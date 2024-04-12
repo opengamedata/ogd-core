@@ -1,20 +1,20 @@
 # import libraries
 from typing import Any, Callable, Dict, List, Type, Optional
 # import locals
-from ogd.core.extractors.registries.DetectorRegistry import DetectorRegistry
+from ogd.core.generators.registries.DetectorRegistry import DetectorRegistry
 from ogd.core.schemas.FeatureData import FeatureData
-from ogd.core.extractors.ExtractorLoader import ExtractorLoader
-from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
+from ogd.core.processors.GeneratorProcessor import GeneratorProcessor
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.utils.utils import ExportRow
 
-class DetectorProcessor(ExtractorProcessor):
+class DetectorProcessor(GeneratorProcessor):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_schema: GameSchema, LoaderClass: Type[ExtractorLoader], trigger_callback:Callable[[Event], None],
+    def __init__(self, game_schema: GameSchema, LoaderClass: Type[GeneratorLoader], trigger_callback:Callable[[Event], None],
                  feature_overrides:Optional[List[str]]=None):
         # TODO: Consider having multiple registries for per-player or per-session kinds of things.
         super().__init__(game_schema=game_schema, LoaderClass=LoaderClass, feature_overrides=feature_overrides)
@@ -40,7 +40,7 @@ class DetectorProcessor(ExtractorProcessor):
 
     def _processEvent(self, event:Event):
         if self._registry is not None:
-            self._registry.ExtractFromEvent(event)
+            self._registry.UpdateFromEvent(event)
 
     def _getLines(self) -> List[ExportRow]:
         return []

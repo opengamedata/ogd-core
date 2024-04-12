@@ -1,9 +1,10 @@
 # Workflow to run monthly exports of data.
 name: Monthly Automated Exports
+
 on:
   schedule:
     - cron: '1 0 2 * *'
-  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
+  workflow_dispatch:
 
 env:
   OGD_BQ_GAMES: '["AQUALAB", "BACTERIA", "BALLOON", "CRYSTAL", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "JOWILDER", "PENGUINS", "LAKELAND", "MAGNET", "WAVES", "WIND"]'
@@ -20,9 +21,20 @@ jobs:
       fail-fast: false # we don't want to cancel just because one game fails.
       max-parallel: 20
 
-    # Steps to set up for and execute an export
     steps:
-    - uses: actions/checkout@v3
+
+  # 1. Local checkout 
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    # Need to get VPN connection in this case so we can upload file to server
+    - name: Get OpenConnect
+      run: sudo apt-get -q update && sudo apt-get -q install openconnect
+    - name: Get Dependencies
+      uses: ./.github/actions/OGD_dependencies
+
+  # 2. Configure cloud & local environments
+    - name: Connect VPN
+      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
       # A bunch of copy-paste crap to set up google cloud for any given game.
     - if: contains(fromJson(${{ env.OGD_BQ_GAMES }}), ${{ matrix.game }})
       name: Set up Cloud SDK for OGD BigQuery
@@ -46,12 +58,6 @@ jobs:
         service_account_key: ${{ secrets.BQ_SHIPWRECKS_JSON }}
         export_default_credentials: true
       # Back to normal setup stuff.
-    - name: Get OpenConnect
-      run: sudo apt-get -q update && sudo apt-get -q install openconnect
-    - name: Connect VPN
-      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
-    - name: Get Dependencies
-      uses: ./.github/actions/OGD_dependencies
     - name: Set up Config File
       uses: ./.github/actions/OGD_config
       with:
@@ -65,6 +71,8 @@ jobs:
       uses: ./.github/actions/OGD_schema
       with:
         game: ${{matrix.game}}
+
+  # 3. Perform export & upload
     - name: Do Export of last month
       uses: ./.github/actions/export_last_month
       with:
@@ -76,6 +84,8 @@ jobs:
         chmod 600 ./key.txt
         ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }} "cd /var/www/opengamedata/data; mkdir -p ${{matrix.game}}"
         scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
+
+  # 4. Cleanup & complete
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -86,6 +96,7 @@ jobs:
     runs-on: ubuntu-22.04
     if: always()
     needs: export_data
+
     steps:
     - name: Get OpenConnect
       run: sudo apt-get -q update && sudo apt-get -q install openconnect

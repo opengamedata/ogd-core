@@ -1,0 +1,63 @@
+name: Waves Exporter CI Test
+run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
+
+on:
+  push:
+    paths:
+    - 'src/ogd/games/WAVES/**'
+    - '.github/workflows/CI_waves.yml'
+    - '.github/actions/export_yesterday/**'
+  workflow_dispatch:
+
+jobs:
+  ci_export:
+    name: CI Export of Wave Combinator Data
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+
+  # 1. Local checkout 
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Get Dependencies
+      uses: ./.github/actions/OGD_dependencies
+
+  # 2. Configure cloud & local environments
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        project_id: ${{ secrets.OGD_BQ_PROJECT_ID }}
+        service_account_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
+        export_default_credentials: true
+    - name: Set up Config File
+      uses: ./.github/actions/OGD_config
+      with:
+        vpn_user: ${{secrets.VPN_USER}}
+        vpn_pass: ${{secrets.VPN_PASS}}
+        sql_host: ${{vars.FD_LOGGER_HOST}}
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+        log_level: "DEBUG"
+    - name: Set up Schema File
+      uses: ./.github/actions/OGD_schema
+      with:
+        game: "WAVES"
+
+  # 3. Perform export
+    - name: Do Export of yesterday's data
+      uses: ./.github/actions/export_yesterday
+      with:
+        game: WAVES
+
+  # 4. Cleanup & complete
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: ./*.log
+    - name: Upload zips as artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: ./data/WAVES/*.zip
