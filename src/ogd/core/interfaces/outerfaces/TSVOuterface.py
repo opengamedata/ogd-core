@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any, Dict, IO, List, Optional, Set
 
 # import local files
-from ogd.core import games
+from ogd import games
 from ogd.core.interfaces.outerfaces.DataOuterface import DataOuterface
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.ExportMode import ExportMode
@@ -39,7 +39,7 @@ class TSVOuterface(DataOuterface):
         self._file_indexing : FileIndexingSchema       = file_indexing
         self._data_dir      : Path = Path(f"./{self._file_indexing.LocalDirectory}")
         self._game_data_dir : Path = self._data_dir / self._game_id
-        self._readme_path   : Path = self._game_data_dir / "readme.md"
+        self._readme_path   : Path = self._game_data_dir / "README.md"
         self._extension     : str  = extension
         self._date_range    : Dict[str,Optional[datetime]] = date_range
         self._dataset_id    : str  = ""
@@ -109,14 +109,14 @@ class TSVOuterface(DataOuterface):
             # if not in place, generate the readme
             Logger.Log(f"Missing readme for {self._game_id}, generating new readme...", logging.WARNING, depth=1)
             _games_path  = Path(games.__file__) if Path(games.__file__).is_dir() else Path(games.__file__).parent
-            game_schema  : GameSchema  = GameSchema(game_id=self._game_id, schema_path=_games_path / self._game_id / "schemas")
+            game_schema  : GameSchema  = GameSchema.FromFile(game_id=self._game_id, schema_path=_games_path / self._game_id / "schemas")
             table_schema = TableSchema(schema_name=self._config.TableSchema)
             readme = Readme(game_schema=game_schema, table_schema=table_schema)
             readme.GenerateReadme(path=self._game_data_dir)
         else:
             # otherwise, readme is there, so just close it and move on.
             readme.close()
-            Logger.Log(f"Successfully found, opened, and closed the readme.md", logging.DEBUG, depth=1)
+            Logger.Log(f"Successfully found, opened, and closed the README.md", logging.DEBUG, depth=1)
         finally:
             self._closeFiles()
             self._zipFiles()
@@ -336,8 +336,11 @@ class TSVOuterface(DataOuterface):
                 if _existing_pop_file is not None and Path(_existing_pop_file).is_file() and self._zip_paths['population'] is not None:
                     Logger.Log(f"Renaming {str(_existing_pop_file)} -> {self._zip_paths['population']}", logging.DEBUG)
                     os.rename(_existing_pop_file, str(self._zip_paths['population']))
+            except FileExistsError as err:
+                msg = f"Error while setting up zip files, could not rename an existing file because another file is already using the target name! {err}"
+                Logger.Log(msg, logging.ERROR)
             except Exception as err:
-                msg = f"Error while setting up zip files! {type(err)} : {err}"
+                msg = f"Unexpected error while setting up zip files! {type(err)} : {err}"
                 Logger.Log(msg, logging.ERROR)
                 traceback.print_tb(err.__traceback__)
         # for each file, try to save out the csv/tsv to a file - if it's one that should be exported, that is.
@@ -345,7 +348,7 @@ class TSVOuterface(DataOuterface):
             with zipfile.ZipFile(self._zip_paths["population"], "w", compression=zipfile.ZIP_DEFLATED) as population_zip_file:
                 try:
                     population_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_population-features.{self._extension}"
-                    readme_file  = Path(self._dataset_id) / "readme.md"
+                    readme_file  = Path(self._dataset_id) / "README.md"
                     TSVOuterface._addToZip(path=self._file_paths["population"], zip_file=population_zip_file, path_in_zip=population_file)
                     TSVOuterface._addToZip(path=self._readme_path,              zip_file=population_zip_file, path_in_zip=readme_file)
                     population_zip_file.close()
@@ -358,7 +361,7 @@ class TSVOuterface(DataOuterface):
             with zipfile.ZipFile(self._zip_paths["players"], "w", compression=zipfile.ZIP_DEFLATED) as players_zip_file:
                 try:
                     player_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_player-features.{self._extension}"
-                    readme_file  = Path(self._dataset_id) / "readme.md"
+                    readme_file  = Path(self._dataset_id) / "README.md"
                     TSVOuterface._addToZip(path=self._file_paths["players"], zip_file=players_zip_file, path_in_zip=player_file)
                     TSVOuterface._addToZip(path=self._readme_path,           zip_file=players_zip_file, path_in_zip=readme_file)
                     players_zip_file.close()
@@ -371,7 +374,7 @@ class TSVOuterface(DataOuterface):
             with zipfile.ZipFile(self._zip_paths["sessions"], "w", compression=zipfile.ZIP_DEFLATED) as sessions_zip_file:
                 try:
                     session_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_session-features.{self._extension}"
-                    readme_file  = Path(self._dataset_id) / "readme.md"
+                    readme_file  = Path(self._dataset_id) / "README.md"
                     TSVOuterface._addToZip(path=self._file_paths["sessions"], zip_file=sessions_zip_file, path_in_zip=session_file)
                     TSVOuterface._addToZip(path=self._readme_path,            zip_file=sessions_zip_file, path_in_zip=readme_file)
                     sessions_zip_file.close()
@@ -384,7 +387,7 @@ class TSVOuterface(DataOuterface):
             with zipfile.ZipFile(self._zip_paths["raw_events"], "w", compression=zipfile.ZIP_DEFLATED) as _raw_events_zip_file:
                 try:
                     events_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_events.{self._extension}"
-                    readme_file = Path(self._dataset_id) / "readme.md"
+                    readme_file = Path(self._dataset_id) / "README.md"
                     TSVOuterface._addToZip(path=self._file_paths["raw_events"], zip_file=_raw_events_zip_file, path_in_zip=events_file)
                     TSVOuterface._addToZip(path=self._readme_path,          zip_file=_raw_events_zip_file, path_in_zip=readme_file)
                     _raw_events_zip_file.close()
@@ -397,7 +400,7 @@ class TSVOuterface(DataOuterface):
             with zipfile.ZipFile(self._zip_paths["processed_events"], "w", compression=zipfile.ZIP_DEFLATED) as _processed_events_zip_file:
                 try:
                     events_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_all-events.{self._extension}"
-                    readme_file = Path(self._dataset_id) / "readme.md"
+                    readme_file = Path(self._dataset_id) / "README.md"
                     TSVOuterface._addToZip(path=self._file_paths["processed_events"], zip_file=_processed_events_zip_file, path_in_zip=events_file)
                     TSVOuterface._addToZip(path=self._readme_path,          zip_file=_processed_events_zip_file, path_in_zip=readme_file)
                     _processed_events_zip_file.close()

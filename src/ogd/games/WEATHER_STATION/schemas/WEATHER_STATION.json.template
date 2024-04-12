@@ -1,0 +1,779 @@
+{
+    "enums" : {
+        "Speaker" : ["RAY", "MISSION_CONTROL", "ALEX", "MATT", "ARGO"],
+        "DialogType" : ["EXPOSITION", "HINT", "FUN_FACT"],
+        "HighlightObject" : [
+            "TODO"
+        ],
+        "HighlightDestination" : [
+            "TODO"
+        ],
+        "HighlightType" : ["OBJECT", "DESTINATION"],
+        "Destination" : ["SLED", "WORKBENCH", "TOWER"],
+        "PuzzleObject" : ["SOLAR", "TURBINE", "BATTERY", "THERMOMETER", "DATA_LOGGER", "ARGO"],
+        "Location" : ["INSIDE", "OUTSIDE"],
+        "PropellerShape" : ["BROKEN", "LARGE", "MEDIUM", "SMALL"],
+        "PuckShape" : ["TODO"],
+        "BatteryShape" : ["DEAD", "CELL", "TODO"],
+        "ThermometerComponentShape" : ["TODO"],
+        "Hand" : ["LEFT", "RIGHT"]
+    },
+    "game_state" : {
+        "seconds_from_launch" : {
+            "type" : "float",
+            "description" : "The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*."
+        },
+        "level" : {
+            "type" : "int",
+            "description" : "The current level the player is in (1-5, or 6 for the epilogue)"
+        },
+        "location" : {
+            "type" : "Location",
+            "description" : "Indicator for whether the player is located outside at the tower or inside at the workbench"
+        },
+        "pos" : {
+            "type" : "List[float]",
+            "description" : "The current position (x, y, z) of the headset at the moment the event occurred."
+        },
+        "rot" : {
+            "type" : "List[float]",
+            "description" : "The current orientation (x, y, z, w) of the headset at the moment the event occurred."
+        },
+        "highlighted_objects" : {
+            "type" : "List[HighlightObject]",
+            "description" : "The current orientation (x, y, z, w) of the headset at the moment the event occurred."
+        },
+        "puzzles_complete" : {
+            "type" : "List[PuzzleObject]",
+            "description" : "List of which puzzles the player has completed in the given level."
+        },
+        "puzzles_incomplete" : {
+            "type" : "List[PuzzleObject]",
+            "description" : "List of which puzzles remain to be completed in the given level."
+        }
+    },
+
+    "events": {
+        "session_start": {
+            "description": "When the app is started and the gameplay session is assigned a session ID",
+            "event_data": {
+            }
+        },
+        "game_start": {
+            "description": "When the player starts a new game (at present, this happens automatically at launch, but in the future the player will launch a new game from a menu).",
+            "event_data": {
+            }
+        },
+        "level_complete": {
+            "description": "When the player finishes a level and is transitioned to the next.",
+            "event_data": {
+            }
+        },
+        "viewport_data": {
+            "description": "An event sent approximately once per second, containing the in-game position and orientation of the player headset for each frame in the past second",
+            "event_data": {
+                "gaze_data_package" : {
+                    "type" : "List[Dict]",
+                    "details" : {
+                        "pos" : "List[float]",
+                        "rot" : "List[float]"
+                    },
+                    "description" : "A list of dicts, where each dict is one frame of headset data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
+                }
+            }
+        },
+        "left_hand_data": {
+            "description": "An event sent approximately once per second, containing the in-game position and orientation of the player's left hand for each frame in the past second",
+            "event_data": {
+                "left_hand_data_package": {
+                    "type": "List[Dict]",
+                    "details" : {
+                        "pos" : "List[float]",
+                        "rot" : "List[float]"
+                    },
+                    "description": "A list of dicts, where each dict is one frame of left-hand data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
+                }
+            }
+        },
+        "right_hand_data": {
+            "description": "An event sent approximately once per second, containing the in-game position and orientation of the player's right hand for each frame in the past second",
+            "event_data": {
+                "right_hand_data_package": {
+                    "type": "List[Dict]",
+                    "details" : {
+                        "pos" : "List[float]",
+                        "rot" : "List[float]"
+                    },
+                    "description": "A list of dicts, where each dict is one frame of right-hand data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
+                }
+            }
+        },
+        "headset_on": {
+            "description": "When the player puts the headset on, resuming the game",
+            "event_data": {}
+        },
+        "headset_off": {
+            "description": "When the player removes the headset from their head, pausing the game",
+            "event_data": {}
+        },
+        "grab_gesture": {
+            "description": "When the player presses the trigger to perform a grab, whether the 'grab' did anything or not.",
+            "event_data": {
+                "pos": {
+                    "type": "Dict[str, float]",
+                    "details" : {
+                        "pos_x" : "float",
+                        "pos_y" : "float",
+                        "pos_z" : "float"
+                    },
+                    "description": "The position of the hand when the 'grab' was triggered"
+                },
+                "rot": {
+                    "type": "Dict[str, float]",
+                    "details" : {
+                        "rot_x" : "float",
+                        "rot_y" : "float",
+                        "rot_z" : "float",
+                        "rot_w" : "float"
+                    },
+                    "description": "The orientation of the hand when the 'grab' was triggered"
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed with their right or left hand."
+                }
+            }
+        },
+        "release_gesture": {
+            "description": "When the player releases the trigger button to end a 'grab'",
+            "event_data": {
+                "pos": {
+                    "type": "Dict[str, float]",
+                    "details" : {
+                        "pos_x" : "float",
+                        "pos_y" : "float",
+                        "pos_z" : "float"
+                    },
+                    "description": "The position of the hand when the 'grab' was released"
+                },
+                "rot": {
+                    "type": "Dict[str, float]",
+                    "details" : {
+                        "rot_x" : "float",
+                        "rot_y" : "float",
+                        "rot_z" : "float",
+                        "rot_w" : "float"
+                    },
+                    "description": "The orientation of the hand when the 'grab' was released"
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed with their right or left hand."
+                }
+            }
+        },
+        "dialog_audio_start" : {
+            "description" : "When a voiceover audio clip begins",
+            "event_data" : {
+                "dialog_id" : {
+                    "type":"str",
+                    "description":"The identifier of the dialog audio, which can be cross-referenced against DBExport."
+                },
+                "dialog_type" : {
+                    "type":"enum(DialogType)",
+                    "description":"Indicator for whether the dialog was exposition, a hint, or a fun fact."
+                },
+                "speaker" : {
+                    "type":"enum(Speaker)",
+                    "description":"Which character speaks the dialog"
+                }
+            }
+        },
+        "dialog_audio_end" : {
+            "description" : "When a voiceover audio clip ends",
+            "event_data" : {
+                "dialog_id" : {
+                    "type":"str",
+                    "description":"The identifier of the dialog audio, which can be cross-referenced against DBExport."
+                },
+                "dialog_type" : {
+                    "type":"enum(DialogType)",
+                    "description":"Indicator for whether the dialog was exposition, a hint, or a fun fact."
+                },
+                "speaker" : {
+                    "type":"enum(Speaker)",
+                    "description":"Which character spoke the dialog"
+                }
+            }
+        },
+        "object_highlighted": {
+            "description": "When an object is highlighted, indicating the player should move the object, or place another object on it.",
+            "event_data": {
+                "highlight_object": {
+                    "type": "enum(HighlightObject) | enum(HighlightDestination)",
+                    "description": "The object that was highlighted."
+                },
+                "highlight_type": {
+                    "type": "enum(HighlightType)",
+                    "description": "Indicator of whether the object was a normal object, or an object destination."
+                }
+            }
+        },
+        "object_unhighlighted": {
+            "description": "When the highlighting on an object is cleared",
+            "event_data": {
+                "highlight_object": {
+                    "type": "enum(HighlightObject) | enum(HighlightDestination)",
+                    "description": "The object that was highlighted."
+                },
+                "highlight_type": {
+                    "type": "enum(HighlightType)",
+                    "description": "Indicator of whether the object was a normal object, or an object destination."
+                }
+            }
+        },
+        "click_argo_help": {
+            "description": "When the player presses the help button on Argo",
+            "event_data": {
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand."
+                }
+            }
+        },
+        "click_argo_funfact": {
+            "description": "When the player presses the 'fun fact' button on Argo",
+            "event_data": {
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand."
+                }
+            }
+        },
+        "grab_station_handle": {
+            "description": "When the player grabs the weather station adjustment handle",
+            "event_data": {
+                "start_height": {
+                    "type": "float",
+                    "description": "The height of the weather station handle when the player grabbed it."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the handle with their right or left hand."
+                }
+            }
+        },
+        "release_station_handle": {
+            "description": "When the player releases the weather station handle at a new height",
+            "event_data": {
+                "end_height": {
+                    "type": "float",
+                    "description": "The height of the weather station handle when the player released it."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the handle with their right or left hand."
+                }
+            }
+        },
+        "grab_workbench_handle": {
+            "description": "When the player grabs the workbench adjustment handle",
+            "event_data": {
+                "start_height": {
+                    "type": "float",
+                    "description": "The height of the workbench handle when the player grabbed it."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the handle with their right or left hand."
+                }
+            }
+        },
+        "release_workbench_handle": {
+            "description": "When the player releases the tablet object",
+            "event_data": {
+                "end_height": {
+                    "type": "float",
+                    "description": "The height of the workbench handle when the player released it."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the handle with their right or left hand."
+                }
+            }
+        },
+        "grab_puzzle_object": {
+            "description": "When the player grabs a puzzle object",
+            "event_data": {
+                "object": {
+                    "type": "enum(PuzzleObject)",
+                    "description": "The object the player grabbed; either the solar panel, wind turbine, data logger, temperature sensor, battery, or Argo."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the object with their right or left hand."
+                }
+            }
+        },
+        "release_puzzle_object": {
+            "description": "When the player releases a puzzle object, without placing it onto a destination",
+            "event_data": {
+                "object": {
+                    "type": "enum(PuzzleObject)",
+                    "description": "The object the player released; either the solar panel, wind turbine, data logger, temperature sensor, battery, or Argo."
+                },
+                "pos": {
+                    "type": "Dict[str, float]",
+                    "details" : {
+                        "pos_x" : "float",
+                        "pos_y" : "float",
+                        "pos_z" : "float"
+                    },
+                    "description": "The position of the object when the player released it"
+                },
+                "rot": {
+                    "type": "Dict[str, float]",
+                    "details" : {
+                        "rot_x" : "float",
+                        "rot_y" : "float",
+                        "rot_z" : "float",
+                        "rot_w" : "float"
+                    },
+                    "description": "The orientation of the object when the player released it"
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the object with their right or left hand."
+                }
+            }
+        },
+        "place_puzzle_object": {
+            "description": "When the player places a puzzle object on a destination",
+            "event_data": {
+                "object": {
+                    "type": "enum(PuzzleObject)",
+                    "description": "The object the player placed; either the solar panel, wind turbine, data logger, temperature sensor, battery, or Argo."
+                },
+                "destination" : {
+                    "type": "enum(Destination)",
+                    "description": "The type of destination in which  the player placed the object, either the sled, workbench, or tower."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the object with their right or left hand."
+                }
+            }
+        },
+        "discard_object": {
+            "description": "When the player drops any object into the trash chute",
+            "event_data": {
+                "object": {
+                    "type": "enum(PropellerShape) | enum(BatteryShape) | enum(ThermometerComponentShape)",
+                    "description": "The object the player dropped into the trash chute."
+                }
+            }
+        },
+        "place_argo_to_sled": {
+            "description": "When the player places Argo, specifically, on the sled, triggering a transition to a new location. This event occurs in addition to the standard `place_puzzle_object` event",
+            "event_data": {
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player placed Argo with their right or left hand."
+                }
+            }
+        },
+        "location_transition": {
+            "description": "When the player is transitioned to a new location",
+            "event_data": {
+                "to": {
+                    "type": "enum(Location)",
+                    "description": "The location to which the player is moved (the starting location is given in GameState)."
+                }
+            }
+        },
+        "start_puzzle": {
+            "description": "When the player makes an initial move to start a puzzle, usually by placing the puzzle object on the workbench or interacting with the object at the weather station",
+            "event_data": {
+                "puzzle": {
+                    "type": "enum(PuzzleObject)",
+                    "description": "The puzzle the player started."
+                }
+            }
+        },
+        "complete_puzzle": {
+            "description": "When the player completes a puzzle",
+            "event_data": {
+                "puzzle": {
+                    "type": "enum(PuzzleObject)",
+                    "description": "The puzzle the player completed."
+                }
+            }
+        },
+        "grab_solar_handle": {
+            "description": "When the player grabs the handle of the solar panel",
+            "event_data": {
+                "start_angle": {
+                    "type": "float",
+                    "description": "The rotation of the solar panel when the player grabbed it."
+                },
+                "start_alignment" : {
+                    "type" : "int",
+                    "description" : "The number of green 'bars' shown on the solar panel when the player grabbed it."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the solar panel with their right or left hand."
+                }
+            }
+        },
+        "release_solar_handle": {
+            "description": "When the player releases the handle of the solar panel",
+            "event_data": {
+                "end_angle": {
+                    "type": "float",
+                    "description": "The rotation of the solar panel when the player released it."
+                },
+                "start_alignment" : {
+                    "type" : "int",
+                    "description" : "The number of green 'bars' shown on the solar panel when the player released it."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the solar panel with their right or left hand."
+                }
+            }
+        },
+        "grab_logger_handle": {
+            "description": "When the player grabs the handle of the data logger door",
+            "event_data": {
+                "start_angle": {
+                    "type": "float",
+                    "description": "The hinge angle of the door when the player grabbed it."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the door with their right or left hand."
+                }
+            }
+        },
+        "release_logger_handle": {
+            "description": "When the player releases the handle of the data logger door",
+            "event_data": {
+                "end_angle": {
+                    "type": "float",
+                    "description": "The hinge angle of the door when the player released it."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the door with their right or left hand."
+                }
+            }
+        },
+        "grab_data_puck": {
+            "description": "When the player grabs a puzzle object",
+            "event_data": {
+                "puck_shape": {
+                    "type": "enum(PuckShape)",
+                    "description": "The data puck shape the player grabbed; the pucks come in a variety of shapes."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the puck with their right or left hand."
+                }
+            }
+        },
+        "release_data_puck": {
+            "description": "When the player releases a propeller sahpe, without placing it onto the logger board",
+            "event_data": {
+                "propeller_shape": {
+                    "type": "enum(PuckShape)",
+                    "description": "The data puck shape the player released; the pucks come in a variety of shapes."
+                },
+                "pos": {
+                    "type": "Dict[str, float]",
+                    "details" : {
+                        "pos_x" : "float",
+                        "pos_y" : "float",
+                        "pos_z" : "float"
+                    },
+                    "description": "The position of the puck when the player released it"
+                },
+                "rot": {
+                    "type": "Dict[str, float]",
+                    "details" : {
+                        "rot_x" : "float",
+                        "rot_y" : "float",
+                        "rot_z" : "float",
+                        "rot_w" : "float"
+                    },
+                    "description": "The orientation of the puck when the player released it"
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the puck with their right or left hand."
+                }
+            }
+        },
+        "place_data_puck": {
+            "description": "When the player places a propeller onto the turbine",
+            "event_data": {
+                "propeller_shape": {
+                    "type": "enum(PuckShape)",
+                    "description": "The data puck shape the player placed; the pucks come in a variety of shapes."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the puck with their right or left hand."
+                }
+            }
+        },
+        "click_test_uplink": {
+            "description": "When the player presses the button to test the data uplink and complete the indoor portion of the level.",
+            "event_data": {
+                "station_name": {
+                    "type": "str",
+                    "description": "The name of the station on the map whose uplink the player is testing."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand."
+                }
+            }
+        },
+        "grab_trash": {
+            "description": "When the player grabs the door of the trash chute to open it and toss away a component",
+            "event_data": {
+                "start_angle": {
+                    "type": "float",
+                    "description": "The hinge angle of the trash chute door when the player grabbed it."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the door with their right or left hand."
+                }
+            }
+        },
+        "release_trash": {
+            "description": "When the player releases the trash chute door",
+            "event_data": {
+                "end_angle": {
+                    "type": "float",
+                    "description": "The hinge angle of the trash chute door when the player released it."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the door with their right or left hand."
+                }
+            }
+        },
+        "click_rotate_drawer": {
+            "description": "When the player presses the button to shift to a different drawer of components at the workbench.",
+            "event_data": {
+                "drawer_contents": {
+                    "type": "List[PropellerShape, BatteryShape]",
+                    "description": "A list of all the shapes in the new drawer we rotated to."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand."
+                }
+            }
+        },
+        "grab_propeller": {
+            "description": "When the player grabs a puzzle object",
+            "event_data": {
+                "propeller_shape": {
+                    "type": "enum(PropellerShape)",
+                    "description": "The propeller shape the player grabbed; the propeller comes in a few sizes."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the object with their right or left hand."
+                }
+            }
+        },
+        "release_propeller": {
+            "description": "When the player releases a propeller sahpe, without placing it onto the turbine",
+            "event_data": {
+                "propeller_shape": {
+                    "type": "enum(PropellerShape)",
+                    "description": "The propeller the player released; the propeller comes in a few sizes."
+                },
+                "pos": {
+                    "type": "Dict[str, float]",
+                    "details" : {
+                        "pos_x" : "float",
+                        "pos_y" : "float",
+                        "pos_z" : "float"
+                    },
+                    "description": "The position of the propeller when the player released it"
+                },
+                "rot": {
+                    "type": "Dict[str, float]",
+                    "details" : {
+                        "rot_x" : "float",
+                        "rot_y" : "float",
+                        "rot_z" : "float",
+                        "rot_w" : "float"
+                    },
+                    "description": "The orientation of the propeller when the player released it"
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the propeller with their right or left hand."
+                }
+            }
+        },
+        "place_propeller": {
+            "description": "When the player places a propeller onto the turbine",
+            "event_data": {
+                "propeller_shape": {
+                    "type": "enum(PropellerShape)",
+                    "description": "The propeller the player placed; the propeller comes in a few sizes."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the propeller with their right or left hand."
+                }
+            }
+        },
+        "click_test_propeller": {
+            "description": "When the player presses the button to test the propeller they placed on the wind turbine",
+            "event_data": {
+                "is_correct" : {
+                    "type": "bool",
+                    "description": "Indicator for whether the propeller the player is testing is the correct one."
+                },
+                "propeller_shape": {
+                    "type": "enum(PropellerShape)",
+                    "description": "The propeller the player is testing; the propeller comes in a few sizes."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand."
+                }
+            }
+        },
+        "battery_box_open": {
+            "description": "When the battery box opens after placing it on the workbench.",
+            "event_data": {
+            }
+        },
+        "battery_box_close": {
+            "description": "When the battery box closes after completing the battery puzzle.",
+            "event_data": {
+                "hand": {
+                }
+            }
+        },
+        "grab_battery_component": {
+            "description": "When the player grabs a component for repairing the battery",
+            "event_data": {
+                "propeller_shape": {
+                    "type": "enum(BatteryShape)",
+                    "description": "The battery component the player grabbed."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the battery component with their right or left hand."
+                }
+            }
+        },
+        "release_battery_component": {
+            "description": "When the player releases a battery component, without placing it in the battery box",
+            "event_data": {
+                "propeller_shape": {
+                    "type": "enum(BatteryShape)",
+                    "description": "The battery component the player released."
+                },
+                "pos": {
+                    "type": "Dict[str, float]",
+                    "details" : {
+                        "pos_x" : "float",
+                        "pos_y" : "float",
+                        "pos_z" : "float"
+                    },
+                    "description": "The position of the battery component when the player released it"
+                },
+                "rot": {
+                    "type": "Dict[str, float]",
+                    "details" : {
+                        "rot_x" : "float",
+                        "rot_y" : "float",
+                        "rot_z" : "float",
+                        "rot_w" : "float"
+                    },
+                    "description": "The orientation of the battery component when the player released it"
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the battery component with their right or left hand."
+                }
+            }
+        },
+        "place_battery_component": {
+            "description": "When the player places a battery component onto a spot in the battery box",
+            "event_data": {
+                "propeller_shape": {
+                    "type": "enum(BatteryShape)",
+                    "description": "The battery component the player placed."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed the battery component with their right or left hand."
+                }
+            }
+        },
+        "click_cycle_temperature_component": {
+            "description": "When the player presses the button to rotate one of the component shapes on the temperature sensor",
+            "event_data": {
+                "button_position" : {
+                    "type": "int",
+                    "description": "The index of the component button the player clicked to rotate."
+                },
+                "old_shape": {
+                    "type": "enum(ThermometerComponentShape)",
+                    "description": "The shape of the component that was selected before the rotation happened."
+                },
+                "new_shape": {
+                    "type": "enum(ThermometerComponentShape)",
+                    "description": "The shape of the component that after rotating."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand."
+                }
+            }
+        },
+        "lock_temperature_components": {
+            "description": "When the player presses the button to lock the temperature sensor components",
+            "event_data": {
+                "component_settings" : {
+                    "type" : "List[ThermometerComponentShape]",
+                    "description" : "The list of current component shapes when the player locked them."
+                }
+            }
+        },
+        "epilogue_start": {
+            "description": "When the epilogue level starts. This level does not have any tasks for the player, just dialog to listen to.",
+            "event_data": {
+            }
+        },
+        "epilogue_end": {
+            "description": "When the epilogue level ends.",
+            "event_data": {
+            }
+        }
+    },
+
+    "features": {
+        "per_count": {
+        },
+        "aggregate":{
+        }
+    },
+
+    "config": {
+    	"SUPPORTED_VERS": [1]
+	}
+}

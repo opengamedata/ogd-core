@@ -2,14 +2,14 @@ import json
 import logging
 import os
 from datetime import datetime
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, Final, List, Tuple, Optional
 # import locals
 from ogd.core.interfaces.BigQueryInterface import BigQueryInterface
 from ogd.core.schemas.IDMode import IDMode
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.utils.Logger import Logger
 
-AQUALAB_MIN_VERSION = 6.2
+AQUALAB_MIN_VERSION : Final[float] = 6.2
 
 class BQFirebaseInterface(BigQueryInterface):
     """Subclass of the general BigQueryInterface, with re-implemented queries to handle old Firebase unnest bullshit.

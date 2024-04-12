@@ -43,7 +43,7 @@ class PerCountSchema(FeatureSchema):
         if len(self.Subfeatures) > 0:
             ret_val += "*Sub-features*:  \n\n" + "\n".join([subfeature.AsMarkdown for subfeature in self.Subfeatures.values()])
         if len(self.NonStandardElements) > 0:
-            ret_val += "*Other elements*:  \n\n" + "\n".join([f"{elem_name} - {elem}" for elem_name,elem in self.NonStandardElements.items()])
+            ret_val += "*Other elements*:  \n\n" + "\n".join([f"{elem_name} : {elem}" for elem_name,elem in self.NonStandardElements.items()])
         return ret_val
 
     @staticmethod

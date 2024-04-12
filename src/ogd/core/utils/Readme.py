@@ -42,7 +42,7 @@ class Readme:
     def GenerateReadme(self, path:Path = Path("./")):
         try:
             os.makedirs(name=path, exist_ok=True)
-            with open(path / "readme.md", "w") as readme:
+            with open(path / "README.md", "w") as readme:
                 # 1. Open files with game-specific readme data, and global db changelog.
                 # 2. Use schema to write feature & column descriptions to the readme.
                 readme.write("\n\n".join([
@@ -56,10 +56,10 @@ class Readme:
                 ]))
                 # 3. Append any important data from the data changelog.
         except FileNotFoundError as err:
-            Logger.Log(f"Could not open readme.md for writing.", logging.ERROR)
+            Logger.Log(f"Could not open README.md for writing.", logging.ERROR)
             traceback.print_tb(err.__traceback__)
         else:
-            Logger.Log(f"Wrote readme file to {path}/readme.md", logging.INFO)
+            Logger.Log(f"Wrote readme file to {path}/README.md", logging.INFO)
 
     def _getCustomSrc(self) -> str:
         ret_val = "No game-specific readme content prepared"

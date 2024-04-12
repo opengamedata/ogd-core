@@ -12,20 +12,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple, Type, Optional
 
 ## import local files
-from ogd.core import games
-from ogd.core.extractors.ExtractorLoader import ExtractorLoader
-from ogd.core.games.AQUALAB.AqualabLoader import AqualabLoader
-from ogd.core.games.CRYSTAL.CrystalLoader import CrystalLoader
-from ogd.core.games.ICECUBE.IcecubeLoader import IcecubeLoader
-from ogd.core.games.JOURNALISM.JournalismLoader import JournalismLoader
-from ogd.core.games.JOWILDER.JowilderLoader import JowilderLoader
-from ogd.core.games.LAKELAND.LakelandLoader import LakelandLoader
-from ogd.core.games.MAGNET.MagnetLoader import MagnetLoader
-from ogd.core.games.SHADOWSPECT.ShadowspectLoader import ShadowspectLoader
-from ogd.core.games.SHIPWRECKS.ShipwrecksLoader import ShipwrecksLoader
-from ogd.core.games.THERMOVR.ThermoVRLoader import ThermoVRLoader
-from ogd.core.games.WAVES.WaveLoader import WaveLoader
-from ogd.core.games.PENGUINS.PenguinsLoader import PenguinsLoader
+from ogd import games
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.managers.EventManager import EventManager
 from ogd.core.managers.FeatureManager import FeatureManager
 from ogd.core.schemas.Event import Event
@@ -102,8 +90,11 @@ class ExportManager:
 
             ret_val.SessionCount = len(_sess_ids)
             ret_val.RequestSucceeded(msg=f"Successfully executed data request {request}.")
+        except ValueError as err:
+            msg = f"Failed to execute data request {str(request)}, an invalid value was found:\n{str(err)}"
+            ret_val.RequestErrored(msg=msg)
         except Exception as err:
-            msg = f"Failed to execute data request {str(request)}, an error occurred:\n{type(err)} {str(err)}\n{traceback.format_exc()}"
+            msg = f"Failed to execute data request {str(request)}, an unexpected error occurred:\n{type(err)} {str(err)}\n{traceback.format_exc()}"
             ret_val.RequestErrored(msg=msg)
         finally:
             time_delta = datetime.now() - start
@@ -123,7 +114,7 @@ class ExportManager:
 
     def _preProcess(self, request:Request) -> None:
         _games_path  = Path(games.__file__) if Path(games.__file__).is_dir() else Path(games.__file__).parent
-        _game_schema  : GameSchema  = GameSchema(game_id=request.GameID, schema_path=_games_path / request.GameID / "schemas")
+        _game_schema  : GameSchema  = GameSchema.FromFile(game_id=request.GameID, schema_path=_games_path / request.GameID / "schemas")
         # 1. Get LoaderClass and set up Event and Feature managers.
         load_class = self._loadLoaderClass(request.GameID)
         if load_class is None:
@@ -178,39 +169,51 @@ class ExportManager:
         time_delta = datetime.now() - start
         Logger.Log(f"Output time for population: {time_delta}", logging.INFO, depth=2)
 
-    def _loadLoaderClass(self, game_id:str) -> Optional[Type[ExtractorLoader]]:
-        _loader_class: Optional[Type[ExtractorLoader]] = None
+    def _loadLoaderClass(self, game_id:str) -> Optional[Type[GeneratorLoader]]:
+        _loader_class: Optional[Type[GeneratorLoader]] = None
         match game_id:
             case "AQUALAB":
+                from ogd.games.AQUALAB.AqualabLoader import AqualabLoader
                 _loader_class = AqualabLoader
             case "CRYSTAL":
+                from ogd.games.CRYSTAL.CrystalLoader import CrystalLoader
                 _loader_class = CrystalLoader
             case "ICECUBE":
+                from ogd.games.ICECUBE.IcecubeLoader import IcecubeLoader
                 _loader_class = IcecubeLoader
             case "JOURNALISM":
+                from ogd.games.JOURNALISM.JournalismLoader import JournalismLoader
                 _loader_class = JournalismLoader
             case "JOWILDER":
+                from ogd.games.JOWILDER.JowilderLoader import JowilderLoader
                 _loader_class = JowilderLoader
             case "LAKELAND":
+                from ogd.games.LAKELAND.LakelandLoader import LakelandLoader
                 _loader_class = LakelandLoader
             case "MAGNET":
+                from ogd.games.MAGNET.MagnetLoader import MagnetLoader
                 _loader_class = MagnetLoader
             case "SHADOWSPECT":
+                from ogd.games.SHADOWSPECT.ShadowspectLoader import ShadowspectLoader
                 _loader_class = ShadowspectLoader
             case "SHIPWRECKS":
+                from ogd.games.SHIPWRECKS.ShipwrecksLoader import ShipwrecksLoader
                 _loader_class = ShipwrecksLoader
             case "THERMOVR":
+                from ogd.games.THERMOVR.ThermoVRLoader import ThermoVRLoader
                 _loader_class = ThermoVRLoader
             case "WAVES":
+                from ogd.games.WAVES.WaveLoader import WaveLoader
                 _loader_class = WaveLoader
             case "PENGUINS":
+                from ogd.games.PENGUINS.PenguinsLoader import PenguinsLoader
                 _loader_class = PenguinsLoader
             case _:
-                if game_id in {"BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MASHOPOLIS", "WIND"}:
+                if game_id in {"BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MASHOPOLIS", "WEATHER_STATION", "WIND"}:
                     # all games with data but no extractor.
                     pass
                 else:
-                    raise Exception(f"Got an invalid game ID ({game_id})!")
+                    raise ValueError(f"Got an unrecognized game ID ({game_id})!")
         return _loader_class
 
     def _generateSlices(self, sess_ids:List[str]) -> List[List[str]]:
