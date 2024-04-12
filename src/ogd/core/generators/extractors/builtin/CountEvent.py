@@ -2,8 +2,8 @@
 import json
 from typing import Any, List, Optional
 # import local files
-from extractors.features.Feature import Feature
-from extractors.Extractor import ExtractorParameters
+from generators.extractors.Feature import Feature
+from generators.Generator import GeneratorParameters
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
@@ -14,7 +14,7 @@ class CountEvent(Feature):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    def __init__(self, params:ExtractorParameters, schema_args:dict):
+    def __init__(self, params:GeneratorParameters, schema_args:dict):
         self._target_event = schema_args['target_event']
         super().__init__(params=params)
         self._count = 0

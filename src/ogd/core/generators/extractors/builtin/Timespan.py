@@ -3,8 +3,8 @@ import logging
 from datetime import datetime, timedelta
 from typing import Any, List, Optional
 # import local files
-from extractors.features.SessionFeature import SessionFeature
-from extractors.Extractor import ExtractorParameters
+from generators.extractors.SessionFeature import SessionFeature
+from generators.Generator import GeneratorParameters
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 from utils import Logger
@@ -15,7 +15,7 @@ class Timespan(SessionFeature):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    def __init__(self, params:ExtractorParameters, schema_args:dict):
+    def __init__(self, params:GeneratorParameters, schema_args:dict):
         self._start_event = schema_args['start_event']
         self._end_event = schema_args['end_event']
         super().__init__(params=params)
@@ -50,14 +50,14 @@ class Timespan(SessionFeature):
             if self._start_time is None:
                 self._start_time = event.Timestamp
             else:
-                Logger.Log(f"{self.Name} received a second {self._start_event} (start-of-span) event! This occurred {event.Timestamp - self._start_time} after the initial {self._start_event} event.", logging.WARN)
+                self.WarningMessage(f"{self.Name} received a second {self._start_event} (start-of-span) event! This occurred {event.Timestamp - self._start_time} after the initial {self._start_event} event.")
         if event.EventName == self._end_event:
             if self._start_time is not None:
                 if self._end_time is not None:
-                    Logger.Log(f"{self.Name} received a second {self._end_event} (end-of-span) event! This occurred {event.Timestamp - self._end_time} after the initial {self._end_event} event. Using the later event's timestamp for span.", logging.WARN)
+                    self.WarningMessage(f"{self.Name} received a second {self._end_event} (end-of-span) event! This occurred {event.Timestamp - self._end_time} after the initial {self._end_event} event. Using the later event's timestamp for span.")
                 self._end_time = event.Timestamp
             else:
-                Logger.Log(f"{self.Name} received a {self._end_event} event (end-of-span event) when no {self._start_event} event (start-of-span event) had occurred!", logging.WARN)
+                self.WarningMessage(f"{self.Name} received a {self._end_event} event (end-of-span event) when no {self._start_event} event (start-of-span event) had occurred!")
         return
 
     def _extractFromFeatureData(self, feature: FeatureData):
