@@ -1,0 +1,853 @@
+{
+    "level_range": {
+        "min": 0,
+        "max": 56
+    },
+    "task_range": {
+        "min": 0,
+        "max": 235
+    },
+    "game_state": {
+        "job_name": {
+            "type": "str",
+            "description": "The name of the current job"
+        }
+    },
+    "events": {
+        "accept_job": {
+            "description": "N/A",
+            "event_data": {
+            }
+        },
+        "switch_job": {
+            "description": "Event that occurs whenever the job switches, whether manually or through an `accept_job` or `complete_job`",
+            "event_data": {
+                "prev_job_name": {
+                    "type": "str",
+                    "description": "String name of the previous job, may be incorrect when coinciding with any `complete_job`, or with an `accept_job` at a time the user was actively in a job."
+                }
+            }
+        },
+        "receive_fact": {
+            "description": "N/A",
+            "event_data": {
+                "fact_entity": {
+                    "type": "str",
+                    "description": "The entity (e.g. species) with which the fact is associated"
+                },
+                "fact_id": {
+                    "type": "str",
+                    "description": "Unique ID for the given fact"
+                },
+                "fact_rate": {
+                    "type": "bool",
+                    "description": "Whether the fact is a... rate fact? I don't really get this one..."
+                },
+                "fact_stressed": {
+                    "type": "bool",
+                    "description": ""
+                },
+                "fact_type": {
+                    "type": "str",
+                    "description": "The type of fact"
+                },
+                "has_rate": {
+                    "type": "bool",
+                    "description": "Whether the fact... has a rate? We need better naming of things I guess..."
+                }
+            }
+        },
+        "receive_entity": {
+            "description": "N/A",
+            "event_data": {
+                "entity_id": {
+                    "type": "str",
+                    "description": "Unique ID for the given entity"
+                }
+            }
+        },
+        "complete_job": {
+            "description": "N/A",
+            "event_data": {
+                "job_name": {
+                    "type": "str",
+                    "description": "String name of the completed job"
+                }
+            }
+        },
+        "complete_task": {
+            "description": "N/A",
+            "event_data": {
+                "task_id": {
+                    "type": "str",
+                    "description": "ID of the completed task"
+                }
+            }
+        },
+        "scene_changed": {
+            "description": "N/A",
+            "event_data": {
+                "scene_name": {
+                    "type": "str",
+                    "description": "Name of the loaded scene"
+                }
+            }
+        },
+        "room_changed": {
+            "description": "N/A",
+            "event_data": {
+                "room_name": {
+                    "type": "str",
+                    "description": "Name of the room being entered"
+                }
+            }
+        },
+        "begin_dive": {
+            "description": "N/A",
+            "event_data": {
+                "site_id": {
+                    "type": "str",
+                    "description": "ID of the dive site"
+                }
+            }
+        },
+        "ask_for_help": {
+            "description": "N/A",
+            "event_data": {
+                "node_id": {
+                    "type": "str",
+                    "description": "Scripting ID for the hint response"
+                }
+            }
+        },
+        "guide_script_triggered": {
+            "description": "N/A",
+            "event_data": {
+                "node_id": {
+                    "type": "str",
+                    "description": "Scripting ID for the guide's response"
+                }
+            }
+        },
+        "script_fired": {
+            "description": "N/A",
+            "event_data": {
+                "node_id": {
+                    "type": "str",
+                    "description": "ID of a given script node"
+                }
+            }
+        },
+        "open_bestiary": {
+            "description": "N/A",
+            "event_data": {
+            }
+        },
+        "bestiary_open_species_tab": {
+            "description": "N/A",
+            "event_data": {
+            }
+        },
+        "bestiary_open_environments_tab": {
+            "description": "N/A",
+            "event_data": {
+            }
+        },
+        "bestiary_open_models_tab": {
+            "description": "N/A",
+            "event_data": {
+            }
+        },
+        "bestiary_select_species": {
+            "description": "N/A",
+            "event_data": {
+                "species_id": {
+                    "type": "str",
+                    "description": "ID of the selected species"
+                }
+            }
+        },
+        "bestiary_select_environment": {
+            "description": "N/A",
+            "event_data": {
+                "environment_id": {
+                    "type": "str",
+                    "description": "ID of the selected environment"
+                }
+            }
+        },
+        "bestiary_select_model": {
+            "description": "N/A",
+            "event_data": {
+                "model_id": {
+                    "type": "str",
+                    "description": "ID of the selected model"
+                }
+            }
+        },
+        "close_bestiary": {
+            "description": "N/A",
+            "event_data": {
+            }
+        },
+        "open_status": {
+            "description": "N/A",
+            "event_data": {
+            }
+        },
+        "status_open_job_tab": {
+            "description": "N/A",
+            "event_data": {
+            }
+        },
+        "status_open_item_tab": {
+            "description": "N/A",
+            "event_data": {
+            }
+        },
+        "status_open_tech_tab": {
+            "description": "N/A",
+            "event_data": {
+            }
+        },
+        "close_status": {
+            "description": "N/A",
+            "event_data": {
+            }
+        },
+        "begin_model": {
+            "description": "N/A",
+            "event_data": {
+            }
+        },
+        "model_phase_changed": {
+            "description": "N/A",
+            "event_data": {
+                "phase": {
+                    "type": "str",
+                    "description": "The selected modeling phase"
+                }
+            }
+        },
+        "model_ecosystem_selected": {
+            "description": "N/A",
+            "event_data": {
+                "ecosystem": {
+                    "type": "str",
+                    "description": "Ecosystem selected for modeling"
+                }
+            }
+        },
+        "model_concept_started": {
+            "description": "N/A",
+            "event_data": {
+                "ecosystem": {
+                    "type": "str",
+                    "description": "Ecosystem selected for modeling"
+                }
+            }
+        },
+        "model_concept_updated": {
+            "description": "N/A",
+            "event_data": {
+                "ecosystem": {
+                    "type": "str",
+                    "description": "Ecosystem selected for modeling"
+                },
+                "status": {
+                    "type": "str",
+                    "description": "Updated status of the concept model"
+                }
+            }
+        },
+        "model_concept_exported": {
+            "description": "N/A",
+            "event_data": {
+                "ecosystem": {
+                    "type": "str",
+                    "description": "Ecosystem selected for modeling"
+                }
+            }
+        },
+        "begin_simulation": {
+            "description": "N/A",
+            "event_data": {
+                "ecosystem": {
+                    "type": "str",
+                    "description": "Ecosystem selected for modeling"
+                }
+            }
+        },
+        "model_sync_error": {
+            "description": "N/A",
+            "event_data": {
+                "ecosystem": {
+                    "type": "str",
+                    "description": "Ecosystem selected for modeling"
+                },
+                "sync": {
+                    "type": "int",
+                    "description": "Sync % achieved with the current model"
+                }
+            }
+        },
+        "simulation_sync_achieved": {
+            "description": "N/A",
+            "event_data": {
+                "ecosystem": {
+                    "type": "str",
+                    "description": "Ecosystem selected for modeling"
+                }
+            }
+        },
+        "model_predict_completed": {
+            "description": "N/A",
+            "event_data": {
+                "ecosystem": {
+                    "type": "str",
+                    "description": "Ecosystem selected for modeling"
+                }
+            }
+        },
+        "model_intervene_update": {
+            "description": "N/A",
+            "event_data": {
+                "ecosystem": {
+                    "type": "str",
+                    "description": "Ecosystem selected for modeling"
+                },
+                "organism": {
+                    "type": "str",
+                    "description": "The organism having its population modified by the player"
+                },
+                "difference_value": {
+                    "type": null,
+                    "description": "The population change for the selected organism"
+                }
+            }
+        },
+        "model_intervene_error": {
+            "description": "N/A",
+            "event_data": {
+                "ecosystem": {
+                    "type": "str",
+                    "description": "Ecosystem selected for modeling"
+                }
+            }
+        },
+        "model_intervene_completed": {
+            "description": "N/A",
+            "event_data": {
+                "ecosystem": {
+                    "type": "str",
+                    "description": "Ecosystem selected for modeling"
+                }
+            }
+        },
+        "end_model": {
+            "description": "N/A",
+            "event_data": {
+                "phase": {
+                    "type": "str",
+                    "description": "The selected modeling phase upon leaving"
+                },
+                "ecosystem": {
+                    "type": "str",
+                    "description": "The selected ecosystem upon leaving"
+                }
+            }
+        },
+        "purchase_upgrade": {
+            "description": "N/A",
+            "event_data": {
+                "item_id": {
+                    "type": "str",
+                    "description": "ID of the purchased item"
+                },
+                "item_name": {
+                    "type": "str",
+                    "description": "String name of the purchased item"
+                },
+                "cost": {
+                    "type": null,
+                    "description": "Cost of the purchased item"
+                }
+            }
+        },
+        "insufficient_funds": {
+            "description": "N/A",
+            "event_data": {
+                "item_id": {
+                    "type": "str",
+                    "description": "ID of the item"
+                },
+                "item_name": {
+                    "type": "str",
+                    "description": "String name of the item"
+                },
+                "cost": {
+                    "type": null,
+                    "description": "Cost of the item"
+                }
+            }
+        },
+        "talk_to_shopkeep": {
+            "description": "N/A",
+            "event_data": {
+            }
+        },
+        "add_environment": {
+            "description": "N/A",
+            "event_data": {
+                "tank_type": {
+                    "type": "str",
+                    "description": "Selected tank type for the experiment"
+                },
+                "environment": {
+                    "type": "str",
+                    "description": "Name of the added environment"
+                }
+            }
+        },
+        "remove_environment": {
+            "description": "N/A",
+            "event_data": {
+                "tank_type": {
+                    "type": "str",
+                    "description": "Selected tank type for the experiment"
+                },
+                "environment": {
+                    "type": "str",
+                    "description": "Name of the removed environment"
+                }
+            }
+        },
+        "add_critter": {
+            "description": "N/A",
+            "event_data": {
+                "tank_type": {
+                    "type": "str",
+                    "description": "Selected tank type for the experiment"
+                },
+                "environment": {
+                    "type": "str",
+                    "description": "Selected environment for the experiment"
+                },
+                "critter": {
+                    "type": "str",
+                    "description": "Name of the critter added to the tank"
+                }
+            }
+        },
+        "remove_critter": {
+            "description": "N/A",
+            "event_data": {
+                "tank_type": {
+                    "type": "str",
+                    "description": "Selected tank type for the experiment"
+                },
+                "environment": {
+                    "type": "str",
+                    "description": "Selected environment for the experiment"
+                },
+                "critter": {
+                    "type": "str",
+                    "description": "Name of the critter removed from the tank"
+                }
+            }
+        },
+        "begin_experiment": {
+            "description": "N/A",
+            "event_data": {
+                "tank_type": {
+                    "type": "str",
+                    "description": "Selected tank type for the experiment"
+                },
+                "environment": {
+                    "type": "str",
+                    "description": "Selected environment for the experiment"
+                },
+                "critters": {
+                    "type": "str",
+                    "description": "Comma separated list of all critters added to the tank"
+                }
+            }
+        },
+        "end_experiment": {
+            "description": "N/A",
+            "event_data": {
+                "tank_type": {
+                    "type": "str",
+                    "description": "Selected tank type for the experiment"
+                },
+                "environment": {
+                    "type": "str",
+                    "description": "Selected environment for the experiment"
+                },
+                "critters": {
+                    "type": "str",
+                    "description": "Comma separated list of all critters added to the tank"
+                }
+            }
+        },
+        "begin_argument": {
+            "description": "N/A",
+            "event_data": {
+            }
+        },
+        "fact_submitted": {
+            "description": "N/A",
+            "event_data": {
+                "fact_id": {
+                    "type": "str",
+                    "description": "ID of the submitted fact"
+                }
+            }
+        },
+        "fact_rejected": {
+            "description": "N/A",
+            "event_data": {
+                "fact_id": {
+                    "type": "str",
+                    "description": "ID of the rejected fact"
+                }
+            }
+        },
+        "leave_argument": {
+            "description": "N/A",
+            "event_data": {
+            }
+        },
+        "complete_argument": {
+            "description": "N/A",
+            "event_data": {
+            }
+        }
+    },
+    "detectors": {
+        "per_count": {},
+        "aggregate": {
+            "CollectFactNoJob": {
+                "type": "CollectFactNoJob",
+                "enabled": true,
+                "description": "Triggers an event when a player collects a fact while not actively working on a job"
+            },
+            "DiveSiteNoEvidence": {
+                "type": "DiveSiteNoEvidence",
+                "enabled": true,
+                "threshold": 30,
+                "description": "Triggers an event when a player has gone sufficiently long at a dive site without uncovering new evidence"
+            },
+            "EchoRoomChange": {
+                "type": "EchoRoomChange",
+                "enabled": false,
+                "description": "Triggers an event when a player changes rooms."
+            },
+            "HintAndLeave": {
+                "type": "HintAndLeave",
+                "enabled": true,
+                "description": "",
+                "threshold": 30
+            },
+            "Idle": {
+                "type": "Idle",
+                "enabled": true,
+                "description": "",
+                "idle_level": 30
+            },
+            "SceneChangeFrequently": {
+                "type": "SceneChangeFrequently",
+                "enabled": true,
+                "description": "",
+                "threshold": 30
+            },
+            "TwoHints": {
+                "type": "TwoHints",
+                "enabled": true,
+                "description": "",
+                "threshold": 30
+            }
+        }
+    },
+    "features": {
+        "per_count": {
+            "JobActiveTime": {
+                "enabled": true,
+                "type": "JobActiveTime",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Time spent with job as the active job",
+                "return_type": "timedelta"
+            },
+            "JobArgumentationTime": {
+                "enabled": true,
+                "type": "JobArgumentationTime",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Time spent in argumentation during a job",
+                "return_type": "timedelta"
+            },
+            "JobCompletionTime": {
+                "enabled": true,
+                "type": "JobCompletionTime",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Time taken to complete a given job",
+                "return_type": "timedelta"
+            },
+            "JobDiveSitesCount": {
+                "enabled": true,
+                "type": "JobDiveSitesCount",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Number of dive sites visited during a job",
+                "return_type": "int"
+            },
+            "JobDiveTime": {
+                "enabled": true,
+                "type": "JobDiveTime",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Time spent diving during a job",
+                "return_type": "timedelta"
+            },
+            "JobExperimentationTime": {
+                "enabled": true,
+                "type": "JobExperimentationTime",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Time spent in experimentation during a job",
+                "return_type": "timedelta"
+            },
+            "JobModelingTime": {
+                "enabled": true,
+                "type": "JobModelingTime",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Time spent in modeling during a job",
+                "return_type": "timedelta"
+            },
+            "JobGuideCount": {
+                "enabled": true,
+                "type": "JobGuideCount",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Number of times player talked with guide during a job",
+                "return_type": "int"
+            },
+            "JobHelpCount": {
+                "enabled": true,
+                "type": "JobHelpCount",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Number of times player asked for help during a job",
+                "return_type": "int",
+                "subfeatures": {
+                    "ByTask": {
+                        "description": "Help counts leading up to each completed task",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "JobLocationChanges": {
+                "enabled": true,
+                "type": "JobLocationChanges",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Number of times player changed scenes or rooms",
+                "return_type": "int",
+                "subfeatures": {
+                    "ByTask": {
+                        "description": "Change counts leading up to each completed task",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "JobTasksCompleted": {
+                "enabled": true,
+                "type": "JobTasksCompleted",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Number of tasks completed for a given job",
+                "return_type": "int"
+            },
+            "JobsAttempted": {
+                "type": "JobsAttempted",
+                "enabled": true,
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Subfeatures for number of job starts and completes, percent complete, and avg/std time to complete",
+                "subfeatures": {
+                    "job-name": {
+                        "description": "String name for a job",
+                        "return_type": "string"
+                    },
+                    "num-starts": {
+                        "description": "Number of accept_job events for a given job id",
+                        "return_type": "int"
+                    },
+                    "num-completes": {
+                        "description": "Number of complete_job events for a given job id",
+                        "return_type": "int"
+                    },
+                    "percent-complete": {
+                        "description": "Percent of jobs which were accepted and completed",
+                        "return_type": "float"
+                    },
+                    "avg-time-per-attempt": {
+                        "description": "Average time taken from accepting to completing/leaving a job",
+                        "return_type": "float"
+                    },
+                    "std-dev-per-attempt": {
+                        "description": "Standard deviation of time taken on a job",
+                        "return_type": "float"
+                    },
+                    "job-difficulties": {
+                        "description": "Difficulty of experimentation, modeling, and argumentation phases in the job",
+                        "return_type": "dict"
+                    }
+                }
+            },
+            "SyncCompletionTime": {
+                "enabled": true,
+                "type": "SyncCompletionTime",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Time taken to achieve 100% sync in a simulation",
+                "return_type": "timedelta"
+            }
+        },
+        "aggregate": {
+            "ActiveJobs": {
+                "enabled": false,
+                "type": "ActiveJobs",
+                "description": "Count of players who left off on each job.",
+                "return_type": "dict"
+            },
+            "ActiveTime": {
+                "enabled": true,
+                "type": "ActiveTime",
+                "return_type": "timedelta"
+            },
+            "EventList": {
+                "enabled": false,
+                "type": "EventList",
+                "description": "List of key events that happened in a player's session(s)",
+                "return_type": "list"
+            },
+            "JobsCompleted": {
+                "enabled": true,
+                "type": "JobsCompleted",
+                "description": "List of completed jobs for a player",
+                "return_type": "list[str]"
+            },
+            "PlayerSummary": {
+                "enabled": false,
+                "type": "PlayerSummary",
+                "description": "Summary of player statistics (active session time, jobs completed, number of sessions)",
+                "return_type": "dict"
+            },
+            "PopulationSummary": {
+                "enabled": false,
+                "type": "PopulationSummary",
+                "description": "Summary of population statistics (active session time, average jobs completed count, average session count)",
+                "return_type": "dict"
+            },
+            "SessionDiveSitesCount": {
+                "enabled": true,
+                "type": "SessionDiveSitesCount",
+                "description": "Time spent playing in a given session",
+                "return_type": "int"
+            },
+            "SessionDuration": {
+                "enabled": true,
+                "type": "SessionDuration",
+                "description": "Time spent playing in a given session",
+                "return_type": "timedelta"
+            },
+            "SessionGuideCount": {
+                "enabled": true,
+                "type": "SessionGuideCount",
+                "description": "Number of times player talked with the guide throughout the session",
+                "return_type": "int"
+            },
+            "SessionHelpCount": {
+                "enabled": true,
+                "type": "SessionHelpCount",
+                "description": "Number of times player clicked the help button throughout the session",
+                "return_type": "int"
+            },
+            "SessionID": {
+                "enabled": true,
+                "type": "SessionID",
+                "description": "The player's session ID number for this play session",
+                "return_type": "str"
+            },
+            "SessionJobsCompleted": {
+                "enabled": true,
+                "type": "SessionJobsCompleted",
+                "description": "Number of jobs completed in a given session",
+                "return_type": "int"
+            },
+            "SwitchJobsCount": {
+                "enabled": true,
+                "type": "SwitchJobsCount",
+                "description": "Number of times player switched jobs before completion",
+                "return_type": "int"
+            },
+            "TopJobCompletionDestinations": {
+                "enabled": true,
+                "type": "TopJobCompletionDestinations",
+                "description": "Top five most accepted jobs after previously completing a given job",
+                "return_type": "str"
+            },
+            "TopJobSwitchDestinations": {
+                "enabled": true,
+                "type": "TopJobSwitchDestinations",
+                "description": "Top five most accepted jobs after switching away from a given job",
+                "return_type": "str"
+            },
+            "TotalArgumentationTime": {
+                "enabled": true,
+                "type": "TotalArgumentationTime",
+                "description": "Total time spent in argumentation",
+                "return_type": "timedelta"
+            },
+            "EchoSessionID": {
+                "enabled": false,
+                "type": "EchoSessionID",
+                "description": "Test of second-order features.",
+                "return_type": "str"
+            },
+            "TotalDiveTime": {
+                "enabled": true,
+                "type": "TotalDiveTime",
+                "description": "Total time spent in dive sites",
+                "return_type": "timedelta"
+            },
+            "TotalExperimentationTime": {
+                "enabled": true,
+                "type": "TotalExperimentationTime",
+                "description": "Total time spent in experimentation",
+                "return_type": "timedelta"
+            },
+            "UserAvgSessionDuration": {
+                "enabled": true,
+                "type": "UserAvgSessionDuration",
+                "description": "Average session duration for a user.",
+                "return_type": "float"
+            },
+            "UserTotalSessionDuration": {
+                "enabled": true,
+                "type": "UserTotalSessionDuration",
+                "description": "Total duration of all sessions for a user.",
+                "return_type": "timedelta"
+            }
+        }
+    },
+    "config": {
+        "SUPPORTED_VERS": [
+            1
+        ]
+    }
+}

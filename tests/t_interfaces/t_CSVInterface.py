@@ -1,6 +1,7 @@
 # import libraries
 from datetime import datetime
 from pathlib import Path
+from typing import Final, List
 from unittest import TestCase
 from zipfile import ZipFile
 # import locals
@@ -8,12 +9,11 @@ from ogd.core.interfaces.CSVInterface import CSVInterface
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 
 class t_CSVInterface(TestCase):
-
-    TEST_MIN_DATE = datetime(year=2021, month=2, day=1, hour= 0, minute=0, second=0)
-    TEST_MAX_DATE = datetime(year=2021, month=2, day=1, hour=10, minute=0, second=0)
-    ACTUAL_MIN_DATE = datetime(year=2021, month=2, day=1, hour=0, minute=10, second=43)
-    ACTUAL_MAX_DATE = datetime(year=2021, month=2, day=1, hour=19, minute=3, second=48)
-    TEST_SESSION_LIST = [str(sess) for sess in [21010101103505700,
+    TEST_MIN_DATE     : Final[datetime]  = datetime(year=2021, month=2, day=1, hour= 0, minute=0, second=0)
+    TEST_MAX_DATE     : Final[datetime]  = datetime(year=2021, month=2, day=1, hour=10, minute=0, second=0)
+    ACTUAL_MIN_DATE   : Final[datetime]  = datetime(year=2021, month=2, day=1, hour=0, minute=10, second=43)
+    ACTUAL_MAX_DATE   : Final[datetime]  = datetime(year=2021, month=2, day=1, hour=19, minute=3, second=48)
+    TEST_SESSION_LIST : Final[List[str]] = [str(sess) for sess in [21010101103505700,
     21000023305455852, 21010115412037270, 21000023421893364, 21010117132485776, 21010118441143000, 21010111452962156, 21000418535922490, 21010108270998280,
     21010108335648930, 21010108333377450, 21010108373813452, 21000021135436150, 21010108411540216, 21010108533392384, 21010114062116830, 21010109070574484,
     21010109100621570, 21010109103008504, 21010109130844224, 21010109115355664, 21010109145083300, 21010109152191600, 21010109162788190, 21010109191736536,
