@@ -34,7 +34,7 @@ class AverageSessionTime(Feature):
                 self._play_time += feature.FeatureValues[0]
                 self._session_count += 1
             except TypeError as err:
-                Logger.Log(f"TotalPlayTime for player {feature.PlayerID} got non-timedelta value of {feature.FeatureValues[0]}")
+                self.WarningMessage(f"TotalPlayTime for player {feature.PlayerID} got non-timedelta value of {feature.FeatureValues[0]}")
 
     def _getFeatureValues(self) -> List[Any]:
         return [self._play_time / self._session_count]
