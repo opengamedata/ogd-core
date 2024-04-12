@@ -22,6 +22,9 @@ class JobActiveTime(PerJobFeature):
             self._last_event_session = None
             self._last_event_name = None
             self._last_event_index = None
+            self._last_event_session = None
+            self._last_event_name = None
+            self._last_event_index = None
         else:
             raise NotImplementedError(f"Got invalid export mode of {self.ExtractionMode.name} in JobActiveTime!")
 
@@ -46,21 +49,7 @@ class JobActiveTime(PerJobFeature):
     def _updateFromEvent(self, event:Event) -> None:
         self._player_id = event.UserID
         if event.SessionID != self._session_id:
-<<<<<<< HEAD
             self._handleNewSession(event)
-=======
-            _old_sess = self._session_id
-            self._session_id = event.SessionID
-            # if we jumped to a new session, we only want to count time up to last event, then skip the time between sessions to new timestamp;
-            # but only if we had a previous session, i.e. this isn't the first event seen.
-            if _old_sess is not None:
-                # Logger.Log(f"JobActiveTime attempting to update total time for {event.UserID} ({_old_sess} -> {self._session_id}) following change in session, index={event.EventSequenceIndex}", logging.INFO)
-                self._updateTotalTime()
-                # Logger.Log("Done", logging.INFO)
-                self._last_start_time = event.timestamp
-                if event.Timestamp is None:
-                    self.WarningMessage(f"JobActiveTime received an initial event with Timestamp == None!")
->>>>>>> master
 
         if event.EventName == "accept_job":
             self._last_start_time = event.timestamp
@@ -85,20 +74,12 @@ class JobActiveTime(PerJobFeature):
             self._last_start_time = event.Timestamp
         # if we got an event earlier than last start, we are out of order
         elif self._last_start_time > event.Timestamp:
-<<<<<<< HEAD
-            Logger.Log(f"Got out-of-order events in JobActiveTime; event {event.UserID}:{event.SessionID}:{event.EventName}:{event.EventSequenceIndex} had timestamp {event.Timestamp} earlier than start event, with time {self._last_start_time}!", logging.WARN)
-=======
             self.WarningMessage(f"Got out-of-order events in JobActiveTime; event {event.EventName}:{event.EventSequenceIndex} had timestamp {event.Timestamp} earlier than start event, with time {self._last_start_time}!")
->>>>>>> master
             self._last_start_time = event.Timestamp
 
         # finally, update latest timestamp
         if self._last_event_time and self._last_event_time > event.Timestamp:
-<<<<<<< HEAD
-            Logger.Log(f"Got out-of-order events in JobActiveTime; event {event.UserID}:{event.SessionID}:{event.EventName}:{event.EventSequenceIndex} had timestamp {event.Timestamp} earlier than end event, with time {self._last_event_time} ({self._last_event_name}:{self._last_event_session}:{self._last_event_index})!", logging.WARN)
-=======
             self.WarningMessage(f"Got out-of-order events in SessionDuration; event {event.EventName}:{event.EventSequenceIndex} had timestamp {event.Timestamp} earlier than end event, with time {self._last_event_time}!")
->>>>>>> master
         else:
             self._last_event_time = event.timestamp
             self._last_event_session = event.SessionID
@@ -166,6 +147,17 @@ class JobActiveTime(PerJobFeature):
                     self._last_event_time = event.Timestamp
                 if event.Timestamp is None:
                     Logger.Log(f"JobActiveTime received an initial event with Timestamp == None!", logging.WARN)
+            # _old_sess = self._session_id
+            # self._session_id = event.SessionID
+            # # if we jumped to a new session, we only want to count time up to last event, then skip the time between sessions to new timestamp;
+            # # but only if we had a previous session, i.e. this isn't the first event seen.
+            # if _old_sess is not None:
+            #     # Logger.Log(f"JobActiveTime attempting to update total time for {event.UserID} ({_old_sess} -> {self._session_id}) following change in session, index={event.EventSequenceIndex}", logging.INFO)
+            #     self._updateTotalTime()
+            #     # Logger.Log("Done", logging.INFO)
+            #     self._last_start_time = event.timestamp
+            #     if event.Timestamp is None:
+            #         self.WarningMessage(f"JobActiveTime received an initial event with Timestamp == None!")
 
     def _updateTotalTime(self):
         if self._last_start_time:
