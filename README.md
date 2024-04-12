@@ -2,8 +2,8 @@
 
 This code pulls raw game data from a SQL database, BigQuery database, or export file; chooses appropiate features to extract based on the "game_id"; and writes results to a file for data mining.
 
-See http://fielddaylab.wisc.edu/opengamedata for exports of raw events and the features created by this code for a collection of education games.
-See https://www.youtube.com/watch?v=gelyDJjxIeg for a walkthorugh of the high-level code structure.
+See [http://fielddaylab.wisc.edu/opengamedata](http://fielddaylab.wisc.edu/opengamedata) for exports of raw events and the features created by this code for a collection of education games.
+See [https://www.youtube.com/watch?v=gelyDJjxIeg](https://www.youtube.com/watch?v=gelyDJjxIeg) for a walkthorugh of the high-level code structure.
 
 Please feel free to modify this code, add new features or games and share back to the authors. We will deploy improvements to the Open Game Data site.
 
@@ -16,7 +16,7 @@ Setup:
 
 Running Data Exports:  
 
-```
+```none
 usage: <python> main.py <cmd> [<args>]
 
 <python> is your python command.
@@ -49,27 +49,33 @@ usage: <python> main.py <cmd> [<args>]
          --file: specifies a file to export events or features
          --monthly: with this flag, specify dates by mm/yyyy instead of mm/dd/yyyy
 ```
+
 (you can see a similar printout directly from the system by running ```python3 main.py --help```)
 
 Example use:
-```
+
+```none
 python3 main.py export JOWILDER 1/1/2019 2/28/2019
 ```
+
 In the example above, all JOWILDER data from beginning of January to end of February (in 2019) is exported. This includes both the events and the processed session features.
 
-```
+```none
 python3 main.py export JOWILDER --monthly 1/2019
 ```
+
 In the example above, all JOWILDER data from the month of January 2019 is exported. This includes both the events and the processed session features.
 
-```
+```none
 python3 main.py export-events JOWILDER 1/1/2019 2/28/2019
 ```
+
 In the example above, only the events from the JOWILDER data during given date range are exported.
 
-```
+```none
 python3 main.py export-features JOWILDER 1/1/2019 2/28/2019
 ```
+
 In the example above, only the processed session/player/population features from the JOWILDER data during given date range are exported.
 
 <!-- ```

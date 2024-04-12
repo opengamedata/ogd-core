@@ -571,24 +571,8 @@
     },
     "features": {
         "per_count": {
-            "JobPriorComplete": {
-                "enabled": false,
-                "type": "JobPriorComplete",
-                "count": "level_range",
-                "prefix": "job",
-                "description": "",
-                "return_type": "list"
-            },
-            "JobPriorAttempt": {
-                "enabled": false,
-                "type": "JobPriorAttempt",
-                "count": "level_range",
-                "prefix": "job",
-                "description": "",
-                "return_type": "list"
-            },
             "JobActiveTime": {
-                "enabled": false,
+                "enabled": true,
                 "type": "JobActiveTime",
                 "count": "level_range",
                 "prefix": "job",
@@ -600,11 +584,17 @@
                 "type": "JobArgumentation",
                 "count": "level_range",
                 "prefix": "job",
-                "description": "Time spent in argumentation during a job",
-                "return_type": "timedelta"
+                "description": "Number of times the player entered the argumentation mechanic during a job",
+                "return_type": "timedelta",
+                "subfeatures": {
+                    "Time": {
+                        "description": "Time spent in argumentation during a job",
+                        "return_type": "timedelta"
+                    }
+                }
             },
             "JobCompletionTime": {
-                "enabled": false,
+                "enabled": true,
                 "type": "JobCompletionTime",
                 "count": "level_range",
                 "prefix": "job",
@@ -612,7 +602,7 @@
                 "return_type": "timedelta"
             },
             "JobDiveSitesCount": {
-                "enabled": false,
+                "enabled": true,
                 "type": "JobDiveSitesCount",
                 "count": "level_range",
                 "prefix": "job",
@@ -620,7 +610,7 @@
                 "return_type": "int"
             },
             "JobDiveTime": {
-                "enabled": false,
+                "enabled": true,
                 "type": "JobDiveTime",
                 "count": "level_range",
                 "prefix": "job",
@@ -632,16 +622,14 @@
                 "type": "JobExperimentation",
                 "count": "level_range",
                 "prefix": "job",
-                "description": "Time spent in experimentation during a job",
-                "return_type": "timedelta"
-            },
-            "JobModeling": {
-                "enabled": true,
-                "type": "JobModeling",
-                "count": "level_range",
-                "prefix": "job",
-                "description": "Time spent in modeling during a job",
-                "return_type": "timedelta"
+                "description": "Number of times the player entered the experimentation mechanic during a job",
+                "return_type": "timedelta",
+                "subfeatures": {
+                    "Time": {
+                        "description": "Time spent in experimentation during a job",
+                        "return_type": "timedelta"
+                    }
+                }
             },
             "JobGuideCount": {
                 "enabled": false,
@@ -679,8 +667,38 @@
                     }
                 }
             },
+            "JobModeling": {
+                "enabled": true,
+                "type": "JobModeling",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Number of times the player entered the modeling mechanic during a job",
+                "return_type": "timedelta",
+                "subfeatures": {
+                    "Time": {
+                        "description": "Time spent in modeling during a job",
+                        "return_type": "timedelta"
+                    }
+                }
+            },
+            "JobPriorComplete": {
+                "enabled": true,
+                "type": "JobPriorComplete",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "",
+                "return_type": "list"
+            },
+            "JobPriorAttempt": {
+                "enabled": true,
+                "type": "JobPriorAttempt",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "",
+                "return_type": "list"
+            },
             "JobTasksCompleted": {
-                "enabled": false,
+                "enabled": true,
                 "type": "JobTasksCompleted",
                 "count": "level_range",
                 "prefix": "job",
@@ -741,7 +759,7 @@
                 "return_type": "str"
             },
             "SyncCompletionTime": {
-                "enabled": false,
+                "enabled": true,
                 "type": "SyncCompletionTime",
                 "count": "level_range",
                 "prefix": "job",
@@ -751,7 +769,7 @@
         },
         "aggregate": {
             "ActiveJobs": {
-                "enabled": false,
+                "enabled": true,
                 "type": "ActiveJobs",
                 "description": "Count of players who left off on each job.",
                 "return_type": "dict"
@@ -759,6 +777,7 @@
             "ActiveTime": {
                 "enabled": false,
                 "type": "ActiveTime",
+                "description": "Total time spent actively playing",
                 "return_type": "timedelta"
             },
             "EventList": {
@@ -780,7 +799,7 @@
                 "return_type": "dict"
             },
             "PlayLocations": {
-                "enabled": true,
+                "enabled": false,
                 "type": "PlayLocations",
                 "description": "An indicator of whether play happened during normal school hours or not",
                 "return_type": "List[bool]",
@@ -798,15 +817,16 @@
                 "return_type": "dict"
             },
             "SessionDiveSitesCount": {
-                "enabled": false,
+                "enabled": true,
                 "type": "SessionDiveSitesCount",
                 "description": "Time spent playing in a given session",
                 "return_type": "int"
             },
             "SessionDuration": {
-                "enabled": false,
+                "enabled": true,
                 "type": "SessionDuration",
                 "description": "Time spent playing in a given session",
+                "threshold": 60,
                 "return_type": "timedelta"
             },
             "SessionID": {
@@ -816,7 +836,7 @@
                 "return_type": "str"
             },
             "SwitchJobsCount": {
-                "enabled": false,
+                "enabled": true,
                 "type": "SwitchJobsCount",
                 "description": "Number of times player switched jobs before completion",
                 "return_type": "int"
@@ -834,37 +854,37 @@
                 "return_type": "str"
             },
             "TotalArgumentationTime": {
-                "enabled": false,
+                "enabled": true,
                 "type": "TotalArgumentationTime",
                 "description": "Total time spent in argumentation",
                 "return_type": "timedelta"
             },
             "TotalDiveTime": {
-                "enabled": false,
+                "enabled": true,
                 "type": "TotalDiveTime",
                 "description": "Total time spent in dive sites",
                 "return_type": "timedelta"
             },
             "TotalExperimentationTime": {
-                "enabled": false,
+                "enabled": true,
                 "type": "TotalExperimentationTime",
                 "description": "Total time spent in experimentation",
                 "return_type": "timedelta"
             },
             "TotalModelingTime": {
-                "enabled": false,
+                "enabled": true,
                 "type": "TotalModelingTime",
                 "description": "Total time spent in modeling",
                 "return_type": "timedelta"
             },
             "TotalGuideCount": {
-                "enabled": false,
+                "enabled": true,
                 "type": "TotalGuideCount",
                 "description": "Number of times player talked with the guide throughout the session",
                 "return_type": "int"
             },
             "TotalHelpCount": {
-                "enabled": false,
+                "enabled": true,
                 "type": "TotalHelpCount",
                 "description": "Number of times player clicked the help button throughout the session",
                 "return_type": "int"
@@ -876,13 +896,13 @@
                 "return_type": "timedelta"
             },
             "UserAvgSessionDuration": {
-                "enabled": false,
+                "enabled": true,
                 "type": "UserAvgSessionDuration",
                 "description": "Average session duration for a user.",
                 "return_type": "float"
             },
             "UserTotalSessionDuration": {
-                "enabled": false,
+                "enabled": true,
                 "type": "UserTotalSessionDuration",
                 "description": "Total duration of all sessions for a user.",
                 "return_type": "timedelta"

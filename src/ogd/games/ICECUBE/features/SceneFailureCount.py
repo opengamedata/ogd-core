@@ -3,9 +3,9 @@ import logging
 from typing import Any, Dict, List, Optional
 # import locals
 from ogd.core.utils.Logger import Logger
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.Feature import Feature
-from ogd.core.extractors.features.SessionFeature import SessionFeature
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
@@ -13,7 +13,7 @@ scenes_map = {"ICE":0, "VOYAGER":0, "NOTHING":0, "EXTREME":0, "EARTH":0, "CREDIT
 
 class SceneFailureCount(SessionFeature):
 
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._failure_count : int = 0
         self._scene_started = False
@@ -24,15 +24,15 @@ class SceneFailureCount(SessionFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         # return ["scene_change", "failed"]
         return ["scene_end", "scene_begin"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         # if event.EventName == "scene_change":
         #     self._scene_list.append(event.event_data.get("scene_name"))
         # elif event.EventName == "failed":
@@ -41,7 +41,7 @@ class SceneFailureCount(SessionFeature):
         self._game_state.append(event.game_state)
         # return
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

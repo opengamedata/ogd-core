@@ -4,8 +4,8 @@ from collections import defaultdict
 from typing import Any, List
 # import locals
 from ogd.core.utils.Logger import Logger
-from ogd.core.extractors.features.Feature import Feature
-from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
@@ -13,7 +13,7 @@ from ogd.core.schemas.FeatureData import FeatureData
 
 class TopJobCompletionDestinations(Feature):
 
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._current_session_id = None
         self._current_mission_id = None
@@ -22,14 +22,14 @@ class TopJobCompletionDestinations(Feature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["checkpoint"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         session_id = event.SessionID
         checkpoint = event.EventData["status"]
         mission_id = event.EventData["mission_id"]
@@ -57,7 +57,7 @@ class TopJobCompletionDestinations(Feature):
 
         self._current_session_id = session_id
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

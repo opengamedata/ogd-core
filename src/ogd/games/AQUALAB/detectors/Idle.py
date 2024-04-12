@@ -1,11 +1,11 @@
 # import standard libraries
 from datetime import datetime, timedelta
 from time import time
-from typing import Callable, List, Optional, Union
+from typing import Callable, Final, List, Optional, Union
 # import local files
-from ogd.core.extractors.detectors.Detector import Detector
-from ogd.core.extractors.detectors.DetectorEvent import DetectorEvent
-from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.generators.detectors.Detector import Detector
+from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 
@@ -15,17 +15,14 @@ class Idle(Detector):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    DEFAULT_IDLE_LEVEL = 30
+    DEFAULT_IDLE_LEVEL : Final[int] = 30
 
 
-    def __init__(self, params:ExtractorParameters, trigger_callback:Callable[[Event], None], idle_level:Optional[int]):
+    def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None], idle_level:Optional[int]):
         super().__init__(params=params, trigger_callback=trigger_callback)
         self._found = False
         self._sess_id = "Unknown"
-        self._player_id = "Unknown"
         self._last_action_time = None
-        self._app_version = "Unknown"
-        self._log_version = "Unknown"
         self._job_name = "Unknown"
         self._idle_level = 0
         self._idle_time: Optional[Union[float, timedelta]] = None
@@ -36,7 +33,7 @@ class Idle(Detector):
 
     # *** Implement abstract functions ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -44,7 +41,7 @@ class Idle(Detector):
         """
         return ["all_events"] # >>> fill in names of events this Feature should use for extraction. <<<
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         """_summary_
 
         :param event: _description_
@@ -68,12 +65,7 @@ class Idle(Detector):
             self._idle_time = self._idle_time / timedelta(seconds=1)
             self._idle_level = self._idle_threads / timedelta(seconds=1)
             self._sess_id = event.SessionID
-            self._player_id = event.UserID
-            self._time = event.Timestamp
-            self._app_version = event.AppVersion
-            self._log_version = event.LogVersion
             self._job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
-            self._sequence_index = event.EventSequenceIndex
         return
 
     def _trigger_condition(self) -> bool:
@@ -89,5 +81,11 @@ class Idle(Detector):
         :return: _description_
         :rtype: List[Any]
         """
-        ret_val : DetectorEvent = DetectorEvent(session_id=self._sess_id, app_id="AQUALAB", timestamp=self._time, event_name="Idle", event_data={"level" : self._idle_level, "time": self._idle_time, "job_name": self._job_name}, app_version=self._app_version, log_version=self._log_version, user_id=self._player_id, event_sequence_index=self._sequence_index)
+        _event_data = {
+            "level" : self._idle_level,
+            "time": self._idle_time,
+            "job_name": self._job_name
+        }
+        ret_val : DetectorEvent = self.GenerateEvent(session_id=self._sess_id, app_id="AQUALAB",
+                                                     event_name="Idle", event_data=_event_data)
         return ret_val

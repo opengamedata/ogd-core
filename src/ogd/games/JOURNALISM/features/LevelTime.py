@@ -2,17 +2,17 @@ import logging
 from datetime import datetime, timedelta
 from ogd.games.JOURNALISM.features import PlayTime
 from ogd.core.schemas import Event
-from typing import Any, List, Optional
+from typing import Any, Final, List, Optional
 # import locals
 from ogd.core.utils.Logger import Logger
-from ogd.core.extractors.features.PerLevelFeature import PerLevelFeature
-from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 
 class LevelTime(PerLevelFeature):
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         PerLevelFeature.__init__(self, params=params)
         self._begin_times    : List[datetime] = []
         self._complete_times : List[datetime] = []
@@ -22,11 +22,11 @@ class LevelTime(PerLevelFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["start_level", "complete_level"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["PlayTime"]
 
     def _validateEventCountIndex(self, event: Event):
@@ -34,7 +34,7 @@ class LevelTime(PerLevelFeature):
         
 
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.EventName == "start_level":
             self._begin_times.append(event.Timestamp)
         elif event.EventName == "complete_level":
@@ -42,8 +42,8 @@ class LevelTime(PerLevelFeature):
         else:
             Logger.Log(f"LevelTime received an event which was not a BEGIN or a COMPLETE!", logging.WARN)
 
-    def _extractFromFeatureData(self, feature:FeatureData):
-        IDLE_TIME_INDEX = 2 # Idle time should be at index 2 for the PlayTime feature
+    def _updateFromFeatureData(self, feature:FeatureData):
+        IDLE_TIME_INDEX : Final[int] = 2 # Idle time should be at index 2 for the PlayTime feature
         if feature.FeatureType == "PlayTime":
             self._idle_time = feature.FeatureValues[IDLE_TIME_INDEX]
 

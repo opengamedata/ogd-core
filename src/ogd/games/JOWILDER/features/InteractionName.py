@@ -1,28 +1,26 @@
 # import libraries
 import json
 import logging
+from pathlib import Path
 from typing import Any, Dict, List, Optional
-from ogd.core.extractors.Extractor import ExtractorParameters
 # import local files
-from ogd.core.extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.schemas.Event import Event
 from ogd.games.JOWILDER import Jowilder_Enumerators as je
+from ogd.core.utils.utils import loadJSONFile
 from ogd.core.utils.Logger import Logger
 
-try:
-    with open(file="./games/JOWILDER/interaction_metadata.json") as f:
-        METADATA_RAW : Dict[str, Dict[str, Any]] = json.load(f)
-        METADATA     : Dict[int, Dict[str, Any]] = {je.fqid_to_enum.get(v.get("fqid", "FQID NOT FOUND"), -1): v for v in METADATA_RAW.values()}
-except FileNotFoundError as err:
-    Logger.Log(f"Could not find ./games/JOWILDER/interaction_metadata.json")
-    METADATA_RAW = {}
-    METADATA     = {}
+interaction_path = Path('.') / "ogd" / "games" / "JOWILDER"
+METADATA_RAW : Dict[str, Dict[str, Any]] = loadJSONFile(filename="interaction_metadata.json", path=interaction_path, search_in_src=True)
+METADATA     : Dict[int, Dict[str, Any]] = {je.fqid_to_enum.get(v.get("fqid", "FQID NOT FOUND"), -1): v for v in METADATA_RAW.values()}
+Logger.Log(f"JoWilder InteractionName loaded {len(METADATA.keys())} metadata items.")
 
 class InteractionName(PerCountFeature):
 
-    def __init__(self, params=ExtractorParameters):
+    def __init__(self, params=GeneratorParameters):
         super().__init__(params=params)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -30,17 +28,17 @@ class InteractionName(PerCountFeature):
         return False
 
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return [] 
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

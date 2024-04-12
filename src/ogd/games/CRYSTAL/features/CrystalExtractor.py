@@ -6,8 +6,8 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 ## import local files
 from ogd.core.utils.Logger import Logger
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.legacy.LegacyFeature import LegacyFeature
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.legacy.LegacyFeature import LegacyFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
@@ -29,7 +29,7 @@ class CrystalExtractor(LegacyFeature):
     #                    table assiciated with this game is structured. 
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, params:ExtractorParameters, game_schema:GameSchema, session_id:str):
+    def __init__(self, params:GeneratorParameters, game_schema:GameSchema, session_id:str):
         super().__init__(params=params, game_schema=game_schema, session_id=session_id)
         # Define custom private data.
         self._start_times: typing.Dict       = {}
@@ -49,7 +49,7 @@ class CrystalExtractor(LegacyFeature):
     #                                 "complex data" already parsed from JSON.
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
-    def _extractFromEvent(self, event:Event):
+    def _updateFromEvent(self, event:Event):
         # put some data in local vars, for readability later.
         level = event.GameState['level']
         event_client_time = event.Timestamp

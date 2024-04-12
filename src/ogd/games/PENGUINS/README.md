@@ -214,6 +214,7 @@ When a player performs a waddle movement to move their penguin avatar forward
 | rotY | float | The Y-component of the rotation when the waddle ended. | |
 | rotZ | float | The Z-component of the rotation when the waddle ended. | |
 | rotW | float | The W-component of the rotation when the waddle ended. | |
+| source | enum(BUTTON, WADDLE) | Indicator for whether the player waddled by pressing a button, or by making the 'waddle' gesture with their head. | |
 
 #### Other Elements
 
@@ -664,7 +665,19 @@ The duration of time a player played in a given region of the game.
 
 **WaddlePerRegion** : *int*, *Per-count feature*   
 The number of times a player waddled in a given region of the game.  
+  
 
+## Other Elements  
+
+Other (potentially non-standard) elements specified in the game's schema, which may be referenced by event/feature processors.  
+
+game_state : {'seconds_from_launch': {'type': 'float', 'description': 'The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*.'}, 'pos': {'type': 'List[float]', 'description': 'The current position of the player headset at the moment the event occurred, formatted as [x, y, z]'}, 'rot': {'type': 'List[float]', 'description': 'The current orientation of the player headset at the moment the event occurred, formatted as [x, y, z, w]'}, 'has_rock': {'type': 'bool', 'description': 'Whether the player was holding a rock in their beak at the time the event occurred.'}}  
+
+### Other Ranges  
+
+Extra ranges specified in the game's schema, which may be referenced by event/feature processors.  
+
+level_range : range(1, 6)
 
 No changelog prepared
 

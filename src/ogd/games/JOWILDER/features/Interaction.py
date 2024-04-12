@@ -4,9 +4,9 @@ from datetime import datetime, timedelta
 from os import environ
 from sqlite3 import Timestamp
 from typing import Any, List, Optional
-from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 # import local files
-from ogd.core.extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.games.JOWILDER import Jowilder_Enumerators as je
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
@@ -90,7 +90,7 @@ class Interaction(PerCountFeature):
     :type Feature: _type_
     """
 
-    def __init__(self, params: ExtractorParameters):
+    def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self._interaction : Optional[int] = None
         self._interaction_time : timedelta = timedelta(0)
@@ -112,13 +112,13 @@ class Interaction(PerCountFeature):
 
         
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         # NOTE: Count all the click events
         return [f"CUSTOM.{i}" for i in range(3,12)] + ["CUSTOM.1"]
         # CUSTOM.X, X in [3,12) = ['navigate_click','notebook_click', 'map_click', 'notification_click', 'object_click', 'observation_click', 'person_click', 'cutscene_click', 'wildcard_click']
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -126,7 +126,7 @@ class Interaction(PerCountFeature):
         """
         return []
 
-    def _extractFromEvent(self, event: Event) -> None:
+    def _updateFromEvent(self, event: Event) -> None:
         if not clicks_track.GameStart:
             if event.EventName == "CUSTOM.1":
                 clicks_track.startGame(event)
@@ -165,7 +165,7 @@ class Interaction(PerCountFeature):
         
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

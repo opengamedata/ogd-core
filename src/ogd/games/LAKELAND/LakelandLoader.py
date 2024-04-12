@@ -2,10 +2,10 @@
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
 from . import features
-from ogd.core.extractors.detectors.Detector import Detector
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.legacy.LegacyLoader import LegacyLoader
-from ogd.core.extractors.features.Feature import Feature
+from ogd.core.generators.detectors.Detector import Detector
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.legacy.LegacyLoader import LegacyLoader
+from ogd.core.generators.extractors.Feature import Feature
 from ogd.games.LAKELAND.features.LakelandExtractor import LakelandExtractor
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -15,10 +15,10 @@ class LakelandLoader(LegacyLoader):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
         return LakelandExtractor(params=extractor_params, game_schema=self._game_schema, session_id=self._session_id)
 
-    def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
+    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         raise NotImplementedError(f"'{detector_type}' is not a valid feature for Lakeland.")
 
     @staticmethod

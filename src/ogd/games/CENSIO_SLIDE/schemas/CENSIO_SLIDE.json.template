@@ -1,0 +1,298 @@
+{
+   "enums": {
+      "BlockType": [ "WIRE", "POWER", "TRANSISTOR" ],
+      "MovementConstraint": [ "NO_ROTATE", "NO_VERTICAL", "NO_HORIZONTAL" ]
+   },
+
+   "game_state": {
+      "seconds_from_launch": {
+         "type": "float",
+         "description": "The number of seconds of game time elapsed since the game was launched."
+      },
+      "level": {
+         "type": "int",
+         "description": "The current level the player is in."
+      },
+      "move_count": {
+         "type": "int",
+         "description": "The number of moves the player has made on the current level."
+      },
+      "level_max_moves": {
+         "type": "int",
+         "description": "The maximum number of moves allowed in the current level."
+      },
+      "board": {
+         "type" : "N/A",
+         "details" : {
+            "N/A" : "N/A"
+         },
+         "description" : "TODO - Placeholder for some representation of the board state."
+      }
+   },
+
+   "events": {
+      "session_start": {
+         "description": "When the app is started and the gameplay session is assigned a session ID",
+         "event_data": {}
+      },
+      "game_start": {
+         "description": "When the player starts a new game (at present, this happens automatically at launch, but in the future the player may launch a new game from a menu).",
+         "event_data": {}
+      },
+      "level_menu_displayed": {
+         "description": "When the system displays a list of the game's levels.",
+         "event_data": {
+            "unlocked_levels" : {
+               "type":"List[Dict]",
+               "details" : {
+                  "level_id" : "int",
+                  "level_max_moves" : "int",
+                  "best_score" : "int | null"
+               },
+               "description":"A list of all currently-unlocked levels, each indicating the level number, max moves allowed, and the player's best score, or null if unplayed."
+            },
+            "locked_levels" : {
+               "type":"List[Dict]",
+               "details" : {
+                  "level_id" : "int",
+                  "level_max_moves" : "int"
+               },
+               "description":"A list of all currently-locked levels, each indicating the level number and max moves allowed."
+            }
+         }
+      },
+      "level_tier_unlocked": {
+         "description": "When the player completes a tier of levels, and the system shows the next tier being unlocked.",
+         "event_data": {
+            "unlocked_levels" : {
+               "type":"List[Dict]",
+               "details" : {
+                  "level_id" : "int",
+                  "level_max_moves" : "int"
+               },
+               "description":"A list of the newly-unlocked levels, each indicating the level number and max moves allowed."
+            }
+         }
+      },
+      "click_select_level": {
+         "description": "When the player selects a level from the menu.",
+         "event_data": {
+            "level_id" : {
+               "type":"int",
+               "description":"The level number for the level."
+            },
+            "level_max_moves" : {
+               "type":"int",
+               "description":"The max number of moves allowed in the level."
+            },
+            "best_score" : {
+               "type":"int | null",
+               "description":"The player's best score on the level, or null if they have not previously played the level."
+            }
+         }
+      },
+      "click_reset": {
+         "description": "When the player clicks the button to reset the current puzzle.",
+         "event_data": {
+         }
+      },
+      "click_confirm_reset": {
+         "description": "When the player clicks the button to confirm they want to reset the current puzzle.",
+         "event_data": {
+         }
+      },
+      "click_cancel_reset": {
+         "description": "When the player clicks the button to cancel resetting the current puzzle.",
+         "event_data": {
+         }
+      },
+      "select_block": {
+         "description": "When the player selects a level from the menu.",
+         "event_data": {
+            "block" : {
+               "type":"TBD",
+               "description":"TODO - Placeholder for some representation of an individual block."
+            },
+            "position" : {
+               "type":"List[int]",
+               "description":"The board coordinates of the selected block's anchor point."
+            },
+            "is_connected" : {
+               "type":"bool",
+               "description":"Indicator for whether the selected block is currently connected to power (i.e. whether the wire is green or red)."
+            }
+         }
+      },
+      "place_block": {
+         "description": "When the player moves the selected block to a new position.",
+         "event_data": {
+            "block" : {
+               "type":"TBD",
+               "description":"TODO - Placeholder for some representation of an individual block."
+            },
+            "position" : {
+               "type":"List[int]",
+               "description":"The board coordinates at which the selected block's anchor point was placed."
+            },
+            "is_connected" : {
+               "type":"bool",
+               "description":"Indicator for whether the block is now connected to power (i.e. whether the wire is green or red)."
+            },
+            "new_move_count" : {
+               "type":"bool",
+               "description":"The total moves the player has made on the current puzzle, after placing the block."
+            }
+         }
+      },
+      "rotate_block": {
+         "description": "When the player clicks to rotate a block to a new orientation.",
+         "event_data": {
+            "block" : {
+               "type":"TBD",
+               "description":"TODO - Placeholder for some representation of an individual block."
+            },
+            "old_orientation" : {
+               "type":"int",
+               "description":"The orientation of the block before rotation, relative to its default, in degrees."
+            },
+            "new_orientation" : {
+               "type":"int",
+               "description":"The orientation of the block after being rotated, relative to its default, in degrees."
+            },
+            "is_connected" : {
+               "type":"bool",
+               "description":"Indicator for whether the block is now connected to power (i.e. whether the wire is green or red)."
+            },
+            "new_move_count" : {
+               "type":"bool",
+               "description":"The total moves the player has made on the current puzzle, after placing the block."
+            }
+         }
+      },
+      "block_destinations_highlighted": {
+         "description": "When the system displays higlighting on the puzzle board for where the currently-selected block may be placed.",
+         "event_data": {
+            "highlighted_spaces" : {
+               "type":"List[List]",
+               "description":"A list of board coordinates, each indicating a highlighted space on the puzzle board."
+            }
+         }
+      },
+      "puzzle_solved": {
+         "description": "When the puzzle enters the 'solved' state after the player has moved all pieces to complete the circuit.",
+         "event_data": {
+         }
+      },
+      "puzzle_solution_lost": {
+         "description": "When the player makes a move after previously solving the puzzle, taking the puzzle out of the 'solved' state.",
+         "event_data": {
+         }
+      },
+      "click_complete_level": {
+         "description": "When the player clicks the button to complete the level, when the puzzle is in the 'solved' state.",
+         "event_data": {
+         }
+      },
+      "click_quit_level": {
+         "description": "When the player clicks the button to quit the current level.",
+         "event_data": {
+         }
+      },
+      "click_request_hint": {
+         "description": "TODO - Placeholder for when hinting is implemented in the game.",
+         "event_data": {
+         }
+      },
+      "select_hint_block": {
+         "description": "TODO - Placeholder for when hinting is implemented in the game.",
+         "event_data": {
+         }
+      },
+      "block_hint_displayed": {
+         "description": "TODO - Placeholder for when hinting is implemented in the game.",
+         "event_data": {
+         }
+      },
+      "start_survey": {
+         "description": "When the player enters into a survey after a level",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            }
+         }
+      },
+      "survey_item_displayed": {
+         "description": "When the system displays a multi-choice (i.e. select one) survey item.",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            },
+            "item_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey item."
+            },
+            "prompt" : {
+               "type":"str",
+               "description":"The text content of the item prompt."
+            },
+            "choices" : {
+               "type":"List[str]",
+               "description":"The list of possible choices for the survey item."
+            }
+         }
+      },
+      "select_survey_response": {
+         "description": "When the player clicks on a choice in a multi-choice survey item, selecting the choice.",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            },
+            "item_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey item."
+            },
+            "choice_value" : {
+               "type":"int",
+               "description":"The index of the selected choice among the available choices, or the value (if the multi-choice item uses a Likert scale or similar)."
+            },
+            "choice_string" : {
+               "type":"str",
+               "description":"The text content of the selected choice."
+            }
+         }
+      },
+      "submit_survey_response": {
+         "description": "When the player clicks to submit their choice on a multi-choice survey item.",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            },
+            "item_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey item."
+            },
+            "choice_value" : {
+               "type":"int",
+               "description":"The index of the submitted choice among the available choices, or the value (if the multi-choice item uses a Likert scale or similar)."
+            },
+            "choice_string" : {
+               "type":"str",
+               "description":"The text content of the submitted choice."
+            }
+         }
+      },
+      "end_survey": {
+         "description": "When the player finishes a survey",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            }
+         }
+      }
+   }
+}

@@ -4,14 +4,14 @@ import json
 from typing import Any, Dict, List, Optional
 # import locals
 from ogd.core.utils.Logger import Logger
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.schemas.Event import Event
 
 
 
 class PerRegionFeature(PerCountFeature):
-    def __init__(self, params:ExtractorParameters, region_map:List[Dict[str, Any]]):
+    def __init__(self, params:GeneratorParameters, region_map:List[Dict[str, Any]]):
         super().__init__(params=params)
         self._region_map = region_map
 

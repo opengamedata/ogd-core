@@ -2,17 +2,17 @@
 from datetime import timedelta
 from typing import Any, List
 # import locals
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.Feature import Feature
+from ogd.core.generators.extractors.Extractor import GeneratorParameters
+from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.schemas.Event import Event, EventSource
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.utils.Logger import Logger
-from ogd.core.extractors.features.PerCountFeature import PerCountFeature
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 
 class TotalArcticTime(Feature):
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self.prev_time = timedelta(0)
         self.total_time = timedelta(0)
@@ -25,14 +25,14 @@ class TotalArcticTime(Feature):
         return ["Seconds", "Active", "Active-Seconds", "Idle", "Idle-Seconds"]
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["begin_argument", "room_changed", "leave_argument", "complete_argument"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.app_version == 'Aqualab' or event.app_version == 'None':
             if event.EventSource == EventSource.GAME:
                 if self.on:
@@ -58,7 +58,7 @@ class TotalArcticTime(Feature):
                         self.on = True
                 self.prev_time = event.Timestamp
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

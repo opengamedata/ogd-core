@@ -2,8 +2,8 @@
 from datetime import timedelta
 from typing import Any, List, Optional
 # import locals
-from ogd.core.extractors.features.Feature import Feature
-from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
@@ -12,20 +12,20 @@ from ogd.core.schemas.FeatureData import FeatureData
 class MissionSonarTimeToComplete(Feature):
     
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._sonar_start_time = None
         self._time = timedelta(0)
 
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["sonar_start", "sonar_exit"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.EventName == "sonar_start":
             self._sonar_start_time = event.Timestamp
         elif event.EventName == "sonar_complete":
@@ -33,7 +33,7 @@ class MissionSonarTimeToComplete(Feature):
                 self._time += (event.Timestamp - self._sonar_start_time).total_seconds() # TODO : maybe see if we should add timedeltas and convert to float at end?
                 self._sonar_start_time = None
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

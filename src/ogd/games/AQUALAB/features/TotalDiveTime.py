@@ -2,15 +2,15 @@
 from datetime import timedelta
 from typing import Any, List
 # import locals
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.Feature import Feature
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.schemas.Event import Event, EventSource
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 
 class TotalDiveTime(Feature):
     
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self.prev_time = timedelta(0)
         self.total_time = timedelta(0)
@@ -21,14 +21,14 @@ class TotalDiveTime(Feature):
         return ["Seconds", "Active", "Active-Seconds", "Idle", "Idle-Seconds"]
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["begin_dive", "scene_changed", "end_dive"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.EventSource == EventSource.GAME:
             if self.on:
                 self.total_time += (event.Timestamp - self.prev_time)
@@ -41,7 +41,23 @@ class TotalDiveTime(Feature):
                     self.on = True
             self.prev_time = event.Timestamp
        
-    def _extractFromFeatureData(self, feature:FeatureData):
+        # if event.SessionID != self._session_id:
+        #     self._session_id = event.SessionID
+
+        #     if self._dive_start_time:
+        #         self._time += (self._prev_timestamp - self._dive_start_time).total_seconds()
+        #         self._dive_start_time = event.Timestamp
+
+        # if event.EventName == "begin_dive":
+        #     self._dive_start_time = event.Timestamp
+        # elif event.EventName == "scene_changed":
+        #     if self._dive_start_time is not None:
+        #         self._time += (event.Timestamp - self._dive_start_time).total_seconds()
+        #         self._dive_start_time = None
+
+        # self._prev_timestamp = event.Timestamp
+
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

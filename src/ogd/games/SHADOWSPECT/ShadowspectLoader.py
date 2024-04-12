@@ -2,11 +2,11 @@
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
 from . import features
-from ogd.core.extractors.detectors.Detector import Detector
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.ExtractorLoader import ExtractorLoader
-from ogd.core.extractors.features.Feature import Feature
-from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.generators.detectors.Detector import Detector
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
+from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.games.SHADOWSPECT.features import *
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -14,7 +14,7 @@ from ogd.core.schemas.games.GameSchema import GameSchema
 
 ## @class ShadowspectExtractor
 #  Extractor subclass for extracting features from Shadowspects game data.
-class ShadowspectLoader(ExtractorLoader):
+class ShadowspectLoader(GeneratorLoader):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
@@ -22,7 +22,7 @@ class ShadowspectLoader(ExtractorLoader):
     def _getFeaturesModule():
         return features
 
-    def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
         match feature_type:
             case "MoveShapeCount":

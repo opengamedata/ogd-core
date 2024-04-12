@@ -5,12 +5,12 @@ import json
 from time import time
 from datetime  import timedelta, datetime
 # import local files
-from ogd.core.extractors.features.Feature import Feature
+from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.SessionFeature import SessionFeature
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
 
 
@@ -23,7 +23,7 @@ class UserPlayTime(SessionFeature):
     :type Feature: _type_
     """
 
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._cumulative_play_time : Optional[timedelta] = None 
         self._cumulative_total_time : Optional[timedelta] = None
@@ -32,7 +32,7 @@ class UserPlayTime(SessionFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -41,7 +41,7 @@ class UserPlayTime(SessionFeature):
         return [] # >>> fill in names of events this Feature should use for extraction. <<<
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -49,7 +49,7 @@ class UserPlayTime(SessionFeature):
         """
         return ["PlayTime"] # >>> fill in names of first-order features this Feature should use for extraction. <<<
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         """_summary_
 
         :param event: _description_
@@ -59,14 +59,14 @@ class UserPlayTime(SessionFeature):
 
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         """_summary_
 
         :param feature: _description_
         :type feature: FeatureData
         """
         # >>> use data in the FeatureData object to update state variables as needed. <<<
-        # Note: This function runs on data from each Feature whose name matches one of the strings returned by _getFeatureDependencies().
+        # Note: This function runs on data from each Feature whose name matches one of the strings returned by _featureFilter().
         #       The number of instances of each Feature may vary, depending on the configuration and the unit of analysis at which this CustomFeature is run.
     
         # Exception handling for empty sessions

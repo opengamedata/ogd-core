@@ -4,8 +4,8 @@ import logging
 from datetime import datetime, timedelta
 from typing import Any, List, Optional
 # import local files
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.schemas.Event import Event
@@ -30,7 +30,7 @@ class SurveyItem(PerCountFeature):
     """
     
     
-    def __init__(self, params: ExtractorParameters):
+    def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         # NOTE: The time we record it the first time that players answered the given question minus the last time answering the last question or the time starting the quiz
         self._last_timestamp : Optional[datetime] = None
@@ -54,7 +54,7 @@ class SurveyItem(PerCountFeature):
         return self._index == self.CountIndex or self._index == self.CountIndex - 1
 
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -64,7 +64,7 @@ class SurveyItem(PerCountFeature):
         # ["CUSTOM.22", "CUSTOM.23"] = ["quizquestion", "quizstart"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -72,7 +72,7 @@ class SurveyItem(PerCountFeature):
         """
         return [] 
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         """_summary_
 
         :param event: _description_
@@ -109,7 +109,7 @@ class SurveyItem(PerCountFeature):
         
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

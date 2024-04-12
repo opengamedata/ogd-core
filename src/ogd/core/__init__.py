@@ -1,7 +1,7 @@
 __all__ = [
 	"utils",
 	"schemas",
-    "extractors",
+    "generators",
 	"interfaces",
 	"managers",
 	"requests"
@@ -9,7 +9,7 @@ __all__ = [
 
 from . import utils
 from . import schemas
-from . import extractors
+from . import generators
 from . import interfaces
 from . import managers
 from . import requests

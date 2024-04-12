@@ -2,14 +2,14 @@
 import itertools
 import json
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, Final, List, Optional
 # import local files
 from . import features
 from ogd.games import AQUALAB
-from ogd.core.extractors.detectors.Detector import Detector
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.ExtractorLoader import ExtractorLoader
-from ogd.core.extractors.features.Feature import Feature
+from ogd.core.generators.detectors.Detector import Detector
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
+from ogd.core.generators.extractors.Feature import Feature
 from ogd.games.AQUALAB.detectors import *
 from ogd.games.AQUALAB.features import *
 from ogd.core.schemas.Event import Event
@@ -17,11 +17,11 @@ from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.utils.utils import loadJSONFile
 
-EXPORT_PATH = "games/AQUALAB/DBExport.json"
+EXPORT_PATH : Final[str] = "games/AQUALAB/DBExport.json"
 
 ## @class AqualabLoader
 #  Extractor subclass for extracting features from Aqualab game data.
-class AqualabLoader(ExtractorLoader):
+class AqualabLoader(GeneratorLoader):
 
     # *** BUILT-INS & PROPERTIES ***
 
@@ -67,25 +67,13 @@ class AqualabLoader(ExtractorLoader):
     def _getFeaturesModule():
         return features
 
-    def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
         # First run through aggregate features
         if extractor_params._count_index == None:
             match feature_type:
                 case "ActiveTime":
                     ret_val = ActiveTime.ActiveTime(params=extractor_params, job_map=self._job_map, active_threads=schema_args.get("Active_threshold"))
-                case "JobTriesInArgument":
-                    ret_val = JobTriesInArgument.JobTriesInArgument(params=extractor_params, job_map=self._job_map)
-                case "ModelInterveneCount":
-                    ret_val = ModelInterveneCount.ModelInterveneCount(params=extractor_params, job_map=self._job_map)
-                case "TankRulesCount":
-                    ret_val = TankRulesCount.TankRulesCount(params=extractor_params)
-                case "ModelExportCount":
-                    ret_val = ModelExportCount.ModelExportCount(params=extractor_params, job_map=self._job_map)
-                case "ModelPredictCount":
-                    ret_val = ModelPredictCount.ModelPredictCount(params=extractor_params, job_map=self._job_map)
-                case "UserAvgActiveTime":
-                    ret_val = UserAvgActiveTime.UserAvgActiveTime(params=extractor_params, player_id=self._player_id)
                 case "ActiveJobs":
                     ret_val = ActiveJobs.ActiveJobs(params=extractor_params, job_map=self._job_map)
                 case "EchoSessionID":
@@ -94,8 +82,16 @@ class AqualabLoader(ExtractorLoader):
                     ret_val = EventList.EventList(params=extractor_params)
                 case "JobsCompleted":
                     ret_val = JobsCompleted.JobsCompleted(params=extractor_params, player_id=self._player_id)
-                case "PlayLocations":
-                    ret_val = PlayLocations.PlayLocations(params=extractor_params)
+                case "JobTriesInArgument":
+                    ret_val = JobTriesInArgument.JobTriesInArgument(params=extractor_params, job_map=self._job_map)
+                case "ModelExportCount":
+                    ret_val = ModelExportCount.ModelExportCount(params=extractor_params, job_map=self._job_map)
+                case "ModelInterveneCount":
+                    ret_val = ModelInterveneCount.ModelInterveneCount(params=extractor_params, job_map=self._job_map)
+                case "ModelPredictCount":
+                    ret_val = ModelPredictCount.ModelPredictCount(params=extractor_params, job_map=self._job_map)
+                # case "PlayLocations":
+                #     ret_val = PlayLocations.PlayLocations(params=extractor_params)
                 case "PlayerSummary":
                     ret_val = PlayerSummary.PlayerSummary(params=extractor_params)
                 case "PopulationSummary":
@@ -103,13 +99,17 @@ class AqualabLoader(ExtractorLoader):
                 case "SessionDiveSitesCount":
                     ret_val = SessionDiveSitesCount.SessionDiveSitesCount(params=extractor_params)
                 case "SessionDuration":
-                    ret_val = SessionDuration.SessionDuration(params=extractor_params, threshold=60)
+                    ret_val = SessionDuration.SessionDuration(params=extractor_params, threshold=int(schema_args.get("threshold", 60)))
+                case "SessionGuideCount":
+                    ret_val = SessionGuideCount.SessionGuideCount(params=extractor_params)
                 case "SessionID":
                     ret_val = SessionID.SessionID(params=extractor_params, session_id=self._session_id)
                 case "SessionJobsCompleted":
                     ret_val = SessionJobsCompleted.SessionJobsCompleted(params=extractor_params)
                 case "SwitchJobsCount":
                     ret_val = SwitchJobsCount.SwitchJobsCount(params=extractor_params)
+                case "TankRulesCount":
+                    ret_val = TankRulesCount.TankRulesCount(params=extractor_params)
                 case "TopJobCompletionDestinations":
                     ret_val = TopJobCompletionDestinations.TopJobCompletionDestinations(params=extractor_params, job_map=self._job_map)
                 case "TopJobSwitchDestinations":
@@ -126,6 +126,16 @@ class AqualabLoader(ExtractorLoader):
                     ret_val = TotalPlayTime.TotalPlayTime(params=extractor_params)
                 case "TotalExperimentationTime":
                     ret_val = TotalExperimentationTime.TotalExperimentationTime(params=extractor_params)
+                case "TotalGuideCount":
+                    ret_val = TotalGuideCount.TotalGuideCount(params=extractor_params)
+                case "TotalHelpCount":
+                    ret_val = TotalHelpCount.TotalHelpCount(params=extractor_params)
+                case "TotalModelingTime":
+                    ret_val = TotalModelingTime.TotalModelingTime(params=extractor_params)
+                case "TotalPlayTime":
+                    ret_val = TotalPlayTime.TotalPlayTime(params=extractor_params)
+                case "UserAvgActiveTime":
+                    ret_val = UserAvgActiveTime.UserAvgActiveTime(params=extractor_params, player_id=self._player_id)
                 case "UserAvgSessionDuration":
                     ret_val = UserAvgSessionDuration.UserAvgSessionDuration(params=extractor_params, player_id=self._player_id)
                 case "UserTotalSessionDuration":
@@ -171,7 +181,7 @@ class AqualabLoader(ExtractorLoader):
                     raise NotImplementedError(f"'{feature_type}' is not a valid per-count feature type for Aqualab.")
         return ret_val
 
-    def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
+    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         ret_val : Detector
         match detector_type:
             case "CollectFactNoJob":

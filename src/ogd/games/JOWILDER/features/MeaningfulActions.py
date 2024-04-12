@@ -1,8 +1,8 @@
 # import libraries
 from typing import Any, List, Optional
-from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 # import local files
-from ogd.core.extractors.features.SessionFeature import SessionFeature
+from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.schemas.Event import Event
@@ -16,28 +16,28 @@ class MeaningfulActions(SessionFeature):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._click_count : int = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["CUSTOM.3", "CUSTOM.5"]
         # ["CUSTOM.3", "CUSTOM.5"] = ["Navigation_click", "map_click"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         # fqid != 0 means that the click event does make Jo move to some interactive items, such as an interaction, an item that Jo can look into, or a way to next room.
         if event.EventData.get("fqid") != 0:
             self._click_count += 1
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

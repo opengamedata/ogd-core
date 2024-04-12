@@ -47,7 +47,7 @@ class OGDCommands:
         :rtype: bool
         """
         try:
-            game_schema = GameSchema(game_id=game)
+            game_schema = GameSchema.FromFile(game_id=game)
             table_schema = TableSchema(schema_name=f"{config.GameSourceMap[game].TableSchema}.json")
             readme = Readme(game_schema=game_schema, table_schema=table_schema)
             print(readme.CustomReadmeSource)
@@ -71,7 +71,7 @@ class OGDCommands:
         """
         path = destination / game
         try:
-            game_schema = GameSchema(game_id=game, schema_path=Path("src") / "ogd" / "games" / game / "schemas")
+            game_schema = GameSchema.FromFile(game_id=game, schema_path=Path("src") / "ogd" / "games" / game / "schemas")
             table_schema = TableSchema(schema_name=f"{config.GameSourceMap[game].TableSchema}.json")
             readme = Readme(game_schema=game_schema, table_schema=table_schema)
             readme.GenerateReadme(path=path)

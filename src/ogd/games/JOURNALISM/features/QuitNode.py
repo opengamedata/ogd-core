@@ -2,15 +2,15 @@
 import operator
 import logging
 from collections import Counter
-from typing import Any, List, Optional
+from typing import Any, Final, List, Optional
 # import local files
-from ogd.core.extractors.features.Feature import Feature
-from ogd.core.extractors.features.PerLevelFeature import PerLevelFeature
+from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.SessionFeature import SessionFeature
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.utils.Logger import Logger
 
 
@@ -22,7 +22,7 @@ class QuitNode(SessionFeature):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
 
         self._quit_nodes : Counter = Counter()
@@ -33,7 +33,7 @@ class QuitNode(SessionFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -42,7 +42,7 @@ class QuitNode(SessionFeature):
         return [] # >>> fill in names of events this Feature should use for extraction. <<<
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -50,27 +50,27 @@ class QuitNode(SessionFeature):
         """
         return ["QuitLevel"] # >>> fill in names of first-order features this Feature should use for extraction. <<<
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         """_summary_
 
         :param event: _description_
         :type event: Event
         """
         # >>> use the data in the Event object to update state variables as needed. <<<
-        # Note that this function runs once on each Event whose name matches one of the strings returned by _getEventDependencies()
+        # Note that this function runs once on each Event whose name matches one of the strings returned by _eventFilter()
         #
         # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
         
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         """_summary_
 
         :param feature: _description_
         :type feature: FeatureData
         """
-        QNODE_INDEX = 2 # The "Node" subfeature of the "QuitLevel" feature should be at index 2.
-        quit_node : Optional[str] = None
+        QNODE_INDEX : Final[int]    = 2 # The "Node" subfeature of the "QuitLevel" feature should be at index 2.
+        quit_node   : Optional[str] = None
         if len(feature.FeatureValues) > QNODE_INDEX: # need to ensure there's at least 3 items, for index 2 to be valid...
             quit_node = str(feature.FeatureValues[2])
         else:

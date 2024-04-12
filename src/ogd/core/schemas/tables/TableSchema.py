@@ -6,8 +6,7 @@ from dateutil import parser
 from datetime import datetime, time, timedelta
 from json.decoder import JSONDecodeError
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Optional, Union
-Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
+from typing import Any, Dict, Final, List, Tuple, Optional, Union
 ## import local files
 from ogd.core import schemas
 from ogd.core.schemas.Event import Event, EventSource
@@ -15,6 +14,7 @@ from ogd.core.schemas.tables.ColumnMapSchema import ColumnMapSchema
 from ogd.core.schemas.tables.ColumnSchema import ColumnSchema
 from ogd.core.utils import utils
 from ogd.core.utils.Logger import Logger
+from ogd.core.utils.typing import Map
 
 ## @class TableSchema
 #  Dumb struct to hold useful info about the structure of database data
@@ -230,7 +230,7 @@ class TableSchema:
         :rtype: [type]
         """
         # define vars to be passed as params
-        MAX_WARNINGS : int = 10
+        MAX_WARNINGS : Final[int] = 10
         sess_id : str
         app_id  : str
         time    : datetime
@@ -338,7 +338,7 @@ class TableSchema:
     # *** PRIVATE STATICS ***
 
     @staticmethod
-    def _parse(input:str, col_schema:ColumnSchema) -> Any:
+    def _parse(input:Any, col_schema:ColumnSchema) -> Any:
         """Applies whatever parsing is appropriate based on what type the schema said a column contained.
 
         :param input: _description_
@@ -363,14 +363,20 @@ class TableSchema:
         elif col_schema.ValueType == 'timedelta':
             return input if isinstance(input, timedelta) else TableSchema._convertTimedelta(str(input))
         elif col_schema.ValueType == 'json':
-            if input != 'None' and input != '': # watch out for nasty corner cases.
-                try:
+            try:
+                if isinstance(input, dict):
+                    # if input was a dict already, then just give it back. Else, try to load it from string.
+                    return input
+                elif isinstance(input, str):
+                    if input != 'None' and input != '': # watch out for nasty corner cases.
+                        return json.loads(input)
+                    else:
+                        return None
+                else:
                     return json.loads(str(input))
-                except JSONDecodeError as err:
-                    Logger.Log(f"Could not parse input '{input}' of type {type(input)} from column {col_schema.Name}, got the following error:\n{str(err)}", logging.WARN)
-                    return {}
-            else:
-                return None
+            except JSONDecodeError as err:
+                Logger.Log(f"Could not parse input '{input}' of type {type(input)} from column {col_schema.Name}, got the following error:\n{str(err)}", logging.WARN)
+                return {}
         elif col_schema.ValueType.startswith('enum'):
             # if the column is supposed to be an enum, for now we just stick with the string.
             return str(input)

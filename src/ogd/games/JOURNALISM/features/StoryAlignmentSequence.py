@@ -1,30 +1,30 @@
 # import libraries
 from typing import Any, List
 from ogd.core.schemas import Event
-from ogd.core.extractors.features.PerLevelFeature import PerLevelFeature
-from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 
 """
 class StoryAlignmentSequence(PerLevelFeature):
-    def __init__(self, params: ExtractorParameters):
+    def __init__(self, params: GeneratorParameters):
         PerLevelFeature.__init__(self, params=params)
         self._story_alignment_sequence = []
         
     @classmethod
-    def _getEventDependencies(cls, mode: ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
         return ["story_updated"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode: ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event: Event) -> None:
+    def _updateFromEvent(self, event: Event) -> None:
         self._story_alignment_sequence.append(event.event_data["story_alignment"])
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         return []
 
     def _getFeatureValues(self) -> List[Any]:
@@ -41,22 +41,22 @@ class StoryAlignmentSequence(PerLevelFeature):
 
 
 class StoryAlignmentSequence(PerLevelFeature):
-    def __init__(self, params: ExtractorParameters):
+    def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self._story_alignment_sequence = []
 
     @classmethod
-    def _getEventDependencies(cls, mode: ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
         return ["story_updated"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode: ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event: Event) -> None:
+    def _updateFromEvent(self, event: Event) -> None:
         self._story_alignment_sequence.append(event.event_data["story_alignment"])
 
-    def _extractFromFeatureData(self, feature: FeatureData) -> None:
+    def _updateFromFeatureData(self, feature: FeatureData) -> None:
         return
 
     def _getFeatureValues(self) -> List[Any]:

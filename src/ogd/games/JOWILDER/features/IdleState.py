@@ -4,8 +4,8 @@ from time import time
 from typing import Any, List, Optional
 from datetime  import timedelta, datetime
 # import local files
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.SessionFeature import SessionFeature
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.schemas.Event import Event
@@ -19,7 +19,7 @@ class IdleState(SessionFeature):
 
     IDLE_TIME_THRESHOLD = timedelta(seconds=15)
 
-    def __init__(self, params:ExtractorParameters, threshold:int):
+    def __init__(self, params:GeneratorParameters, threshold:int):
         super().__init__(params=params)
         self._time : timedelta = timedelta(0)
         self._count : int = 0
@@ -32,14 +32,14 @@ class IdleState(SessionFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return [f"CUSTOM.{i}" for i in range(3, 21)] + ["CUSTOM.1"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.EventName == "CUSTOM.1" and not self._last_timestamp:
             self._last_timestamp = event.Timestamp
             return
@@ -53,7 +53,7 @@ class IdleState(SessionFeature):
         self._last_timestamp = event.Timestamp
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

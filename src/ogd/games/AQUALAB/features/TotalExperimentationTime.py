@@ -2,15 +2,15 @@
 from datetime import timedelta
 from typing import Any, List
 # import locals
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.Feature import Feature
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.schemas.Event import Event, EventSource
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 
 class TotalExperimentationTime(Feature):
 
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self.prev_time = timedelta(0)
         self.total_time = timedelta(0)
@@ -22,14 +22,14 @@ class TotalExperimentationTime(Feature):
     
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["begin_experiment", "room_changed", "end_experiment"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.EventSource == EventSource.GAME:
             if self.on:
                 self.total_time += (event.Timestamp - self.prev_time)
@@ -42,7 +42,7 @@ class TotalExperimentationTime(Feature):
                     self.on = True
             self.prev_time = event.Timestamp
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

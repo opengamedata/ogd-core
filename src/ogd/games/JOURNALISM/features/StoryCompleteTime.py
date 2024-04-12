@@ -2,12 +2,12 @@
 import json
 from typing import Any, List, Optional
 # import local files
-from ogd.core.extractors.features.Feature import Feature
+from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.SessionFeature import SessionFeature
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from time import time
 from datetime  import timedelta, datetime
 
@@ -20,7 +20,7 @@ class StoryCompleteTime(SessionFeature):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
 
         self._mean_delta_time : float = 0.0
@@ -32,7 +32,7 @@ class StoryCompleteTime(SessionFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -41,7 +41,7 @@ class StoryCompleteTime(SessionFeature):
         return ["snippet_received", "start_level"] # >>> fill in names of events this Feature should use for extraction. <<<
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -49,14 +49,14 @@ class StoryCompleteTime(SessionFeature):
         """
         return [] # >>> fill in names of first-order features this Feature should use for extraction. <<<
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         """_summary_
 
         :param event: _description_
         :type event: Event
         """
         # >>> use the data in the Event object to update state variables as needed. <<<
-        # Note that this function runs once on each Event whose name matches one of the strings returned by _getEventDependencies()
+        # Note that this function runs once on each Event whose name matches one of the strings returned by _eventFilter()
         #
         # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
         
@@ -79,14 +79,14 @@ class StoryCompleteTime(SessionFeature):
 
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         """_summary_
 
         :param feature: _description_
         :type feature: FeatureData
         """
         # >>> use data in the FeatureData object to update state variables as needed. <<<
-        # Note: This function runs on data from each Feature whose name matches one of the strings returned by _getFeatureDependencies().
+        # Note: This function runs on data from each Feature whose name matches one of the strings returned by _featureFilter().
         #       The number of instances of each Feature may vary, depending on the configuration and the unit of analysis at which this CustomFeature is run.
         return
 
@@ -101,7 +101,7 @@ class StoryCompleteTime(SessionFeature):
         # >>> put the calculated value(s) into a list as the function return value. <<<
         # >>> definitely don't return ["template"], unless you really find that useful... <<<
         #
-        # e.g. use the self._found_click, which was created/initialized in __init__(...), and updated in _extractFromEvent(...):
+        # e.g. use the self._found_click, which was created/initialized in __init__(...), and updated in _updateFromEvent(...):
         # if self._found_click:
         #     ret_val = [True]
         # else:

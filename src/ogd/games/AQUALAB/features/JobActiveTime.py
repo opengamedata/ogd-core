@@ -4,7 +4,7 @@ from datetime import timedelta
 from typing import Any, List, Optional
 # import locals
 from ogd.core.utils.Logger import Logger
-from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -12,7 +12,7 @@ from ogd.core.schemas.FeatureData import FeatureData
 
 class JobActiveTime(PerJobFeature):
 
-    def __init__(self, params:ExtractorParameters, job_map:dict):
+    def __init__(self, params:GeneratorParameters, job_map:dict):
         super().__init__(params=params, job_map=job_map)
         self._total_time = timedelta(0)
         if self.ExtractionMode == ExtractionMode.PLAYER:
@@ -27,7 +27,7 @@ class JobActiveTime(PerJobFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["all_events"]
         # if self.ExtractionMode == ExtractionMode.PLAYER \
         # or self.ExtractionMode == ExtractionMode.SESSION:
@@ -36,14 +36,14 @@ class JobActiveTime(PerJobFeature):
         #     return []
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
         # if self.ExtractionMode == ExtractionMode.POPULATION:
         #     return ["JobActiveTime"]
         # else:
         #     return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         self._player_id = event.UserID
         if event.SessionID != self._session_id:
             self._handleNewSession(event)
@@ -83,7 +83,7 @@ class JobActiveTime(PerJobFeature):
             self._last_event_name = event.UserID
             self._last_event_index = event.EventSequenceIndex
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
         # if self.ExtractionMode == ExtractionMode.PLAYER \
         # or self.ExtractionMode == ExtractionMode.SESSION:
@@ -135,7 +135,10 @@ class JobActiveTime(PerJobFeature):
                 # Logger.Log(f"JobActiveTime attempting to update total time for {event.UserID} ({_old_sess} -> {self._session_id}) following change in session, index={event.EventSequenceIndex}", logging.INFO)
                 self._updateTotalTime()
                 # Logger.Log("Done", logging.INFO)
-                current_job = event.EventData.get("job_name", {}).get("string_value")
+                if event.app_version == 'Aqualab' or event.app_version == 'None':
+                    current_job = event.EventData.get("job_name", {}).get('string_value')
+                else:
+                    current_job = event.EventData.get("job_name")
                 if current_job is not None and self._job_map.get(current_job, None) == self.CountIndex:
                     self._last_start_time = event.Timestamp
                     self._last_event_time = event.Timestamp

@@ -2,19 +2,19 @@
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
 from . import features
-from ogd.core.extractors.detectors.Detector import Detector
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.ExtractorLoader import ExtractorLoader
-from ogd.core.extractors.features.Feature import Feature
+from ogd.core.generators.detectors.Detector import Detector
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
+from ogd.core.generators.extractors.Feature import Feature
 from ogd.games.SHIPWRECKS.features import *
-from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
 
 ## @class ShipwrecksLoader
 #  Extractor subclass for extracting features from Shipwrecks game data.
-class ShipwrecksLoader(ExtractorLoader):
+class ShipwrecksLoader(GeneratorLoader):
     ## Constructor for the ShipwrecksLoader class.
     #  Initializes some custom private data (not present in base class) for use
     #  when calculating some features.
@@ -34,7 +34,7 @@ class ShipwrecksLoader(ExtractorLoader):
     def _getFeaturesModule():
         return features
 
-    def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
         if extractor_params._count_index is None:
             match feature_type:
@@ -74,5 +74,5 @@ class ShipwrecksLoader(ExtractorLoader):
                     raise NotImplementedError(f"'{feature_type}' is not a valid per-count feature for Shipwrecks.")
         return ret_val
 
-    def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
+    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         raise NotImplementedError(f"'{detector_type}' is not a valid feature for Shipwrecks.")

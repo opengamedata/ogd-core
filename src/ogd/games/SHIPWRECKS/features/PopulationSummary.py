@@ -2,32 +2,32 @@ from collections import defaultdict
 from typing import Any, Dict, List, Union
 from unicodedata import numeric
 
-from ogd.core.extractors.features.SessionFeature import SessionFeature
-from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.generators.extractors.SessionFeature import SessionFeature
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 
 class PopulationSummary(SessionFeature):
 
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._session_completions = defaultdict(list)
         self._session_times = []
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["JobsCompleted", "SessionDuration"]
 
-    def _extractFromEvent(self, event: Event) -> None:
+    def _updateFromEvent(self, event: Event) -> None:
         return
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         if feature.FeatureType == "JobsCompleted":
             self._session_completions[feature.SessionID] = feature.FeatureValues[0]
         elif feature.FeatureType == "SessionDuration":

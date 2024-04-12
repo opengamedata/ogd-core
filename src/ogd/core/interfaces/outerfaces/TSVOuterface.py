@@ -109,7 +109,7 @@ class TSVOuterface(DataOuterface):
             # if not in place, generate the readme
             Logger.Log(f"Missing readme for {self._game_id}, generating new readme...", logging.WARNING, depth=1)
             _games_path  = Path(games.__file__) if Path(games.__file__).is_dir() else Path(games.__file__).parent
-            game_schema  : GameSchema  = GameSchema(game_id=self._game_id, schema_path=_games_path / self._game_id / "schemas")
+            game_schema  : GameSchema  = GameSchema.FromFile(game_id=self._game_id, schema_path=_games_path / self._game_id / "schemas")
             table_schema = TableSchema(schema_name=self._config.TableSchema)
             readme = Readme(game_schema=game_schema, table_schema=table_schema)
             readme.GenerateReadme(path=self._game_data_dir)
@@ -336,8 +336,11 @@ class TSVOuterface(DataOuterface):
                 if _existing_pop_file is not None and Path(_existing_pop_file).is_file() and self._zip_paths['population'] is not None:
                     Logger.Log(f"Renaming {str(_existing_pop_file)} -> {self._zip_paths['population']}", logging.DEBUG)
                     os.rename(_existing_pop_file, str(self._zip_paths['population']))
+            except FileExistsError as err:
+                msg = f"Error while setting up zip files, could not rename an existing file because another file is already using the target name! {err}"
+                Logger.Log(msg, logging.ERROR)
             except Exception as err:
-                msg = f"Error while setting up zip files! {type(err)} : {err}"
+                msg = f"Unexpected error while setting up zip files! {type(err)} : {err}"
                 Logger.Log(msg, logging.ERROR)
                 traceback.print_tb(err.__traceback__)
         # for each file, try to save out the csv/tsv to a file - if it's one that should be exported, that is.

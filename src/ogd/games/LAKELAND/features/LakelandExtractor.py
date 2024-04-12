@@ -21,8 +21,8 @@ from math import sqrt
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 ## import local files
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.legacy.LegacyFeature import LegacyFeature
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.legacy.LegacyFeature import LegacyFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
@@ -101,7 +101,7 @@ class LakelandExtractor(LegacyFeature):
     #                    table associated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, params:ExtractorParameters, game_schema:GameSchema, session_id:str):
+    def __init__(self, params:GeneratorParameters, game_schema:GameSchema, session_id:str):
         # Initialize superclass
         super().__init__(params=params, game_schema=game_schema, session_id=session_id)
         # Set window and overlap size
@@ -122,7 +122,7 @@ class LakelandExtractor(LegacyFeature):
     
     def _extractFeaturesFromEvent(self, event:Event):
         try:
-            self._extractFromEvent(event)
+            self._updateFromEvent(event)
         except Exception as e:
             if len(self.debug_strs) > 10:
                 debug_strs = self.debug_strs[:5] + ['...'] + self.debug_strs[-5:]
@@ -141,7 +141,7 @@ class LakelandExtractor(LegacyFeature):
     #                                 "complex data" already parsed from JSON.
     #  @param table_schema A data structure containing information on how the db
     #                      table assiciated with this game is structured.
-    def _extractFromEvent(self, event:Event):
+    def _updateFromEvent(self, event:Event):
 
         # put some data in local vars, for readability later.
         self.event_client_time = event.Timestamp
