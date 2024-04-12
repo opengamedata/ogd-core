@@ -1,5 +1,5 @@
 # import libraries
-from typing import Any, List, Optional
+from typing import Any, Final, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
 # import local files
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
@@ -14,7 +14,7 @@ class UsedContinue(SessionFeature):
     :type Feature: _type_
     """
 
-    START_SIGN = "tunic.historicalsociety.closet.gramps.intro_0_cs_0"
+    START_SIGN : Final[str] = "tunic.historicalsociety.closet.gramps.intro_0_cs_0"
 
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)

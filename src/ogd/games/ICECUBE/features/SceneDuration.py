@@ -71,7 +71,7 @@ class SceneDuration(PerCountFeature):
             if scene_data in scenes_map and scenes_map[scene_data] == self.CountIndex:
                 ret_val = True
         else:
-            Logger.Log(f"Got invalid scene data in {type(self).__name__}", logging.WARNING)
+            self.WarningMessage(f"Got invalid scene data in {type(self).__name__}")
 
         return ret_val
     @staticmethod

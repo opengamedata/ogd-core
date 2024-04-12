@@ -1,9 +1,11 @@
 ## import standard libraries
 import abc
+import logging
 from typing import List, Optional
 # import locals
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.utils.Logger import Logger
 
 ## @class ExtractorParams
 class GeneratorParameters:
@@ -70,19 +72,15 @@ class Generator(abc.ABC):
 
     # *** PUBLIC STATICS ***
 
-    # *** PUBLIC METHODS ***
+    @staticmethod
+    def WarningMessage(message:str):
+        """
+        Simple wrapper for the Logger in utils, makes it easier for subclasses to print warning messages without extra imports.
 
-    @classmethod
-    def EventFilter(cls, mode:ExtractionMode) -> List[str]:
-        return cls._eventFilter(mode=mode)
-
-    @classmethod
-    def FeatureFilter(cls, mode:ExtractionMode) -> List[str]:
-        return cls._featureFilter(mode=mode)
-
-    def UpdateFromEvent(self, event:Event):
-        if self._validateEvent(event=event):
-            self._updateFromEvent(event=event)
+        :param message: The warning message to print
+        :type message: str
+        """
+        Logger.Log(message=message, level=logging.WARN, depth=3)
 
     ## Base function to get the minimum log version the feature can handle.
     @staticmethod
@@ -121,6 +119,20 @@ class Generator(abc.ABC):
         :rtype: List[ExtractionMode]
         """
         return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR]
+
+    # *** PUBLIC METHODS ***
+
+    @classmethod
+    def EventFilter(cls, mode:ExtractionMode) -> List[str]:
+        return cls._eventFilter(mode=mode)
+
+    @classmethod
+    def FeatureFilter(cls, mode:ExtractionMode) -> List[str]:
+        return cls._featureFilter(mode=mode)
+
+    def UpdateFromEvent(self, event:Event):
+        if self._validateEvent(event=event):
+            self._updateFromEvent(event=event)
 
     # *** PROPERTIES ***
 

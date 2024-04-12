@@ -81,5 +81,5 @@ class TopJobSwitchDestinations(Feature):
         if job_data and job_data in self._job_map:
             ret_val = True
         else:
-            Logger.Log(f"Got invalid job_name data in JobsAttempted", logging.WARNING)
+            self.WarningMessage(f"Got invalid job_name data in JobsAttempted")
         return ret_val

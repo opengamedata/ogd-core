@@ -36,14 +36,14 @@ class PerRegionFeature(PerCountFeature):
             current_position['z'] < target_region['maxZ']):
             ret_val = True
         # else:
-        #     Logger.Log(f"Got invalid region_name data in {type(self).__name__}", logging.WARNING)
+        #     self.WarningMessage(f"Got invalid region_name data in {type(self).__name__}")
         return ret_val
 
         #if region_data is not None:
             #if region_data in self.region_map and self.region_map[region_data] == self.CountIndex:
                 #ret_val = True
         #else:
-            #Logger.Log(f"Got invalid region_name data in {type(self).__name__}", logging.WARNING)
+            #self.WarningMessage(f"Got invalid region_name data in {type(self).__name__}")
         #return ret_val
 
     # *** Optionally override public functions. ***
