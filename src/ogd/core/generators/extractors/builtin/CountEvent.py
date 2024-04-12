@@ -21,7 +21,7 @@ class CountEvent(Feature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -30,7 +30,7 @@ class CountEvent(Feature):
         return [self._target_event]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -38,7 +38,7 @@ class CountEvent(Feature):
         """
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         """_summary_
 
         :param event: _description_
@@ -48,7 +48,7 @@ class CountEvent(Feature):
             self._count += 1
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         """_summary_
 
         :param feature: _description_

@@ -24,7 +24,7 @@ class Timespan(SessionFeature):
         self._span = timedelta()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    def _eventFilter(self) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -32,7 +32,7 @@ class Timespan(SessionFeature):
         """
         return [self._start_event, self._end_event]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    def _featureFilter(self) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -40,7 +40,7 @@ class Timespan(SessionFeature):
         """
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         """_summary_
 
         :param event: _description_
@@ -60,7 +60,7 @@ class Timespan(SessionFeature):
                 self.WarningMessage(f"{self.Name} received a {self._end_event} event (end-of-span event) when no {self._start_event} event (start-of-span event) had occurred!")
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         """_summary_
 
         :param feature: _description_
