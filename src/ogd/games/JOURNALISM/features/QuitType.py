@@ -1,11 +1,8 @@
 # import libraries
 import json
-from typing import Any, List, Optional
+from typing import Any, Final, List, Optional
 import json
-from time import time
-from datetime  import timedelta, datetime
 # import local files
-from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
@@ -56,7 +53,7 @@ class QuitType(SessionFeature):
         
 
         #buffer for event margin before quit type is no longer considered something besides "other"
-        self._BUFFER_LIMIT: int = 9
+        self._BUFFER_LIMIT: Final[int] = 9
         #counters            
         self._event_counter : int = 0
     

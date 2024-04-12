@@ -2,7 +2,7 @@
 import json
 import logging
 from datetime import datetime, timedelta
-from typing import Any, List, Optional
+from typing import Any, Dict, Final, List, Optional
 # import local files
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
@@ -14,7 +14,7 @@ from ogd.core.utils.Logger import Logger
 # BUG: Question0 and quiz 0 don't have start time
 # NOTE: Assumptions are: Every quiz should have a quizstart.
 
-QUIZ_INDEXES = {
+QUIZ_INDEXES : Final[Dict[int, Dict[int, int]]] = {
     0: {0: 0, 1: 1},
     2: {0: 2, 1: 3, 2: 4, 3: 5},
     3: {0: 6, 1: 7, 2: 8, 3: 9},

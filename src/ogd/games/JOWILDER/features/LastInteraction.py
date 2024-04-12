@@ -1,6 +1,6 @@
 # import libraries
 import json
-from typing import Any, List, Optional
+from typing import Any, Final, List, Optional
 # import local files
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
@@ -14,7 +14,7 @@ class LastInteraction(SessionFeature):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    NO_SENSE = 'tunic.historicalsociety.closet.intro'
+    NO_SENSE : Final[str] = 'tunic.historicalsociety.closet.intro'
 
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
