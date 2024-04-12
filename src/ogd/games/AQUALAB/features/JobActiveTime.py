@@ -57,7 +57,7 @@ class JobActiveTime(PerJobFeature):
                 # Logger.Log("Done", logging.INFO)
                 self._last_start_time = event.timestamp
                 if event.Timestamp is None:
-                    Logger.Log(f"JobActiveTime received an initial event with Timestamp == None!", logging.WARN)
+                    self.WarningMessage(f"JobActiveTime received an initial event with Timestamp == None!")
 
         if event.EventName == "accept_job":
             self._last_start_time = event.timestamp
@@ -70,7 +70,7 @@ class JobActiveTime(PerJobFeature):
             if self._job_map.get(new_job, None) == self.CountIndex:
                 self._last_start_time = event.Timestamp
                 if event.Timestamp is None:
-                    Logger.Log(f"JobActiveTime received a switch_job event with Timestamp == None!", logging.WARN)
+                    self.WarningMessage(f"JobActiveTime received a switch_job event with Timestamp == None!")
             # if we switched out of "this" job, update total time in the job.
             # note, if "this" job is no-active-job, we don't care. Further, if we switched into no-active-job, then we just completed a job and don't care.
             elif self._job_map.get(old_job, None) == self.CountIndex and new_job != "no-active-job" and old_job != "no-active-job":
@@ -82,12 +82,12 @@ class JobActiveTime(PerJobFeature):
             self._last_start_time = event.Timestamp
         # if we got an event earlier than last start, we are out of order
         elif self._last_start_time > event.Timestamp:
-            Logger.Log(f"Got out-of-order events in JobActiveTime; event {event.EventName}:{event.EventSequenceIndex} had timestamp {event.Timestamp} earlier than start event, with time {self._last_start_time}!", logging.WARN)
+            self.WarningMessage(f"Got out-of-order events in JobActiveTime; event {event.EventName}:{event.EventSequenceIndex} had timestamp {event.Timestamp} earlier than start event, with time {self._last_start_time}!")
             self._last_start_time = event.Timestamp
 
         # finally, update latest timestamp
         if self._last_event_time and self._last_event_time > event.Timestamp:
-            Logger.Log(f"Got out-of-order events in SessionDuration; event {event.EventName}:{event.EventSequenceIndex} had timestamp {event.Timestamp} earlier than end event, with time {self._last_event_time}!", logging.WARN)
+            self.WarningMessage(f"Got out-of-order events in SessionDuration; event {event.EventName}:{event.EventSequenceIndex} had timestamp {event.Timestamp} earlier than end event, with time {self._last_event_time}!")
         else:
             self._last_event_time = event.timestamp
 
@@ -117,7 +117,7 @@ class JobActiveTime(PerJobFeature):
                 if self._job_map.get(old_job, None) == self.CountIndex:
                     ret_val = True
         else:
-            Logger.Log(f"Got invalid job_name data in {type(self).__name__}", logging.WARNING)
+            self.WarningMessage(f"Got invalid job_name data in {type(self).__name__}")
 
         return ret_val
 
@@ -140,9 +140,9 @@ class JobActiveTime(PerJobFeature):
                 self._total_time += (self._last_event_time - self._last_start_time)
                 self._last_start_time = None
             else:
-                Logger.Log(f"JobActiveTime could not update total time, missing previous event time!", logging.WARNING)
+                self.WarningMessage(f"JobActiveTime could not update total time, missing previous event time!")
         elif self.ExtractionMode == ExtractionMode.PLAYER:
-            Logger.Log(f"JobActiveTime could not update total time for player {self._player_id}, session {self._session_id} missing start time!", logging.WARNING)
+            self.WarningMessage(f"JobActiveTime could not update total time for player {self._player_id}, session {self._session_id} missing start time!")
 
     # def _handle_population(self, feature:FeatureData):
     #     if feature.ExportMode == ExtractionMode.PLAYER:

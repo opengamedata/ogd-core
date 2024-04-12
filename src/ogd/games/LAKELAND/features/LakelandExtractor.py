@@ -949,7 +949,7 @@ class LakelandExtractor(LegacyFeature):
         is_neutral = affect == 0
         is_negative = affect == -1
         if(self._num_farmbits) < 1:
-            # Logger.Log(f"Num farmbits < 1 @ {self._num_farmbits}!! Setting to 1.", logging.WARNING)
+            # self.WarningMessage(f"Num farmbits < 1 @ {self._num_farmbits}!! Setting to 1.")
             self.log_warning(f"Num farmbits < 1 @ {self._num_farmbits}!! Setting to 1.")
             self._num_farmbits = 1
 

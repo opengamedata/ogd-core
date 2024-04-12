@@ -22,7 +22,7 @@ class PerJobFeature(PerCountFeature):
             if job_name in self._job_map and self._job_map[job_name] == self.CountIndex:
                 ret_val = True
         else:
-            Logger.Log(f"Got invalid job_name data in {type(self).__name__}", logging.WARNING)
+            self.WarningMessage(f"Got invalid job_name data in {type(self).__name__}")
 
         return ret_val
 

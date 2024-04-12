@@ -72,7 +72,7 @@ class SceneFailures(PerCountFeature):
                 ret_val = True
         
         # else:
-        #     Logger.Log(f"Got invalid job_name data in {type(self).__name__}", logging.WARNING)
+        #     self.WarningMessage(f"Got invalid job_name data in {type(self).__name__}")
 
         return ret_val
     @staticmethod
