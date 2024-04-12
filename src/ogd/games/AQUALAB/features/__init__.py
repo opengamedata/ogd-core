@@ -35,7 +35,6 @@ __all__ = [
     "SessionJobsCompleted",
     "SessionDuration",
     "SessionGuideCount",
-    "SessionHelpCount",
     "SessionID",
     "SessionJobsCompleted",
     "SwitchJobsCount",
@@ -95,7 +94,6 @@ from . import SessionDiveSitesCount
 from . import SessionJobsCompleted
 from . import SessionDuration
 from . import SessionGuideCount
-from . import SessionHelpCount
 from . import SessionID
 from . import SessionJobsCompleted
 from . import SwitchJobsCount
