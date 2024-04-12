@@ -1,7 +1,6 @@
 # import libraries
 import json
-from time import time
-from typing import Any, List, Optional
+from typing import Any, Final, List, Optional
 from datetime  import timedelta, datetime
 # import local files
 from ogd.core.generators.Generator import GeneratorParameters
@@ -17,8 +16,8 @@ class ActiveStateTime(SessionFeature):
     :type Feature: _type_
     """
 
-    ACTIVE_TIME_THRESHOLD = timedelta(seconds=15)
-    CLICK_EVENTS_NAME = [f"CUSTOM.{i}" for i in range(3, 12)]
+    ACTIVE_TIME_THRESHOLD : Final[timedelta] = timedelta(seconds=15)
+    CLICK_EVENTS_NAME     : Final[List[str]] = [f"CUSTOM.{i}" for i in range(3, 12)]
 
     def __init__(self, params:GeneratorParameters, threshold:int):
         super().__init__(params=params)
