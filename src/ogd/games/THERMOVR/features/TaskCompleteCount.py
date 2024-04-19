@@ -4,6 +4,7 @@ from ogd.core.extractors.features.SessionFeature import SessionFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
+import json
 
 class TaskCompleteCount(SessionFeature):
 
@@ -25,7 +26,9 @@ class TaskCompleteCount(SessionFeature):
             if target_state:
                 self.completed_tasks.add(str(target_state))
         elif event.EventName == "click_submit_answer":
-            quiz_task = event.EventData.get("quiz_task")
+            quiz_task = event.EventData.get("quiz_task", [])
+            if isinstance(quiz_task, str):
+                quiz_task = json.loads(quiz_task)
             if quiz_task and quiz_task.get("is_complete"):
                 _id = f"{quiz_task.get('lab_name')}_{quiz_task.get('section_number')}_{quiz_task.get('task_number')}"
                 self.completed_tasks.add(_id)
