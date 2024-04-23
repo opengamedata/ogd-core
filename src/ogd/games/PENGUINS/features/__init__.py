@@ -17,7 +17,8 @@ __all__ = [
     "WaddlePerRegion",
     "RegionDuration",
     "ActivityCompleted",
-    "ActivityDuration"
+    "ActivityDuration",
+    "PickupRockCheck"
 ]
 # aggregated features
 
@@ -34,10 +35,12 @@ from . import EggLostCount
 from . import EggRecoverTime
 from . import PlayerInactiveAvgDuration
 from . import MirrorWaddleDuration
+
 # percount features
 from . import RegionEnterCount
 from . import WaddlePerRegion
 from . import RegionDuration
 from . import ActivityCompleted
 from . import ActivityDuration
+from . import PickupRockCheck
 
