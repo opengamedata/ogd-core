@@ -38,7 +38,6 @@ class PickupRockCheck(SessionFeature):
         if event.game_state.get("has_rock", False):
             self._current_count += 1
         
-        self._current_count = self._current_count
 
     def _updateFromFeatureData(self, feature: FeatureData):
         return
