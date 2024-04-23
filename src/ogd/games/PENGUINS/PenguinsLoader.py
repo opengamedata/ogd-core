@@ -100,8 +100,8 @@ class PenguinsLoader(GeneratorLoader):
                         ret_val = RegionEnterCount.RegionEnterCount(params=extractor_params, region_map=self._region_map)
                 # case "WaddlePerRegion":
                         #ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params)
-                case "PickupRockCount":
-                        ret_val = PickupRockCount.PickupRockCount(params=extractor_params)
+                case "PickupRockCheck":
+                        ret_val = PickupRockCheck.PickupRockCheck(params=extractor_params)
                 case "RegionDuration":
                             ret_val = RegionDuration.RegionDuration(params=extractor_params, region_map=self._region_map)
                 case _:
