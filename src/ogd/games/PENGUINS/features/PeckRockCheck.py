@@ -12,7 +12,7 @@ from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
 
-class PickupRockCheck(SessionFeature):
+class PeckRockCheck(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
     :param Feature: Base class for a Custom Feature class.
@@ -27,7 +27,7 @@ class PickupRockCheck(SessionFeature):
 
     @classmethod
     def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
-        return ["pickup_rock"]
+        return ["peck_rock"]
 
     @classmethod
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:

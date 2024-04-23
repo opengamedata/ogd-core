@@ -18,7 +18,7 @@ __all__ = [
     "RegionDuration",
     "ActivityCompleted",
     "ActivityDuration",
-    "PickupRockCheck"
+    "PeckRockCheck"
 ]
 # aggregated features
 
@@ -42,5 +42,5 @@ from . import WaddlePerRegion
 from . import RegionDuration
 from . import ActivityCompleted
 from . import ActivityDuration
-from . import PickupRockCheck
+from . import PeckRockCheck
 
