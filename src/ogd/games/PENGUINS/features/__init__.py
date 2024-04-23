@@ -37,6 +37,7 @@ from . import EggRecoverTime
 from . import PlayerInactiveAvgDuration
 from . import MirrorWaddleDuration
 from . import FlipperBashRockCount
+from . import PeckRockCheck
 
 # percount features
 from . import RegionEnterCount
@@ -44,5 +45,5 @@ from . import WaddlePerRegion
 from . import RegionDuration
 from . import ActivityCompleted
 from . import ActivityDuration
-from . import PeckRockCheck
+
 

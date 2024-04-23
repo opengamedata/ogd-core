@@ -20,7 +20,6 @@ class PeckRockCheck(SessionFeature):
     """
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
-        self._object_id = None
         self._current_count : int = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***

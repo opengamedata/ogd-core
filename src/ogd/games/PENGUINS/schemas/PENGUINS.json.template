@@ -503,13 +503,6 @@
                 "prefix": "region",
                 "description": "The number of times a player waddled in a given region of the game.",
                 "return_type": "int"
-            },
-            "PeckRockCheck": {
-                "type": "PeckRockCheck",
-                "enabled": true,
-                "count": 11,
-                "description": "The number of times a player with a rock has peck_rock event.",
-                "return_type": "int"
             }
         },
         "aggregate": {
@@ -571,6 +564,13 @@
                 "type": "FlipperBashRockCount",
                 "enabled": true,
                 "description": "he number of times a player had a flipper_bash_rock event.",
+                "return_type": "int"
+            },
+            "PeckRockCheck": {
+                "type": "PeckRockCheck",
+                "enabled": true,
+                "count": 11,
+                "description": "The number of times a player with a rock has peck_rock event.",
                 "return_type": "int"
             }
         }

@@ -92,6 +92,8 @@ class PenguinsLoader(GeneratorLoader):
                     ret_val = ActivityDuration.ActivityDuration(params=extractor_params)       
                 case "FlipperBashRockCount":
                     ret_val = FlipperBashRockCount.FlipperBashRockCount(params=extractor_params) 
+                case "PeckRockCheck":
+                        ret_val = PeckRockCheck.PeckRockCheck(params=extractor_params)
                 case _:
                     raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature for Penguins.")
         # Per-count features
@@ -102,8 +104,7 @@ class PenguinsLoader(GeneratorLoader):
                         ret_val = RegionEnterCount.RegionEnterCount(params=extractor_params, region_map=self._region_map)
                 # case "WaddlePerRegion":
                         #ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params)
-                case "PeckRockCheck":
-                        ret_val = PeckRockCheck.PeckRockCheck(params=extractor_params)
+                
                 case "RegionDuration":
                             ret_val = RegionDuration.RegionDuration(params=extractor_params, region_map=self._region_map)
                 case _:
