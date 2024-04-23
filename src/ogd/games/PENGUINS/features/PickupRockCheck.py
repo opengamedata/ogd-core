@@ -27,15 +27,18 @@ class PickupRockCheck(SessionFeature):
 
     @classmethod
     def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
-        return [ "pickup_rock"]
+        return ["pickup_rock"]
 
     @classmethod
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return [] 
 
     def _updateFromEvent(self, event:Event) -> None:
-        if event.game_state.get("has_rock"):
+        # if has_rock does not exit it will return false as well
+        if event.game_state.get("has_rock", False):
             self._current_count += 1
+        
+        self._current_count = self._current_count
 
     def _updateFromFeatureData(self, feature: FeatureData):
         return
