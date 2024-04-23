@@ -90,6 +90,8 @@ class PenguinsLoader(GeneratorLoader):
                     ret_val = ActivityCompleted.ActivityCompleted(params=extractor_params)
                 case "ActivityDuration":
                     ret_val = ActivityDuration.ActivityDuration(params=extractor_params)       
+                case "FlipperBashRockCount":
+                    ret_val = FlipperBashRockCount.FlipperBashRockCount(params=extractor_params) 
                 case _:
                     raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature for Penguins.")
         # Per-count features

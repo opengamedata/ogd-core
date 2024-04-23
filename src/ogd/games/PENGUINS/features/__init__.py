@@ -18,7 +18,8 @@ __all__ = [
     "RegionDuration",
     "ActivityCompleted",
     "ActivityDuration",
-    "PeckRockCheck"
+    "PeckRockCheck",
+    "FlipperBashRockCount"
 ]
 # aggregated features
 
@@ -35,6 +36,7 @@ from . import EggLostCount
 from . import EggRecoverTime
 from . import PlayerInactiveAvgDuration
 from . import MirrorWaddleDuration
+from . import FlipperBashRockCount
 
 # percount features
 from . import RegionEnterCount

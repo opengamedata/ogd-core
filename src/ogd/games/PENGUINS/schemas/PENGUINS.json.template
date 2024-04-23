@@ -566,6 +566,12 @@
                 "enabled": true,
                 "description": "The regions entered in a given session.",
                 "return_type": "int"
+            },
+            "FlipperBashRockCount": {
+                "type": "FlipperBashRockCount",
+                "enabled": true,
+                "description": "he number of times a player had a flipper_bash_rock event.",
+                "return_type": "int"
             }
         }
     },
