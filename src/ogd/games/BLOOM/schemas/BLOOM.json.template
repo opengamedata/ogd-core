@@ -467,7 +467,7 @@
                "description" : "The text content of the selected card."
             }
          }
-      },
+      }
    },
    
    "features": {
