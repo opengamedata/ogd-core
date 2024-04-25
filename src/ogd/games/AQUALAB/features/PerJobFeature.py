@@ -3,12 +3,12 @@ import logging
 from typing import Optional
 # import locals
 from ogd.core.utils.Logger import Logger
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.schemas.Event import Event
 
 class PerJobFeature(PerCountFeature):
-    def __init__(self, params:ExtractorParameters, job_map:dict):
+    def __init__(self, params:GeneratorParameters, job_map:dict):
         super().__init__(params=params,)
         self._job_map = job_map
 
@@ -22,7 +22,7 @@ class PerJobFeature(PerCountFeature):
             if job_name in self._job_map and self._job_map[job_name] == self.CountIndex:
                 ret_val = True
         else:
-            Logger.Log(f"Got invalid job_name data in {type(self).__name__}", logging.WARNING)
+            self.WarningMessage(f"Got invalid job_name data in {type(self).__name__}")
 
         return ret_val
 

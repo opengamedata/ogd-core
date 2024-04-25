@@ -13,7 +13,7 @@ from typing import Any, Dict, List, Tuple, Type, Optional
 
 ## import local files
 from ogd import games
-from ogd.core.extractors.ExtractorLoader import ExtractorLoader
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.managers.EventManager import EventManager
 from ogd.core.managers.FeatureManager import FeatureManager
 from ogd.core.schemas.Event import Event
@@ -90,8 +90,11 @@ class ExportManager:
 
             ret_val.SessionCount = len(_sess_ids)
             ret_val.RequestSucceeded(msg=f"Successfully executed data request {request}.")
+        except ValueError as err:
+            msg = f"Failed to execute data request {str(request)}, an invalid value was found:\n{str(err)}"
+            ret_val.RequestErrored(msg=msg)
         except Exception as err:
-            msg = f"Failed to execute data request {str(request)}, an error occurred:\n{type(err)} {str(err)}\n{traceback.format_exc()}"
+            msg = f"Failed to execute data request {str(request)}, an unexpected error occurred:\n{type(err)} {str(err)}\n{traceback.format_exc()}"
             ret_val.RequestErrored(msg=msg)
         finally:
             time_delta = datetime.now() - start
@@ -111,7 +114,7 @@ class ExportManager:
 
     def _preProcess(self, request:Request) -> None:
         _games_path  = Path(games.__file__) if Path(games.__file__).is_dir() else Path(games.__file__).parent
-        _game_schema  : GameSchema  = GameSchema(game_id=request.GameID, schema_path=_games_path / request.GameID / "schemas")
+        _game_schema  : GameSchema  = GameSchema.FromFile(game_id=request.GameID, schema_path=_games_path / request.GameID / "schemas")
         # 1. Get LoaderClass and set up Event and Feature managers.
         load_class = self._loadLoaderClass(request.GameID)
         if load_class is None:
@@ -166,8 +169,8 @@ class ExportManager:
         time_delta = datetime.now() - start
         Logger.Log(f"Output time for population: {time_delta}", logging.INFO, depth=2)
 
-    def _loadLoaderClass(self, game_id:str) -> Optional[Type[ExtractorLoader]]:
-        _loader_class: Optional[Type[ExtractorLoader]] = None
+    def _loadLoaderClass(self, game_id:str) -> Optional[Type[GeneratorLoader]]:
+        _loader_class: Optional[Type[GeneratorLoader]] = None
         match game_id:
             case "AQUALAB":
                 from ogd.games.AQUALAB.AqualabLoader import AqualabLoader
@@ -206,11 +209,11 @@ class ExportManager:
                 from ogd.games.PENGUINS.PenguinsLoader import PenguinsLoader
                 _loader_class = PenguinsLoader
             case _:
-                if game_id in {"BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MASHOPOLIS", "WIND"}:
+                if game_id in {"BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MASHOPOLIS", "WEATHER_STATION", "WIND"}:
                     # all games with data but no extractor.
                     pass
                 else:
-                    raise Exception(f"Got an invalid game ID ({game_id})!")
+                    raise ValueError(f"Got an unrecognized game ID ({game_id})!")
         return _loader_class
 
     def _generateSlices(self, sess_ids:List[str]) -> List[List[str]]:

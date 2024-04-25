@@ -3,9 +3,9 @@ import json
 from os import environ
 from typing import Any, List, Optional
 import numpy as np
-from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 # import local files
-from ogd.core.extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.schemas.Event import Event
@@ -22,7 +22,7 @@ class InteractionWordsPerSecond(PerCountFeature):
     :type Feature: _type_
     """
 
-    def __init__(self, params: ExtractorParameters):
+    def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self._interaction : Optional[int] = None
         self._interaction_time : List[float] = []
@@ -44,13 +44,13 @@ class InteractionWordsPerSecond(PerCountFeature):
 
         
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         # NOTE: Count all the click events
         return [f"CUSTOM.{i}" for i in range(3,12)] + ["CUSTOM.1"]
         # CUSTOM.X, X in [3,12) = ['navigate_click','notebook_click', 'map_click', 'notification_click', 'object_click', 'observation_click', 'person_click', 'cutscene_click', 'wildcard_click']
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -58,7 +58,7 @@ class InteractionWordsPerSecond(PerCountFeature):
         """
         return ["InteractionName"]
 
-    def _extractFromEvent(self, event: Event) -> None:
+    def _updateFromEvent(self, event: Event) -> None:
         if not clicks_track.GameStart:
             if event.EventName == "CUSTOM.1":
                 clicks_track.startGame(event)
@@ -87,7 +87,7 @@ class InteractionWordsPerSecond(PerCountFeature):
         
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         if len(self._interaction_time) == 0:
             return
         if feature.CountIndex != self.CountIndex:

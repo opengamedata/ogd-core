@@ -4,7 +4,7 @@ from datetime import timedelta
 from typing import Any, List, Optional
 # import locals
 from ogd.core.utils.Logger import Logger
-from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -12,23 +12,22 @@ from ogd.core.schemas.FeatureData import FeatureData
 
 class JobActiveTime(PerJobFeature):
 
-    def __init__(self, params:ExtractorParameters, job_map:dict):
+    def __init__(self, params:GeneratorParameters, job_map:dict):
         super().__init__(params=params, job_map=job_map)
         self._total_time = timedelta(0)
         if self.ExtractionMode == ExtractionMode.PLAYER:
             self._session_id      = None
             self._last_start_time = None
             self._last_event_time = None
-        elif self.ExtractionMode == ExtractionMode.POPULATION:
-            self._session_id      = None
-            self._last_start_time = None
-            self._last_event_time = None
+            self._last_event_session = None
+            self._last_event_name = None
+            self._last_event_index = None
         else:
             raise NotImplementedError(f"Got invalid export mode of {self.ExtractionMode.name} in JobActiveTime!")
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["all_events"]
         # if self.ExtractionMode == ExtractionMode.PLAYER \
         # or self.ExtractionMode == ExtractionMode.SESSION:
@@ -37,27 +36,17 @@ class JobActiveTime(PerJobFeature):
         #     return []
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
         # if self.ExtractionMode == ExtractionMode.POPULATION:
         #     return ["JobActiveTime"]
         # else:
         #     return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         self._player_id = event.UserID
         if event.SessionID != self._session_id:
-            _old_sess = self._session_id
-            self._session_id = event.SessionID
-            # if we jumped to a new session, we only want to count time up to last event, then skip the time between sessions to new timestamp;
-            # but only if we had a previous session, i.e. this isn't the first event seen.
-            if _old_sess is not None:
-                # Logger.Log(f"JobActiveTime attempting to update total time for {event.UserID} ({_old_sess} -> {self._session_id}) following change in session, index={event.EventSequenceIndex}", logging.INFO)
-                self._updateTotalTime()
-                # Logger.Log("Done", logging.INFO)
-                self._last_start_time = event.timestamp
-                if event.Timestamp is None:
-                    Logger.Log(f"JobActiveTime received an initial event with Timestamp == None!", logging.WARN)
+            self._handleNewSession(event)
 
         if event.EventName == "accept_job":
             self._last_start_time = event.timestamp
@@ -70,7 +59,7 @@ class JobActiveTime(PerJobFeature):
             if self._job_map.get(new_job, None) == self.CountIndex:
                 self._last_start_time = event.Timestamp
                 if event.Timestamp is None:
-                    Logger.Log(f"JobActiveTime received a switch_job event with Timestamp == None!", logging.WARN)
+                    self.WarningMessage(f"JobActiveTime received a switch_job event with Timestamp == None!")
             # if we switched out of "this" job, update total time in the job.
             # note, if "this" job is no-active-job, we don't care. Further, if we switched into no-active-job, then we just completed a job and don't care.
             elif self._job_map.get(old_job, None) == self.CountIndex and new_job != "no-active-job" and old_job != "no-active-job":
@@ -82,16 +71,19 @@ class JobActiveTime(PerJobFeature):
             self._last_start_time = event.Timestamp
         # if we got an event earlier than last start, we are out of order
         elif self._last_start_time > event.Timestamp:
-            Logger.Log(f"Got out-of-order events in JobActiveTime; event {event.EventName}:{event.EventSequenceIndex} had timestamp {event.Timestamp} earlier than start event, with time {self._last_start_time}!", logging.WARN)
+            self.WarningMessage(f"Got out-of-order events in JobActiveTime; event {event.EventName}:{event.EventSequenceIndex} had timestamp {event.Timestamp} earlier than start event, with time {self._last_start_time}!")
             self._last_start_time = event.Timestamp
 
         # finally, update latest timestamp
         if self._last_event_time and self._last_event_time > event.Timestamp:
-            Logger.Log(f"Got out-of-order events in SessionDuration; event {event.EventName}:{event.EventSequenceIndex} had timestamp {event.Timestamp} earlier than end event, with time {self._last_event_time}!", logging.WARN)
+            self.WarningMessage(f"Got out-of-order events in SessionDuration; event {event.EventName}:{event.EventSequenceIndex} had timestamp {event.Timestamp} earlier than end event, with time {self._last_event_time}!")
         else:
             self._last_event_time = event.timestamp
+            self._last_event_session = event.SessionID
+            self._last_event_name = event.UserID
+            self._last_event_index = event.EventSequenceIndex
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
         # if self.ExtractionMode == ExtractionMode.PLAYER \
         # or self.ExtractionMode == ExtractionMode.SESSION:
@@ -117,7 +109,7 @@ class JobActiveTime(PerJobFeature):
                 if self._job_map.get(old_job, None) == self.CountIndex:
                     ret_val = True
         else:
-            Logger.Log(f"Got invalid job_name data in {type(self).__name__}", logging.WARNING)
+            self.WarningMessage(f"Got invalid job_name data in {type(self).__name__}")
 
         return ret_val
 
@@ -134,15 +126,46 @@ class JobActiveTime(PerJobFeature):
 
     # *** PRIVATE METHODS ***
 
+    def _handleNewSession(self, event:Event):
+            _old_sess = self._session_id
+            self._session_id = event.SessionID
+            # if we jumped to a new session, we only want to count time up to last event, then skip the time between sessions to new timestamp;
+            # but only if we had a previous session, i.e. this isn't the first event seen.
+            if _old_sess is not None:
+                # Logger.Log(f"JobActiveTime attempting to update total time for {event.UserID} ({_old_sess} -> {self._session_id}) following change in session, index={event.EventSequenceIndex}", logging.INFO)
+                self._updateTotalTime()
+                # Logger.Log("Done", logging.INFO)
+                if event.app_version == 'Aqualab' or event.app_version == 'None':
+                    current_job = event.EventData.get("job_name", {}).get('string_value')
+                else:
+                    current_job = event.EventData.get("job_name")
+                if current_job is not None and self._job_map.get(current_job, None) == self.CountIndex:
+                    self._last_start_time = event.Timestamp
+                    self._last_event_time = event.Timestamp
+                if event.Timestamp is None:
+                    Logger.Log(f"JobActiveTime received an initial event with Timestamp == None!", logging.WARN)
+            # _old_sess = self._session_id
+            # self._session_id = event.SessionID
+            # # if we jumped to a new session, we only want to count time up to last event, then skip the time between sessions to new timestamp;
+            # # but only if we had a previous session, i.e. this isn't the first event seen.
+            # if _old_sess is not None:
+            #     # Logger.Log(f"JobActiveTime attempting to update total time for {event.UserID} ({_old_sess} -> {self._session_id}) following change in session, index={event.EventSequenceIndex}", logging.INFO)
+            #     self._updateTotalTime()
+            #     # Logger.Log("Done", logging.INFO)
+            #     self._last_start_time = event.timestamp
+            #     if event.Timestamp is None:
+            #         self.WarningMessage(f"JobActiveTime received an initial event with Timestamp == None!")
+
     def _updateTotalTime(self):
         if self._last_start_time:
             if self._last_event_time:
                 self._total_time += (self._last_event_time - self._last_start_time)
                 self._last_start_time = None
+                self._last_event_time = None
             else:
-                Logger.Log(f"JobActiveTime could not update total time, missing previous event time!", logging.WARNING)
+                self.WarningMessage(f"JobActiveTime could not update total time, missing previous event time!")
         elif self.ExtractionMode == ExtractionMode.PLAYER:
-            Logger.Log(f"JobActiveTime could not update total time for player {self._player_id}, session {self._session_id} missing start time!", logging.WARNING)
+            self.WarningMessage(f"JobActiveTime could not update total time for player {self._player_id}, session {self._session_id} missing start time!")
 
     # def _handle_population(self, feature:FeatureData):
     #     if feature.ExportMode == ExtractionMode.PLAYER:

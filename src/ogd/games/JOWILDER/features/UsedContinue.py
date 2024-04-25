@@ -1,8 +1,8 @@
 # import libraries
-from typing import Any, List, Optional
-from ogd.core.extractors.Extractor import ExtractorParameters
+from typing import Any, Final, List, Optional
+from ogd.core.generators.Generator import GeneratorParameters
 # import local files
-from ogd.core.extractors.features.SessionFeature import SessionFeature
+from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.schemas.Event import Event
@@ -14,26 +14,26 @@ class UsedContinue(SessionFeature):
     :type Feature: _type_
     """
 
-    START_SIGN = "tunic.historicalsociety.closet.gramps.intro_0_cs_0"
+    START_SIGN : Final[str] = "tunic.historicalsociety.closet.gramps.intro_0_cs_0"
 
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._continue : int = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["FirstInteraction", "UsedSaveCode"] 
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         if feature.FeatureType == "UsedSaveCode":
             self._save_code = feature.FeatureValues[0]
         elif feature.FeatureType == "FirstInteraction":

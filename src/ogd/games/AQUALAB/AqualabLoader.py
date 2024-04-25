@@ -2,14 +2,14 @@
 import itertools
 import json
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, Final, List, Optional
 # import local files
 from . import features
 from ogd.games import AQUALAB
-from ogd.core.extractors.detectors.Detector import Detector
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.ExtractorLoader import ExtractorLoader
-from ogd.core.extractors.features.Feature import Feature
+from ogd.core.generators.detectors.Detector import Detector
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
+from ogd.core.generators.extractors.Feature import Feature
 from ogd.games.AQUALAB.detectors import *
 from ogd.games.AQUALAB.features import *
 from ogd.core.schemas.Event import Event
@@ -17,11 +17,11 @@ from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.utils.utils import loadJSONFile
 
-EXPORT_PATH = "games/AQUALAB/DBExport.json"
+EXPORT_PATH : Final[str] = "games/AQUALAB/DBExport.json"
 
 ## @class AqualabLoader
 #  Extractor subclass for extracting features from Aqualab game data.
-class AqualabLoader(ExtractorLoader):
+class AqualabLoader(GeneratorLoader):
 
     # *** BUILT-INS & PROPERTIES ***
 
@@ -67,7 +67,7 @@ class AqualabLoader(ExtractorLoader):
     def _getFeaturesModule():
         return features
 
-    def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
         # First run through aggregate features
         if extractor_params._count_index == None:
@@ -163,7 +163,7 @@ class AqualabLoader(ExtractorLoader):
                     raise NotImplementedError(f"'{feature_type}' is not a valid per-count feature type for Aqualab.")
         return ret_val
 
-    def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
+    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         ret_val : Detector
         match detector_type:
             case "CollectFactNoJob":

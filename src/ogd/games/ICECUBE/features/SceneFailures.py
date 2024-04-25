@@ -2,8 +2,8 @@
 import json
 from typing import Any, List, Optional
 # import local files
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
@@ -19,7 +19,7 @@ scenes_map = {"ICE":0, "VOYAGER":1, "NOTHING":2, "EXTREME":3, "EARTH":4, "CREDIT
 
 class SceneFailures(PerCountFeature):
 
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._failure_count = 0
         self._name = None
@@ -29,14 +29,14 @@ class SceneFailures(PerCountFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["scene_begin","scene_end", "failed"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         # Logger.Log(f"event data is {event.EventData}")
         if event.EventName == "failed":
             self._failure_count += 1
@@ -44,7 +44,7 @@ class SceneFailures(PerCountFeature):
         
         
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
@@ -72,7 +72,7 @@ class SceneFailures(PerCountFeature):
                 ret_val = True
         
         # else:
-        #     Logger.Log(f"Got invalid job_name data in {type(self).__name__}", logging.WARNING)
+        #     self.WarningMessage(f"Got invalid job_name data in {type(self).__name__}")
 
         return ret_val
     @staticmethod

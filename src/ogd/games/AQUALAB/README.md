@@ -57,7 +57,23 @@ The elements (member variables) of each Event object, available to programmers w
 
 ## Logged Events  
 
-The individual fields encoded in the *event_data* Event element for each type of event logged by the game.  
+The individual fields encoded in the *game_state* and *user_data* Event element for all event types, and the fields in the *event_data* Event element for each individual event type logged by the game.  
+
+### Enums  
+
+| **Name** | **Values** |
+| ---      | ---        |  
+
+### Game State  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| job_name | str | The name of the current job | |  
+
+### User Data  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
 
 ### **accept_job**
 
@@ -1010,7 +1026,19 @@ Subfeatures for number of job starts and completes, percent complete, and avg/st
 
 **SyncCompletionTime** : *timedelta*, *Per-count feature*   
 Time taken to achieve 100% sync in a simulation  
+  
 
+## Other Elements  
+
+Other (potentially non-standard) elements specified in the game's schema, which may be referenced by event/feature processors.  
+
+### Other Ranges  
+
+Extra ranges specified in the game's schema, which may be referenced by event/feature processors.  
+
+level_range : range(0, 56)  
+
+task_range : range(0, 235)
 
 No changelog prepared
 

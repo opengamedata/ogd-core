@@ -3,7 +3,8 @@ import logging
 import os
 from datetime import datetime, date
 from google.cloud import bigquery
-from typing import Dict, List, Tuple, Optional
+from google.api_core.exceptions import BadRequest
+from typing import Dict, Final, List, Tuple, Optional
 # import locals
 from ogd.core.interfaces.DataInterface import DataInterface
 from ogd.core.schemas.IDMode import IDMode
@@ -11,7 +12,7 @@ from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
 from ogd.core.utils.Logger import Logger
 
-AQUALAB_MIN_VERSION = 6.2
+AQUALAB_MIN_VERSION : Final[float] = 6.2
 
 class BigQueryInterface(DataInterface):
 
@@ -52,46 +53,65 @@ class BigQueryInterface(DataInterface):
         return True
 
     def _allIDs(self) -> List[str]:
+        ret_val = []
+
         query = f"""
             SELECT DISTINCT session_id
             FROM `{self.DBPath()}`,
         """
         Logger.Log(f"Running query for all ids:\n{query}", logging.DEBUG, depth=3)
-        data = self._client.query(query)
-        ids = [str(row['session_id']) for row in data]
-        return ids if ids != None else []
+        try:
+            data = self._client.query(query)
+            session_ids = [str(row['session_id']) for row in data]
+        except BadRequest as err:
+            Logger.Log(f"Got a BadRequest error when trying to retrieve data from BigQuery, defaulting to empty result!\n{err}")
+        else:
+            ret_val = session_ids
+        return ret_val
 
     def _fullDateRange(self) -> Dict[str, datetime]:
+        ret_val : Dict[str, datetime] = {}
+
         query = f"""
             SELECT MIN(server_time), MAX(server_time)
             FROM `{self.DBPath()}`
         """
         Logger.Log(f"Running query for full date range:\n{query}", logging.DEBUG, depth=3)
-        data = list(self._client.query(query))
-        return {'min':data[0][0], 'max':data[0][1]}
+        try:
+            data = list(self._client.query(query))
+            date_range : Dict[str, datetime] = { 'min':data[0][0], 'max':data[0][1] }
+        except BadRequest as err:
+            Logger.Log(f"Got a BadRequest error when trying to retrieve data from BigQuery, defaulting to empty result!\n{err}")
+        else:
+            ret_val = date_range
+        return ret_val
 
     def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None, exclude_rows:Optional[List[str]]=None) -> List[Tuple]:
         # 2) Set up clauses to select based on Session ID or Player ID.
-        events = None
+        ret_val = []
         if self._client != None:
             query = self._generateRowFromIDQuery(id_list=id_list, id_mode=id_mode, exclude_rows=exclude_rows)
             Logger.Log(f"Running query for rows from IDs:\n{query}", logging.DEBUG, depth=3)
-            data = self._client.query(query)
-            events = []
-            for row in data:
-                items = tuple(row.items())
-                event = []
-                for item in items:
-                    match item[0]:
-                        case "event_params":
-                            _params = {param['key']:param['value'] for param in item[1]}
-                            event.append(json.dumps(_params, sort_keys=True))
-                        case "device" | "geo":
-                            event.append(json.dumps(item[1], sort_keys=True))
-                        case _:
-                            event.append(item[1])
-                events.append(tuple(event))
-        return events if events != None else []
+            try:
+                data = self._client.query(query)
+                Logger.Log(f"...Query yielded results, with query in state: {data.state}", logging.DEBUG, depth=3)
+            except BadRequest as err:
+                Logger.Log(f"Got a BadRequest error when trying to retrieve data from BigQuery, defaulting to empty result!\n{err}")
+            else:
+                for row in data:
+                    items = tuple(row.items())
+                    event = []
+                    for item in items:
+                        match item[0]:
+                            case "event_params":
+                                _params = {param['key']:param['value'] for param in item[1]}
+                                event.append(json.dumps(_params, sort_keys=True))
+                            case "device" | "geo":
+                                event.append(json.dumps(item[1], sort_keys=True))
+                            case _:
+                                event.append(item[1])
+                    ret_val.append(tuple(event))
+        return ret_val
 
     def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]] = None) -> List[str]:
         ret_val = []
@@ -102,14 +122,19 @@ class BigQueryInterface(DataInterface):
             WHERE _TABLE_SUFFIX BETWEEN '{str_min}' AND '{str_max}'
         """
         Logger.Log(f"Running query for ids from dates:\n{query}", logging.DEBUG, depth=3)
-        data = self._client.query(query)
-        ids = [str(row['session_id']) for row in data]
-        if ids is not None:
+        try:
+            data = self._client.query(query)
+            ids = [str(row['session_id']) for row in data]
+        except BadRequest as err:
+            Logger.Log(f"Got a BadRequest error when trying to retrieve data from BigQuery, defaulting to empty result!\n{err}")
+        else:
             ret_val = ids
-        Logger.Log(f"Found {len(ret_val)} ids. {ret_val if len(ret_val) <= 5 else ''}", logging.DEBUG, depth=3)
+            Logger.Log(f"Found {len(ret_val)} ids. {ret_val if len(ret_val) <= 5 else ''}", logging.DEBUG, depth=3)
         return ret_val
 
     def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> Dict[str, datetime]:
+        ret_val : Dict[str, datetime] = {}
+
         match id_mode:
             case IDMode.SESSION:
                 id_string = ','.join([f"{x}" for x in id_list])
@@ -127,21 +152,24 @@ class BigQueryInterface(DataInterface):
             {where_clause}
         """
         Logger.Log(f"Running query for dates from IDs:\n{query}", logging.DEBUG, depth=3)
-        data = list(self._client.query(query))
-        Logger.Log(f"...Query yielded results:\n{data}", logging.DEBUG, depth=3)
-        ret_val : Dict[str, datetime] = {}
-        if len(data) == 1:
-            dates = data[0]
-            if len(dates) == 2 and dates[0] is not None and dates[1] is not None:
-                _min = dates[0] if type(dates[0]) == datetime else datetime.strptime(str(dates[0]), "%m-%d-%Y %H:%M:%S")
-                _max = dates[1] if type(dates[1]) == datetime else datetime.strptime(str(dates[1]), "%m-%d-%Y %H:%M:%S")
-                ret_val = {'min':_min, 'max':_max}
-            else:
-                Logger.Log(f"BigQueryInterface query did not give both a min and a max, setting both to 'now'", logging.WARNING, depth=3)
-                ret_val = {'min':datetime.now(), 'max':datetime.now()}
+        try:
+            data = list(self._client.query(query))
+            Logger.Log(f"...Query yielded results:\n{data}", logging.DEBUG, depth=3)
+        except BadRequest as err:
+            Logger.Log(f"Got a BadRequest error when trying to retrieve data from BigQuery, defaulting to empty result!\n{err}")
         else:
-            Logger.Log(f"BigQueryInterface query did not return any results, setting both min and max to 'now'", logging.WARNING, depth=3)
-            ret_val = {'min':datetime.now(), 'max':datetime.now()}
+            if len(data) == 1:
+                dates = data[0]
+                if len(dates) == 2 and dates[0] is not None and dates[1] is not None:
+                    _min = dates[0] if type(dates[0]) == datetime else datetime.strptime(str(dates[0]), "%m-%d-%Y %H:%M:%S")
+                    _max = dates[1] if type(dates[1]) == datetime else datetime.strptime(str(dates[1]), "%m-%d-%Y %H:%M:%S")
+                    ret_val = {'min':_min, 'max':_max}
+                else:
+                    Logger.Log(f"BigQueryInterface query did not give both a min and a max, setting both to 'now'", logging.WARNING, depth=3)
+                    ret_val = {'min':datetime.now(), 'max':datetime.now()}
+            else:
+                Logger.Log(f"BigQueryInterface query did not return any results, setting both min and max to 'now'", logging.WARNING, depth=3)
+                ret_val = {'min':datetime.now(), 'max':datetime.now()}
         return ret_val
 
     # *** PUBLIC STATICS ***

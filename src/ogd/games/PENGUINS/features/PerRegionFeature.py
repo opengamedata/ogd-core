@@ -4,14 +4,14 @@ import json
 from typing import Any, Dict, List, Optional
 # import locals
 from ogd.core.utils.Logger import Logger
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.schemas.Event import Event
 
 
 
 class PerRegionFeature(PerCountFeature):
-    def __init__(self, params:ExtractorParameters, region_map:List[Dict[str, Any]]):
+    def __init__(self, params:GeneratorParameters, region_map:List[Dict[str, Any]]):
         super().__init__(params=params)
         self._region_map = region_map
 
@@ -36,14 +36,14 @@ class PerRegionFeature(PerCountFeature):
             current_position['z'] < target_region['maxZ']):
             ret_val = True
         # else:
-        #     Logger.Log(f"Got invalid region_name data in {type(self).__name__}", logging.WARNING)
+        #     self.WarningMessage(f"Got invalid region_name data in {type(self).__name__}")
         return ret_val
 
         #if region_data is not None:
             #if region_data in self.region_map and self.region_map[region_data] == self.CountIndex:
                 #ret_val = True
         #else:
-            #Logger.Log(f"Got invalid region_name data in {type(self).__name__}", logging.WARNING)
+            #self.WarningMessage(f"Got invalid region_name data in {type(self).__name__}")
         #return ret_val
 
     # *** Optionally override public functions. ***

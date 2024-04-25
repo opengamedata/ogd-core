@@ -1,20 +1,20 @@
 # import libraries
 from os import truncate
-from ogd.core.extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.schemas import Event
-from typing import Any, List, Optional
+from typing import Any, Final, List, Optional
 # import locals
-from ogd.core.extractors.features.PerLevelFeature import PerLevelFeature
-from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 
 class WorstPlayerAttribute(PerCountFeature):
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         PerCountFeature.__init__(self, params=params)
         self._attr_count = 0
-        self._ATTRIBUTE_ENUM : List[str] = ["endurance", "resourceful", "tech","social","trust","research"]
+        self._ATTRIBUTE_ENUM : Final[List[str]] = ["endurance", "resourceful", "tech","social","trust","research"]
         self._attr_name = self._ATTRIBUTE_ENUM[self.CountIndex]
 
 
@@ -27,20 +27,20 @@ class WorstPlayerAttribute(PerCountFeature):
 
 
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return [""]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["WorstAttribute"]
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         #self._story_alignment = event.EventData["story_alignment"]
 
         pass
 
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         #add logic to make sure that MODE is session, not player so we don't get duplicates
         if(feature._mode == ExtractionMode.SESSION):
             attribute_list = feature._vals[1]

@@ -1,6 +1,6 @@
 # import locals
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.games.ICECUBE.DBExport import scenes_list
@@ -20,7 +20,7 @@ class PerSceneFeature(PerCountFeature):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***

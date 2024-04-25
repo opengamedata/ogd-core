@@ -6,8 +6,7 @@ from dateutil import parser
 from datetime import datetime, time, timedelta
 from json.decoder import JSONDecodeError
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Optional, Union
-Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
+from typing import Any, Dict, Final, List, Tuple, Optional, Union
 ## import local files
 from ogd.core import schemas
 from ogd.core.schemas.Event import Event, EventSource
@@ -15,6 +14,7 @@ from ogd.core.schemas.tables.ColumnMapSchema import ColumnMapSchema
 from ogd.core.schemas.tables.ColumnSchema import ColumnSchema
 from ogd.core.utils import utils
 from ogd.core.utils.Logger import Logger
+from ogd.core.utils.typing import Map
 
 ## @class TableSchema
 #  Dumb struct to hold useful info about the structure of database data
@@ -230,7 +230,7 @@ class TableSchema:
         :rtype: [type]
         """
         # define vars to be passed as params
-        MAX_WARNINGS : int = 10
+        MAX_WARNINGS : Final[int] = 10
         sess_id : str
         app_id  : str
         time    : datetime

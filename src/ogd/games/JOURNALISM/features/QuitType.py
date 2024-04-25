@@ -1,16 +1,13 @@
 # import libraries
 import json
-from typing import Any, List, Optional
+from typing import Any, Final, List, Optional
 import json
-from time import time
-from datetime  import timedelta, datetime
 # import local files
-from ogd.core.extractors.features.Feature import Feature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.SessionFeature import SessionFeature
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
 
 """
@@ -34,7 +31,7 @@ class QuitType(SessionFeature):
     :type Feature: _type_
     """
 
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         
         ##event boolean watchers
@@ -56,14 +53,14 @@ class QuitType(SessionFeature):
         
 
         #buffer for event margin before quit type is no longer considered something besides "other"
-        self._BUFFER_LIMIT: int = 9
+        self._BUFFER_LIMIT: Final[int] = 9
         #counters            
         self._event_counter : int = 0
     
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -72,7 +69,7 @@ class QuitType(SessionFeature):
         return ["all_events"] # >>> fill in names of events this Feature should use for extraction. <<<
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -80,7 +77,7 @@ class QuitType(SessionFeature):
         """
         return [] # >>> fill in names of first-order features this Feature should use for extraction. <<<
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         """_summary_
 
         :param event: _description_
@@ -89,7 +86,7 @@ class QuitType(SessionFeature):
         if(self._store_event == None):
             self._store_event= event
         # >>> use the data in the Event object to update state variables as needed. <<<
-        # Note that this function runs once on each Event whose name matches one of the strings returned by _getEventDependencies()
+        # Note that this function runs once on each Event whose name matches one of the strings returned by _eventFilter()
         #
         # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
         if(self._event_counter >= self._BUFFER_LIMIT):
@@ -134,14 +131,14 @@ class QuitType(SessionFeature):
 
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         """_summary_
 
         :param feature: _description_
         :type feature: FeatureData
         """
         # >>> use data in the Feature Data object to update state variables as needed. <<<
-        # Note: This function runs on data from each Feature whose name matches one of the strings returned by _getFeatureDependencies().
+        # Note: This function runs on data from each Feature whose name matches one of the strings returned by _featureFilter().
         #       The number of instances of each Feature may vary, depending on the configuration and the unit of analysis at which this CustomFeature is run.
         return
 

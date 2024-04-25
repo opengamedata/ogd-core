@@ -2,9 +2,9 @@
 from datetime import datetime, timedelta
 import json
 from typing import Any, List, Optional
-from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 # import local files
-from ogd.core.extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.schemas.Event import Event
@@ -17,7 +17,7 @@ class SurveyTime(PerCountFeature):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    def __init__(self, params=ExtractorParameters):
+    def __init__(self, params=GeneratorParameters):
         super().__init__(params=params)
         self._start_time : Optional[datetime] = None
         self._duration : Optional[timedelta] = None
@@ -35,22 +35,22 @@ class SurveyTime(PerCountFeature):
             raise KeyError(f"SurveyTime got an event of type {event.EventName} with no quiz_number! EventData keys are: {event.EventData.keys()}")
 
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["CUSTOM.23", "CUSTOM.24"] 
         # ["CUSTOM.23", "CUSTOM.24"] = [quizstart, quizend]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return [] 
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if self.CountIndex == 0:
             return
         # TODO: Fix the bugs that quizstart and quizend doesn't match
         raise(NotImplementedError("Haven't implemented the function due to bugs"))
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         
         return
 

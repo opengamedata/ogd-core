@@ -2,8 +2,8 @@
 import json
 from typing import Any, List, Optional
 # import local files
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
@@ -20,7 +20,7 @@ scenes_map = {"ICE":0, "VOYAGER":1, "NOTHING":2, "EXTREME":3, "EARTH":4, "CREDIT
 
 class SceneDuration(PerCountFeature):
 
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._session_id = None
         self._scene_start_time = None
@@ -29,14 +29,14 @@ class SceneDuration(PerCountFeature):
         self._name = None
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["scene_begin","scene_end"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.SessionID != self._session_id:
             self._session_id = event.SessionID
 
@@ -54,7 +54,7 @@ class SceneDuration(PerCountFeature):
 
         self._prev_timestamp = event.Timestamp
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
@@ -71,7 +71,7 @@ class SceneDuration(PerCountFeature):
             if scene_data in scenes_map and scenes_map[scene_data] == self.CountIndex:
                 ret_val = True
         else:
-            Logger.Log(f"Got invalid scene data in {type(self).__name__}", logging.WARNING)
+            self.WarningMessage(f"Got invalid scene data in {type(self).__name__}")
 
         return ret_val
     @staticmethod

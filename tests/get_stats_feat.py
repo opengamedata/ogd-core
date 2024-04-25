@@ -16,7 +16,7 @@ proc = pd.read_csv("tests/test_data/LAKELAND_20200828_to_20200828/LAKELAND_20200
 # print(df.columns)
 model_name = 'PopAchVelocityModel'
 file_version = 'v18'
-schema = GameSchema("LAKELAND", Path("games/LAKELAND/schemas"))
+schema = GameSchema.FromFile("LAKELAND", Path("games/LAKELAND/schemas"))
 model_mgr = ModelManager(game_name="LAKELAND")
 col_names = list(dump.columns)
 game_id = dump['app_id'][0]

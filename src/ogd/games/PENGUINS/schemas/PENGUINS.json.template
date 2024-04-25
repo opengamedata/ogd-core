@@ -8,33 +8,17 @@
             "type": "float",
             "description": "The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*."
         },
-        "posX": {
-            "type": "float",
-            "description": "The current x-position of ______ at the moment the event occurred."
+        "pos": {
+            "type": "List[float]",
+            "description": "The current position of the player headset at the moment the event occurred, formatted as [x, y, z]"
         },
-        "posY": {
-            "type": "float",
-            "description": "The current y-position of ______ at the moment the event occurred."
+        "rot": {
+            "type": "List[float]",
+            "description": "The current orientation of the player headset at the moment the event occurred, formatted as [x, y, z, w]"
         },
-        "posZ": {
-            "type": "float",
-            "description": "The current z-position of ______ at the moment the event occurred."
-        },
-        "rotX": {
-            "type": "float",
-            "description": "The x-component of the orientation of ______ at the moment the event occurred."
-        },
-        "rotY": {
-            "type": "float",
-            "description": "The y-component of the orientation of ______ at the moment the event occurred."
-        },
-        "rotZ": {
-            "type": "float",
-            "description": "The z-component of the orientation of ______ at the moment the event occurred."
-        },
-        "rotW": {
-            "type": "float",
-            "description": "The w-component of the orientation of ______ at the moment the event occurred."
+        "has_rock": {
+            "type": "bool",
+            "description": "Whether the player was holding a rock in their beak at the time the event occurred."
         }
     },
     "events": {
@@ -124,45 +108,17 @@
                     "type": "str",
                     "description": "The name of... some object"
                 },
-                "old_posX": {
-                    "type": "float",
-                    "description": "The previous X-position, where the waddle started."
+                "pos_old": {
+                    "type": "List[float]",
+                    "description": "The previous position of the player avatar's feet, in [x, y, z] form, i.e. where the waddle started."
                 },
-                "old_posY": {
-                    "type": "float",
-                    "description": "The previous Y-position, where the waddle started."
+                "pos_new": {
+                    "type": "List[float]",
+                    "description": "The resulting position of the player avatar's feet, in [x, y, z] form, i.e. where the waddle ended."
                 },
-                "old_posZ": {
-                    "type": "float",
-                    "description": "The previous Z-position, where the waddle started."
-                },
-                "posX": {
-                    "type": "float",
-                    "description": "The new X-position, where the waddle ended."
-                },
-                "posY": {
-                    "type": "float",
-                    "description": "The new Y-position, where the waddle ended."
-                },
-                "posZ": {
-                    "type": "float",
-                    "description": "The new Z-position, where the waddle ended."
-                },
-                "rotX": {
-                    "type": "float",
-                    "description": "The X-component of the rotation when the waddle ended."
-                },
-                "rotY": {
-                    "type": "float",
-                    "description": "The Y-component of the rotation when the waddle ended."
-                },
-                "rotZ": {
-                    "type": "float",
-                    "description": "The Z-component of the rotation when the waddle ended."
-                },
-                "rotW": {
-                    "type": "float",
-                    "description": "The W-component of the rotation when the waddle ended."
+                "source": {
+                    "type": "enum(BUTTON, WADDLE)",
+                    "description": "Indicator for whether the player waddled by pressing a button, or by making the 'waddle' gesture with their head."
                 }
             }
         },
@@ -206,12 +162,50 @@
                 }
             }
         },
+        "flipper_bash_nest": {
+            "description": "An event triggered when the player makes a flipper-bashing move and makes contact with a nest.",
+            "event_data": {
+                "nest_id": {
+                    "type": "str",
+                    "description": "The name of the nest object the player bashed"
+                },
+                "nest_pos": {
+                    "type": "List[float]",
+                    "description": "The position of the nest the player bashed"
+                },
+                "hand": {
+                    "type": "List[float]",
+                    "description": "The position of the nest the player bashed"
+                },
+            }
+        },
+        "flipper_bash_penguin": {
+            "description": "An event triggered when the player makes a flipper-bashing move and makes contact with another penguin.",
+            "event_data": {
+                "penguin_id": {
+                    "type": "str",
+                    "description": "The name of the penguin object the player bashed"
+                },
+                "penguin_pos": {
+                    "type": "List[float]",
+                    "description": "The position of the other penguin when it got bashed"
+                }
+            }
+        },
         "flipper_bash_skua": {
             "description": "An event triggered when the player makes a flipper-bashing move to shoo a skua away from their nest/egg.",
             "event_data": {
-                "object_id": {
+                "skua_id": {
                     "type": "str",
                     "description": "The name of the skua object the player bashed"
+                },
+                "skua_pos": {
+                    "type": "List[float]",
+                    "description": "The position of ht eskua when it got bashed"
+                },
+                "penguin_pos": {
+                    "type": "str",
+                    "description": "The position of the player when they slapped the skua. NOTE : This was added due to a mistake in specification, and is redundant with the position element in game_state."
                 }
             }
         },

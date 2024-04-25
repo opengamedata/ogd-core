@@ -1,13 +1,14 @@
 # import standard libraries
 from datetime import datetime, timedelta
 from time import time
-from typing import Callable, List, Optional, Union
+from typing import Callable, Final, List, Optional, Union
 # import local files
-from ogd.core.extractors.detectors.Detector import Detector
-from ogd.core.extractors.detectors.DetectorEvent import DetectorEvent
-from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.generators.detectors.Detector import Detector
+from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.utils.typing import Map
 
 
 class TwoHints(Detector):
@@ -16,32 +17,28 @@ class TwoHints(Detector):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    DEFAULT_THRESOLD = 5
+    DEFAULT_THRESOLD : Final[int] = 5
 
 
-    def __init__(self, params:ExtractorParameters, trigger_callback:Callable[[Event], None], time_threshold:Optional[int]):
+    def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None], time_threshold:Optional[int]):
         super().__init__(params=params, trigger_callback=trigger_callback)
         self._found = False
         self._sess_id = "Unknown"
-        self._player_id = "Unknown"
-        self._app_version = "Unknown"
-        self._log_version = "Unknown"
-
         self._job_name = "Unknown"
         self._last_hint = "Unknown"
         self._this_hint = "Unknown"
         self._last_hint_time:Optional[datetime] = None
         self._time_spent: Optional[Union[timedelta, float]] = None
-        self._detector_event_data: Optional[dict] = {"job_name": self._job_name}
+        self._detector_event_data: Map = {"job_name": self._job_name}
+        self._threshold : timedelta
         if time_threshold is not None:
-            self._threshold: Union[timedelta, float] = timedelta(seconds=time_threshold)
+            self._threshold = timedelta(seconds=time_threshold)
         else:
-            self._threshold: Union[timedelta, float] = timedelta(
-                seconds=TwoHints.DEFAULT_THRESOLD)
+            self._threshold = timedelta(seconds=TwoHints.DEFAULT_THRESOLD)
 
     # *** Implement abstract functions ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -49,7 +46,7 @@ class TwoHints(Detector):
         """
         return ["ask_for_help"] # >>> fill in names of events this Feature should use for extraction. <<<
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         """_summary_
 
         :param event: _description_
@@ -72,16 +69,16 @@ class TwoHints(Detector):
             self._found = True
             self._time_spent = self._time_spent / timedelta(seconds=1)
             self._sess_id = event.SessionID
-            self._player_id = event.UserID
-            self._time = event.Timestamp
-            self._app_version = event.AppVersion
-            self._log_version = event.LogVersion
-            self._sequence_index = event.EventSequenceIndex
 
             self._job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
             self._this_hint = event.EventData.get("node_id")
-            self._detector_event_data = {"time": self._time_spent, "level": self._threshold / timedelta(
-                seconds=1), "job_name": self._job_name, "last_hint_node": self._last_hint, "this_hint_node": self._this_hint}
+            self._detector_event_data = {
+                "time": self._time_spent,
+                "level": self._threshold / timedelta(seconds=1),
+                "job_name": self._job_name,
+                "last_hint_node": self._last_hint,
+                "this_hint_node": self._this_hint
+            }
 
         self._last_hint_time = event.Timestamp
         self._last_hint = self._this_hint
@@ -100,5 +97,6 @@ class TwoHints(Detector):
         :return: _description_
         :rtype: List[Any]
         """
-        ret_val: DetectorEvent = DetectorEvent(session_id=self._sess_id, app_id="AQUALAB", timestamp=self._time, event_name="TwoHints", event_data=self._detector_event_data, app_version=self._app_version, log_version=self._log_version, user_id=self._player_id, event_sequence_index=self._sequence_index)
+        ret_val: DetectorEvent = self.GenerateEvent(session_id=self._sess_id, app_id="AQUALAB",
+                                                    event_name="TwoHints", event_data=self._detector_event_data)
         return ret_val

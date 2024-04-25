@@ -4,8 +4,8 @@ import logging
 from datetime import datetime
 from typing import Dict, List, Type, Optional, Set, Tuple, Union
 ## import local files
-from ogd.core.extractors.ExtractorLoader import ExtractorLoader
-from ogd.core.processors.FeatureProcessor import FeatureProcessor
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
+from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.core.processors.PopulationProcessor import PopulationProcessor
 from ogd.core.processors.PlayerProcessor import PlayerProcessor
 from ogd.core.processors.SessionProcessor import SessionProcessor
@@ -15,8 +15,8 @@ from ogd.core.utils.Logger import Logger
 from ogd.core.utils.utils import ExportRow
 
 class FeatureManager:
-    def __init__(self, game_schema:GameSchema, LoaderClass:Optional[Type[ExtractorLoader]], feature_overrides:Optional[List[str]]):
-        self._LoaderClass    : Optional[Type[ExtractorLoader]] = LoaderClass
+    def __init__(self, game_schema:GameSchema, LoaderClass:Optional[Type[GeneratorLoader]], feature_overrides:Optional[List[str]]):
+        self._LoaderClass    : Optional[Type[GeneratorLoader]] = LoaderClass
         self._game_schema    : GameSchema                 = game_schema
         self._overrides      : Optional[List[str]]        = feature_overrides
         # local tracking of whether we're up-to-date on getting feature values.
@@ -164,8 +164,8 @@ class FeatureManager:
                                         player_id="null", session_id="null", feature_overrides=self._overrides)
             }
 
-    def _flatHierarchy(self) -> List[FeatureProcessor]:
-        ret_val : List[FeatureProcessor] = []
+    def _flatHierarchy(self) -> List[ExtractorProcessor]:
+        ret_val : List[ExtractorProcessor] = []
         if self._population is not None:
             ret_val = [self._population]
         if self._players is not None:
