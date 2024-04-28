@@ -572,6 +572,13 @@
                 "count": 11,
                 "description": "The number of times a player with a rock has peck_rock event.",
                 "return_type": "int"
+            },
+            "NestIDCheck": {
+                "type": "NestIDCheck",
+                "enabled": true,
+                "count": 11,
+                "description": "The number of times a player with a rock that has a peck_nest event, where nest_id does not equal to player nest_id.",
+                "return_type": "int"
             }
         }
     },
