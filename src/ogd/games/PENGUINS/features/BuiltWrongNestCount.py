@@ -13,7 +13,7 @@ from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
 
-class NestIDCheck(SessionFeature):
+class BuiltWrongNestCount(SessionFeature):
 
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
@@ -32,7 +32,7 @@ class NestIDCheck(SessionFeature):
         # if has_rock does not exit it will return false as well
         
         if event.game_state.get("has_rock", False):
-            if re.match(r'^PebNest\d+$', event.event_data.get("nest_id", "")):
+            if (event.log_version) <11 and (event.game_state.get("has_rock", False)):
                 self._current_count += 1
 
     def _updateFromFeatureData(self, feature:FeatureData):

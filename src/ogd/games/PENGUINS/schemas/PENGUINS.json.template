@@ -566,15 +566,15 @@
                 "description": "he number of times a player had a flipper_bash_rock event.",
                 "return_type": "int"
             },
-            "PeckRockCheck": {
-                "type": "PeckRockCheck",
+            "PickupMultipleRockCount": {
+                "type": "PickupMultipleRockCount",
                 "enabled": true,
                 "count": 11,
                 "description": "The number of times a player with a rock has peck_rock event.",
                 "return_type": "int"
             },
-            "NestIDCheck": {
-                "type": "NestIDCheck",
+            "BuiltWrongNestCount": {
+                "type": "BuiltWrongNestCount",
                 "enabled": true,
                 "count": 11,
                 "description": "The number of times a player with a rock that has a peck_nest event, where nest_id does not equal to player nest_id.",

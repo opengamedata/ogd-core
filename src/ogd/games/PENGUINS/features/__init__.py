@@ -18,9 +18,9 @@ __all__ = [
     "RegionDuration",
     "ActivityCompleted",
     "ActivityDuration",
-    "PeckRockCheck",
+    "PickupMultipleRockCount",
     "FlipperBashRockCount",
-    "NestIDCheck"
+    "BuiltWrongNestCount"
 ]
 # aggregated features
 
@@ -38,8 +38,8 @@ from . import EggRecoverTime
 from . import PlayerInactiveAvgDuration
 from . import MirrorWaddleDuration
 from . import FlipperBashRockCount
-from . import PeckRockCheck
-from . import NestIDCheck
+from . import PickupMultipleRockCount
+from . import BuiltWrongNestCount
 
 # percount features
 from . import RegionEnterCount

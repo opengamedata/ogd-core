@@ -92,10 +92,10 @@ class PenguinsLoader(GeneratorLoader):
                     ret_val = ActivityDuration.ActivityDuration(params=extractor_params)       
                 case "FlipperBashRockCount":
                     ret_val = FlipperBashRockCount.FlipperBashRockCount(params=extractor_params) 
-                case "PeckRockCheck":
-                        ret_val = PeckRockCheck.PeckRockCheck(params=extractor_params)      
-                case "NestIDCheck":
-                        ret_val = NestIDCheck.NestIDCheck(params=extractor_params)
+                case "PickupMultipleRockCount":
+                        ret_val = PickupMultipleRockCount.PickupMultipleRockCount(params=extractor_params)      
+                case "BuiltWrongNestCount":
+                        ret_val = BuiltWrongNestCount.BuiltWrongNestCount(params=extractor_params)
                 case _:
                     raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature for Penguins.")
         # Per-count features
