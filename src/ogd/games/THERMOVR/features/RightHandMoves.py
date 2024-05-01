@@ -1,14 +1,14 @@
 from typing import Any, Dict, List
 
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.SessionFeature import SessionFeature
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 
 class RightHandMovesCount(SessionFeature):
 
-    def __init__(self, params: ExtractorParameters):
+    def __init__(self, params: GeneratorParameters):
         self._right_hand_move_count = 0
         self._last_hand_action = None
         super().__init__(params=params)
@@ -29,7 +29,7 @@ class RightHandMovesCount(SessionFeature):
     def _extractFromEvent(self, event: Event) -> None:
         hand = event.EventData.get("hand")
         if hand == "RIGHT":
-            action = event.EventType.split("_")[0]  # Extract action (grab, release, click, etc.)
+            action = event.EventName.split("_")[0]  # Extract action (grab, release, click, etc.)
             if action in ["grab", "click"] or (action == "release" and self._last_hand_action != "grab"):
                 self._right_hand_move_count += 1
             self._last_hand_action = action

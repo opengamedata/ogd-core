@@ -1,14 +1,14 @@
 from typing import Any, Dict, List
 
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.SessionFeature import SessionFeature
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 
 class ToolSliderTime(SessionFeature):
 
-    def __init__(self, params: ExtractorParameters):
+    def __init__(self, params: GeneratorParameters):
         self._slider_start_time = {}
         self._slider_times = {}
         super().__init__(params=params)
@@ -22,10 +22,10 @@ class ToolSliderTime(SessionFeature):
         return []
 
     def _extractFromEvent(self, event: Event) -> None:
-        if event.EventType == "grab_tool_slider":
+        if event.EventName == "grab_tool_slider":
             tool_name = event.EventData["tool_name"]
             self._slider_start_time[tool_name] = event.Timestamp
-        elif event.EventType == "release_tool_slider":
+        elif event.EventName == "release_tool_slider":
             tool_name = event.EventData["tool_name"]
             if tool_name in self._slider_start_time:
                 start_time = self._slider_start_time[tool_name]

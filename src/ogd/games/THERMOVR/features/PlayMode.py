@@ -1,13 +1,13 @@
 from typing import Any, List
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.SessionFeature import SessionFeature
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 
 class PlayMode(SessionFeature):
 
-    def __init__(self, params: ExtractorParameters):
+    def __init__(self, params: GeneratorParameters):
         self.play_mode = None
         super().__init__(params=params)
 
@@ -20,7 +20,7 @@ class PlayMode(SessionFeature):
         return []
 
     def _extractFromEvent(self, event: Event) -> None:
-        if event.EventType == "game_start":
+        if event.EventName == "game_start":
             mode = event.EventData.get("mode")
             if mode:
                 self.play_mode = mode
