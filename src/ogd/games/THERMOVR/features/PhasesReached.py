@@ -20,11 +20,9 @@ class PhasesReached(SessionFeature):
         return []
 
     def _extractFromEvent(self, event: Event) -> None:
-        game_state = event.GameState.get("region")
-        """if game_state:
-            region = event.GameState.get("region")
-            if region:
-                self.phases_reached.add(region)"""
+        region = event.GameState.get("region")
+        if region:
+            self.phases_reached.add(region)
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
