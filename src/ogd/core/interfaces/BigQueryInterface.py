@@ -64,7 +64,7 @@ class BigQueryInterface(DataInterface):
             data = self._client.query(query)
             session_ids = [str(row['session_id']) for row in data]
         except BadRequest as err:
-            Logger.Log(f"Got a BadRequest error when trying to retrieve data from BigQuery, defaulting to empty result!\n{err}")
+            Logger.Log(f"In _allIDs, got a BadRequest error when trying to retrieve data from BigQuery, defaulting to empty result!\n{err}")
         else:
             ret_val = session_ids
         return ret_val
@@ -81,7 +81,7 @@ class BigQueryInterface(DataInterface):
             data = list(self._client.query(query))
             date_range : Dict[str, datetime] = { 'min':data[0][0], 'max':data[0][1] }
         except BadRequest as err:
-            Logger.Log(f"Got a BadRequest error when trying to retrieve data from BigQuery, defaulting to empty result!\n{err}")
+            Logger.Log(f"In _fullDateRange, got a BadRequest error when trying to retrieve data from BigQuery, defaulting to empty result!\n{err}")
         else:
             ret_val = date_range
         return ret_val
@@ -96,7 +96,7 @@ class BigQueryInterface(DataInterface):
                 data = self._client.query(query)
                 Logger.Log(f"...Query yielded results, with query in state: {data.state}", logging.DEBUG, depth=3)
             except BadRequest as err:
-                Logger.Log(f"Got a BadRequest error when trying to retrieve data from BigQuery, defaulting to empty result!\n{err}")
+                Logger.Log(f"In _rowsFromIDs, got a BadRequest error when trying to retrieve data from BigQuery, defaulting to empty result!\n{err}")
             else:
                 for row in data:
                     items = tuple(row.items())
@@ -126,7 +126,7 @@ class BigQueryInterface(DataInterface):
             data = self._client.query(query)
             ids = [str(row['session_id']) for row in data]
         except BadRequest as err:
-            Logger.Log(f"Got a BadRequest error when trying to retrieve data from BigQuery, defaulting to empty result!\n{err}")
+            Logger.Log(f"In _IDsFromDates, got a BadRequest error when trying to retrieve data from BigQuery, defaulting to empty result!\n{err}")
         else:
             ret_val = ids
             Logger.Log(f"Found {len(ret_val)} ids. {ret_val if len(ret_val) <= 5 else ''}", logging.DEBUG, depth=3)
@@ -156,7 +156,7 @@ class BigQueryInterface(DataInterface):
             data = list(self._client.query(query))
             Logger.Log(f"...Query yielded results:\n{data}", logging.DEBUG, depth=3)
         except BadRequest as err:
-            Logger.Log(f"Got a BadRequest error when trying to retrieve data from BigQuery, defaulting to empty result!\n{err}")
+            Logger.Log(f"In _datesFromIDs, got a BadRequest error when trying to retrieve data from BigQuery, defaulting to empty result!\n{err}")
         else:
             if len(data) == 1:
                 dates = data[0]
