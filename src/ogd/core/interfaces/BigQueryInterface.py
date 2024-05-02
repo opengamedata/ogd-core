@@ -137,7 +137,7 @@ class BigQueryInterface(DataInterface):
 
         match id_mode:
             case IDMode.SESSION:
-                id_string = ','.join([f"{x}" for x in id_list])
+                id_string = ','.join([f"'{x}'" for x in id_list])
                 where_clause = f"WHERE session_id IN ({id_string})"
             case IDMode.USER:
                 id_string = ','.join([f"'{x}'" for x in id_list])
@@ -156,7 +156,7 @@ class BigQueryInterface(DataInterface):
             data = list(self._client.query(query))
             Logger.Log(f"...Query yielded results:\n{data}", logging.DEBUG, depth=3)
         except BadRequest as err:
-            Logger.Log(f"In _datesFromIDs, got a BadRequest error when trying to retrieve data from BigQuery, defaulting to empty result!\n{err}")
+            Logger.Log(f"In _datesFromIDs, got a BadRequest error when trying to retrieve data from BigQuery, defaulting to empty result!\n{err}", logging.WARNING)
         else:
             if len(data) == 1:
                 dates = data[0]
