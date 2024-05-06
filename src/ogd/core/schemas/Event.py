@@ -1,7 +1,7 @@
 import logging
 from datetime import date, datetime, timedelta
 from enum import IntEnum
-from typing import List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 from ogd.core.utils import utils
 class EventSource(IntEnum):
@@ -83,6 +83,25 @@ class Event:
             self.app_id = app_id
         if self.event_sequence_index == None:
             self.event_sequence_index = index
+
+    @staticmethod
+    def FromJSON(json_data:Dict):
+        return Event(
+            session_id  =json_data.get("session_id", "SESSION ID NOT FOUND"),
+            app_id      =json_data.get("app_id", "APP ID NOT FOUND"),
+            timestamp   =json_data.get("client_time", "CLIENT TIME NOT FOUND"),
+            event_name  =json_data.get("event_name", "EVENT NAME NOT FOUND"),
+            event_data  =json_data.get("event_data", "EVENT DATA NOT FOUND"),
+            event_source=EventSource.GAME,
+            app_version =json_data.get("app_version", None),
+            app_branch  =json_data.get("app_branch", None),
+            log_version =json_data.get("log_version", None),
+            time_offset =None,
+            user_id     =json_data.get("user_id", None),
+            user_data   =json_data.get("user_data", None),
+            game_state  =json_data.get("game_state", None),
+            event_sequence_index=json_data.get("event_sequence_index", json_data).get("session_n", None)
+        )
 
     @staticmethod
     def CompareVersions(a:str, b:str, version_separator='.') -> int:
