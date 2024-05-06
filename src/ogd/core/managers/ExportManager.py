@@ -116,7 +116,7 @@ class ExportManager:
         _games_path  = Path(games.__file__) if Path(games.__file__).is_dir() else Path(games.__file__).parent
         _game_schema  : GameSchema  = GameSchema.FromFile(game_id=request.GameID, schema_path=_games_path / request.GameID / "schemas")
         # 1. Get LoaderClass and set up Event and Feature managers.
-        load_class = self._loadLoaderClass(request.GameID)
+        load_class = ExportManager._loadLoaderClass(request.GameID)
         if load_class is None:
             # If game doesn't have an extractor, make sure we don't try to export it.
             request.RemoveExportMode(ExportMode.DETECTORS)
@@ -169,7 +169,8 @@ class ExportManager:
         time_delta = datetime.now() - start
         Logger.Log(f"Output time for population: {time_delta}", logging.INFO, depth=2)
 
-    def _loadLoaderClass(self, game_id:str) -> Optional[Type[GeneratorLoader]]:
+    @staticmethod
+    def _loadLoaderClass(game_id:str) -> Optional[Type[GeneratorLoader]]:
         _loader_class: Optional[Type[GeneratorLoader]] = None
         match game_id:
             case "AQUALAB":
