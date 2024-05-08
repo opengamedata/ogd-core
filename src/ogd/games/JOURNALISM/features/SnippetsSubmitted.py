@@ -31,9 +31,9 @@ class SnippetsSubmitted(PerLevelFeature):
         if event.EventName == "story_click":
             snippet_list = json.loads( event.EventData["snippet_list"] )
             for snippet in snippet_list:
-                if not SnippetsSubmitted.has_printed:
-                    print(f"snippet: {snippet} of type {type(snippet)}")
-                    SnippetsSubmitted.has_printed = True
+                # if not SnippetsSubmitted.has_printed:
+                #     print(f"snippet: {snippet} of type {type(snippet)}")
+                #     SnippetsSubmitted.has_printed = True
                 self._snippet_ids.append(snippet.get("SnippetId", "NOT FOUND"))
 
     def _updateFromFeatureData(self, feature: FeatureData):
