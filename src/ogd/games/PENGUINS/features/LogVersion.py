@@ -21,14 +21,14 @@ class LogVersion(SessionFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
-        return []
+        return ["all_events"]
 
     @classmethod
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event:Event) -> None:
-        self._current_log = event.log_version
+        return event.log_version
 
 
     def _updateFromFeatureData(self, feature:FeatureData):
