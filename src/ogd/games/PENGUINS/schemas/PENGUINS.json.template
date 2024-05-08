@@ -176,7 +176,7 @@
                 "hand": {
                     "type": "List[float]",
                     "description": "The position of the nest the player bashed"
-                },
+                }
             }
         },
         "flipper_bash_penguin": {
