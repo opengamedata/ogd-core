@@ -20,7 +20,8 @@ __all__ = [
     "ActivityDuration",
     "PickupMultipleRockCount",
     "FlipperBashRockCount",
-    "BuiltWrongNestCount"
+    "BuiltWrongNestCount",
+    "LogVersion"
 ]
 # aggregated features
 
@@ -40,6 +41,7 @@ from . import MirrorWaddleDuration
 from . import FlipperBashRockCount
 from . import PickupMultipleRockCount
 from . import BuiltWrongNestCount
+from . import LogVersion
 
 # percount features
 from . import RegionEnterCount
