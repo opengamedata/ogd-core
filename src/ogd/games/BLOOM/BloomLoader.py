@@ -3,6 +3,8 @@ import itertools
 import json
 from pathlib import Path
 from typing import Any, Callable, Dict, Final, List, Optional
+
+from ogd.games.BLOOM.features import AverageActiveTime
 # import local files
 from . import features
 from ogd.games import BLOOM
@@ -10,18 +12,18 @@ from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.games.BLOOM.detectors import *
+from ogd.games.BLOOM.detectors import * 
 from ogd.games.BLOOM.features import *
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.utils.utils import loadJSONFile
 
-EXPORT_PATH : Final[str] = "games/BLOOM/DBExport.json"
+#EXPORT_PATH : Final[str] = "games/BLOOM/DBExport.json"
 
 ## @class BloomLoader
 #  Extractor subclass for extracting features from Bloomlab game data.
-class BloomlabLoader(GeneratorLoader):
+class BloomLoader(GeneratorLoader):
 
     # *** BUILT-INS & PROPERTIES ***
 
@@ -39,27 +41,14 @@ class BloomlabLoader(GeneratorLoader):
         :type feature_overrides: Optional[List[str]]
         """
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
-        self._job_map = {"no-active-job": 0}
-        self._diff_map = {0: {"experimentation": 0, "modeling": 0, "argumentation": 0} }
-        self._task_map = {}
         data = None
 
-        # Load Bloomlab jobs export and map job names to integer values
-        _dbexport_path = Path(BLOOM.__file__) if Path(BLOOM.__file__).is_dir() else Path(BLOOM.__file__).parent
-        with open(_dbexport_path / "DBExport.json", "r") as file:
-            export = json.load(file)
+    """        # Load Bloomlab jobs export and map job names to integer values
+            _dbexport_path = Path(BLOOM.__file__) if Path(BLOOM.__file__).is_dir() else Path(BLOOM.__file__).parent
+            with open(_dbexport_path / "DBExport.json", "r") as file:
+                export = json.load(file)"""
 
-            task_num = 1
-            for i, job in enumerate(export["jobs"], start=1):
-                self._job_map[job["id"]] = i
-                self._diff_map[i] = job["difficulties"]
-                for task in job["tasks"]:
-                    task_by_job = job["id"] + "_" + task["id"]
-                    self._task_map[task_by_job] = task_num
-                    task_num += 1
 
-        # Update level count
-        self._game_schema._max_level = len(self._job_map) - 1
 
    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
@@ -72,6 +61,12 @@ class BloomlabLoader(GeneratorLoader):
         # First run through aggregate features
         if extractor_params._count_index == None:
             match feature_type:
+                case "ActiveTime":
+                    ret_val = ActiveTime.ActiveTime(params=extractor_params, active_threads=schema_args.get("Active_threshold"))
+                case "NumberOfSessionsPerPlayer":
+                    ret_val = NumberOfSessionsPerPlayer.NumberOfSessionsPerPlayer(params=extractor_params)
+                case "AverageActiveTime":
+                    ret_val = AverageActiveTime.AverageActiveTime(params=extractor_params)    
                 case _:
                     raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature type for Bloom.")
         # then run through per-count features.

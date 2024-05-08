@@ -208,6 +208,9 @@ class ExportManager:
             case "PENGUINS":
                 from ogd.games.PENGUINS.PenguinsLoader import PenguinsLoader
                 _loader_class = PenguinsLoader
+            case "BLOOM":
+                from ogd.games.BLOOM.BloomLoader import BloomLoader
+                _loader_class = BloomLoader
             case _:
                 if game_id in {"BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MASHOPOLIS", "WEATHER_STATION", "WIND"}:
                     # all games with data but no extractor.

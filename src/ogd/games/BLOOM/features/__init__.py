@@ -1,8 +1,11 @@
 __all__ = [
     
     "ActiveTime",
-    "NumberOfSessionsPerPlayer"
+    "NumberOfSessionsPerPlayer",
+    "AverageActiveTime"
+
 ]
 
 from . import ActiveTime
 from . import NumberOfSessionsPerPlayer
+from . import AverageActiveTime

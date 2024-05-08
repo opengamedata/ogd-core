@@ -13,8 +13,7 @@ from ogd.core.schemas.FeatureData import FeatureData
 class ActiveTime(Feature):
     IDLE_LEVEL: Final[int] = 30
 
-    def __init__(self, params: GeneratorParameters, job_map: Dict[str, Any], active_threads: Optional[float] = None):
-        self._job_map = job_map
+    def __init__(self, params: GeneratorParameters, active_threads: Optional[float] = None):
         super().__init__(params=params)
         self._Idle_time: float = 0
         self.active_level: float = active_threads if active_threads else ActiveTime.IDLE_LEVEL
