@@ -579,6 +579,13 @@
                 "count": 11,
                 "description": "The number of times a player with a rock that has a peck_nest event, where nest_id does not equal to player nest_id.",
                 "return_type": "int"
+            },
+            "LogVersion": {
+                "type": "LogVersion",
+                "enabled": true,
+                "count": 11,
+                "description": "The version of game the player use.",
+                "return_type": "int"
             }
         }
     },

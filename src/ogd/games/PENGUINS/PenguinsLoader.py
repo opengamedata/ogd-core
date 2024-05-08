@@ -82,6 +82,9 @@ class PenguinsLoader(GeneratorLoader):
                     ret_val = EggLostCount.EggLostCount(params=extractor_params)
                 case "EggRecoverTime":
                     ret_val = EggRecoverTime.EggRecoverTime(params=extractor_params)
+                case "LogVersion":
+                    ret_val = LogVersion.LogVersion(params=extractor_params)
+                
                 # case "PlayerInactiveAvgDuration":
                 #     ret_val = PlayerInactiveAvgDuration.PlayerInactiveAvgDuration(params=extractor_params)
                 case "MirrorWaddleDuration":
