@@ -13,7 +13,8 @@
       "CleanupPolicy" : ["NOT_SET", "NONE", "LOW_SKIMMING", "HIGH_SKIMMING", "SKIM_AND_DREDGE"],
       "CharacterClass" : ["TODO : This includes ECONOMY_ADVISOR, ECOLOGY_ADVISOR, PHOS4US, GRAIN_FARMER, DAIRY_FARMER, etc. but need to get full list"],
       "AlertType" : ["TODO : This is the different kinds of notification, but we haven't decided on granularity yet. Would inclue e.g. BLOOM_WARNING, or OPTIONAL_DIALOG, or whatever else"],
-      "ZoomType" : ["BUTTON", "SCROLL"]
+      "ZoomType" : ["BUTTON", "SCROLL"],
+      "LossType" : ["CITY_FAILED", "TOO_MANY_BLOOMS", "OUT_OF_MONEY"]
    },
    "game_state" : {
       "seconds_from_launch" : {
@@ -83,6 +84,25 @@
             }
          }
       },
+      "win_game": {
+         "description": "When the player enters the game win state, and is shown the 'you win' cutscene",
+         "event_data": {
+            "map_state" : {
+               "type" : "TODO : BuildMap",
+               "description" : "The state of the build map when the player entered the win state."
+            }
+         }
+      },
+      "lose_game": {
+         "description": "When the player enters the game lose state, and is taken back to a checkpoint to try again.",
+         "event_data": {
+            "lose_condition" : {
+               "type" : "LossType",
+               "description" : "The state of the build map when the player entered the win state."
+            }
+         }
+      },
+
       "click_new_game": {
          "description": "When the player clicks the button for a new game. This should bring the 'new game' menu",
          "event_data": {
