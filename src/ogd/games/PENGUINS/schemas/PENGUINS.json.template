@@ -565,33 +565,6 @@
                 "enabled": true,
                 "description": "The regions entered in a given session.",
                 "return_type": "int"
-            },
-            "FlipperBashRockCount": {
-                "type": "FlipperBashRockCount",
-                "enabled": true,
-                "description": "he number of times a player had a flipper_bash_rock event.",
-                "return_type": "int"
-            },
-            "PickupMultipleRockCount": {
-                "type": "PickupMultipleRockCount",
-                "enabled": true,
-                "count": 11,
-                "description": "The number of times a player with a rock has peck_rock event.",
-                "return_type": "int"
-            },
-            "BuiltWrongNestCount": {
-                "type": "BuiltWrongNestCount",
-                "enabled": true,
-                "count": 11,
-                "description": "The number of times a player with a rock that has a peck_nest event, where nest_id does not equal to player nest_id.",
-                "return_type": "int"
-            },
-            "LogVersion": {
-                "type": "LogVersion",
-                "enabled": true,
-                "count": 11,
-                "description": "The version of game the player use.",
-                "return_type": "int"
             }
         }
     },
