@@ -174,7 +174,7 @@ When a new piece appears on the conveyer belt.
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| type | PieceType | The type of piece that appeared on the belt. | |
+| type | PieceShape | The type of piece that appeared on the belt. | |
 
 #### Other Elements
 
@@ -188,7 +188,7 @@ When a non-packed piece disappears off the conveyer belt.
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| type | PieceType | The type of piece that left the belt. | |
+| type | PieceShape | The type of piece that left the belt. | |
 
 #### Other Elements
 
@@ -216,8 +216,8 @@ When a piece is hit by a punch, packing it into the box.
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| piece | Dict | A dict describing the piece that was hit. Indicates the type of the piece, whether the piece was damaged, and whether it matched the level target. |**type** : PieceType, **is_damaged** : bool, **is_target** : bool |
-| new_box_contents | List[Dict] | A list whose elements are dictionaries describing individual pieces placed in the current box, including the newly-packed piece. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target. |**type** : PieceType, **is_damaged** : bool, **is_target** : bool |
+| piece | Dict | A dict describing the piece that was hit. Indicates the type of the piece, whether the piece was damaged, and whether it matched the level target. |**type** : PieceShape, **is_damaged** : bool, **is_target** : bool |
+| new_box_contents | List[Dict] | A list whose elements are dictionaries describing individual pieces placed in the current box, including the newly-packed piece. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target. |**type** : PieceShape, **is_damaged** : bool, **is_target** : bool |
 | accuracy | float | A value, from 0-1, indicating how close the player was to a 'perfectly accurate' punch. | |
 
 #### Other Elements
@@ -232,7 +232,7 @@ When a bomb is hit by a punch, destroying the current contents of the box.
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| pieces_destroyed | List[Dict] | A list whose elements are dictionaries describing individual pieces that were in the current box, and destroyed by the bomb. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target. |**type** : PieceType, **is_damaged** : bool, **is_target** : bool |
+| pieces_destroyed | List[Dict] | A list whose elements are dictionaries describing individual pieces that were in the current box, and destroyed by the bomb. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target. |**type** : PieceShape, **is_damaged** : bool, **is_target** : bool |
 | accuracy | float | A value, from 0-1, indicating how close the player was to a 'perfectly accurate' punch. | |
 
 #### Other Elements
@@ -247,7 +247,7 @@ When a third piece is packed in a box, completing the box
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| pieces | List[Dict] | A list whose elements are dictionaries describing individual pieces that were in the completed box. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target. |**type** : PieceType, **is_damaged** : bool, **is_target** : bool |
+| pieces | List[Dict] | A list whose elements are dictionaries describing individual pieces that were in the completed box. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target. |**type** : PieceShape, **is_damaged** : bool, **is_target** : bool |
 | score | int | The points earned for packing the box. | |
 | is_perfect | bool | Indicator for whether the box score is the maximum possible for the current level. | |
 
@@ -263,7 +263,7 @@ When a player packs a box in a 'SHIFTING' level, and the target for the next box
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| new_target_pieces | List[PieceType] | A list of the types of pieces accepted for the new target. If the game ever has 'shifting ordered set' levels, the order in the list indicates the order pieces must be placed. | |
+| new_target_pieces | List[PieceShape] | A list of the types of pieces accepted for the new target. If the game ever has 'shifting ordered set' levels, the order in the list indicates the order pieces must be placed. | |
 
 #### Other Elements
 
