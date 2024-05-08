@@ -8,6 +8,7 @@ __all__ = [
     "SkillSequenceCount",
     "TotalLevelTime",
     "PlayerAttributes",
+    "FinalAttributes",
     "StoryAlignment",
     "QuitLevel",
     "QuitType",
@@ -19,6 +20,7 @@ __all__ = [
     "LevelCompleteCount",
     "LevelCompleted",
     "TotalFails",
+    "FailureAttributes",
     "FailureCount",
     "ContinuesOnFail",
     "PlayTime",
@@ -49,6 +51,7 @@ from . import MeanSnippetTime
 from . import StoryCompleteTime
 from . import SkillSequenceCount
 from . import TotalLevelTime
+from . import FinalAttributes
 from . import PlayerAttributes
 from . import StoryAlignment
 from . import QuitLevel
@@ -61,6 +64,7 @@ from . import MaxedPlayerAttribute
 from . import LevelCompleteCount
 from . import LevelCompleted
 from . import TotalFails
+from . import FailureAttributes
 from . import FailureCount
 from . import ContinuesOnFail
 from . import PlayTime

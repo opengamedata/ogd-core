@@ -7,6 +7,7 @@ from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 
+
 class StoryScore(PerLevelFeature):
     def __init__(self, params: GeneratorParameters):
         PerLevelFeature.__init__(self, params=params)
