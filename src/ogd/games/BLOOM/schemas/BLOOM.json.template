@@ -14,7 +14,7 @@
       "CharacterClass" : ["TODO : This includes ECONOMY_ADVISOR, ECOLOGY_ADVISOR, PHOS4US, GRAIN_FARMER, DAIRY_FARMER, etc. but need to get full list"],
       "AlertType" : ["TODO : This is the different kinds of notification, but we haven't decided on granularity yet. Would inclue e.g. BLOOM_WARNING, or OPTIONAL_DIALOG, or whatever else"],
       "ZoomType" : ["BUTTON", "SCROLL"],
-      "LossType" : ["CITY_FAILED", "TOO_MANY_BLOOMS", "OUT_OF_MONEY"]
+      "LossType" : ["CityFailed", "TooManyBlooms", "OutOfMoney"]
    },
    "game_state" : {
       "seconds_from_launch" : {
