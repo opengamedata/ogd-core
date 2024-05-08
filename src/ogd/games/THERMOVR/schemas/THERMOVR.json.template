@@ -1003,10 +1003,58 @@
         }
     },
 
-    "features": {
+   "features": {
         "per_count": {
         },
         "aggregate":{
+            "LabCompleteCount": {
+                "enabled": false,
+                "type": "LabCompleteCount",
+                "description": "Count of number of labs completed",
+                "return_type": "int"
+            },
+            "LeftHandMoves": {
+                "enabled": false,
+                "type": "LabCompleteCount",
+                "description": "Count of number of Left hand moves",
+                "return_type": "int"
+            },
+            "RighHandMoves": {
+                "enabled": false,
+                "type": "RighHandMoves",
+                "description": "Count of number of right hand moves",
+                "return_type": "int"
+            },
+            "PhasesReached": {
+                "enabled": false,
+                "type": "PhasesReached",
+                "description": "Phases Reached during a certain task",
+                "return_type": "dict"
+            },
+            "PlayMode": {
+                "enabled": false,
+                "type": "PlayMode",
+                "description": "Play mode of the current instance",
+                "return_type": "str"
+            },
+            "TaskCompleteCount": {
+                "enabled": true,
+                "type": "TaskCompleteCount",
+                "description": "Count of number of tasks completed",
+                "return_type": "int"
+            },
+            "ToolNudegCount": {
+                "enabled": false,
+                "type": "ToolNudegCount",
+                "description": "Count of number of times a tool has been nudged",
+                "return_type": "dict"
+            },
+            "ToolSliderTime": {
+                "enabled": false,
+                "type": "ToolSliderTime",
+                "description": "Counts the total time the slider has been moved",
+                "return_type": "timedelta"
+            }
         }
     },
 
