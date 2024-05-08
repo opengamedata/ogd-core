@@ -32,6 +32,10 @@ class JournalismLoader(GeneratorLoader):
                     ret_val = ChoiceClickCount.ChoiceClickCount(params=extractor_params)
                 case "SessionPlayTime":
                     ret_val = SessionPlayTime.SessionPlayTime(params=extractor_params, threshold=schema_args.get("IDLE_THRESH_SECONDS", SessionPlayTime.SessionPlayTime.IDLE_TIME_THRESHOLD))
+                case "FinalAttributes":
+                    ret_val = FinalAttributes.FinalAttributes(params=extractor_params)
+                case "FailureAttributes":
+                    ret_val = FailureAttributes.FailureAttributes(params=extractor_params)
                 case "SkillSequenceCount":
                     ret_val = SkillSequenceCount.SkillSequenceCount(params = extractor_params)
                 case "MeanSnippetTime":

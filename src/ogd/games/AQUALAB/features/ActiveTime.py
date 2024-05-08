@@ -37,8 +37,8 @@ class ActiveTime(Feature):
             self._client_start_time = event.Timestamp
         self._client_end_time = event.Timestamp
         
-        if event.EventName != "Idle":
-            return
+        # if event.EventName != "Idle":
+        #     return
 
         if not self.active_level:
             self.active_level = event.EventData.get("level")
