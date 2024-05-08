@@ -57,7 +57,26 @@ The elements (member variables) of each Event object, available to programmers w
 
 ## Logged Events  
 
-The individual fields encoded in the *event_data* Event element for each type of event logged by the game.  
+The individual fields encoded in the *game_state* and *user_data* Event element for all event types, and the fields in the *event_data* Event element for each individual event type logged by the game.  
+
+### Enums  
+
+| **Name** | **Values** |
+| ---      | ---        |  
+
+### Game State  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| seconds_from_launch | float | The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*. | |
+| pos | List[float] | The current position of the player headset at the moment the event occurred, formatted as [x, y, z] | |
+| rot | List[float] | The current orientation of the player headset at the moment the event occurred, formatted as [x, y, z, w] | |
+| has_rock | bool | Whether the player was holding a rock in their beak at the time the event occurred. | |  
+
+### User Data  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
 
 ### **session_start**
 
@@ -204,16 +223,8 @@ When a player performs a waddle movement to move their penguin avatar forward
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | object_id | str | The name of... some object | |
-| old_posX | float | The previous X-position, where the waddle started. | |
-| old_posY | float | The previous Y-position, where the waddle started. | |
-| old_posZ | float | The previous Z-position, where the waddle started. | |
-| posX | float | The new X-position, where the waddle ended. | |
-| posY | float | The new Y-position, where the waddle ended. | |
-| posZ | float | The new Z-position, where the waddle ended. | |
-| rotX | float | The X-component of the rotation when the waddle ended. | |
-| rotY | float | The Y-component of the rotation when the waddle ended. | |
-| rotZ | float | The Z-component of the rotation when the waddle ended. | |
-| rotW | float | The W-component of the rotation when the waddle ended. | |
+| pos_old | List[float] | The previous position of the player avatar's feet, in [x, y, z] form, i.e. where the waddle started. | |
+| pos_new | List[float] | The resulting position of the player avatar's feet, in [x, y, z] form, i.e. where the waddle ended. | |
 | source | enum(BUTTON, WADDLE) | Indicator for whether the player waddled by pressing a button, or by making the 'waddle' gesture with their head. | |
 
 #### Other Elements
@@ -277,6 +288,37 @@ An event triggered when the player eats a fish.
 
 - None  
 
+### **flipper_bash_nest**
+
+An event triggered when the player makes a flipper-bashing move and makes contact with a nest.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| nest_id | str | The name of the nest object the player bashed | |
+| nest_pos | List[float] | The position of the nest the player bashed | |
+| hand | List[float] | The position of the nest the player bashed | |
+
+#### Other Elements
+
+- None  
+
+### **flipper_bash_penguin**
+
+An event triggered when the player makes a flipper-bashing move and makes contact with another penguin.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| penguin_id | str | The name of the penguin object the player bashed | |
+| penguin_pos | List[float] | The position of the other penguin when it got bashed | |
+
+#### Other Elements
+
+- None  
+
 ### **flipper_bash_skua**
 
 An event triggered when the player makes a flipper-bashing move to shoo a skua away from their nest/egg.
@@ -285,7 +327,9 @@ An event triggered when the player makes a flipper-bashing move to shoo a skua a
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| object_id | str | The name of the skua object the player bashed | |
+| skua_id | str | The name of the skua object the player bashed | |
+| skua_pos | List[float] | The position of ht eskua when it got bashed | |
+| penguin_pos | str | The position of the player when they slapped the skua. NOTE : This was added due to a mistake in specification, and is redundant with the position element in game_state. | |
 
 #### Other Elements
 
@@ -670,8 +714,6 @@ The number of times a player waddled in a given region of the game.
 ## Other Elements  
 
 Other (potentially non-standard) elements specified in the game's schema, which may be referenced by event/feature processors.  
-
-game_state : {'seconds_from_launch': {'type': 'float', 'description': 'The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*.'}, 'pos': {'type': 'List[float]', 'description': 'The current position of the player headset at the moment the event occurred, formatted as [x, y, z]'}, 'rot': {'type': 'List[float]', 'description': 'The current orientation of the player headset at the moment the event occurred, formatted as [x, y, z, w]'}, 'has_rock': {'type': 'bool', 'description': 'Whether the player was holding a rock in their beak at the time the event occurred.'}}  
 
 ### Other Ranges  
 
