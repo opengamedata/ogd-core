@@ -22,6 +22,9 @@ class JobActiveTime(PerJobFeature):
             self._last_event_session = None
             self._last_event_name = None
             self._last_event_index = None
+            self._last_event_session = None
+            self._last_event_name = None
+            self._last_event_index = None
         else:
             raise NotImplementedError(f"Got invalid export mode of {self.ExtractionMode.name} in JobActiveTime!")
 

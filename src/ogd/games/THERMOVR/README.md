@@ -57,7 +57,50 @@ The elements (member variables) of each Event object, available to programmers w
 
 ## Logged Events  
 
-The individual fields encoded in the *event_data* Event element for each type of event logged by the game.  
+The individual fields encoded in the *game_state* and *user_data* Event element for all event types, and the fields in the *event_data* Event element for each individual event type logged by the game.  
+
+### Enums  
+
+| **Name** | **Values** |
+| ---      | ---        |  
+
+### Game State  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| seconds_from_launch | float | The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*. | |
+| region | enum(WATER, VAPOR, TWO_PHASE) | The current graph region of the water in the piston | |
+| pressure | float | The current pressure (P) in the piston in kPa | |
+| temperature | float | The current temperature (T) of the water in the piston in K | |
+| volume | float | The current volume (V) of the water in the piston m^3 | |
+| internal_energy | float | The current internal energy (u) in the piston | |
+| entropy | float | The current entropy (s) in the piston in kJ/(kgK) | |
+| enthalpy | float | The current enthalpy (h) in the piston in kJ/kg | |
+| vapor | float | The current percentage (by mass) of water in the vapor phase in the piston | |
+| pos_x | float | The current x-position of the headset at the moment the event occurred. | |
+| pos_y | float | The current y-position of the headset at the moment the event occurred. | |
+| pos_z | float | The current z-position of the headset at the moment the event occurred. | |
+| rot_x | float | The x-component of the orientation of the headset at the moment the event occurred. | |
+| rot_y | float | The y-component of the orientation of the headset at the moment the event occurred. | |
+| rot_z | float | The z-component of the orientation of the headset at the moment the event occurred. | |
+| rot_w | float | The w-component of the orientation of the headset at the moment the event occurred. | |
+| insulation_tool | Dict[str, int] | The state of the insulation tool: whether it is enabled, and the percent effectiveness of the insulation. |**enabled** : bool, **slider_val** : float |
+| lower_stop_tool | Dict[str, int] | The state of the lower stop tool: whether it is enabled, and the minimum piston volume in m^3/kg. |**enabled** : bool, **slider_val** : float |
+| upper_stop_tool | Dict[str, int] | The state of the upper stop tool: whether it is enabled, and the maximum piston volume in m^3/kg. |**enabled** : bool, **slider_val** : float |
+| increase_weight_tool | Dict[str, int] | The state of the weight (pressure increase) tool: whether it is enabled, and the pressure increase in kPa. |**enabled** : bool, **slider_val** : float |
+| decrease_weight_tool | Dict[str, int] | The state of the balloon (pressure reduction) tool: whether it is enabled, and the pressure reduction in kPa. |**enabled** : bool, **slider_val** : float |
+| heat_tool | Dict[str, int] | The state of the bunsen burner tool: whether it is enabled, and the heat per second it generates in kJ/s. |**enabled** : bool, **slider_val** : float |
+| cooling_tool | Dict[str, int] | The state of the cooling coil tool: whether it is enabled, and the heat per second it removes in kJ/s. |**enabled** : bool, **slider_val** : float |
+| chamber_temperature_tool | Dict[str, int] | The state of the chamber/ambient temperature tool: whether ambient heat exchange is enabled, and the ambient temperature in K. |**enabled** : bool, **slider_val** : float |
+| chamber_pressure_tool | Dict[str, int] | The state of the chamber/ambient pressure tool: the ambient pressure in kPa (the ambient pressure is always enabled). |**enabled** : bool, **slider_val** : float |
+| current_lab | Dict[str, int] | null | A description of the currently-active lab, or null if not in lab mode. |**lab_name** : str, **author** : str, **percent_complete** : float |
+| current_section | Dict[str, int] | null | A description of the currently-active lab section, or null if not in lab mode. |**section_number** : int, **description** : str, **is_complete** : bool |
+| current_task | Dict[str, int] | null | A description of the currently-active lab task, or null if not in lab mode. |**category** : enum(TARGET_STATE, CONSTANT_VARIABLE, MULTIPLE_CHOICE, MULTIPLE_SELECT, WORD_BANK), **task_number** : int, **is_complete** : bool, **available_tools** : List[enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)], **prompts** : List[str] |  
+
+### User Data  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
 
 ### **session_start**
 
@@ -889,7 +932,45 @@ None
 
 The features/metrics calculated from this game's event logs by OpenGameData when an 'export' is run.  
 
-None
+**LabCompleteCount** : *int*, *Aggregate feature*  (disabled)  
+Count of number of labs completed  
+  
+
+**LeftHandMoves** : *int*, *Aggregate feature*  (disabled)  
+Count of number of Left hand moves  
+  
+
+**RighHandMoves** : *int*, *Aggregate feature*  (disabled)  
+Count of number of right hand moves  
+  
+
+**PhasesReached** : *dict*, *Aggregate feature*  (disabled)  
+Phases Reached during a certain task  
+  
+
+**PlayMode** : *str*, *Aggregate feature*  (disabled)  
+Play mode of the current instance  
+  
+
+**TaskCompleteCount** : *int*, *Aggregate feature*   
+Count of number of tasks completed  
+  
+
+**ToolNudegCount** : *dict*, *Aggregate feature*  (disabled)  
+Count of number of times a tool has been nudged  
+  
+
+**ToolSliderTime** : *timedelta*, *Aggregate feature*  (disabled)  
+Counts the total time the slider has been moved  
+  
+
+## Other Elements  
+
+Other (potentially non-standard) elements specified in the game's schema, which may be referenced by event/feature processors.  
+
+### Other Ranges  
+
+Extra ranges specified in the game's schema, which may be referenced by event/feature processors.
 
 No changelog prepared
 

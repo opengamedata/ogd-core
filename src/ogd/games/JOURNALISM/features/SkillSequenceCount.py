@@ -103,7 +103,7 @@ class SkillSequenceCount(SessionFeature):
 
         # print("TOTAL DEBUG: " + self._total_upgrades)
         # print(self._total_upgrades)
-        return [self._total_upgrades, event_string]
+        return [self._total_upgrades, self._skill_event_sequence]
 
 
     # *** Optionally override public functions. ***

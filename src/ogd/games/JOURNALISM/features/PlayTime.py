@@ -111,10 +111,9 @@ class PlayTime(SessionFeature):
         try:
             total_time : timedelta = self._last_event_timestamp - self._first_event_timestamp
             play_time : timedelta = total_time - self._idle_time
-
         except:
-            total_time = 0
-            play_time = 0
+            total_time = timedelta(0)
+            play_time  = timedelta(0)
 
 
         return [total_time, play_time, self._idle_time]
