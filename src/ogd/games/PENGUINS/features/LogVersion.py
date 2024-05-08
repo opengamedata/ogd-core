@@ -28,7 +28,7 @@ class LogVersion(SessionFeature):
         return []
 
     def _updateFromEvent(self, event:Event) -> None:
-        return event.log_version
+        self._current_log = event.log_version
 
 
     def _updateFromFeatureData(self, feature:FeatureData):
