@@ -72,8 +72,6 @@ class PenguinsLoader(GeneratorLoader):
                     ret_val = SnowBallDuration.SnowBallDuration(params=extractor_params)
                 # case "RingChimesCount":
                     # ret_val = RingChimesCount.RingChimesCount(params=extractor_params)
-                case "WaddlePerRegion":
-                    ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params, region_map=self._region_map)
                 case "EatFishCount":
                     ret_val = EatFishCount.EatFishCount(params=extractor_params)
                 case "PickupRockCount":
@@ -99,6 +97,10 @@ class PenguinsLoader(GeneratorLoader):
                         ret_val = PickupMultipleRockCount.PickupMultipleRockCount(params=extractor_params)      
                 case "BuiltWrongNestCount":
                         ret_val = BuiltWrongNestCount.BuiltWrongNestCount(params=extractor_params)
+                #case "SkuaBashCount":
+                        #ret_val = SkuaBashCount.SkuaBashCount(params=extractor_params)
+                #case "SkuaPeckCount":
+                        #ret_val = SkuaPeckCount.SkuaPeckCount(params=extractor_params)
                 case _:
                     raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature for Penguins.")
         # Per-count features
@@ -107,9 +109,8 @@ class PenguinsLoader(GeneratorLoader):
             match feature_type:
                 case "RegionEnterCount":
                         ret_val = RegionEnterCount.RegionEnterCount(params=extractor_params, region_map=self._region_map)
-                # case "WaddlePerRegion":
-                        #ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params)
-                
+                case "WaddlePerRegion":
+                    ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params, region_map=self._region_map)
                 case "RegionDuration":
                             ret_val = RegionDuration.RegionDuration(params=extractor_params, region_map=self._region_map)
                 case _:

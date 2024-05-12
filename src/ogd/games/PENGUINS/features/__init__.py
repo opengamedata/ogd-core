@@ -21,7 +21,8 @@ __all__ = [
     "PickupMultipleRockCount",
     "FlipperBashRockCount",
     "BuiltWrongNestCount",
-    "LogVersion"
+    "LogVersion",
+    "SkuaBashCount"
 ]
 # aggregated features
 
@@ -42,6 +43,7 @@ from . import FlipperBashRockCount
 from . import PickupMultipleRockCount
 from . import BuiltWrongNestCount
 from . import LogVersion
+from . import SkuaBashCount
 
 # percount features
 from . import RegionEnterCount
