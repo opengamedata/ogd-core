@@ -38,6 +38,7 @@ class RegionEnter(Detector):
         # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
         # if "Click" in event.EventName:
         #     self._found_click = True
+        # TODO : update retrieval of position data to match newer format.
         old_position = { "x" : event.EventData.get("old_posX"), "y" : event.EventData.get("old_posY"), "z" : event.EventData.get("old_posZ")}
         new_position = { "x" : event.EventData.get("posX"),     "y" : event.EventData.get("posY"),     "z" : event.EventData.get("posZ")}
 
