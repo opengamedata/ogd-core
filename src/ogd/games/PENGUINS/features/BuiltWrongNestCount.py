@@ -31,9 +31,10 @@ class BuiltWrongNestCount(SessionFeature):
     def _updateFromEvent(self, event:Event) -> None:
         # if has_rock does not exit it will return false as well
         
+        # TODO : account for newer versions having peck_nest co-occurring with place_rock when building correct nest
         if event.game_state.get("has_rock", False):
-            if (event.log_version) <11 and (event.game_state.get("has_rock", False)):
-                self._current_count += 1
+            # if (event.log_version) < 11 and (event.game_state.get("has_rock", False)):
+            self._current_count += 1
 
     def _updateFromFeatureData(self, feature:FeatureData):
         return
