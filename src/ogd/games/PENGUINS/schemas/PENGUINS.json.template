@@ -3,6 +3,11 @@
         "min": 1,
         "max": 6
     },
+    "enums" : {
+        "GameMode" : ["HOME_MODE", "..."],
+        "MoveType" : ["BUTTON", "WADDLE"],
+        "Activity" : ["skuas", "mating_dance", "nest", "..."]
+    },
     "game_state": {
         "seconds_from_launch": {
             "type": "float",
@@ -32,7 +37,7 @@
             "description": "When a new game is started",
             "event_data": {
                 "mode": {
-                    "type": "enum(HOME_MODE, ...)",
+                    "type": "GameMode",
                     "description": "The game mode that the player launched"
                 }
             }
@@ -117,7 +122,7 @@
                     "description": "The resulting position of the player avatar's feet, in [x, y, z] form, i.e. where the waddle ended."
                 },
                 "source": {
-                    "type": "enum(BUTTON, WADDLE)",
+                    "type": "MoveType",
                     "description": "Indicator for whether the player waddled by pressing a button, or by making the 'waddle' gesture with their head."
                 }
             }
@@ -441,7 +446,7 @@
             "description": "Event when the player begins to engage with a mini-game.",
             "event_data": {
                 "activity_name": {
-                    "type": "enum(skuas, mating_dance, ...)",
+                    "type": "Activity",
                     "description": "The name of the mini-game/activity with which the player began to engage"
                 }
             }
@@ -450,7 +455,7 @@
             "description": "NOT YET DOCUMENTED",
             "event_data": {
                 "activity_name": {
-                    "type": "enum(skuas, mating_dance, ...)",
+                    "type": "Activity",
                     "description": "NOT YET DOCUMENTED"
                 }
             }
