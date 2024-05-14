@@ -38,28 +38,53 @@ class RegionEnter(Detector):
         # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
         # if "Click" in event.EventName:
         #     self._found_click = True
-        # TODO : update retrieval of position data to match newer format.
-        old_position = { "x" : event.EventData.get("old_posX"), "y" : event.EventData.get("old_posY"), "z" : event.EventData.get("old_posZ")}
-        new_position = { "x" : event.EventData.get("posX"),     "y" : event.EventData.get("posY"),     "z" : event.EventData.get("posZ")}
+        if event.log_version <= 10:
 
-        self._old_region = "NoRegion"
-        self._new_region = "NoRegion"
+            old_position = { "x" : event.EventData.get("old_posX"), "y" : event.EventData.get("old_posY"), "z" : event.EventData.get("old_posZ")}
+            new_position = { "x" : event.EventData.get("posX"),     "y" : event.EventData.get("posY"),     "z" : event.EventData.get("posZ")}
 
-        for region in self._region_map:
-            if (old_position['x'] > region['minX'] and 
-                old_position['x'] < region['maxX'] and
-                old_position['y'] > region['minY'] and
-                old_position['y'] < region['maxY'] and
-                old_position['z'] > region['minZ'] and
-                old_position['z'] < region['maxZ']):
-                self._old_region = region['name']
-            if (new_position['x'] > region['minX'] and 
-                new_position['x'] < region['maxX'] and
-                new_position['y'] > region['minY'] and
-                new_position['y'] < region['maxY'] and
-                new_position['z'] > region['minZ'] and
-                new_position['z'] < region['maxZ']):
-                self._new_region = region['name']
+            self._old_region = "NoRegion"
+            self._new_region = "NoRegion"
+
+            for region in self._region_map:
+                if (old_position['x'] > region['minX'] and 
+                    old_position['x'] < region['maxX'] and
+                    old_position['y'] > region['minY'] and
+                    old_position['y'] < region['maxY'] and
+                    old_position['z'] > region['minZ'] and
+                    old_position['z'] < region['maxZ']):
+                    self._old_region = region['name']
+                if (new_position['x'] > region['minX'] and 
+                    new_position['x'] < region['maxX'] and
+                    new_position['y'] > region['minY'] and
+                    new_position['y'] < region['maxY'] and
+                    new_position['z'] > region['minZ'] and
+                    new_position['z'] < region['maxZ']):
+                    self._new_region = region['name']
+        else:
+            #change the name of the evendata name to updated name : old_posX / old_posY / old_posZ ; posX/posY/posZ so that the new_position & old_position are not returning None type
+            old_position = { "x" : event.EventData.get("old_posX"), "y" : event.EventData.get("old_posY"), "z" : event.EventData.get("old_posZ")}
+            new_position = { "x" : event.EventData.get("posX"),     "y" : event.EventData.get("posY"),     "z" : event.EventData.get("posZ")}
+
+            self._old_region = "NoRegion"
+            self._new_region = "NoRegion"
+
+            for region in self._region_map:
+                if (old_position['x'] > region['minX'] and 
+                    old_position['x'] < region['maxX'] and
+                    old_position['y'] > region['minY'] and
+                    old_position['y'] < region['maxY'] and
+                    old_position['z'] > region['minZ'] and
+                    old_position['z'] < region['maxZ']):
+                    self._old_region = region['name']
+                if (new_position['x'] > region['minX'] and 
+                    new_position['x'] < region['maxX'] and
+                    new_position['y'] > region['minY'] and
+                    new_position['y'] < region['maxY'] and
+                    new_position['z'] > region['minZ'] and
+                    new_position['z'] < region['maxZ']):
+                    self._new_region = region['name']
+
     
     def _trigger_condition(self) -> bool:
         """_summary_
