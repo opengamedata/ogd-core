@@ -62,7 +62,10 @@ The individual fields encoded in the *game_state* and *user_data* Event element 
 ### Enums  
 
 | **Name** | **Values** |
-| ---      | ---        |  
+| ---      | ---        |
+| GameMode | ['HOME_MODE', '...'] |
+| MoveType | ['BUTTON', 'WADDLE'] |
+| Activity | ['skuas', 'mating_dance', 'nest', '...'] |  
 
 ### Game State  
 
@@ -100,7 +103,7 @@ When a new game is started
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| mode | enum(HOME_MODE, ...) | The game mode that the player launched | |
+| mode | GameMode | The game mode that the player launched | |
 
 #### Other Elements
 
@@ -225,7 +228,7 @@ When a player performs a waddle movement to move their penguin avatar forward
 | object_id | str | The name of... some object | |
 | pos_old | List[float] | The previous position of the player avatar's feet, in [x, y, z] form, i.e. where the waddle started. | |
 | pos_new | List[float] | The resulting position of the player avatar's feet, in [x, y, z] form, i.e. where the waddle ended. | |
-| source | enum(BUTTON, WADDLE) | Indicator for whether the player waddled by pressing a button, or by making the 'waddle' gesture with their head. | |
+| source | MoveType | Indicator for whether the player waddled by pressing a button, or by making the 'waddle' gesture with their head. | |
 
 #### Other Elements
 
@@ -589,7 +592,7 @@ Event when the player begins to engage with a mini-game.
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| activity_name | enum(skuas, mating_dance, ...) | The name of the mini-game/activity with which the player began to engage | |
+| activity_name | Activity | The name of the mini-game/activity with which the player began to engage | |
 
 #### Other Elements
 
@@ -603,7 +606,7 @@ NOT YET DOCUMENTED
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| activity_name | enum(skuas, mating_dance, ...) | NOT YET DOCUMENTED | |
+| activity_name | Activity | NOT YET DOCUMENTED | |
 
 #### Other Elements
 
