@@ -30,6 +30,17 @@ class SemanticVersion:
 
         return f"{_major}{_minor or ''}{_fix or ''}{_suffix or ''}{_suffix_ver or ''}"
 
+    def __eq__(self, other) -> bool:
+        if self._major is None or other._major is None:
+            return False
+        if self._major       == other._major  \
+        and self._minor      == other._minor  \
+        and self._fix        == other._fix    \
+        and self._suffix     == other._suffix \
+        and self._suffix_ver == other._suffix_ver:
+            return True
+        return False
+
 
     @staticmethod
     def FromString(semver:str) -> 'SemanticVersion':
