@@ -31,6 +31,10 @@ class SemanticVersion:
         return f"{_major}{_minor or ''}{_fix or ''}{_suffix or ''}{_suffix_ver or ''}"
 
     def __eq__(self, other) -> bool:
+        if type(other) != type(self):
+            if isinstance(other, str):
+                return self == SemanticVersion.FromString(other, verbose=False)
+            return False
         if self._major is None or other._major is None:
             return False
         if self._major       == other._major  \
@@ -43,14 +47,14 @@ class SemanticVersion:
 
 
     @staticmethod
-    def FromString(semver:str) -> 'SemanticVersion':
+    def FromString(semver:str, verbose:bool=True) -> 'SemanticVersion':
         pieces = re.split('\.|-', semver)
         Logger.Log(f"Pieces: {pieces}", logging.DEBUG)
 
-        return SemanticVersion._parseMajor(semver=semver, pieces=pieces)
+        return SemanticVersion._parseMajor(semver=semver, pieces=pieces, verbose=verbose)
 
     @staticmethod
-    def _parseMajor(semver:str, pieces:List[str]) -> 'SemanticVersion':
+    def _parseMajor(semver:str, pieces:List[str], verbose:bool) -> 'SemanticVersion':
         ret_val : 'SemanticVersion'
 
         _major : int
@@ -58,11 +62,12 @@ class SemanticVersion:
             _major = int(pieces[0])
         except ValueError as err:
             _default_ver = "-1"
-            Logger.Log(f"Could not parse semantic version from {semver}, {pieces[0]} was not an int! Defaulting to version={_default_ver}\nError Details: {err}", level=logging.WARN)
+            if verbose:
+                Logger.Log(f"Could not parse semantic version from {semver}, {pieces[0]} was not an int! Defaulting to version={_default_ver}\nError Details: {err}", level=logging.WARN)
             ret_val = SemanticVersion(major=-1)
         else:
             if len(pieces) > 1:
-                ret_val = SemanticVersion._parseMinor(semver=semver, pieces=pieces[1:], major=_major)
+                ret_val = SemanticVersion._parseMinor(semver=semver, pieces=pieces[1:], major=_major, verbose=verbose)
             else:
                 ret_val = SemanticVersion(major=_major)
         finally:
@@ -70,7 +75,7 @@ class SemanticVersion:
                 
 
     @staticmethod
-    def _parseMinor(semver:str, pieces:List[str], major:int) -> 'SemanticVersion':
+    def _parseMinor(semver:str, pieces:List[str], major:int, verbose:bool) -> 'SemanticVersion':
         ret_val : 'SemanticVersion'
 
         _minor : int
@@ -78,18 +83,19 @@ class SemanticVersion:
             _minor = int(pieces[0])
         except ValueError as err:
             _default_ver = str(major)
-            Logger.Log(f"Could not parse semantic version from {semver}, {pieces[0]} was not an int! Defaulting to version={_default_ver}\nError Details: {err}", level=logging.WARN)
+            if verbose:
+                Logger.Log(f"Could not parse semantic version from {semver}, {pieces[0]} was not an int! Defaulting to version={_default_ver}\nError Details: {err}", level=logging.WARN)
             ret_val = SemanticVersion(major=major)
         else:
             if len(pieces) > 1:
-                ret_val = SemanticVersion._parseFix(semver=semver, pieces=pieces[1:], major=major, minor=_minor)
+                ret_val = SemanticVersion._parseFix(semver=semver, pieces=pieces[1:], major=major, minor=_minor, verbose=verbose)
             else:
                 ret_val = SemanticVersion(major=major, minor=_minor)
         finally:
             return ret_val
 
     @staticmethod
-    def _parseFix(semver:str, pieces:List[str], major:int, minor:int) -> 'SemanticVersion':
+    def _parseFix(semver:str, pieces:List[str], major:int, minor:int, verbose:bool) -> 'SemanticVersion':
         ret_val : 'SemanticVersion'
 
         _fix : int
@@ -97,30 +103,31 @@ class SemanticVersion:
             _fix = int(pieces[0])
         except ValueError as err:
             _default_ver = f"{major}.{minor}"
-            Logger.Log(f"Could not parse semantic version from {semver}, {pieces[0]} was not an int! Defaulting to version={_default_ver}\nError Details: {err}", level=logging.WARN)
+            if verbose:
+                Logger.Log(f"Could not parse semantic version from {semver}, {pieces[0]} was not an int! Defaulting to version={_default_ver}\nError Details: {err}", level=logging.WARN)
             ret_val = SemanticVersion(major=major, minor=minor)
         else:
             if len(pieces) > 1:
-                ret_val = SemanticVersion._parseSuffix(semver=semver, pieces=pieces[1:], major=major, minor=minor, fix=_fix)
+                ret_val = SemanticVersion._parseSuffix(semver=semver, pieces=pieces[1:], major=major, minor=minor, fix=_fix, verbose=verbose)
             else:
                 ret_val = SemanticVersion(major=major, minor=minor, fix=_fix)
         finally:
             return ret_val
 
     @staticmethod
-    def _parseSuffix(semver:str, pieces:List[str], major:int, minor:int, fix:int) -> 'SemanticVersion':
+    def _parseSuffix(semver:str, pieces:List[str], major:int, minor:int, fix:int, verbose:bool) -> 'SemanticVersion':
         ret_val : 'SemanticVersion'
 
         _suffix : str
         _suffix = pieces[0]
         if len(pieces) > 1:
-            ret_val = SemanticVersion._parseSuffixVersion(semver=semver, pieces=pieces[1:], major=major, minor=minor, fix=fix, suffix=_suffix)
+            ret_val = SemanticVersion._parseSuffixVersion(semver=semver, pieces=pieces[1:], major=major, minor=minor, fix=fix, suffix=_suffix, verbose=verbose)
         else:
             ret_val = SemanticVersion(major=major, minor=minor, fix=fix, suffix=_suffix)
         return ret_val
 
     @staticmethod
-    def _parseSuffixVersion(semver:str, pieces:List[str], major:int, minor:int, fix:int, suffix:str) -> 'SemanticVersion':
+    def _parseSuffixVersion(semver:str, pieces:List[str], major:int, minor:int, fix:int, suffix:str, verbose:bool) -> 'SemanticVersion':
         ret_val : 'SemanticVersion'
 
         _suffix_version : int
@@ -128,11 +135,12 @@ class SemanticVersion:
             _suffix_version = int(pieces[0])
         except ValueError as err:
             _default_ver = f"{major}.{minor}.{fix}-{suffix}"
-            Logger.Log(f"Could not parse semantic version from {semver}, {pieces[0]} was not an int! Defaulting to version={_default_ver}\nError Details: {err}", level=logging.WARN)
+            if verbose:
+                Logger.Log(f"Could not parse semantic version from {semver}, {pieces[0]} was not an int! Defaulting to version={_default_ver}\nError Details: {err}", level=logging.WARN)
             ret_val = SemanticVersion(major=major, minor=minor, fix=fix, suffix=suffix)
         else:
             ret_val = SemanticVersion(major=major, minor=minor, fix=fix, suffix=suffix, suffix_ver=_suffix_version)
-            if len(pieces) > 1:
+            if len(pieces) > 1 and verbose:
                 Logger.Log(f"Semantic version string {semver} had excess parts, reducing to version={ret_val}", level=logging.WARN)
         finally:
             return ret_val
