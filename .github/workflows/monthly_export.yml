@@ -80,7 +80,7 @@ jobs:
     - name: Upload files to opengamedata via scp
       run: |
         mkdir -p ~/.ssh
-        echo '${{secrets.DEPLOY_KEY}}' >> ./key.txt
+        echo '${{secrets.VPN_KEY}}' >> ./key.txt
         chmod 600 ./key.txt
         ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }} "cd /var/www/opengamedata/data; mkdir -p ${{matrix.game}}"
         scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
