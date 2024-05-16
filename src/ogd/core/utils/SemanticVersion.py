@@ -49,7 +49,8 @@ class SemanticVersion:
     @staticmethod
     def FromString(semver:str, verbose:bool=True) -> 'SemanticVersion':
         pieces = re.split('\.|-', semver)
-        Logger.Log(f"Pieces: {pieces}", logging.DEBUG)
+        if verbose:
+            Logger.Log(f"Pieces: {pieces}", logging.DEBUG)
 
         return SemanticVersion._parseMajor(semver=semver, pieces=pieces, verbose=verbose)
 
