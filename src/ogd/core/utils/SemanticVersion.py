@@ -11,24 +11,25 @@ from ogd.core.utils.Logger import Logger
 # import locals
 
 class SemanticVersion:
-    def __init__(self, major:int, minor:Optional[int]=None, fix:Optional[int]=None, suffix:Optional[str]=None, suffix_ver:Optional[int]=None):
-        self._major = major
-        self._minor = minor
-        self._fix = fix
-        self._suffix = suffix
-        self._suffix_ver = suffix_ver
+    def __init__(self, major:Optional[int], minor:Optional[int]=None, fix:Optional[int]=None, suffix:Optional[str]=None, suffix_ver:Optional[int]=None, fallback:Optional[str]=None):
+        self._major      : Optional[int] = major
+        self._minor      : Optional[int] = minor
+        self._fix        : Optional[int] = fix
+        self._suffix     : Optional[str] = suffix
+        self._suffix_ver : Optional[int] = suffix_ver
+        self._fallback   : Optional[str] = fallback
 
     def __repr__(self) -> str:
         return f"SemanticVersion : {self}"
 
     def __str__(self) -> str:
-        _major      = str(self._major)
+        _major      = str(self._major)       if self._major      is not None else None
         _minor      = f".{self._minor}"      if self._minor      is not None else None
         _fix        = f".{self._fix}"        if self._fix        is not None else None
         _suffix     = f"-{self._suffix}"     if self._suffix     is not None else None
         _suffix_ver = f".{self._suffix_ver}" if self._suffix_ver is not None else None
 
-        return f"{_major}{_minor or ''}{_fix or ''}{_suffix or ''}{_suffix_ver or ''}"
+        return f"{_major}{_minor or ''}{_fix or ''}{_suffix or ''}{_suffix_ver or ''}" if _major is not None else str(self._fallback)
 
     def __eq__(self, other) -> bool:
         if type(other) != type(self):
@@ -62,10 +63,10 @@ class SemanticVersion:
         try:
             _major = int(pieces[0])
         except ValueError as err:
-            _default_ver = "-1"
+            _default_ver = semver
             if verbose:
                 Logger.Log(f"Could not parse semantic version from {semver}, {pieces[0]} was not an int! Defaulting to version={_default_ver}\nError Details: {err}", level=logging.WARN)
-            ret_val = SemanticVersion(major=-1)
+            ret_val = SemanticVersion(major=None, fallback=semver)
         else:
             if len(pieces) > 1:
                 ret_val = SemanticVersion._parseMinor(semver=semver, pieces=pieces[1:], major=_major, verbose=verbose)
