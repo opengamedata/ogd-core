@@ -891,15 +891,15 @@ List of key events that happened in a player's session(s)
 List of completed jobs for a player  
   
 
+**PlayerSummary** : *dict*, *Aggregate feature*  (disabled)  
+Summary of player statistics (active session time, jobs completed, number of sessions)  
+  
+
 **PlayLocations** : *List[bool]*, *Aggregate feature*  (disabled)  
 An indicator of whether play happened during normal school hours or not  
 *Sub-features*:  
 
 - **LocalTime** : *datetime*, The actual local time when each session started  
-  
-
-**PlayerSummary** : *dict*, *Aggregate feature*  (disabled)  
-Summary of player statistics (active session time, jobs completed, number of sessions)  
   
 
 **PopulationSummary** : *dict*, *Aggregate feature*  (disabled)  
