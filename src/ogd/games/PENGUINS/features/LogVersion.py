@@ -14,7 +14,7 @@ class LogVersion(SessionFeature):
 
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
-        self._current_log : int = 0
+        self._current_log : str = "UNKNOWN LOG VERSION"
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -26,7 +26,7 @@ class LogVersion(SessionFeature):
         return []
 
     def _updateFromEvent(self, event:Event) -> None:
-        self._current_log = event.log_version
+        self._current_log = event.LogVersion
 
 
     def _updateFromFeatureData(self, feature:FeatureData):
