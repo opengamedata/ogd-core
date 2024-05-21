@@ -26,9 +26,9 @@ class PerRegionFeature(PerCountFeature):
             # Old format
             case int_version if int_version <= 9:
                 current_position = {
-                    'x': event.GameState['posX'],
-                    'y': event.GameState['posY'],
-                    'z': event.GameState['posZ']
+                    'x': event.GameState.get('posX', -math.inf),
+                    'y': event.GameState.get('posY', -math.inf),
+                    'z': event.GameState.get('posZ', -math.inf)
                 }
             # New format, up to latest version as of last change to file:
             case int_version if int_version <= 11:
