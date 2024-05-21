@@ -39,12 +39,13 @@ class SessionDuration(SessionFeature):
             self._start_time = event.Timestamp
             self._start_index = event.EventSequenceIndex
         if self._start_time > event.Timestamp + timedelta(milliseconds=100):
-            Logger.Log(f"Got out-of-order events in SessionDuration; event {event.EventName}:{event.EventSequenceIndex} for player {event.UserID}:{event.SessionID} had timestamp {event.Timestamp} earlier than start event, with time {self._start_time}, index {self._start_index}!", logging.WARN)
+            # Logger.Log(f"Got out-of-order events in SessionDuration; event {event.EventName}:{event.EventSequenceIndex} for player {event.UserID}:{event.SessionID} had timestamp {event.Timestamp} earlier than start event, with time {self._start_time}, index {self._start_index}!", logging.WARN)
             self._start_time = event.Timestamp
             self._start_index = event.EventSequenceIndex
         # if this was the latest event, make it the end time, otherwise output error.
         if self._latest_event is not None and self._latest_event.Timestamp > event.Timestamp + timedelta(milliseconds=100):
-            Logger.Log(f"Got out-of-order events in SessionDuration:\n   Event {event.EventName}:{event.EventSequenceIndex} for player {event.UserID}:{event.SessionID} had timestamp {event.Timestamp},\n   Earlier than previous latest event {self._latest_event.EventName}:{self._latest_event.EventSequenceIndex} for player {self._latest_event.UserID}:{self._latest_event.SessionID} with timestamp {self._latest_event.Timestamp}", logging.WARN)
+            # Logger.Log(f"Got out-of-order events in SessionDuration:\n   Event {event.EventName}:{event.EventSequenceIndex} for player {event.UserID}:{event.SessionID} had timestamp {event.Timestamp},\n   Earlier than previous latest event {self._latest_event.EventName}:{self._latest_event.EventSequenceIndex} for player {self._latest_event.UserID}:{self._latest_event.SessionID} with timestamp {self._latest_event.Timestamp}", logging.WARN)
+            pass
         else:
             self._latest_event = event
         # self._session_duration = (event.Timestamp - self._client_start_time).total_seconds()
