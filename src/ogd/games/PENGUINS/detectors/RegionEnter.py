@@ -1,5 +1,5 @@
 # import standard libraries
-from datetime import datetime
+import math
 from typing import Any, Callable, Dict, List, Optional
 # import local files
 from ogd.core.generators.Generator import GeneratorParameters
@@ -14,6 +14,14 @@ class RegionEnter(Detector):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
+
+    # *** BUILT-INS & PROPERTIES ***
+
+    def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None], region_map:List[Dict[str, Any]]):
+        super().__init__(params=params, trigger_callback=trigger_callback)
+        self._region_map = region_map
+        self._old_region : str = "NoRegion"
+        self._new_region : str = "NoRegion"
 
     # *** Implement abstract functions ***
 
@@ -32,59 +40,66 @@ class RegionEnter(Detector):
         :param event: _description_
         :type event: Event
         """
-        # >>> use the data in the Event object to update state variables as needed. <<<
-        # Note that this function runs once on each Event whose name matches one of the strings returned by _eventFilter()
-        #
-        # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
-        # if "Click" in event.EventName:
-        #     self._found_click = True
-        if event.log_version <= 10:
+        old_position : Dict[str, float]
+        new_position : Dict[str, float]
 
-            old_position = { "x" : event.EventData.get("old_posX"), "y" : event.EventData.get("old_posY"), "z" : event.EventData.get("old_posZ")}
-            new_position = { "x" : event.EventData.get("posX"),     "y" : event.EventData.get("posY"),     "z" : event.EventData.get("posZ")}
+        int_version = int(event.LogVersion) # Penguins just uses an int for the log_version
+        match int_version:
+            case int_version if int_version <= 9:
+                old_position = {
+                    'x': event.GameState.get('old_posX', -math.inf),
+                    'y': event.GameState.get('old_posY', -math.inf),
+                    'z': event.GameState.get('old_posZ', -math.inf)
+                }
+                new_position = {
+                    'x': event.GameState.get('posX', -math.inf),
+                    'y': event.GameState.get('posY', -math.inf),
+                    'z': event.GameState.get('posZ', -math.inf)
+                }
+            # New format, up to latest version as of last change to file:
+            case int_version if int_version <= 11:
+                _pos_old = event.GameState.get("pos_old", [-math.inf, -math.inf, -math.inf])
+                _pos_new = event.GameState.get("pos_new", [-math.inf, -math.inf, -math.inf])
+                old_position = {
+                    'x': _pos_old[0],
+                    'y': _pos_old[1],
+                    'z': _pos_old[2],
+                }
+                new_position = {
+                    'x': _pos_new[0],
+                    'y': _pos_new[1],
+                    'z': _pos_new[2],
+                }
+            # Default to current format as of last change to file:
+            case _:
+                _pos_old = event.GameState.get("pos_old", [-math.inf, -math.inf, -math.inf])
+                _pos_new = event.GameState.get("pos_new", [-math.inf, -math.inf, -math.inf])
+                old_position = {
+                    'x': _pos_old[0],
+                    'y': _pos_old[1],
+                    'z': _pos_old[2],
+                }
+                new_position = {
+                    'x': _pos_new[0],
+                    'y': _pos_new[1],
+                    'z': _pos_new[2],
+                }
 
-            self._old_region = "NoRegion"
-            self._new_region = "NoRegion"
-
-            for region in self._region_map:
-                if (old_position['x'] > region['minX'] and 
-                    old_position['x'] < region['maxX'] and
-                    old_position['y'] > region['minY'] and
-                    old_position['y'] < region['maxY'] and
-                    old_position['z'] > region['minZ'] and
-                    old_position['z'] < region['maxZ']):
-                    self._old_region = region['name']
-                if (new_position['x'] > region['minX'] and 
-                    new_position['x'] < region['maxX'] and
-                    new_position['y'] > region['minY'] and
-                    new_position['y'] < region['maxY'] and
-                    new_position['z'] > region['minZ'] and
-                    new_position['z'] < region['maxZ']):
-                    self._new_region = region['name']
-        else:
-            #change the name of the evendata name to updated name : old_posX / old_posY / old_posZ ; posX/posY/posZ so that the new_position & old_position are not returning None type
-            old_position = { "x" : event.EventData.get("old_posX"), "y" : event.EventData.get("old_posY"), "z" : event.EventData.get("old_posZ")}
-            new_position = { "x" : event.EventData.get("posX"),     "y" : event.EventData.get("posY"),     "z" : event.EventData.get("posZ")}
-
-            self._old_region = "NoRegion"
-            self._new_region = "NoRegion"
-
-            for region in self._region_map:
-                if (old_position['x'] > region['minX'] and 
-                    old_position['x'] < region['maxX'] and
-                    old_position['y'] > region['minY'] and
-                    old_position['y'] < region['maxY'] and
-                    old_position['z'] > region['minZ'] and
-                    old_position['z'] < region['maxZ']):
-                    self._old_region = region['name']
-                if (new_position['x'] > region['minX'] and 
-                    new_position['x'] < region['maxX'] and
-                    new_position['y'] > region['minY'] and
-                    new_position['y'] < region['maxY'] and
-                    new_position['z'] > region['minZ'] and
-                    new_position['z'] < region['maxZ']):
-                    self._new_region = region['name']
-
+        for region in self._region_map:
+            if (old_position['x'] > region['minX'] and 
+                old_position['x'] < region['maxX'] and
+                old_position['y'] > region['minY'] and
+                old_position['y'] < region['maxY'] and
+                old_position['z'] > region['minZ'] and
+                old_position['z'] < region['maxZ']):
+                self._old_region = region['name']
+            if (new_position['x'] > region['minX'] and 
+                new_position['x'] < region['maxX'] and
+                new_position['y'] > region['minY'] and
+                new_position['y'] < region['maxY'] and
+                new_position['z'] > region['minZ'] and
+                new_position['z'] < region['maxZ']):
+                self._new_region = region['name']
     
     def _trigger_condition(self) -> bool:
         """_summary_
@@ -103,14 +118,6 @@ class RegionEnter(Detector):
         ret_val : Event = self.GenerateEvent(app_id="PENGUINS",
                                              event_name="region_enter", event_data={"region":self._new_region})
         return ret_val
-
-    # *** BUILT-INS & PROPERTIES ***
-
-    def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None], region_map:List[Dict[str, Any]]):
-        super().__init__(params=params, trigger_callback=trigger_callback)
-        self._region_map = region_map
-        self._old_region = "N/A"
-        self._new_region = "N/A"
 
     # *** PUBLIC STATICS ***
 
