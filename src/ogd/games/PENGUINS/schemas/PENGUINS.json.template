@@ -630,8 +630,8 @@
                 "description": "The duration each session took.",
                 "return_type": "int"
             },
-            "PlayerWaddleCount": {
-                "type": "PlayerWaddleCount",
+            "WaddleCount": {
+                "type": "WaddleCount",
                 "enabled": true,
                 "description": "The number of times a player waddled.",
                 "return_type": "int"

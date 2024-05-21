@@ -62,8 +62,8 @@ class PenguinsLoader(GeneratorLoader):
                     ret_val = SessionDuration.SessionDuration(params=extractor_params, session_id=self._session_id)
                 case "RegionsEncountered":
                     ret_val = RegionsEncountered.RegionsEncountered(params=extractor_params)
-                case "PlayerWaddleCount":
-                    ret_val = PlayerWaddleCount.PlayerWaddleCount(params=extractor_params)
+                case "WaddleCount":
+                    ret_val = WaddleCount.WaddleCount(params=extractor_params)
                 case "GazeDuration":
                     ret_val = GazeDuration.GazeDuration(params=extractor_params)
                 case "GazeCount":

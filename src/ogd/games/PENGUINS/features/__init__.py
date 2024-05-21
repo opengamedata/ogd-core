@@ -2,7 +2,7 @@ __all__ = [
     "SessionDuration",
     "RegionsEncountered",
     "RegionEnterCount",
-    "PlayerWaddleCount",
+    "WaddleCount",
     "GazeDuration",
     "GazeCount",
     "SnowBallDuration",
@@ -28,7 +28,7 @@ __all__ = [
 
 from . import SessionDuration
 from . import RegionsEncountered
-from . import PlayerWaddleCount
+from . import WaddleCount
 from . import GazeDuration
 from . import GazeCount
 from . import SnowBallDuration
