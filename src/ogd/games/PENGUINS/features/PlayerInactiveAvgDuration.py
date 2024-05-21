@@ -57,6 +57,6 @@ class PlayerInactiveAvgDuration(SessionFeature):
         if (len(self._inactive_time_lst) != 0):
             return [sum(self._inactive_time_lst)/len(self._inactive_time_lst)]
         else:
-            return None
+            return [None]
 
     
