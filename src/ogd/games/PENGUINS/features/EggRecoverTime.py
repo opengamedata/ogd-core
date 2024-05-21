@@ -30,7 +30,7 @@ class EggRecoverTime(SessionFeature):
         return []
 
     def _updateFromEvent(self, event:Event) -> None:
-        Logger.Log(f"triggered")
+        # Logger.Log(f"triggered")
         if event.SessionID != self._session_id:
             self._session_id = event.SessionID
             # if we jumped to a new session, we only want to count time up to last event, not the time between sessions.
@@ -41,7 +41,7 @@ class EggRecoverTime(SessionFeature):
         if event.EventName == "egg_lost":
             self._skua_id = event.event_data.get("object_id")
             self._argument_start_time = event.Timestamp
-            Logger.Log(f"lost time is {self._argument_start_time}")
+            # Logger.Log(f"lost time is {self._argument_start_time}")
         elif event.EventName == "egg_recovered" and self._argument_start_time is not None:
             self._time = (event.Timestamp - self._argument_start_time).total_seconds()
             self._argument_start_time = None
