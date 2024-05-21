@@ -32,8 +32,7 @@ class SessionDuration(SessionFeature):
         super().__init__(params=params)
         self._start_time = None
         self._start_index = None
-        self._end_time = None
-        self._end_index = None
+        self._latest_event = None
         # self._session_duration = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -55,8 +54,8 @@ class SessionDuration(SessionFeature):
             self._start_time = event.Timestamp
             self._start_index = event.EventSequenceIndex
         # if this was the latest event, make it the end time, otherwise output error.
-        if self._end_time is not None and self._end_time > event.Timestamp:
-            Logger.Log(f"Got out-of-order events in SessionDuration; event {event.EventName}:{event.EventSequenceIndex} for player {event.UserID}:{event.SessionID} had timestamp {event.Timestamp} earlier than end event, with time {self._end_time}, index {self._end_index}!", logging.WARN)
+        if self._latest_event is not None and self._latest_event.Timestamp > event.Timestamp:
+            Logger.Log(f"Got out-of-order events in SessionDuration:\n   Event {event.EventName}:{event.EventSequenceIndex} for player {event.UserID}:{event.SessionID} had timestamp {event.Timestamp},\n   Earlier than previous latest event {self._latest_event.EventName}:{self._latest_event.EventSequenceIndex} for player {self._latest_event.UserID}:{self._latest_event.SessionID} with timestamp {self._latest_event.Timestamp}", logging.WARN)
         else:
             self._end_time = event.Timestamp
             self._end_index = event.EventSequenceIndex
