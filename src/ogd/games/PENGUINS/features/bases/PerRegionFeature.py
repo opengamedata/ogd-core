@@ -39,7 +39,6 @@ class PerRegionFeature(PerCountFeature):
                         _pos = json.loads(_pos)
                     except json.JSONDecodeError as err:
                         fix_dumb_fucking_data_error = _pos[:-2] + "]"
-                        Logger.Log(f"Ok, got fucking malformed data {_pos}, trying to parse as {fix_dumb_fucking_data_error}")
                         _pos = json.loads(fix_dumb_fucking_data_error)
                 current_position = {
                     'x': _pos[0],
@@ -54,7 +53,6 @@ class PerRegionFeature(PerCountFeature):
                         _pos = json.loads(_pos)
                     except json.JSONDecodeError as err:
                         fix_dumb_fucking_data_error = _pos[:-2] + "]"
-                        Logger.Log(f"Ok, got fucking malformed data {_pos}, trying to parse as {fix_dumb_fucking_data_error}")
                         _pos = json.loads(fix_dumb_fucking_data_error)
                 current_position = {
                     'x': _pos[0],
