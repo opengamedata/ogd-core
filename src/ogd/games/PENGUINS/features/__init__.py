@@ -1,6 +1,7 @@
 __all__ = [
     "ActivityCompleted",
     "ActivityDuration",
+    "BuiltNestCount",
     "BuiltWrongNestCount",
     "EatFishCount",
     "EggLostCount",
@@ -28,6 +29,7 @@ __all__ = [
 ]
 # aggregated features
 
+from . import BuiltNestCount
 from . import BuiltWrongNestCount
 from . import EatFishCount
 from . import EggLostCount

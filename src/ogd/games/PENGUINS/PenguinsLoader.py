@@ -62,6 +62,8 @@ class PenguinsLoader(GeneratorLoader):
                     ret_val = ActivityCompleted.ActivityCompleted(params=extractor_params)
                 case "ActivityDuration":
                     ret_val = ActivityDuration.ActivityDuration(params=extractor_params)       
+                case "BuiltNestCount":
+                    ret_val = BuiltNestCount.BuiltNestCount(params=extractor_params)
                 case "BuiltWrongNestCount":
                     ret_val = BuiltWrongNestCount.BuiltWrongNestCount(params=extractor_params)
                 case "EatFishCount":
