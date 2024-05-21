@@ -2,8 +2,9 @@ from typing import Any, List
 import json
 import pandas as pd
 import numpy as np
-from extractors.SessionFeature import SessionFeature
-from schemas.Event import Event
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.extractors.SessionFeature import SessionFeature
+from ogd.core.schemas.Event import Event
 
 orderMapping = {'1. One Box': 1, '2. Separated Boxes': 2, '3. Rotate a Pyramid': 3, '4. Match Silhouettes': 4, '5. Removing Objects': 5, '6. Stretch a Ramp': 6, '7. Max 2 Boxes': 7, '8. Combine 2 Ramps': 8, '9. Scaling Round Objects': 9,
                 'Square Cross-Sections': 10, 'Bird Fez': 11, 'Pi Henge': 12, '45-Degree Rotations': 13,  'Pyramids are Strange': 14, 'Boxes Obscure Spheres': 15, 'Object Limits': 16, 'Warm Up': 17, 'Angled Silhouette': 18,
@@ -15,8 +16,8 @@ selectedEvents = ["start_level", "create_shape", "delete_shape", "rotate_shape",
 #undoableActions = ["create_shape", "delete_shape", "rotate_shape", "scale_shape", "move_shape", "select_shape", "deselect_shape", #"select_shape_add", "rotate_view", "mode_change", "palette_change", "paint", "toogle_snapshot_display"]
 
 class SequenceWithinPuzzles(SessionFeature):
-    def __init__(self, name:str, description:str):
-        super().__init__(name=name, description=description)
+    def __init__(self,  params:GeneratorParameters):
+        super().__init__(params=params)
         self._numPuzzles = 1
         self._currentPuzzle = []
         self._activePuzzle = None
