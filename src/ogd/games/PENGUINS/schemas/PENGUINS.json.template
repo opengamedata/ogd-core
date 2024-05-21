@@ -218,8 +218,8 @@
                     "description": "The position of the nest the player bashed"
                 },
                 "hand": {
-                    "type": "Hand",
-                    "description": "Whether the player performed the bash with their right or left hand."
+                    "type": "List[float]",
+                    "description": "The position of the nest the player bashed"
                 }
             }
         },
@@ -600,6 +600,12 @@
     },
     "features": {
         "per_count": {
+            "RegionEnterCount": {
+                "type": "RegionEnterCount",
+                "enabled": false,
+                "description": "The number of times a player enterd for a given region of the game.",
+                "return_type": "int"
+            },
             "RegionDuration": {
                 "type": "RegionDuration",
                 "enabled": true,
@@ -618,22 +624,10 @@
             }
         },
         "aggregate": {
-            "GazeCount": {
-                "type": "GazeCount",
+            "LogVersion": {
+                "type": "LogVersion",
                 "enabled": true,
-                "description": "The number of times a player waddled in a given region of the game.",
-                "return_type": "int"
-            },
-            "PickupRockCount": {
-                "type": "PickupRockCount",
-                "enabled": true,
-                "description": "The duration each session took.",
-                "return_type": "int"
-            },
-            "PlayerWaddleCount": {
-                "type": "PlayerWaddleCount",
-                "enabled": true,
-                "description": "The number of times a player waddled.",
+                "description": "The version of game the player use.",
                 "return_type": "int"
             },
             "SessionDuration": {
@@ -642,16 +636,82 @@
                 "description": "The duration each session took.",
                 "return_type": "timedelta"
             },
+            "BuiltNestCount": {
+                "type": "BuiltNestCount",
+                "enabled": true,
+                "description": "The number of times a player with a rock placed the rock on the correct nest.",
+                "return_type": "int"
+            },
+            "BuiltWrongNestCount": {
+                "type": "BuiltWrongNestCount",
+                "enabled": true,
+                "description": "The number of times a player with a rock that has a peck_nest event, where nest_id does not equal to player nest_id.",
+                "return_type": "int"
+            },
+            "RockPickupCount": {
+                "type": "RockPickupCount",
+                "enabled": true,
+                "description": "The duration each session took.",
+                "return_type": "int"
+            },
+            "RockMultiplePickupCount": {
+                "type": "RockMultiplePickupCount",
+                "enabled": true,
+                "description": "The number of times a player with a rock has peck_rock event.",
+                "return_type": "int"
+            },
+            "RockBashCount": {
+                "type": "RockBashCount",
+                "enabled": true,
+                "description": "he number of times a player had a flipper_bash_rock event.",
+                "return_type": "int"
+            },
+            "SkuaBashCount": {
+                "type": "SkuaBashCount",
+                "enabled": true,
+                "description": "The number of times a player bashed skuas",
+                "return_type": "int"
+            },
+            "SkuaPeckCount": {
+                "type": "SkuaPeckCount",
+                "enabled": true,
+                "description": "The number of times a player pecked skuas, which does not actually affect the skuas",
+                "return_type": "int"
+            },
+            "EggLostCount": {
+                "type": "EggLostCount",
+                "enabled": true,
+                "description": "The number of times a player's egg was stolen by skuas",
+                "return_type": "int"
+            },
+            "EggRecoverTime": {
+                "type": "EggRecoverTime",
+                "enabled": true,
+                "description": "The amount of time the egg spent stolen, with the player trying to recover it",
+                "return_type": "int"
+            },
+            "PenguinInteractCount": {
+                "type": "PenguinInteractCount",
+                "enabled": true,
+                "description": "The number of times a player interacted with another penguin via pecks and/or flipper bashes",
+                "return_type": "int"
+            },
+            "GazeCount": {
+                "type": "GazeCount",
+                "enabled": true,
+                "description": "The number of times a player waddled in a given region of the game.",
+                "return_type": "int"
+            },
             "GazeDuration": {
                 "type": "GazeDuration",
                 "enabled": true,
                 "description": "How long gaze event last for.",
                 "return_type": "timedelta"
             },
-            "RegionEnterCount": {
-                "type": "RegionEnterCount",
-                "enabled": false,
-                "description": "The number of times a player enterd for a given region of the game.",
+            "WaddleCount": {
+                "type": "WaddleCount",
+                "enabled": true,
+                "description": "The number of times a player waddled.",
                 "return_type": "int"
             },
             "ActivityCompleted": {

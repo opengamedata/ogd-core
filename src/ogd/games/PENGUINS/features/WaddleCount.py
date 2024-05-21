@@ -4,15 +4,13 @@ from typing import Any, Dict, List, Optional
 # import locals
 from ogd.core.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
-from ogd.games.PENGUINS.features.PerRegionFeature import PerRegionFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
 
-class PickupRockCount(SessionFeature):
+class WaddleCount(SessionFeature):
 
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
@@ -21,7 +19,7 @@ class PickupRockCount(SessionFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
-        return ["pickup_rock"]
+        return ["player_waddle"]
 
     @classmethod
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
