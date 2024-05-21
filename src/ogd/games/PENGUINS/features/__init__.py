@@ -19,7 +19,7 @@ __all__ = [
     "ActivityCompleted",
     "ActivityDuration",
     "PickupMultipleRockCount",
-    "FlipperBashRockCount",
+    "RockBashCount",
     "BuiltWrongNestCount",
     "LogVersion",
     "SkuaBashCount",
@@ -40,7 +40,7 @@ from . import EggLostCount
 from . import EggRecoverTime
 from . import PlayerInactiveAvgDuration
 from . import MirrorWaddleDuration
-from . import FlipperBashRockCount
+from . import RockBashCount
 from . import PickupMultipleRockCount
 from . import BuiltWrongNestCount
 from . import LogVersion

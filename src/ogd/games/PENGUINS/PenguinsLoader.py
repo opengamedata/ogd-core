@@ -91,8 +91,8 @@ class PenguinsLoader(GeneratorLoader):
                     ret_val = ActivityCompleted.ActivityCompleted(params=extractor_params)
                 case "ActivityDuration":
                     ret_val = ActivityDuration.ActivityDuration(params=extractor_params)       
-                case "FlipperBashRockCount":
-                    ret_val = FlipperBashRockCount.FlipperBashRockCount(params=extractor_params) 
+                case "RockBashCount":
+                    ret_val = RockBashCount.RockBashCount(params=extractor_params) 
                 case "PickupMultipleRockCount":
                         ret_val = PickupMultipleRockCount.PickupMultipleRockCount(params=extractor_params)      
                 case "BuiltWrongNestCount":

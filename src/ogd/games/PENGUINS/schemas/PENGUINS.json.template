@@ -672,8 +672,8 @@
                 "description": "The regions entered in a given session.",
                 "return_type": "int"
             },
-            "FlipperBashRockCount": {
-                "type": "FlipperBashRockCount",
+            "RockBashCount": {
+                "type": "RockBashCount",
                 "enabled": true,
                 "description": "he number of times a player had a flipper_bash_rock event.",
                 "return_type": "int"
@@ -688,14 +688,24 @@
             "BuiltWrongNestCount": {
                 "type": "BuiltWrongNestCount",
                 "enabled": true,
-                "count": 11,
                 "description": "The number of times a player with a rock that has a peck_nest event, where nest_id does not equal to player nest_id.",
+                "return_type": "int"
+            },
+            "SkuaBashCount": {
+                "type": "SkuaBashCount",
+                "enabled": true,
+                "description": "The number of times a player bashed skuas",
+                "return_type": "int"
+            },
+            "SkuaPeckCount": {
+                "type": "SkuaPeckCount",
+                "enabled": true,
+                "description": "The number of times a player pecked skuas, which does not actually affect the skuas",
                 "return_type": "int"
             },
             "LogVersion": {
                 "type": "LogVersion",
                 "enabled": true,
-                "count": 11,
                 "description": "The version of game the player use.",
                 "return_type": "int"
             }

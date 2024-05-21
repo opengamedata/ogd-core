@@ -10,7 +10,7 @@ from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
 
-class FlipperBashRockCount(SessionFeature):
+class RockBashCount(SessionFeature):
 
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
