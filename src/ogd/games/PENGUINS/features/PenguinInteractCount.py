@@ -10,7 +10,7 @@ from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
 
-class SkuaBashCount(SessionFeature):
+class PenguinInteractCount(SessionFeature):
 
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
@@ -19,7 +19,7 @@ class SkuaBashCount(SessionFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
-        return ["flipper_bash_skua"]
+        return ["peck_penguin", "flipper_bash_penguin"]
 
     @classmethod
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
