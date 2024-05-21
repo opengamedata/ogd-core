@@ -46,17 +46,15 @@ class SessionDuration(SessionFeature):
         if self._latest_event is not None and self._latest_event.Timestamp > event.Timestamp + timedelta(milliseconds=100):
             Logger.Log(f"Got out-of-order events in SessionDuration:\n   Event {event.EventName}:{event.EventSequenceIndex} for player {event.UserID}:{event.SessionID} had timestamp {event.Timestamp},\n   Earlier than previous latest event {self._latest_event.EventName}:{self._latest_event.EventSequenceIndex} for player {self._latest_event.UserID}:{self._latest_event.SessionID} with timestamp {self._latest_event.Timestamp}", logging.WARN)
         else:
-            self._end_time = event.Timestamp
-            self._end_index = event.EventSequenceIndex
+            self._latest_event = event
         # self._session_duration = (event.Timestamp - self._client_start_time).total_seconds()
-        self._latest_event = event
 
     def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        if self._start_time and self._end_time:
-            return [self._end_time - self._start_time]
+        if self._start_time and self._latest_event:
+            return [self._latest_event.Timestamp - self._start_time]
         else:
             return ["No events"]
 
