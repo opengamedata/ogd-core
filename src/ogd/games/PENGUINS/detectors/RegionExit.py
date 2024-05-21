@@ -78,6 +78,10 @@ class RegionExit(Detector):
                     'z': _pos_new[2],
                 }
 
+        # Need to set to "NoRegion" as the default.
+        self._old_region = "NoRegion"
+        self._new_region = "NoRegion"
+
         for region in self._region_map:
             if (old_position['x'] > region['minX'] and 
                 old_position['x'] < region['maxX'] and
