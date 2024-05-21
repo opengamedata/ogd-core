@@ -346,7 +346,7 @@ An event triggered when the player makes a flipper-bashing move and makes contac
 | ---      | ---      | ---             | ---         |
 | nest_id | str | The name of the nest object the player bashed | |
 | nest_pos | List[float] | The position of the nest the player bashed | |
-| hand | Hand | Whether the player performed the bash with their right or left hand. | |
+| hand | List[float] | The position of the nest the player bashed | |
 
 #### Other Elements
 
@@ -801,28 +801,64 @@ Triggers an event when a player exit a region
 
 The features/metrics calculated from this game's event logs by OpenGameData when an 'export' is run.  
 
-**GazeCount** : *int*, *Aggregate feature*   
-The number of times a player waddled in a given region of the game.  
-  
-
-**PickupRockCount** : *int*, *Aggregate feature*   
-The duration each session took.  
-  
-
-**PlayerWaddleCount** : *int*, *Aggregate feature*   
-The number of times a player waddled.  
+**LogVersion** : *int*, *Aggregate feature*   
+The version of game the player use.  
   
 
 **SessionDuration** : *timedelta*, *Aggregate feature*   
 The duration each session took.  
   
 
+**BuiltNestCount** : *int*, *Aggregate feature*   
+The number of times a player with a rock placed the rock on the correct nest.  
+  
+
+**BuiltWrongNestCount** : *int*, *Aggregate feature*   
+The number of times a player with a rock that has a peck_nest event, where nest_id does not equal to player nest_id.  
+  
+
+**RockPickupCount** : *int*, *Aggregate feature*   
+The duration each session took.  
+  
+
+**RockMultiplePickupCount** : *int*, *Aggregate feature*   
+The number of times a player with a rock has peck_rock event.  
+  
+
+**RockBashCount** : *int*, *Aggregate feature*   
+he number of times a player had a flipper_bash_rock event.  
+  
+
+**SkuaBashCount** : *int*, *Aggregate feature*   
+The number of times a player bashed skuas  
+  
+
+**SkuaPeckCount** : *int*, *Aggregate feature*   
+The number of times a player pecked skuas, which does not actually affect the skuas  
+  
+
+**EggLostCount** : *int*, *Aggregate feature*   
+The number of times a player's egg was stolen by skuas  
+  
+
+**EggRecoverTime** : *int*, *Aggregate feature*   
+The amount of time the egg spent stolen, with the player trying to recover it  
+  
+
+**PenguinInteractCount** : *int*, *Aggregate feature*   
+The number of times a player interacted with another penguin via pecks and/or flipper bashes  
+  
+
+**GazeCount** : *int*, *Aggregate feature*   
+The number of times a player waddled in a given region of the game.  
+  
+
 **GazeDuration** : *timedelta*, *Aggregate feature*   
 How long gaze event last for.  
   
 
-**RegionEnterCount** : *int*, *Aggregate feature*  (disabled)  
-The number of times a player enterd for a given region of the game.  
+**WaddleCount** : *int*, *Aggregate feature*   
+The number of times a player waddled.  
   
 
 **ActivityCompleted** : *int*, *Aggregate feature*   
@@ -835,6 +871,10 @@ How long activity last for.
 
 **RegionsEncountered** : *int*, *Aggregate feature*   
 The regions entered in a given session.  
+  
+
+**RegionEnterCount** : *int*, *Per-count feature*  (disabled)  
+The number of times a player enterd for a given region of the game.  
   
 
 **RegionDuration** : *timedelta*, *Per-count feature*   
