@@ -1,6 +1,6 @@
 # import libraries
 import logging
-import json 
+import math 
 from typing import Any, Dict, List, Optional
 # import locals
 from ogd.core.utils.Logger import Logger
@@ -19,14 +19,37 @@ class PerRegionFeature(PerCountFeature):
 
     def _validateEventCountIndex(self, event:Event):
         ret_val : bool = False
+        current_position : Dict[str, float]
+
+        int_version = int(event.LogVersion)
+        match int_version:
+            # Old format
+            case int_version if int_version <= 9:
+                current_position = {
+                    'x': event.GameState['posX'],
+                    'y': event.GameState['posY'],
+                    'z': event.GameState['posZ']
+                }
+            # New format, up to latest version as of last change to file:
+            case int_version if int_version <= 11:
+                _pos = event.GameState.get("pos", [-math.inf, -math.inf, -math.inf])
+                current_position = {
+                    'x': _pos[0],
+                    'y': _pos[1],
+                    'z': _pos[2]
+                }
+            # Default to current format as of last change to file:
+            case _:
+                _pos = event.GameState.get("pos", [-math.inf, -math.inf, -math.inf])
+                current_position = {
+                    'x': _pos[0],
+                    'y': _pos[1],
+                    'z': _pos[2]
+                }
+
 
         # region_data = event.EventData["region_name"]
         target_region = self._region_map[self.CountIndex]
-        current_position = {
-            'x': event.GameState['posX'],
-            'y': event.GameState['posY'],
-            'z': event.GameState['posZ']
-        }
 
         if (current_position['x'] > target_region['minX'] and 
             current_position['x'] < target_region['maxX'] and
