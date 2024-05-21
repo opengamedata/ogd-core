@@ -1,4 +1,5 @@
 # import libraries
+import json
 import logging
 import math 
 from typing import Any, Dict, List, Optional
@@ -33,6 +34,13 @@ class PerRegionFeature(PerCountFeature):
             # New format, up to latest version as of last change to file:
             case int_version if int_version <= 11:
                 _pos = event.GameState.get("pos", [-math.inf, -math.inf, -math.inf])
+                if isinstance(_pos, str):
+                    try:
+                        _pos = json.loads(_pos)
+                    except json.JSONDecodeError as err:
+                        fix_dumb_fucking_data_error = _pos[:-2] + "]"
+                        Logger.Log(f"Ok, got fucking malformed data {_pos}, trying to parse as {fix_dumb_fucking_data_error}")
+                        _pos = json.loads(fix_dumb_fucking_data_error)
                 current_position = {
                     'x': _pos[0],
                     'y': _pos[1],
@@ -41,6 +49,13 @@ class PerRegionFeature(PerCountFeature):
             # Default to current format as of last change to file:
             case _:
                 _pos = event.GameState.get("pos", [-math.inf, -math.inf, -math.inf])
+                if isinstance(_pos, str):
+                    try:
+                        _pos = json.loads(_pos)
+                    except json.JSONDecodeError as err:
+                        fix_dumb_fucking_data_error = _pos[:-2] + "]"
+                        Logger.Log(f"Ok, got fucking malformed data {_pos}, trying to parse as {fix_dumb_fucking_data_error}")
+                        _pos = json.loads(fix_dumb_fucking_data_error)
                 current_position = {
                     'x': _pos[0],
                     'y': _pos[1],
