@@ -6,7 +6,7 @@ __all__ = [
     "GazeDuration",
     "GazeCount",
     "SnowBallDuration",
-    # "RingChimesCount",
+    "RingChimesCount",
     "WaddlePerRegion",
     "EatFishCount",
     "PickupRockCount",
@@ -22,7 +22,8 @@ __all__ = [
     "FlipperBashRockCount",
     "BuiltWrongNestCount",
     "LogVersion",
-    "SkuaBashCount"
+    "SkuaBashCount",
+    "SkuaPeckCount"
 ]
 # aggregated features
 
@@ -44,6 +45,7 @@ from . import PickupMultipleRockCount
 from . import BuiltWrongNestCount
 from . import LogVersion
 from . import SkuaBashCount
+from . import SkuaPeckCount
 
 # percount features
 from . import RegionEnterCount

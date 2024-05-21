@@ -70,8 +70,8 @@ class PenguinsLoader(GeneratorLoader):
                     ret_val = GazeCount.GazeCount(params=extractor_params)
                 case "SnowBallDuration":
                     ret_val = SnowBallDuration.SnowBallDuration(params=extractor_params)
-                # case "RingChimesCount":
-                    # ret_val = RingChimesCount.RingChimesCount(params=extractor_params)
+                case "RingChimesCount":
+                    ret_val = RingChimesCount.RingChimesCount(params=extractor_params)
                 case "EatFishCount":
                     ret_val = EatFishCount.EatFishCount(params=extractor_params)
                 case "PickupRockCount":
@@ -97,10 +97,10 @@ class PenguinsLoader(GeneratorLoader):
                         ret_val = PickupMultipleRockCount.PickupMultipleRockCount(params=extractor_params)      
                 case "BuiltWrongNestCount":
                         ret_val = BuiltWrongNestCount.BuiltWrongNestCount(params=extractor_params)
-                #case "SkuaBashCount":
-                        #ret_val = SkuaBashCount.SkuaBashCount(params=extractor_params)
-                #case "SkuaPeckCount":
-                        #ret_val = SkuaPeckCount.SkuaPeckCount(params=extractor_params)
+                case "SkuaBashCount":
+                        ret_val = SkuaBashCount.SkuaBashCount(params=extractor_params)
+                case "SkuaPeckCount":
+                        ret_val = SkuaPeckCount.SkuaPeckCount(params=extractor_params)
                 case _:
                     raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature for Penguins.")
         # Per-count features
