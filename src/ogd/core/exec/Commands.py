@@ -146,8 +146,6 @@ class OGDCommands:
                     range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.SESSION)
         # e. Default case where we use date range
             else:
-                if args.start_date > args.end_date:
-                    raise ValueError(f"Invalid date range, start date of {args.start_date} is after end date of {args.end_date}!")
                 range = OGDGenerators.genDateRange(game=args.game, interface=interface, monthly=args.monthly, start_date=args.start_date, end_date=args.end_date)
     # 3. set up the outerface, based on the range and dataset_id.
         _cfg = GameSourceSchema(name="FILE DEST", all_elements={"database":"FILE", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
