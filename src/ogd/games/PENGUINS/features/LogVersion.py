@@ -34,5 +34,11 @@ class LogVersion(SessionFeature):
 
     def _getFeatureValues(self) -> List[Any]:
         return [self._current_log]
+    
+    # *** Optionally override public functions. ***
+
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
+        return [ExtractionMode.SESSION]
 
     
