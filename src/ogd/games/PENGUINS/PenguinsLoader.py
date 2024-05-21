@@ -74,8 +74,8 @@ class PenguinsLoader(GeneratorLoader):
                     ret_val = RingChimesCount.RingChimesCount(params=extractor_params)
                 case "EatFishCount":
                     ret_val = EatFishCount.EatFishCount(params=extractor_params)
-                case "PickupRockCount":
-                    ret_val = PickupRockCount.PickupRockCount(params=extractor_params)
+                case "RockPickupCount":
+                    ret_val = RockPickupCount.RockPickupCount(params=extractor_params)
                 case "EggLostCount":
                     ret_val = EggLostCount.EggLostCount(params=extractor_params)
                 case "EggRecoverTime":
@@ -93,8 +93,8 @@ class PenguinsLoader(GeneratorLoader):
                     ret_val = ActivityDuration.ActivityDuration(params=extractor_params)       
                 case "RockBashCount":
                     ret_val = RockBashCount.RockBashCount(params=extractor_params) 
-                case "PickupMultipleRockCount":
-                        ret_val = PickupMultipleRockCount.PickupMultipleRockCount(params=extractor_params)      
+                case "RockMultiplePickupCount":
+                        ret_val = RockMultiplePickupCount.RockMultiplePickupCount(params=extractor_params)      
                 case "BuiltWrongNestCount":
                         ret_val = BuiltWrongNestCount.BuiltWrongNestCount(params=extractor_params)
                 case "SkuaBashCount":

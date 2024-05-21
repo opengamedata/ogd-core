@@ -9,7 +9,7 @@ __all__ = [
     "RingChimesCount",
     "WaddlePerRegion",
     "EatFishCount",
-    "PickupRockCount",
+    "RockPickupCount",
     "EggLostCount",
     "EggRecoverTime",
     "PlayerInactiveAvgDuration",
@@ -18,7 +18,7 @@ __all__ = [
     "RegionDuration",
     "ActivityCompleted",
     "ActivityDuration",
-    "PickupMultipleRockCount",
+    "RockMultiplePickupCount",
     "RockBashCount",
     "BuiltWrongNestCount",
     "LogVersion",
@@ -35,13 +35,13 @@ from . import GazeCount
 from . import SnowBallDuration
 from . import RingChimesCount
 from . import EatFishCount
-from . import PickupRockCount
+from . import RockPickupCount
 from . import EggLostCount
 from . import EggRecoverTime
 from . import PlayerInactiveAvgDuration
 from . import MirrorWaddleDuration
 from . import RockBashCount
-from . import PickupMultipleRockCount
+from . import RockMultiplePickupCount
 from . import BuiltWrongNestCount
 from . import LogVersion
 from . import SkuaBashCount

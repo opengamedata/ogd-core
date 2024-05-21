@@ -10,7 +10,7 @@ from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
 
-class PickupRockCount(SessionFeature):
+class RockPickupCount(SessionFeature):
 
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)

@@ -624,8 +624,8 @@
                 "description": "The number of times a player waddled in a given region of the game.",
                 "return_type": "int"
             },
-            "PickupRockCount": {
-                "type": "PickupRockCount",
+            "RockPickupCount": {
+                "type": "RockPickupCount",
                 "enabled": true,
                 "description": "The duration each session took.",
                 "return_type": "int"
@@ -678,8 +678,8 @@
                 "description": "he number of times a player had a flipper_bash_rock event.",
                 "return_type": "int"
             },
-            "PickupMultipleRockCount": {
-                "type": "PickupMultipleRockCount",
+            "RockMultiplePickupCount": {
+                "type": "RockMultiplePickupCount",
                 "enabled": true,
                 "count": 11,
                 "description": "The number of times a player with a rock has peck_rock event.",
