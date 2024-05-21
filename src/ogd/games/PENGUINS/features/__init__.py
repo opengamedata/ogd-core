@@ -1,57 +1,57 @@
 __all__ = [
-    "SessionDuration",
-    "RegionsEncountered",
-    "RegionEnterCount",
-    "WaddleCount",
-    "GazeDuration",
-    "GazeCount",
-    "SnowBallDuration",
-    "RingChimesCount",
-    "WaddlePerRegion",
-    "EatFishCount",
-    "RockPickupCount",
-    "EggLostCount",
-    "EggRecoverTime",
-    "PlayerInactiveAvgDuration",
-    "MirrorWaddleDuration",
-    "WaddlePerRegion",
-    "RegionDuration",
     "ActivityCompleted",
     "ActivityDuration",
-    "RockMultiplePickupCount",
-    "RockBashCount",
     "BuiltWrongNestCount",
+    "EatFishCount",
+    "EggLostCount",
+    "EggRecoverTime",
+    "GazeCount",
+    "GazeDuration",
     "LogVersion",
+    "MirrorWaddleDuration",
+    "PlayerInactiveAvgDuration",
+    "RegionDuration",
+    "RegionEnterCount",
+    "RegionsEncountered",
+    "RingChimesCount",
+    "RockBashCount",
+    "RockMultiplePickupCount",
+    "RockPickupCount",
+    "SessionDuration",
     "SkuaBashCount",
-    "SkuaPeckCount"
+    "SkuaPeckCount",
+    "SnowBallDuration",
+    "WaddleCount",
+    "WaddlePerRegion",
+    "WaddlePerRegion"
 ]
 # aggregated features
 
-from . import SessionDuration
-from . import RegionsEncountered
-from . import WaddleCount
-from . import GazeDuration
-from . import GazeCount
-from . import SnowBallDuration
-from . import RingChimesCount
+from . import BuiltWrongNestCount
 from . import EatFishCount
-from . import RockPickupCount
 from . import EggLostCount
 from . import EggRecoverTime
-from . import PlayerInactiveAvgDuration
+from . import GazeCount
+from . import GazeDuration
+from . import LogVersion
 from . import MirrorWaddleDuration
+from . import PlayerInactiveAvgDuration
+from . import RegionsEncountered
+from . import RingChimesCount
 from . import RockBashCount
 from . import RockMultiplePickupCount
-from . import BuiltWrongNestCount
-from . import LogVersion
+from . import RockPickupCount
+from . import SessionDuration
 from . import SkuaBashCount
 from . import SkuaPeckCount
+from . import SnowBallDuration
+from . import WaddleCount
 
 # percount features
-from . import RegionEnterCount
-from . import WaddlePerRegion
-from . import RegionDuration
 from . import ActivityCompleted
 from . import ActivityDuration
+from . import RegionDuration
+from . import RegionEnterCount
+from . import WaddlePerRegion
 
 
