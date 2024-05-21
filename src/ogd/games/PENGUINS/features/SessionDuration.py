@@ -1,18 +1,7 @@
 # import libraries
 import logging
-from typing import Any, List
-# import locals
-from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.SessionFeature import SessionFeature
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
-from ogd.core.utils.Logger import Logger
-
-# import libraries
-import logging
-from typing import Any, List, Optional
 from datetime import datetime, timedelta
+from typing import Any, List
 # import locals
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
@@ -49,12 +38,12 @@ class SessionDuration(SessionFeature):
         if not self._start_time:
             self._start_time = event.Timestamp
             self._start_index = event.EventSequenceIndex
-        if self._start_time > event.Timestamp:
+        if self._start_time > event.Timestamp + timedelta(milliseconds=100):
             Logger.Log(f"Got out-of-order events in SessionDuration; event {event.EventName}:{event.EventSequenceIndex} for player {event.UserID}:{event.SessionID} had timestamp {event.Timestamp} earlier than start event, with time {self._start_time}, index {self._start_index}!", logging.WARN)
             self._start_time = event.Timestamp
             self._start_index = event.EventSequenceIndex
         # if this was the latest event, make it the end time, otherwise output error.
-        if self._latest_event is not None and self._latest_event.Timestamp > event.Timestamp:
+        if self._latest_event is not None and self._latest_event.Timestamp > event.Timestamp + timedelta(milliseconds=100):
             Logger.Log(f"Got out-of-order events in SessionDuration:\n   Event {event.EventName}:{event.EventSequenceIndex} for player {event.UserID}:{event.SessionID} had timestamp {event.Timestamp},\n   Earlier than previous latest event {self._latest_event.EventName}:{self._latest_event.EventSequenceIndex} for player {self._latest_event.UserID}:{self._latest_event.SessionID} with timestamp {self._latest_event.Timestamp}", logging.WARN)
         else:
             self._end_time = event.Timestamp
