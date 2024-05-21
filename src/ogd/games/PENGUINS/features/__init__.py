@@ -9,6 +9,7 @@ __all__ = [
     "GazeDuration",
     "LogVersion",
     "MirrorWaddleDuration",
+    "PenguinInteractCount",
     "PlayerInactiveAvgDuration",
     "RegionDuration",
     "RegionEnterCount",
@@ -35,6 +36,7 @@ from . import GazeCount
 from . import GazeDuration
 from . import LogVersion
 from . import MirrorWaddleDuration
+from . import PenguinInteractCount
 from . import PlayerInactiveAvgDuration
 from . import RegionsEncountered
 from . import RingChimesCount
