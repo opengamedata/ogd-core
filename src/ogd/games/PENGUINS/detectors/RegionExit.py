@@ -113,6 +113,7 @@ class RegionExit(Detector):
                 new_position['z'] > region['minZ'] and
                 new_position['z'] < region['maxZ']):
                 self._new_region = region['name']
+        self._last_timestamp = event.Timestamp
     
     def _trigger_condition(self) -> bool:
         """_summary_
@@ -128,7 +129,8 @@ class RegionExit(Detector):
         :return: _description_
         :rtype: List[Any]
         """
-        ret_val : Event = self.GenerateEvent(app_id="PENGUINS", event_name="region_exit", event_data={"region":self._old_region})
+        ret_val : Event = self.GenerateEvent(app_id="PENGUINS", timestamp=self._last_timestamp,
+                                             event_name="region_exit", event_data={"region":self._old_region})
         return ret_val
 
     # *** BUILT-INS & PROPERTIES ***

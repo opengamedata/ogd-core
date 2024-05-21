@@ -1,5 +1,6 @@
 # import standard libraries
 import math
+from datetime import datetime
 from typing import Any, Callable, Dict, List, Optional
 # import local files
 from ogd.core.generators.Generator import GeneratorParameters
@@ -20,6 +21,7 @@ class RegionEnter(Detector):
     def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None], region_map:List[Dict[str, Any]]):
         super().__init__(params=params, trigger_callback=trigger_callback)
         self._region_map = region_map
+        self._last_timestamp = datetime.now()
         self._old_region : str = "NoRegion"
         self._new_region : str = "NoRegion"
 
@@ -32,7 +34,7 @@ class RegionEnter(Detector):
         :return: _description_
         :rtype: List[str]
         """
-        return ["player_waddle"] # >>> fill in names of events this Detector should use for detecting whatever you're looking for. <<<
+        return ["player_waddle"]
 
     def _updateFromEvent(self, event:Event) -> None:
         """_summary_
@@ -104,6 +106,7 @@ class RegionEnter(Detector):
                 new_position['z'] > region['minZ'] and
                 new_position['z'] < region['maxZ']):
                 self._new_region = region['name']
+        self._last_timestamp = event.Timestamp
     
     def _trigger_condition(self) -> bool:
         """_summary_
@@ -119,7 +122,7 @@ class RegionEnter(Detector):
         :return: _description_
         :rtype: List[Any]
         """
-        ret_val : Event = self.GenerateEvent(app_id="PENGUINS",
+        ret_val : Event = self.GenerateEvent(app_id="PENGUINS", timestamp=self._last_timestamp,
                                              event_name="region_enter", event_data={"region":self._new_region})
         return ret_val
 
