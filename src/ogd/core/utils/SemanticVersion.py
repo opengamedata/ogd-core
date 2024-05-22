@@ -175,16 +175,16 @@ class SemanticVersion:
         return self._major is not None
 
     @property
-    def _CompMajor(self) -> float:
-        return self._major or -math.inf
+    def _CompMajor(self) -> int:
+        return self._major or 0
 
     @property
-    def _CompMinor(self) -> float:
-        return self._minor or -math.inf
+    def _CompMinor(self) -> int:
+        return self._minor or 0
 
     @property
-    def _CompPatch(self) -> float:
-        return self._patch or -math.inf
+    def _CompPatch(self) -> int:
+        return self._patch or 0
 
     @staticmethod
     def _parseMajor(semver:str, pieces:List[str], verbose:bool) -> 'SemanticVersion':
