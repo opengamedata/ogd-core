@@ -1,6 +1,5 @@
 # import libraries
-from lib2to3.pgen2.token import OP
-from typing import Any, List, Optional
+from typing import Any, Dict, Final, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
 # import local files
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
@@ -15,7 +14,7 @@ class GameScript(SessionFeature):
     :type Feature: _type_
     """
 
-    TYPE = {0: 'Dry', 1: 'No Humor', 2: 'No Snark', 3: 'Normal'}
+    TYPE : Final[Dict[int, str]] = {0: 'Dry', 1: 'No Humor', 2: 'No Snark', 3: 'Normal'}
 
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)

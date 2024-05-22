@@ -28,7 +28,10 @@ class JobPriorComplete(PerCountFeature):
         return []
 
     def _updateFromEvent(self, event:Event) -> None:
-        job_data = event.EventData["job_name"]['string_value']
+        if event.app_version == 'Aqualab' or event.app_version == 'None':
+            job_data = event.GameState.get("job_name", event.EventData.get("job_name", {})).get('string_value')
+        else:
+            job_data = event.GameState.get("job_name", event.EventData.get("job_name", {}))
         if self._job_map[job_data] == self.CountIndex:
             self._completed = True
             return

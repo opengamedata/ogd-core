@@ -45,6 +45,6 @@ class RegionEnterCount(PerCountFeature):
             if region_data in region_map and region_map[region_data] == self.CountIndex:
                 ret_val = True
         else:
-            Logger.Log(f"Got invalid region data in {type(self).__name__}", logging.WARNING)
+            self.WarningMessage(f"Got invalid region data in {type(self).__name__}")
 
         return ret_val

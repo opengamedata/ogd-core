@@ -336,8 +336,11 @@ class TSVOuterface(DataOuterface):
                 if _existing_pop_file is not None and Path(_existing_pop_file).is_file() and self._zip_paths['population'] is not None:
                     Logger.Log(f"Renaming {str(_existing_pop_file)} -> {self._zip_paths['population']}", logging.DEBUG)
                     os.rename(_existing_pop_file, str(self._zip_paths['population']))
+            except FileExistsError as err:
+                msg = f"Error while setting up zip files, could not rename an existing file because another file is already using the target name! {err}"
+                Logger.Log(msg, logging.ERROR)
             except Exception as err:
-                msg = f"Error while setting up zip files! {type(err)} : {err}"
+                msg = f"Unexpected error while setting up zip files! {type(err)} : {err}"
                 Logger.Log(msg, logging.ERROR)
                 traceback.print_tb(err.__traceback__)
         # for each file, try to save out the csv/tsv to a file - if it's one that should be exported, that is.

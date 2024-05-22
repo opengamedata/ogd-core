@@ -774,6 +774,12 @@
                 "description": "Count of players who left off on each job.",
                 "return_type": "dict"
             },
+            "AppVersions": {
+                "enabled": true,
+                "type": "AppVersions",
+                "description": "List of all app versions encountered.",
+                "return_type": "list"
+            },
             "ActiveTime": {
                 "enabled": false,
                 "type": "ActiveTime",
@@ -792,6 +798,18 @@
                 "description": "List of completed jobs for a player",
                 "return_type": "list[str]"
             },
+            "PlayLocations": {
+                "enabled": true,
+                "type": "PlayLocations",
+                "description": "Where players had each session",
+                "return_type": "list[bool]",
+                "subfeatures": {
+                    "LocalTime": {
+                        "description": "The localized timestamp of the start of the session.",
+                        "return_type": "datetime"
+                    }
+                }
+            },
             "PlayerSummary": {
                 "enabled": false,
                 "type": "PlayerSummary",
@@ -799,7 +817,7 @@
                 "return_type": "dict"
             },
             "PlayLocations": {
-                "enabled": true,
+                "enabled": false,
                 "type": "PlayLocations",
                 "description": "An indicator of whether play happened during normal school hours or not",
                 "return_type": "List[bool]",

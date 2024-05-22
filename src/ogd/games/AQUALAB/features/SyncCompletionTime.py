@@ -46,7 +46,7 @@ class SyncCompletionTime(Feature):
                 self._time += (event.Timestamp - self._sim_start_time).total_seconds()
                 self._sim_start_time = None
             else:
-                Logger.Log("Simulation synced when we had no active start time!", logging.WARNING)
+                self.WarningMessage("Simulation synced when we had no active start time!")
 
         self._prev_timestamp = event.Timestamp
 

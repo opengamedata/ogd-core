@@ -9,6 +9,7 @@ from ogd.core.schemas.Schema import Schema
 from ogd.core.schemas.games.AggregateSchema import AggregateSchema
 from ogd.core.schemas.games.DetectorSchema import DetectorSchema
 from ogd.core.schemas.games.DetectorMapSchema import DetectorMapSchema
+from ogd.core.schemas.games.DataElementSchema import DataElementSchema
 from ogd.core.schemas.games.EventSchema import EventSchema
 from ogd.core.schemas.games.PerCountSchema import PerCountSchema
 from ogd.core.schemas.games.FeatureSchema import FeatureSchema
@@ -42,57 +43,87 @@ class GameSchema(Schema):
         :type schema_path: str, optional
         """
     # 1. define instance vars
-        self._event_list             : List[EventSchema] = []
+        self._game_id                : str                                  = name
+        self._enum_defs              : Dict[str, List[str]]                 = {}
+        self._game_state             : Dict[str, Any]                       = {}
+        self._user_data              : Dict[str, Any]                       = {}
+        self._event_list             : List[EventSchema]                    = []
         self._detector_map           : Dict[str, Dict[str, DetectorSchema]] = {'perlevel':{}, 'per_count':{}, 'aggregate':{}}
         self._aggregate_feats        : Dict[str, AggregateSchema]           = {}
         self._percount_feats         : Dict[str, PerCountSchema]            = {}
         self._legacy_perlevel_feats  : Dict[str, PerCountSchema]            = {}
         self._legacy_mode            : bool                                 = False
-        self._game_id                : str                                  = name
-        self._config                 : Dict[str, Any]
-        self._game_state             : Dict[str, Any]
-        self._other_ranges           : Dict[str, range]
+        self._config                 : Dict[str, Any]                       = {}
         self._min_level              : Optional[int]                        = None
         self._max_level              : Optional[int]                        = None
+        self._other_ranges           : Dict[str, range]
         self._supported_vers         : Optional[List[int]]
-    # 2. set instance vars
+
         if not isinstance(all_elements, dict):
             all_elements   = {}
             Logger.Log(f"For {self._game_id} GameSchema, all_elements was not a dict, defaulting to empty dict", logging.WARN)
+
+    # 2. set instance vars, starting with event data
+
+        if "enums" in all_elements.keys():
+            self._enum_defs = GameSchema._parseEnumDefs(enums_list=all_elements['enums'])
+        else:
+            Logger.Log(f"{self._game_id} game schema does not specify any custom enums", logging.INFO)
+
+        if "game_state" in all_elements.keys():
+            self._game_state = GameSchema._parseGameState(game_state=all_elements['game_state'])
+        else:
+            Logger.Log(f"{self._game_id} game schema does not specify the structure of the game state colum, defaulting to empty dictn", logging.INFO)
+
+        if "user_data" in all_elements.keys():
+            self._user_data = GameSchema._parseUserData(user_data=all_elements['user_data'])
+        else:
+            Logger.Log(f"{self._game_id} game schema does not specify the structure of the user data colum, defaulting to empty dictn", logging.INFO)
         if "events" in all_elements.keys():
             self._event_list = GameSchema._parseEventList(events_list=all_elements['events'])
         else:
             Logger.Log(f"{self._game_id} game schema does not document any events.", logging.INFO)
+
+    # 3. Get detector information
         if "detectors" in all_elements.keys():
             # TODO : Just have DetectorMapSchema directly
             _detector_map = GameSchema._parseDetectorMap(detector_map=all_elements['detectors'])
             self._detector_map = _detector_map.AsDict
         else:
             Logger.Log(f"{self._game_id} game schema does not define any detectors.", logging.INFO)
+
+    # 4. Get feature information
         if "features" in all_elements.keys():
             # TODO : Just have the FeatureMapSchema directly, not 4 different things.
             _feat_map = GameSchema._parseFeatureMap(feature_map=all_elements['features'])
-            self._legacy_mode = _feat_map.LegacyMode
-            self._legacy_perlevel_feats.update(_feat_map.LegacyPerLevelFeatures)
-            self._percount_feats.update(_feat_map.PerCountFeatures)
             self._aggregate_feats.update(_feat_map.AggregateFeatures)
+            self._percount_feats.update(_feat_map.PerCountFeatures)
+            self._legacy_perlevel_feats.update(_feat_map.LegacyPerLevelFeatures)
+            self._legacy_mode = _feat_map.LegacyMode
         else:
             Logger.Log(f"{self._game_id} game schema does not define any features.", logging.INFO)
+
+    # 5. Get config, if any
+        if "config" in all_elements.keys():
+            self._config = all_elements['config']
+        else:
+            Logger.Log(f"{self._game_id} game schema does not define any config items.", logging.INFO)
+        if "SUPPORTED_VERS" in self._config:
+            self._supported_vers = self._config['SUPPORTED_VERS']
+        else:
+            self._supported_vers = None
+            Logger.Log(f"{self._game_id} game schema does not define supported versions, defaulting to support all versions.", logging.INFO)
+
+    # 6. Get level range and other ranges, if any
         if "level_range" in all_elements.keys():
             self._min_level, self._max_level = GameSchema._parseLevelRange(all_elements['level_range'])
         else:
             Logger.Log(f"{self._game_id} game schema does not define a level range.", logging.INFO)
-    # 7. Get other ranges, if any
+
         self._other_ranges = {key : range(val.get('min', 0), val.get('max', 1)) for key,val in all_elements.items() if key.endswith("_range")}
-    # 8. Get config, if any
-        self._config = all_elements.get('config', {})
-        if "SUPPORTED_VERS" in all_elements['config']:
-            self._supported_vers = all_elements['config']['SUPPORTED_VERS']
-        else:
-            self._supported_vers = None
-            Logger.Log(f"{self._game_id} game schema does not define supported versions, defaulting to support all versions.", logging.INFO)
-    # 9. Collect any other, unexpected elements
-        _leftovers = { key:val for key,val in all_elements.items() if key not in {'events', 'detectors', 'features', 'level_range', 'config'}.union(self._other_ranges.keys()) }
+
+    # 7. Collect any other, unexpected elements
+        _leftovers = { key:val for key,val in all_elements.items() if key not in {'enums', 'game_state', 'user_data', 'events', 'detectors', 'features', 'level_range', 'config'}.union(self._other_ranges.keys()) }
         super().__init__(name=self._game_id, other_elements=_leftovers)
 
     # *** BUILT-INS & PROPERTIES ***
@@ -105,6 +136,24 @@ class GameSchema(Schema):
         """Property for the name of the game configured by this schema
         """
         return self._game_id
+
+    @property
+    def EnumDefs(self) -> Dict[str, List[str]]:
+        """Property for the dict of all enums defined for sub-elements in the given game's schema.
+        """
+        return self._enum_defs
+
+    @property
+    def GameState(self) -> Dict[str, Any]:
+        """Property for the dictionary describing the structure of the GameState column for the given game.
+        """
+        return self._game_state
+
+    @property
+    def UserData(self) -> Dict[str, Any]:
+        """Property for the dictionary describing the structure of the UserData column for the given game.
+        """
+        return self._user_data
 
     @property
     def Events(self) -> List[EventSchema]:
@@ -201,8 +250,26 @@ class GameSchema(Schema):
     @property
     def AsMarkdown(self) -> str:
         event_summary = ["## Logged Events",
-                         "The individual fields encoded in the *event_data* Event element for each type of event logged by the game."
+                         "The individual fields encoded in the *game_state* and *user_data* Event element for all event types, and the fields in the *event_data* Event element for each individual event type logged by the game."
                         ]
+        enum_list     = ["### Enums",
+                         "\n".join(
+                             ["| **Name** | **Values** |",
+                             "| ---      | ---        |"]
+                         + [f"| {name} | {val_list} |" for name,val_list in self.EnumDefs.items()]
+                        )]
+        game_state_list = ["### Game State",
+                           "\n".join(
+                               ["| **Name** | **Type** | **Description** | **Sub-Elements** |",
+                               "| ---      | ---      | ---             | ---         |"]
+                           + [elem.AsMarkdownRow for elem in self.GameState.values()]
+                          )]
+        user_data_list = ["### User Data",
+                          "\n".join(
+                              ["| **Name** | **Type** | **Description** | **Sub-Elements** |",
+                              "| ---      | ---      | ---             | ---         |"]
+                          + [elem.AsMarkdownRow for elem in self.UserData.values()]
+                         )]
         # Set up list of events
         event_list = [event.AsMarkdownTable for event in self.Events] if len(self.Events) > 0 else ["None"]
         # Set up list of detectors
@@ -230,7 +297,8 @@ class GameSchema(Schema):
                          ]
         other_range_list = [ f"{key} : {self.OtherRanges[key]}" for key in self.OtherRanges ]
 
-        ret_val = "  \n\n".join(event_summary + event_list
+        ret_val = "  \n\n".join(event_summary
+                              + enum_list + game_state_list + user_data_list + event_list
                               + detector_summary + detector_list
                               + feature_summary + feature_list
                               + other_summary + other_element_list
@@ -388,6 +456,37 @@ class GameSchema(Schema):
                 print(f"(via print) Could not copy {schema_name} from template, a {type(cp_err)} error occurred:\n{cp_err}")
             else:
                 Logger.Log(       f"Successfully copied {schema_name} from template.", logging.DEBUG, depth=2)
+        return ret_val
+
+
+    @staticmethod
+    def _parseEnumDefs(enums_list:Dict[str, Any]) -> Dict[str, List[str]]:
+        ret_val : Dict[str, List[str]]
+        if isinstance(enums_list, dict):
+            ret_val = enums_list
+        else:
+            ret_val = {}
+            Logger.Log(f"enums_list was unexpected type {type(enums_list)}, defaulting to empty Dict.", logging.WARN)
+        return ret_val
+
+    @staticmethod
+    def _parseGameState(game_state:Dict[str, Any]) -> Dict[str, DataElementSchema]:
+        ret_val : Dict[str, DataElementSchema]
+        if isinstance(game_state, dict):
+            ret_val = {name:DataElementSchema(name=name, all_elements=elems) for name,elems in game_state.items()}
+        else:
+            ret_val = {}
+            Logger.Log(f"game_state was unexpected type {type(game_state)}, defaulting to empty dict.", logging.WARN)
+        return ret_val
+
+    @staticmethod
+    def _parseUserData(user_data:Dict[str, Any]) -> Dict[str, DataElementSchema]:
+        ret_val : Dict[str, DataElementSchema]
+        if isinstance(user_data, dict):
+            ret_val = {name:DataElementSchema(name=name, all_elements=elems) for name,elems in user_data.items()}
+        else:
+            ret_val = {}
+            Logger.Log(f"user_data was unexpected type {type(user_data)}, defaulting to empty dict.", logging.WARN)
         return ret_val
 
     @staticmethod

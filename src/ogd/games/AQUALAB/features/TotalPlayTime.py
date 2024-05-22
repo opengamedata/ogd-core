@@ -44,7 +44,7 @@ class TotalPlayTime(Feature):
                 self._idle_time += feature.FeatureValues[4]
                 self._idle_time += feature.FeatureValues[5]
             except TypeError as err:
-                Logger.Log(f"TotalPlayTime for player {feature.PlayerID} got non-timedelta value of {feature.FeatureValues[0]}")
+                self.WarningMessage(f"TotalPlayTime for player {feature.PlayerID} got non-timedelta value of {feature.FeatureValues[0]}")
     
     def _getFeatureValues(self) -> List[Any]:
         return [self._play_time, self._play_time_seconds, self._active_time, self._active_time_seconds, self._idle_time, self._idle_time_seconds]

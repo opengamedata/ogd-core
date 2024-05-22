@@ -1,8 +1,7 @@
 # import libraries
 import json
-from typing import Any, List, Optional
+from typing import Any, Final, List, Optional
 import json
-from time import time
 from datetime  import timedelta, datetime
 # import local files
 from ogd.core.generators.extractors.Feature import Feature
@@ -22,7 +21,7 @@ class SessionPlayTime(SessionFeature):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    IDLE_TIME_THRESHOLD = timedelta(seconds=60)
+    IDLE_TIME_THRESHOLD : Final[timedelta] = timedelta(seconds=60)
 
     def __init__(self, params:GeneratorParameters, threshold: int):
         super().__init__(params=params)

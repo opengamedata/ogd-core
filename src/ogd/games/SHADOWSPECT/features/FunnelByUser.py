@@ -1,7 +1,6 @@
 # import libraries
 from typing import Any, List
 import json
-import pandas as pd
 # import locals
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
