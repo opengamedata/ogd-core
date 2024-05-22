@@ -189,7 +189,7 @@ class SemanticVersion:
     # 1. Handle cases where RHS is not a SemanticVersion, or self is not a valid SemVer string.
         # a. If we're not valid, we're smaller (or equal)
         if not self.IsValid:
-            return self == RHS
+            return True
         # b. If they're not SemVer, convert
         if not isinstance(RHS, SemanticVersion):
             if isinstance(RHS, str):
