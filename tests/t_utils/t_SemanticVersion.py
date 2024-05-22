@@ -13,7 +13,12 @@ def setUpModule():
     from ogd.core.utils.Logger import Logger
     Logger.InitializeLogger(level=logging.ERROR, use_logfile=False)
 
+# TODO : need to test cases where we're comparing directly to a string, and directly to an int.
+# TODO : need to test cases where one semver has more points than the other, e.g. 1.1 vs 1.1.1
 class t_SemanticVersion_eq(TestCase):
+    """
+    Tests for equality operator on SemanticVersions.
+    """
     def RunAll(self):
         self.test_EqualInvalids()
         self.test_UnequalInvalids()
