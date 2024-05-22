@@ -19,6 +19,8 @@ class t_SemanticVersion_eq(TestCase):
         self.test_UnequalInvalids()
         print("Ran all t_SemanticVersion_eq tests.")
 
+    def test_Failure(self):
+        self.assertTrue(False)
     def test_EqualInvalids(self):
         a = SemanticVersion.FromString("Invalid")
         b = SemanticVersion.FromString("Invalid")
