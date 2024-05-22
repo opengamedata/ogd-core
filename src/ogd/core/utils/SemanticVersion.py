@@ -16,26 +16,55 @@ class SemanticVersion:
     # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, major:Optional[int], minor:Optional[int]=None, patch:Optional[int]=None, suffix:Optional[str]=None, suffix_ver:Optional[int]=None, fallback:Optional[str]=None):
-        self._major      : Optional[int] = major
-        self._minor      : Optional[int] = minor
-        self._patch      : Optional[int] = patch
+        """
+        Constructor for a SemanticVersion.
+
+        Any parameter may be set to None; if nothing at all is given, the version will be treated as 0.0.0.
+
+        :param major: The major version number
+        :type major: Optional[int]
+        :param minor: The minor version number, defaults to None
+        :type minor: Optional[int], optional
+        :param patch: The patch version number, defaults to None
+        :type patch: Optional[int], optional
+        :param suffix: An optional suffix for the version, such as 'alpha' or 'beta', defaults to None
+        :type suffix: Optional[str], optional
+        :param suffix_ver: An optional suffix version, allowing for overall suffixes such as 'alpha1' or 'beta2', defaults to None
+        :type suffix_ver: Optional[int], optional
+        :param fallback: _description_, defaults to None
+        :type fallback: Optional[str], optional
+        """
+        self._major      : Optional[int] = max(0, major) if major is not None else None
+        self._minor      : Optional[int] = max(0, minor) if minor is not None else None
+        self._patch      : Optional[int] = max(0, patch) if patch is not None else None
         self._suffix     : Optional[str] = suffix
-        self._suffix_ver : Optional[int] = suffix_ver
+        self._suffix_ver : Optional[int] = max(0, suffix_ver) if suffix_ver is not None else None
         self._fallback   : Optional[str] = fallback
 
     def __repr__(self) -> str:
         return f"SemanticVersion : {self}"
 
     def __str__(self) -> str:
-        _major      = str(self._major)       if self._major      is not None else None
-        _minor      = f".{self._minor}"      if self._minor      is not None else None
-        _patch      = f".{self._patch}"      if self._patch      is not None else None
-        _suffix     = f"-{self._suffix}"     if self._suffix     is not None else None
-        _suffix_ver = f".{self._suffix_ver}" if self._suffix_ver is not None else None
+        _major      = str(self._major)      if self._major      is not None else None
+        _minor      = f".{self._minor}"     if self._minor      is not None else None
+        _patch      = f".{self._patch}"     if self._patch      is not None else None
+        _suffix     = f"-{self._suffix}"    if self._suffix     is not None else None
+        _suffix_ver = f"{self._suffix_ver}" if self._suffix_ver is not None else None
 
         return f"{_major}{_minor or ''}{_patch or ''}{_suffix or ''}{_suffix_ver or ''}" if self.IsValid else str(self._fallback)
 
     def __eq__(self, RHS:Any) -> bool:
+        """
+        _summary_
+
+        :param RHS: _description_
+        :type RHS: Any
+        :raises TypeError: _description_
+        :raises TypeError: _description_
+        :raises TypeError: _description_
+        :return: _description_
+        :rtype: bool
+        """
     # 1. Handle cases where RHS is not a SemanticVersion.
         if not isinstance(RHS, SemanticVersion):
             if isinstance(RHS, str):
@@ -145,14 +174,50 @@ class SemanticVersion:
             return True
         # b. If majors are equal, compare minors
         elif self._CompMajor == RHS._CompMajor:
-        # c. If our minor is bigger, we're bigger
-            if self._CompMinor > RHS._CompMinor:
+        # c. If our minor is smaller, we're smaller
+            if self._CompMinor < RHS._CompMinor:
                 return True
         # d. If minors are equal, compare patches
             elif self._CompMinor == RHS._CompMinor:
-        # e. If our patch is bigger, we're bigger
-                if self._CompPatch > RHS._CompPatch:
+        # e. If our patch is smaller, we're smaller
+                if self._CompPatch < RHS._CompPatch:
                     return True
+        # f. Otherwise, we're not smaller.
+        return False
+
+    def __le__(self, RHS:Any):
+    # 1. Handle cases where RHS is not a SemanticVersion, or self is not a valid SemVer string.
+        # a. If we're not valid, we're smaller (or equal)
+        if not self.IsValid:
+            return self == RHS
+        # b. If they're not SemVer, convert
+        if not isinstance(RHS, SemanticVersion):
+            if isinstance(RHS, str):
+                RHS = SemanticVersion.FromString(RHS, verbose=False)
+            elif isinstance(RHS, int):
+                RHS = SemanticVersion(major=RHS)
+            else:
+                raise TypeError(f"'<=' not supported between instances '{type(self)}' and '{type(RHS)}'")
+        # c. If they're not valid, but we are, we're not smaller
+        if not RHS.IsValid:
+            return False
+    # 2. Handle general case, where we're just comparing each piece
+        # a. If our major is smaller, we're smaller
+        if self._CompMajor < RHS._CompMajor:
+            return True
+        # b. If majors are equal, compare minors
+        elif self._CompMajor == RHS._CompMajor:
+        # c. If our minor is smaller, we're smaller.
+            if self._CompMinor < RHS._CompMinor:
+                return True
+        # d. If minors are equal, compare patches
+            elif self._CompMinor == RHS._CompMinor:
+        # e. If our patch is smaller, we're smaller
+                if self._CompPatch < RHS._CompPatch:
+                    return True
+        # d. If patches are equal, check if we're totally equal.
+                elif self._CompPatch == RHS._CompPatch:
+                    return self._suffix == RHS._suffix and self._suffix_ver == RHS._suffix_ver
         # f. Otherwise, we're not bigger.
         return False
 
