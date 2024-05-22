@@ -1,5 +1,6 @@
 # import standard libraries
 import logging
+import math
 import re
 from typing import Any, Dict, Optional, List
 
@@ -32,51 +33,127 @@ class SemanticVersion:
         _suffix     = f"-{self._suffix}"     if self._suffix     is not None else None
         _suffix_ver = f".{self._suffix_ver}" if self._suffix_ver is not None else None
 
-        return f"{_major}{_minor or ''}{_patch or ''}{_suffix or ''}{_suffix_ver or ''}" if _major is not None else str(self._fallback)
+        return f"{_major}{_minor or ''}{_patch or ''}{_suffix or ''}{_suffix_ver or ''}" if self.IsValid else str(self._fallback)
 
     def __eq__(self, RHS:Any) -> bool:
-        _this : SemanticVersion = self
-        _that : SemanticVersion
-    # 1. Handle weird cases, like bad type or 
-        if not isinstance(RHS, SemanticVersion):
-            if isinstance(RHS, str):
-                _that = SemanticVersion.FromString(RHS, verbose=False)
-            else:
-                return False
-        if _this.IsValid and _that.IsValid:
-    # 2. Handle general case, where we're just comparing each piece
-            if _this._major       == _that._major  \
-            and _this._minor      == _that._minor  \
-            and _this._patch        == _that._patch    \
-            and _this._suffix     == _that._suffix \
-            and _this._suffix_ver == _that._suffix_ver:
-                return True
-        return False
-
-    def __lt__(self, RHS:Any) -> bool:
-        _this : SemanticVersion = self
-        _that : SemanticVersion
     # 1. Handle cases where RHS is not a SemanticVersion.
         if not isinstance(RHS, SemanticVersion):
             if isinstance(RHS, str):
-                _that = SemanticVersion.FromString(RHS, verbose=False)
+                RHS = SemanticVersion.FromString(RHS, verbose=False)
+            elif isinstance(RHS, int):
+                RHS = SemanticVersion(major=RHS)
             else:
                 return False
+        if self.IsValid and RHS.IsValid:
     # 2. Handle general case, where we're just comparing each piece
-        if _this._major is not None and _that._major is not None:
-        # a. Compare Majors
-            if _this._major < _that._major:
+            return  self._CompMajor  == RHS._CompMajor  \
+                and self._CompMinor  == RHS._CompMinor  \
+                and self._CompPatch  == RHS._CompPatch  \
+                and self._suffix     == RHS._suffix     \
+                and self._suffix_ver == RHS._suffix_ver
+        else:
+            return str(self) == str(RHS)
+
+    def __gt__(self, RHS:Any) -> bool:
+    # 1. Handle cases where RHS is not a SemanticVersion, or self is not a valid SemVer string.
+        # a. If we're not valid, we're not bigger
+        if not self.IsValid:
+            return False
+        # b. If they're not SemVer, convert
+        if not isinstance(RHS, SemanticVersion):
+            if isinstance(RHS, str):
+                RHS = SemanticVersion.FromString(RHS, verbose=False)
+            elif isinstance(RHS, int):
+                RHS = SemanticVersion(major=RHS)
+            else:
+                raise TypeError(f"'>' not supported between instances '{type(self)}' and '{type(RHS)}'")
+        # c. If they're not valid, but we are, we're bigger
+        if not RHS.IsValid:
+            return True
+    # 2. Handle general case, where we're just comparing each piece
+        # a. If our major is bigger, we're bigger
+        if self._CompMajor > RHS._CompMajor:
+            return True
+        # b. If majors are equal, compare minors
+        elif self._CompMajor == RHS._CompMajor:
+        # c. If our minor is bigger, we're bigger
+            if self._CompMinor > RHS._CompMinor:
                 return True
-            elif _this._major == _that._major:
-        # b. Compare minors
-                if _this._minor is not None and _that._minor is not None:
-                    if _this._minor < _that._minor:
-                        return True
-                    elif _this._minor == _that._minor:
-        # c. Compare revisions
-                        if _this._patch is not None and _that._patch is not None:
-                            if _this._patch < _that._patch:
-                                return True
+        # d. If minors are equal, compare patches
+            elif self._CompMinor == RHS._CompMinor:
+        # e. If our patch is bigger, we're bigger
+                if self._CompPatch > RHS._CompPatch:
+                    return True
+        # f. Otherwise, we're not bigger.
+        return False
+
+    def __ge__(self, RHS:Any):
+    # 1. Handle cases where RHS is not a SemanticVersion, or self is not a valid SemVer string.
+        # a. If we're not valid, we're not bigger, so return whether we're equal
+        if not self.IsValid:
+            return self == RHS
+        # b. If they're not SemVer, convert
+        if not isinstance(RHS, SemanticVersion):
+            if isinstance(RHS, str):
+                RHS = SemanticVersion.FromString(RHS, verbose=False)
+            elif isinstance(RHS, int):
+                RHS = SemanticVersion(major=RHS)
+            else:
+                raise TypeError(f"'>=' not supported between instances '{type(self)}' and '{type(RHS)}'")
+        # c. If they're not valid, but we are, we're bigger
+        if not RHS.IsValid:
+            return True
+    # 2. Handle general case, where we're just comparing each piece
+        # a. If our major is bigger, we're bigger
+        if self._CompMajor > RHS._CompMajor:
+            return True
+        # b. If majors are equal, compare minors
+        elif self._CompMajor == RHS._CompMajor:
+        # c. If our minor is bigger, we're bigger
+            if self._CompMinor > RHS._CompMinor:
+                return True
+        # d. If minors are equal, compare patches
+            elif self._CompMinor == RHS._CompMinor:
+        # e. If our patch is bigger, we're bigger
+                if self._CompPatch > RHS._CompPatch:
+                    return True
+        # d. If patches are equal, check if we're totally equal.
+                elif self._CompPatch == RHS._CompPatch:
+                    return self._suffix == RHS._suffix and self._suffix_ver == RHS._suffix_ver
+        # f. Otherwise, we're not bigger.
+        return False
+
+    def __lt__(self, RHS:Any) -> bool:
+    # 1. Handle cases where RHS is not a SemanticVersion, or self is not a valid SemVer string.
+        # a. If we're not valid, we're smaller
+        if not self.IsValid:
+            return True
+        # b. If they're not SemVer, convert
+        if not isinstance(RHS, SemanticVersion):
+            if isinstance(RHS, str):
+                RHS = SemanticVersion.FromString(RHS, verbose=False)
+            elif isinstance(RHS, int):
+                RHS = SemanticVersion(major=RHS)
+            else:
+                raise TypeError(f"'<' not supported between instances '{type(self)}' and '{type(RHS)}'")
+        # c. If they're not valid, but we are, we're not smaller
+        if not RHS.IsValid:
+            return False
+    # 2. Handle general case, where we're just comparing each piece
+        # a. If our major is smaller, we're smaller
+        if self._CompMajor < RHS._CompMajor:
+            return True
+        # b. If majors are equal, compare minors
+        elif self._CompMajor == RHS._CompMajor:
+        # c. If our minor is bigger, we're bigger
+            if self._CompMinor > RHS._CompMinor:
+                return True
+        # d. If minors are equal, compare patches
+            elif self._CompMinor == RHS._CompMinor:
+        # e. If our patch is bigger, we're bigger
+                if self._CompPatch > RHS._CompPatch:
+                    return True
+        # f. Otherwise, we're not bigger.
         return False
 
     # *** PUBLIC STATICS ***
@@ -97,13 +174,25 @@ class SemanticVersion:
     def IsValid(self) -> bool:
         return self._major is not None
 
+    @property
+    def _CompMajor(self) -> float:
+        return self._major or -math.inf
+
+    @property
+    def _CompMinor(self) -> float:
+        return self._minor or -math.inf
+
+    @property
+    def _CompPatch(self) -> float:
+        return self._patch or -math.inf
+
     @staticmethod
     def _parseMajor(semver:str, pieces:List[str], verbose:bool) -> 'SemanticVersion':
         ret_val : 'SemanticVersion'
 
         _major : int
         try:
-            _major = int(pieces[0])
+            _major = max(0, int(pieces[0]))
         except ValueError as err:
             _default_ver = semver
             if verbose:
@@ -124,7 +213,7 @@ class SemanticVersion:
 
         _minor : int
         try:
-            _minor = int(pieces[0])
+            _minor = max(0, int(pieces[0]))
         except ValueError as err:
             _default_ver = str(major)
             if verbose:
@@ -144,7 +233,7 @@ class SemanticVersion:
 
         _fix : int
         try:
-            _fix = int(pieces[0])
+            _fix = max(0, int(pieces[0]))
         except ValueError as err:
             _default_ver = f"{major}.{minor}"
             if verbose:
@@ -176,7 +265,7 @@ class SemanticVersion:
 
         _suffix_version : int
         try:
-            _suffix_version = int(pieces[0])
+            _suffix_version = max(0, int(pieces[0]))
         except ValueError as err:
             _default_ver = f"{major}.{minor}.{fix}-{suffix}"
             if verbose:
