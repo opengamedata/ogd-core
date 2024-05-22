@@ -76,6 +76,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = ActiveTime.ActiveTime(params=extractor_params, job_map=self._job_map, active_threads=schema_args.get("Active_threshold"))
                 case "ActiveJobs":
                     ret_val = ActiveJobs.ActiveJobs(params=extractor_params, job_map=self._job_map)
+                case "AppVersions":
+                    ret_val = AppVersions.AppVersions(params=extractor_params)
                 case "EchoSessionID":
                     ret_val = EchoSessionID.EchoSessionID(params=extractor_params)
                 case "EventList":
