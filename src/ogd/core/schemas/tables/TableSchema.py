@@ -14,6 +14,7 @@ from ogd.core.schemas.tables.ColumnMapSchema import ColumnMapSchema
 from ogd.core.schemas.tables.ColumnSchema import ColumnSchema
 from ogd.core.utils import utils
 from ogd.core.utils.Logger import Logger
+from ogd.core.utils.SemanticVersion import SemanticVersion
 from ogd.core.utils.typing import Map
 
 ## @class TableSchema
@@ -329,9 +330,12 @@ class TableSchema:
                 TableSchema._conversion_warnings.append("index")
             index = int(index)
 
+        # NOTE : Don't convert until we're actually constructing the Events, until then we're just dealing in strings.
+        _app_ver = SemanticVersion.FromString(app_ver)
+        _log_ver = SemanticVersion.FromString(log_ver)
         return Event(session_id=sess_id, app_id=app_id, timestamp=time,
                      event_name=ename, event_data=edata, event_source=esrc,
-                     app_version=app_ver, app_branch=app_br, log_version=log_ver,
+                     app_version=_app_ver, app_branch=app_br, log_version=_log_ver,
                      time_offset=offset, user_id=uid, user_data=udata,
                      game_state=state, event_sequence_index=index)
 
