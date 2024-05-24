@@ -28,7 +28,6 @@ __all__ = [
     "ModelInterveneCount",
     "ModelPredictCount",
     "PlayerSummary",
-    "PlayLocations",
     "PopulationSummary",
     "RegionJobCount",
     "RegionName",
@@ -58,7 +57,6 @@ __all__ = [
     "UserAvgActiveTime",
     "UserAvgSessionDuration",
     "UserTotalSessionDuration",
-    "PlayLocations",
     "AppVersions"
 ]
 
@@ -91,7 +89,6 @@ from . import ModelExportCount
 from . import ModelInterveneCount
 from . import ModelPredictCount
 from . import PlayerSummary
-from . import PlayLocations
 from . import PopulationSummary
 from . import RegionJobCount
 from . import RegionName
@@ -120,5 +117,4 @@ from . import TotalPlayTime
 from . import UserAvgActiveTime
 from . import UserAvgSessionDuration
 from . import UserTotalSessionDuration
-from . import PlayLocations
 from . import AppVersions

@@ -66,7 +66,7 @@ class Logger:
                 case logging.INFO:
                     Logger.file_logger.info( f"INFO:    {now} {indent}{_idt_msg}")
                 case logging.WARNING:
-                    Logger.file_logger.warn( f"WARNING: {now} {indent}{_idt_msg}")
+                    Logger.file_logger.warning( f"WARNING: {now} {indent}{_idt_msg}")
                 case logging.ERROR:
                     Logger.file_logger.error(f"ERROR:   {now} {indent}{_idt_msg}")
         if Logger.std_logger is not None:
@@ -76,7 +76,7 @@ class Logger:
                 case logging.INFO:
                     Logger.std_logger.info( f"INFO:    {indent}{_idt_msg}")
                 case logging.WARNING:
-                    Logger.std_logger.warn( f"WARNING: {indent}{_idt_msg}")
+                    Logger.std_logger.warning( f"WARNING: {indent}{_idt_msg}")
                 case logging.ERROR:
                     Logger.std_logger.error(f"ERROR:   {indent}{_idt_msg}")
 

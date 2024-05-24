@@ -58,50 +58,64 @@ class PenguinsLoader(GeneratorLoader):
         ret_val : Feature
         if extractor_params._count_index == None:
             match feature_type:
-                case "SessionDuration":
-                    ret_val = SessionDuration.SessionDuration(params=extractor_params, session_id=self._session_id)
-                case "RegionsEncountered":
-                    ret_val = RegionsEncountered.RegionsEncountered(params=extractor_params)
-                case "PlayerWaddleCount":
-                    ret_val = PlayerWaddleCount.PlayerWaddleCount(params=extractor_params)
-                case "GazeDuration":
-                    ret_val = GazeDuration.GazeDuration(params=extractor_params)
-                case "GazeCount":
-                    ret_val = GazeCount.GazeCount(params=extractor_params)
-                case "SnowBallDuration":
-                    ret_val = SnowBallDuration.SnowBallDuration(params=extractor_params)
-                # case "RingChimesCount":
-                    # ret_val = RingChimesCount.RingChimesCount(params=extractor_params)
-                case "WaddlePerRegion":
-                    ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params, region_map=self._region_map)
-                case "EatFishCount":
-                    ret_val = EatFishCount.EatFishCount(params=extractor_params)
-                case "PickupRockCount":
-                    ret_val = PickupRockCount.PickupRockCount(params=extractor_params)
-                case "EggLostCount":
-                    ret_val = EggLostCount.EggLostCount(params=extractor_params)
-                case "EggRecoverTime":
-                    ret_val = EggRecoverTime.EggRecoverTime(params=extractor_params)
-                # case "PlayerInactiveAvgDuration":
-                #     ret_val = PlayerInactiveAvgDuration.PlayerInactiveAvgDuration(params=extractor_params)
-                case "MirrorWaddleDuration":
-                    ret_val = MirrorWaddleDuration.MirrorWaddleDuration(params=extractor_params)
                 case "ActivityCompleted":
                     ret_val = ActivityCompleted.ActivityCompleted(params=extractor_params)
                 case "ActivityDuration":
                     ret_val = ActivityDuration.ActivityDuration(params=extractor_params)       
+                case "BuiltNestCount":
+                    ret_val = BuiltNestCount.BuiltNestCount(params=extractor_params)
+                case "BuiltWrongNestCount":
+                    ret_val = BuiltWrongNestCount.BuiltWrongNestCount(params=extractor_params)
+                case "EatFishCount":
+                    ret_val = EatFishCount.EatFishCount(params=extractor_params)
+                case "EggLostCount":
+                    ret_val = EggLostCount.EggLostCount(params=extractor_params)
+                case "EggRecoverTime":
+                    ret_val = EggRecoverTime.EggRecoverTime(params=extractor_params)
+                case "GazeCount":
+                    ret_val = GazeCount.GazeCount(params=extractor_params)
+                case "GazeDuration":
+                    ret_val = GazeDuration.GazeDuration(params=extractor_params)
+                case "LogVersion":
+                    ret_val = LogVersion.LogVersion(params=extractor_params)
+                case "MirrorWaddleDuration":
+                    ret_val = MirrorWaddleDuration.MirrorWaddleDuration(params=extractor_params)
+                case "PenguinInteractCount":
+                    ret_val = PenguinInteractCount.PenguinInteractCount(params=extractor_params)
+                # case "PlayerInactiveAvgDuration":
+                #     ret_val = PlayerInactiveAvgDuration.PlayerInactiveAvgDuration(params=extractor_params)
+                case "RegionsEncountered":
+                    ret_val = RegionsEncountered.RegionsEncountered(params=extractor_params)
+                case "RingChimesCount":
+                    ret_val = RingChimesCount.RingChimesCount(params=extractor_params)
+                case "RockBashCount":
+                    ret_val = RockBashCount.RockBashCount(params=extractor_params) 
+                case "RockPickupCount":
+                    ret_val = RockPickupCount.RockPickupCount(params=extractor_params)
+                case "RockMultiplePickupCount":
+                        ret_val = RockMultiplePickupCount.RockMultiplePickupCount(params=extractor_params)      
+                case "SessionDuration":
+                    ret_val = SessionDuration.SessionDuration(params=extractor_params, session_id=self._session_id)
+                case "SkuaBashCount":
+                        ret_val = SkuaBashCount.SkuaBashCount(params=extractor_params)
+                case "SkuaPeckCount":
+                        ret_val = SkuaPeckCount.SkuaPeckCount(params=extractor_params)
+                case "SnowBallDuration":
+                    ret_val = SnowBallDuration.SnowBallDuration(params=extractor_params)
+                case "WaddleCount":
+                    ret_val = WaddleCount.WaddleCount(params=extractor_params)
                 case _:
                     raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature for Penguins.")
         # Per-count features
         # level attempt features
         else:
             match feature_type:
-                case "RegionEnterCount":
-                        ret_val = RegionEnterCount.RegionEnterCount(params=extractor_params, region_map=self._region_map)
-                # case "WaddlePerRegion":
-                        #ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params)
                 case "RegionDuration":
                             ret_val = RegionDuration.RegionDuration(params=extractor_params, region_map=self._region_map)
+                case "RegionEnterCount":
+                        ret_val = RegionEnterCount.RegionEnterCount(params=extractor_params, region_map=self._region_map)
+                case "WaddlePerRegion":
+                    ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params, region_map=self._region_map)
                 case _:
                     raise NotImplementedError(f"'{feature_type}' is not a valid per-count feature for Penguins.")
         return ret_val

@@ -1,18 +1,17 @@
 # import libraries
 import logging
+import re
 from typing import Any, Dict, List, Optional
 # import locals
 from ogd.core.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
-from ogd.games.PENGUINS.features.PerRegionFeature import PerRegionFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
 
-class PlayerWaddleCount(SessionFeature):
+class BuiltWrongNestCount(SessionFeature):
 
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
@@ -21,19 +20,22 @@ class PlayerWaddleCount(SessionFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
-        return ["player_waddle"]
+        return ["peck_nest"]
 
     @classmethod
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event:Event) -> None:
-        self._current_count += 1
+        # if has_rock does not exit it will return false as well
+        
+        # TODO : account for newer versions having peck_nest co-occurring with place_rock when building correct nest
+        if event.game_state.get("has_rock", False):
+            # if (event.log_version) < 11 and (event.game_state.get("has_rock", False)):
+            self._current_count += 1
 
     def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
         return [self._current_count]
-
-    

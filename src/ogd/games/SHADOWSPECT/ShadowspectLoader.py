@@ -35,6 +35,8 @@ class ShadowspectLoader(GeneratorLoader):
                 ret_val = LevelsOfDifficulty.LevelsOfDifficulty(params=extractor_params)
             case "SequenceBetweenPuzzles":
                 ret_val = SequenceBetweenPuzzles.SequenceBetweenPuzzles(params=extractor_params)
+            case "SequenceWithinPuzzles":
+                ret_val = SequenceWithinPuzzles.SequenceWithinPuzzles(params=extractor_params)
             case _:
                 raise NotImplementedError(f"'{feature_type}' is not a valid feature for Shadowspect.")
         return ret_val

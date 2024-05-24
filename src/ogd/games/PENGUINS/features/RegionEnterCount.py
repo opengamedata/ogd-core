@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional
 from ogd.core.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.games.PENGUINS.features.PerRegionFeature import PerRegionFeature
+from ogd.games.PENGUINS.features.bases.PerRegionFeature import PerRegionFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
@@ -40,9 +40,9 @@ class RegionEnterCount(PerCountFeature):
     # *** Optionally override public functions. ***
     def _validateEventCountIndex(self, event: Event):
         ret_val : bool = False
-        region_data = event.EventData.get("region_name")
-        if region_data is not None:
-            if region_data in region_map and region_map[region_data] == self.CountIndex:
+        region_name = event.EventData.get("region_name")
+        if region_name is not None:
+            if region_name in self._region_map and self._region_map[region_name] == self.CountIndex:
                 ret_val = True
         else:
             self.WarningMessage(f"Got invalid region data in {type(self).__name__}")

@@ -57,7 +57,30 @@ The elements (member variables) of each Event object, available to programmers w
 
 ## Logged Events  
 
-The individual fields encoded in the *event_data* Event element for each type of event logged by the game.  
+The individual fields encoded in the *game_state* and *user_data* Event element for all event types, and the fields in the *event_data* Event element for each individual event type logged by the game.  
+
+### Enums  
+
+| **Name** | **Values** |
+| ---      | ---        |
+| GameMode | ['HOME_MODE', '...'] |
+| MoveType | ['BUTTON', 'WADDLE'] |
+| Activity | ['skuas', 'mating_dance', 'nest', '...'] |
+| Hand | ['LEFT', 'RIGHT'] |  
+
+### Game State  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| has_rock | bool | Whether the player was holding a rock in their beak at the time the event occurred. | |
+| pos | List[float] | The current position of the player headset at the moment the event occurred, formatted as [x, y, z] | |
+| rot | List[float] | The current orientation of the player headset at the moment the event occurred, formatted as [x, y, z, w] | |
+| seconds_from_launch | float | The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*. | |  
+
+### User Data  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
 
 ### **session_start**
 
@@ -67,7 +90,7 @@ When the app is started and the gameplay session is assigned a session ID. The p
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| random_seed | Unknown | The random seed used for all random number/position/rotation generation in the game. | |
+| random_seed | int | The random seed used for all random number/position/rotation generation in the game. | |
 
 #### Other Elements
 
@@ -81,7 +104,21 @@ When a new game is started
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| mode | enum(HOME_MODE, ...) | The game mode that the player launched | |
+| mode | GameMode | The game mode that the player launched | |
+
+#### Other Elements
+
+- None  
+
+### **device_identifier**
+
+Event to record a hardware ID, for cross-referencing against survey data at gameplay events.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| hardware_uuid | str | The device UUID | |
 
 #### Other Elements
 
@@ -204,17 +241,9 @@ When a player performs a waddle movement to move their penguin avatar forward
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | object_id | str | The name of... some object | |
-| old_posX | float | The previous X-position, where the waddle started. | |
-| old_posY | float | The previous Y-position, where the waddle started. | |
-| old_posZ | float | The previous Z-position, where the waddle started. | |
-| posX | float | The new X-position, where the waddle ended. | |
-| posY | float | The new Y-position, where the waddle ended. | |
-| posZ | float | The new Z-position, where the waddle ended. | |
-| rotX | float | The X-component of the rotation when the waddle ended. | |
-| rotY | float | The Y-component of the rotation when the waddle ended. | |
-| rotZ | float | The Z-component of the rotation when the waddle ended. | |
-| rotW | float | The W-component of the rotation when the waddle ended. | |
-| source | enum(BUTTON, WADDLE) | Indicator for whether the player waddled by pressing a button, or by making the 'waddle' gesture with their head. | |
+| pos_old | List[float] | The previous position of the player avatar's feet, in [x, y, z] form, i.e. where the waddle started. | |
+| pos_new | List[float] | The resulting position of the player avatar's feet, in [x, y, z] form, i.e. where the waddle ended. | |
+| source | MoveType | Indicator for whether the player waddled by pressing a button, or by making the 'waddle' gesture with their head. | |
 
 #### Other Elements
 
@@ -277,6 +306,84 @@ An event triggered when the player eats a fish.
 
 - None  
 
+### **stand_on_nest**
+
+An event triggered when the player stands atop a nest.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| nest_id | str | The name of the nest object the player stood on | |
+| nest_pos | List[float] | The position of the nest the player stood on | |
+
+#### Other Elements
+
+- None  
+
+### **stand_on_rock**
+
+An event triggered when the player stands atop a rock.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| rock_id | str | The name of the rock object the player stood on | |
+| rock_pos | List[float] | The position of the rock when it got stood on | |
+
+#### Other Elements
+
+- None  
+
+### **flipper_bash_nest**
+
+An event triggered when the player makes a flipper-bashing move and makes contact with a nest.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| nest_id | str | The name of the nest object the player bashed | |
+| nest_pos | List[float] | The position of the nest the player bashed | |
+| hand | List[float] | The position of the nest the player bashed | |
+
+#### Other Elements
+
+- None  
+
+### **flipper_bash_penguin**
+
+An event triggered when the player makes a flipper-bashing move and makes contact with another penguin.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| penguin_id | str | The name of the penguin object the player bashed | |
+| penguin_pos | List[float] | The position of the other penguin when it got bashed | |
+| hand | Hand | Whether the player performed the bash with their right or left hand. | |
+
+#### Other Elements
+
+- None  
+
+### **flipper_bash_rock**
+
+An event triggered when the player makes a flipper-bashing move and makes contact with a rock.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| rock_id | str | The name of the rock object the player bashed | |
+| rock_pos | List[float] | The position of the rock when it got bashed | |
+| hand | Hand | Whether the player performed the bash with their right or left hand. | |
+
+#### Other Elements
+
+- None  
+
 ### **flipper_bash_skua**
 
 An event triggered when the player makes a flipper-bashing move to shoo a skua away from their nest/egg.
@@ -285,7 +392,70 @@ An event triggered when the player makes a flipper-bashing move to shoo a skua a
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| object_id | str | The name of the skua object the player bashed | |
+| skua_id | str | The name of the skua object the player bashed | |
+| skua_pos | List[float] | The position of the skua when it got bashed | |
+| penguin_pos | str | The position of the player when they slapped the skua. NOTE : This was added due to a mistake in specification, and is redundant with the position element in game_state. | |
+| hand | Hand | Whether the player performed the bash with their right or left hand. | |
+
+#### Other Elements
+
+- None  
+
+### **peck_nest**
+
+An event triggered when the player's beak makes contact with a nest.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| nest_id | str | The name of the nest object the player pecked | |
+| nest_pos | List[float] | The position of the nest the player pecked | |
+
+#### Other Elements
+
+- None  
+
+### **peck_penguin**
+
+An event triggered when the player's beak makes contact with another penguin.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| penguin_id | str | The name of the penguin object the player pecked | |
+| penguin_pos | List[float] | The position of the other penguin when it got pecked | |
+
+#### Other Elements
+
+- None  
+
+### **peck_rock**
+
+An event triggered when the player's beak makes contact with a rock.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| rock_id | str | The name of the rock object the player pecked | |
+| rock_pos | List[float] | The position of the rock when it got pecked | |
+
+#### Other Elements
+
+- None  
+
+### **peck_skua**
+
+An event triggered when the player's beak makes contact with a skua.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| skua_id | str | The name of the skua object the player pecked | |
+| skua_pos | List[float] | The position of the skua when it got pecked | |
 
 #### Other Elements
 
@@ -300,13 +470,21 @@ An event triggered when the player picks up a rock lying on the ground, which co
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | total_picked_up | int | The running total of rocks the player has picked up. | |
-| px | float | The x-position of the player when the event happened | |
-| py | float | The y-position of the player when the event happened | |
-| pz | float | The z-position of the player when the event happened | |
-| qx | float | The x-component of the quaternion for the player's orientation when the event happened | |
-| qy | float | The y-component of the quaternion for the player's orientation when the event happened | |
-| qz | float | The z-component of the quaternion for the player's orientation when the event happened | |
-| qw | float | The w-component of the quaternion for the player's orientation when the event happened | |
+
+#### Other Elements
+
+- None  
+
+### **place_rock**
+
+An event triggered when the player places the rock into their nest.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| percent_complete | float | The proportion indicating the player's progress towards completing the nest. So far, the game has always been set to require 4 rocks. | |
+| rock_count | int | The total number of rocks the player has placed in their nest. | |
 
 #### Other Elements
 
@@ -386,7 +564,7 @@ NOT YET DOCUMENTED
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| time_remaining | int | The time left until the egg will hatch | |
+| time_remaining | float | The time left until the egg will hatch | |
 
 #### Other Elements
 
@@ -539,13 +717,13 @@ Event when a moves out of one of the regions containing a mini-game or other fea
 
 ### **activity_begin**
 
-Event when the player begins to engage with a mini-game.
+Event when the player begins to engage with a mini-game activity. Exact trigger varies by activity.
 
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| activity_name | enum(skuas, mating_dance, ...) | The name of the mini-game/activity with which the player began to engage | |
+| activity_name | Activity | The name of the mini-game/activity with which the player began to engage | |
 
 #### Other Elements
 
@@ -553,13 +731,13 @@ Event when the player begins to engage with a mini-game.
 
 ### **activity_end**
 
-NOT YET DOCUMENTED
+Event when the player completes a mini-game activity. Exact trigger varies by activity.
 
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| activity_name | enum(skuas, mating_dance, ...) | NOT YET DOCUMENTED | |
+| activity_name | Activity | The name of the mini-game/activity the player completed. | |
 
 #### Other Elements
 
@@ -623,28 +801,64 @@ Triggers an event when a player exit a region
 
 The features/metrics calculated from this game's event logs by OpenGameData when an 'export' is run.  
 
-**GazeCount** : *int*, *Aggregate feature*   
-The number of times a player waddled in a given region of the game.  
-  
-
-**PickupRockCount** : *int*, *Aggregate feature*   
-The duration each session took.  
-  
-
-**PlayerWaddleCount** : *int*, *Aggregate feature*   
-The number of times a player waddled.  
+**LogVersion** : *int*, *Aggregate feature*   
+The version of game the player use.  
   
 
 **SessionDuration** : *timedelta*, *Aggregate feature*   
 The duration each session took.  
   
 
+**BuiltNestCount** : *int*, *Aggregate feature*   
+The number of times a player with a rock placed the rock on the correct nest.  
+  
+
+**BuiltWrongNestCount** : *int*, *Aggregate feature*   
+The number of times a player with a rock that has a peck_nest event, where nest_id does not equal to player nest_id.  
+  
+
+**RockPickupCount** : *int*, *Aggregate feature*   
+The duration each session took.  
+  
+
+**RockMultiplePickupCount** : *int*, *Aggregate feature*   
+The number of times a player with a rock has peck_rock event.  
+  
+
+**RockBashCount** : *int*, *Aggregate feature*   
+he number of times a player had a flipper_bash_rock event.  
+  
+
+**SkuaBashCount** : *int*, *Aggregate feature*   
+The number of times a player bashed skuas  
+  
+
+**SkuaPeckCount** : *int*, *Aggregate feature*   
+The number of times a player pecked skuas, which does not actually affect the skuas  
+  
+
+**EggLostCount** : *int*, *Aggregate feature*   
+The number of times a player's egg was stolen by skuas  
+  
+
+**EggRecoverTime** : *int*, *Aggregate feature*   
+The amount of time the egg spent stolen, with the player trying to recover it  
+  
+
+**PenguinInteractCount** : *int*, *Aggregate feature*   
+The number of times a player interacted with another penguin via pecks and/or flipper bashes  
+  
+
+**GazeCount** : *int*, *Aggregate feature*   
+The number of times a player waddled in a given region of the game.  
+  
+
 **GazeDuration** : *timedelta*, *Aggregate feature*   
 How long gaze event last for.  
   
 
-**RegionEnterCount** : *int*, *Aggregate feature*  (disabled)  
-The number of times a player enterd for a given region of the game.  
+**WaddleCount** : *int*, *Aggregate feature*   
+The number of times a player waddled.  
   
 
 **ActivityCompleted** : *int*, *Aggregate feature*   
@@ -659,6 +873,10 @@ How long activity last for.
 The regions entered in a given session.  
   
 
+**RegionEnterCount** : *int*, *Per-count feature*  (disabled)  
+The number of times a player enterd for a given region of the game.  
+  
+
 **RegionDuration** : *timedelta*, *Per-count feature*   
 The duration of time a player played in a given region of the game.  
   
@@ -670,8 +888,6 @@ The number of times a player waddled in a given region of the game.
 ## Other Elements  
 
 Other (potentially non-standard) elements specified in the game's schema, which may be referenced by event/feature processors.  
-
-game_state : {'seconds_from_launch': {'type': 'float', 'description': 'The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*.'}, 'pos': {'type': 'List[float]', 'description': 'The current position of the player headset at the moment the event occurred, formatted as [x, y, z]'}, 'rot': {'type': 'List[float]', 'description': 'The current orientation of the player headset at the moment the event occurred, formatted as [x, y, z, w]'}, 'has_rock': {'type': 'bool', 'description': 'Whether the player was holding a rock in their beak at the time the event occurred.'}}  
 
 ### Other Ranges  
 
