@@ -6,6 +6,7 @@ from typing import List, Optional
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.utils.Logger import Logger
+from ogd.core.utils.SemanticVersion import SemanticVersion
 
 ## @class ExtractorParams
 class GeneratorParameters:
@@ -84,7 +85,7 @@ class Generator(abc.ABC):
 
     ## Base function to get the minimum log version the feature can handle.
     @staticmethod
-    def MinVersion() -> Optional[str]:
+    def MinVersion() -> Optional[str | SemanticVersion]:
         """ Base function to get the minimum log version the feature can handle.
             A value of None will set no minimum, so all levels are accepted (unless a max is set).
             Typically default to None, unless there is a required element of the event data that was not added until a certain version.        
@@ -98,7 +99,7 @@ class Generator(abc.ABC):
 
     ## Base function to get the maximum log version the feature can handle.
     @staticmethod
-    def MaxVersion() -> Optional[str]:
+    def MaxVersion() -> Optional[str | SemanticVersion]:
         """ Base function to get the maximum log version the feature can handle.
             A value of None will set no maximum, so all levels are accepted (unless a min is set).
             Typically default to None, unless the feature is not compatible with new data and is only kept for legacy purposes.
@@ -170,7 +171,7 @@ class Generator(abc.ABC):
         )
 
     ## Private function to check whether the given data version from a row is acceptable by this feature extractor.
-    def _validateVersion(self, data_version:str) -> bool:
+    def _validateVersion(self, data_version:SemanticVersion) -> bool:
         """Private function to check whether a given version is valid for this Feature.
 
         :param data_version: The logging version for some event to be checked.
@@ -180,12 +181,14 @@ class Generator(abc.ABC):
         """
         if data_version != 'None':
             min = self.MinVersion()
+            min = min if isinstance(min, SemanticVersion) else SemanticVersion.FromString(min) if isinstance(min, str) else None
             if min is not None:
-                if Event.CompareVersions(data_version, min) < 0:
+                if data_version < min:
                     return False # too old, not valid.
             max = self.MaxVersion()
+            max = max if isinstance(max, SemanticVersion) else SemanticVersion.FromString(max) if isinstance(max, str) else None
             if max is not None:
-                if Event.CompareVersions(data_version, max) > 0:
+                if data_version > max:
                     return False # too new, not valid
             return True # passed both cases, valid.
         else:
