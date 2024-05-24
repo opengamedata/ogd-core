@@ -23,7 +23,7 @@ class QuestionAnswers(PerCountFeature):
     def _validateEventCountIndex(self, event: Event):
         if event.EventName == "CUSTOM.20":
             return self.cur_question == self.CountIndex and self.cur_question in [10, 16]
-        if Event.CompareVersions(event.LogVersion, "6") >= 0 and event.EventData.get("cur_cmd_type") == 2:
+        if event.LogVersion >= "6" and event.EventData.get("cur_cmd_type") == 2:
                 self.cur_question = je.answer_to_question(event.EventData.get("cur_cmd_fqid"), event.GameState["level"])
         return self.cur_question==self.CountIndex
     
@@ -43,7 +43,7 @@ class QuestionAnswers(PerCountFeature):
         if event.event_name == "CUSTOM.20" and self.chosen_answer and event.EventData.get("cur_cmd_fqid"):
             self.chosen_answer = event.EventData.get("interacted_fqid")
             return
-        if Event.CompareVersions(event.LogVersion, "6") >= 0: 
+        if event.LogVersion >= "6": 
             if event.EventData.get("cur_cmd_type") == 2:
                 self.cur_question = je.answer_to_question(
                     event.EventData.get("cur_cmd_fqid"), event.GameState["level"])

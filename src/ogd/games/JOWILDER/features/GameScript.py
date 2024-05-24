@@ -32,7 +32,7 @@ class GameScript(SessionFeature):
         return [] 
 
     def _updateFromEvent(self, event:Event) -> None:
-        if Event.CompareVersions(event.LogVersion, "7") >= 0:
+        if event.LogVersion >= "7":
             _type = event.EventData.get("script_type")
             self._version = event.EventData.get("script_version")
             if _type is not None:

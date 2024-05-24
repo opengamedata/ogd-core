@@ -676,7 +676,7 @@ class LakelandExtractor(LegacyFeature):
         def chose_highest_nutrient_tile(buy_hovers, chosen_tile):
             if not buy_hovers:
                 return None
-            building_buildable_func = self.get_building_buildable_function() if Event.CompareVersions(self._VERSION, "15") < 0 \
+            building_buildable_func = self.get_building_buildable_function() if self._VERSION < "15" \
                 else lambda buy_t: buy_t[-2] # whether the tile is buildable (v15 buy hover data contains:
                                              # [tile_data_short, buildable, hover_time]
             for t in buy_hovers:
@@ -938,7 +938,7 @@ class LakelandExtractor(LegacyFeature):
         _emote_enum = d["emote_enum"]
 
         # fix bug in v13 logging where emote 2s show up as emote 0s
-        if Event.CompareVersions(self._VERSION, "13") == 0 and _emote_enum == 0:
+        if self._VERSION == "13" and _emote_enum == 0:
             _emote_enum = 2
 
         # helpers
