@@ -106,7 +106,7 @@ class BigQueryInterface(DataInterface):
                             case "event_params":
                                 _params = {param['key']:param['value'] for param in item[1]}
                                 event.append(json.dumps(_params, sort_keys=True))
-                            case "device" | "geo":
+                            case "device":
                                 event.append(json.dumps(item[1], sort_keys=True))
                             case _:
                                 event.append(item[1])

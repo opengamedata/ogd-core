@@ -66,7 +66,7 @@ class BQFirebaseInterface(BigQueryInterface):
                         case "event_params":
                             _params = {param['key']:param['value'] for param in item[1]}
                             event.append(json.dumps(_params, sort_keys=True))
-                        case "device" | "geo":
+                        case "device":
                             event.append(json.dumps(item[1], sort_keys=True))
                         case _:
                             event.append(item[1])
@@ -183,7 +183,7 @@ class BQFirebaseInterface(BigQueryInterface):
         match self._game_id:
             case "SHADOWSPECT" | "SHIPWRECKS":
                 query = f"""
-                    SELECT event_name, event_params, device, geo, platform,
+                    SELECT event_name, event_params, device, platform,
                     concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
                     null as app_version,
                     null as log_version,
@@ -200,7 +200,7 @@ class BQFirebaseInterface(BigQueryInterface):
                 # will need to really rethink this when we start using new system.
                 # Still, not a huge deal because most of these will be rewritten at that time anyway.
                 query = f"""
-                    SELECT event_name, event_params, device, geo, platform,
+                    SELECT event_name, event_params, device, platform,
                     concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
                     param_app_version.value.string_value as app_version,
                     param_log_version.value.int_value as log_version,

@@ -76,5 +76,7 @@ class OGDGenerators:
             _from = _from.replace(hour=0, minute=0, second=0)
             _to   = datetime.strptime(end_date, "%m/%d/%Y") if end_date is not None else _from
             _to = _to.replace(hour=23, minute=59, second=59)
+            if _from > _to:
+                raise ValueError(f"Invalid date range, start date of {_from} is after end date of {_to}!")
             Logger.Log(f"Exporting from {str(_from)} to {str(_to)} of data for {game}...", logging.INFO)
         return ExporterRange.FromDateRange(source=interface, date_min=_from, date_max=_to)
