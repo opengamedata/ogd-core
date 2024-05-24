@@ -11,7 +11,7 @@
         "log_version"          : "log_version",
         "time_offset"          : null,
         "user_id"              : "fd_user_id",
-        "user_data"            : "geo",
+        "user_data"            : null,
         "game_state"           : null,
         "event_sequence_index" : null
     },

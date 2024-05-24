@@ -11,7 +11,7 @@ from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.utils.Logger import Logger
 # import libraries
 import logging
-from ogd.games.PENGUINS.features.PerRegionFeature import PerRegionFeature
+from ogd.games.PENGUINS.features.bases.PerRegionFeature import PerRegionFeature
     
 class RegionDuration(PerRegionFeature):
     
