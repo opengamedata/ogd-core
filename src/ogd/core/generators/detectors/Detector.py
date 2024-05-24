@@ -8,6 +8,7 @@ from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.utils.typing import Map
+from ogd.core.utils.SemanticVersion import SemanticVersion
 
 ## @class Model
 #  Abstract base class for session-level Wave Detectors.
@@ -72,12 +73,12 @@ class Detector(Generator):
                 _new_event = self._trigger_event()
                 self._callback(_new_event)
 
-    def GenerateEvent(self, event_name:str,              event_data:Map,
-                      session_id:Optional[str]=None,     app_id:Optional[str]=None,
-                      timestamp:Optional[datetime]=None, time_offset:Optional[timedelta]=None,
-                      app_version:Optional[str]=None,    log_version:Optional[str]=None,
-                      user_id:Optional[str] = None,      user_data:Optional[Map] = None,
-                      game_state:Optional[Map]=None,     event_sequence_index:Optional[int]=None):
+    def GenerateEvent(self, event_name:str,                       event_data:Map,
+                      session_id:Optional[str]=None,              app_id:Optional[str]=None,
+                      timestamp:Optional[datetime]=None,          time_offset:Optional[timedelta]=None,
+                      app_version:Optional[SemanticVersion]=None, log_version:Optional[SemanticVersion]=None,
+                      user_id:Optional[str] = None,               user_data:Optional[Map] = None,
+                      game_state:Optional[Map]=None,              event_sequence_index:Optional[int]=None):
         return DetectorEvent(
             session_id = session_id   or self._triggering_event.SessionID,
             app_id     = app_id       or self._triggering_event.AppID,

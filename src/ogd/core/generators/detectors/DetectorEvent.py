@@ -5,14 +5,15 @@ from typing import Any, Dict, Optional
 # import locals
 from ogd.core.schemas.Event import Event, EventSource
 from ogd.core.utils.typing import Map
+from ogd.core.utils.SemanticVersion import SemanticVersion
 
 class DetectorEvent(Event):
-   def __init__(self, session_id:str,      app_id:str,
-                event_name:str,            event_data:Map,
-                timestamp:datetime,        time_offset:Optional[timedelta],
-                app_version:Optional[str], log_version:Optional[str],
-                user_id:Optional[str],     user_data:Optional[Map],
-                game_state:Optional[Map],  event_sequence_index:Optional[int]):
+   def __init__(self, session_id:str,                  app_id     :str,
+                event_name :str,                       event_data :Map,
+                timestamp  :datetime,                  time_offset:Optional[timedelta],
+                app_version:Optional[SemanticVersion], log_version:Optional[SemanticVersion],
+                user_id    :Optional[str],             user_data  :Optional[Map],
+                game_state :Optional[Map],             event_sequence_index:Optional[int]):
       """Constructor for the simple DetectorEvent wrapper.
 
       :param session_id: _description_
