@@ -21,7 +21,7 @@ class GeneratorLoader(abc.ABC):
         pass
     
     @abc.abstractmethod
-    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
+    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Optional[Detector]:
         pass
 
     @staticmethod
@@ -56,10 +56,7 @@ class GeneratorLoader(abc.ABC):
         ret_val = None
 
         params = GeneratorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
-        try:
-            ret_val = self._loadDetector(detector_type=detector_type, extractor_params=params, schema_args=schema_args, trigger_callback=trigger_callback)
-        except NotImplementedError as err:
-            Logger.Log(f"In GeneratorLoader, '{name}' is not a valid detector for {self._game_schema.GameName}", logging.ERROR)
+        ret_val = self._loadDetector(detector_type=detector_type, extractor_params=params, schema_args=schema_args, trigger_callback=trigger_callback)
 
         return ret_val
 
@@ -68,12 +65,7 @@ class GeneratorLoader(abc.ABC):
 
         if self._validateMode(feature_type=feature_type):
             params = GeneratorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
-        # 1. Attempt to load feature from the game-specific loader.
-            try:
-                ret_val = self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
-            except NotImplementedError as err:
-                Logger.Log(f"In GeneratorLoader, unable to load '{name}', {feature_type} is not implemented!:", logging.ERROR)
-                Logger.Log(str(err), logging.ERROR, depth=1)
+            ret_val = self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
 
         return ret_val
 
