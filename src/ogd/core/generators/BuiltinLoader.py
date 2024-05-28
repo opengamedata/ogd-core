@@ -22,7 +22,7 @@ class BuiltinLoader(GeneratorLoader):
     def _getFeaturesModule():
         return builtin
     
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
         # Session-level features.
         if extractor_params._count_index is None:
