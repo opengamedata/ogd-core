@@ -11,11 +11,12 @@ from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.games.PENGUINS.detectors import *
 from ogd.games.PENGUINS.features import *
+# from ogd.games.PENGUINS.DBExport import scene_map
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
-# from ogd.games.PENGUINS.DBExport import scene_map
+from ogd.core.utils.Logger import Logger
 
 ## @class WaveExtractor
 #  Extractor subclass for extracting features from Waves game data.
@@ -23,8 +24,6 @@ from ogd.core.schemas.games.GameSchema import GameSchema
 EXPORT_PATH : Final[str] = "games/PENGUINS/DBExport.json"
 
 class PenguinsLoader(GeneratorLoader):
-
-
     # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the WaveLoader class.
@@ -55,7 +54,7 @@ class PenguinsLoader(GeneratorLoader):
         return features
     
     def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
-        ret_val : Feature
+        ret_val : Optional[Feature] = None
         if extractor_params._count_index == None:
             match feature_type:
                 case "ActivityCompleted":
@@ -105,7 +104,7 @@ class PenguinsLoader(GeneratorLoader):
                 case "WaddleCount":
                     ret_val = WaddleCount.WaddleCount(params=extractor_params)
                 case _:
-                    raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature for Penguins.")
+                    Logger.Log(f"'{feature_type}' is not a valid aggregate feature for Penguins.")
         # Per-count features
         # level attempt features
         else:
@@ -117,11 +116,11 @@ class PenguinsLoader(GeneratorLoader):
                 case "WaddlePerRegion":
                     ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params, region_map=self._region_map)
                 case _:
-                    raise NotImplementedError(f"'{feature_type}' is not a valid per-count feature for Penguins.")
+                    Logger.Log(f"'{feature_type}' is not a valid per-count feature for Penguins.")
         return ret_val
 
-    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
-        ret_val : Detector
+    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Optional[Detector]:
+        ret_val : Optional[Detector] = None
 
         match detector_type:
             case "RegionEnter":
@@ -129,23 +128,5 @@ class PenguinsLoader(GeneratorLoader):
             case "RegionExit":
                 ret_val = RegionExit.RegionExit(params=extractor_params, trigger_callback=trigger_callback, region_map=self._region_map)
             case _:
-                raise NotImplementedError(f"'{detector_type}' is not a valid detector for Penguins.")
+                Logger.Log(f"'{detector_type}' is not a valid detector for Penguins.")
         return ret_val
-
-
-
-        # Load Aqualab scenes export and map scene names to integer values
-        # with open(EXPORT_PATH, "r") as file:
-        #     export = json.load(file)
-
-        #     task_num = 1
-        #     for i, scene in enumerate(export["scenes"], start=1):
-        #         self._scene_map[scene["id"]] = i
-        #         self._diff_map[i] = scene["difficulties"]
-        #         for task in scene["tasks"]:
-        #             task_by_scene = scene["id"] + "_" + task["id"]
-        #             self._task_map[task_by_scene] = task_num
-        #             task_num += 1
-
-        # Update level count
-        # self._game_schema._max_level = len(self._scene_map) - 1

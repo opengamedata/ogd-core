@@ -10,6 +10,7 @@ from ogd.games.MAGNET.features.MagnetExtractor import MagnetExtractor
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.core.utils.Logger import Logger
 
 class MagnetLoader(LegacyLoader):
 
@@ -18,8 +19,9 @@ class MagnetLoader(LegacyLoader):
     def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
         return MagnetExtractor(params=extractor_params, game_schema=self._game_schema, session_id=self._session_id)
 
-    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
-        raise NotImplementedError(f"'{detector_type}' is not a valid feature for Lakeland.")
+    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Optional[Detector]:
+        Logger.Log(f"'{detector_type}' is not a valid feature for Lakeland.")
+        return None
 
     @staticmethod
     def _getFeaturesModule():

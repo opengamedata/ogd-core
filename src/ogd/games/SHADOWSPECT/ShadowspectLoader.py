@@ -11,6 +11,7 @@ from ogd.games.SHADOWSPECT.features import *
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.core.utils.Logger import Logger
 
 ## @class ShadowspectExtractor
 #  Extractor subclass for extracting features from Shadowspects game data.
@@ -23,7 +24,7 @@ class ShadowspectLoader(GeneratorLoader):
         return features
 
     def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
-        ret_val : Feature
+        ret_val : Optional[Feature] = None
         match feature_type:
             case "MoveShapeCount":
                 ret_val = MoveShapeCount.MoveShapeCount(params=extractor_params)
@@ -38,11 +39,12 @@ class ShadowspectLoader(GeneratorLoader):
             case "SequenceWithinPuzzles":
                 ret_val = SequenceWithinPuzzles.SequenceWithinPuzzles(params=extractor_params)
             case _:
-                raise NotImplementedError(f"'{feature_type}' is not a valid feature for Shadowspect.")
+                Logger.Log(f"'{feature_type}' is not a valid feature for Shadowspect.")
         return ret_val
 
-    def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
-        raise NotImplementedError(f"'{detector_type}' is not a valid detector for Shadowspect.")
+    def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Optional[Detector]:
+        Logger.Log(f"'{detector_type}' is not a valid detector for Shadowspect.")
+        return None
 
     ## Constructor for the ShadowspectExtractor class.
     def __init__(self, player_id:str, session_id: str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]=None):
