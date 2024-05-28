@@ -68,6 +68,7 @@ class GeneratorLoader(abc.ABC):
 
         if self._validateMode(feature_type=feature_type):
             params = GeneratorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
+        # 1. Attempt to load feature from the game-specific loader.
             try:
                 ret_val = self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
             except NotImplementedError as err:
