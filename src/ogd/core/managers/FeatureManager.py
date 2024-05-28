@@ -16,8 +16,8 @@ from ogd.core.utils.utils import ExportRow
 
 class FeatureManager:
     def __init__(self, game_schema:GameSchema, LoaderClass:Optional[Type[GeneratorLoader]], feature_overrides:Optional[List[str]]):
-        self._LoaderClass    : Optional[Type[GeneratorLoader]] = LoaderClass
         self._game_schema    : GameSchema                 = game_schema
+        self._LoaderClass    : Optional[Type[GeneratorLoader]] = LoaderClass
         self._overrides      : Optional[List[str]]        = feature_overrides
         # local tracking of whether we're up-to-date on getting feature values.
         self._up_to_date     : bool                       = True
