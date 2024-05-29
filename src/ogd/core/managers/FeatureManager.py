@@ -116,7 +116,7 @@ class FeatureManager:
         return self._latest_values
 
     def GetPopulationFeatureNames(self) -> List[str]:
-        return self._population.ExtractorNames if self._population is not None else []
+        return self._population.GeneratorNames if self._population is not None else []
     def GetPopulationFeatures(self, as_str:bool = False) -> List[ExportRow]:
         start = datetime.now()
         self._try_update(as_str=as_str)
@@ -125,7 +125,7 @@ class FeatureManager:
         return ret_val
 
     def GetPlayerFeatureNames(self) -> List[str]:
-        return self._players["null"].ExtractorNames if self._players is not None else []
+        return self._players["null"].GeneratorNames if self._players is not None else []
     def GetPlayerFeatures(self, as_str:bool = False) -> List[ExportRow]:
         start   : datetime = datetime.now()
         self._try_update(as_str=as_str)
@@ -134,7 +134,7 @@ class FeatureManager:
         return ret_val
 
     def GetSessionFeatureNames(self) -> List[str]:
-        return self._sessions["null"]["null"].ExtractorNames if self._sessions is not None else []
+        return self._sessions["null"]["null"].GeneratorNames if self._sessions is not None else []
     def GetSessionFeatures(self, slice_num:int, slice_count:int, as_str:bool = False) -> List[ExportRow]:
         start   : datetime = datetime.now()
         self._try_update(as_str=as_str)

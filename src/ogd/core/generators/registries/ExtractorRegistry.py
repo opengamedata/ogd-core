@@ -120,7 +120,7 @@ class ExtractorRegistry(GeneratorRegistry):
         else:
             raise TypeError("ExtractorRegistry was given an Extractor which was not a Feature!")
 
-    def _getExtractorNames(self) -> List[str]:
+    def _getGeneratorNames(self) -> List[str]:
         """Implementation of abstract function to retrieve the names of all extractors currently registered.
 
         :return: A list of all currently-registered features.

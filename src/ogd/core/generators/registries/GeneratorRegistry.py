@@ -40,7 +40,7 @@ class GeneratorRegistry(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _getExtractorNames(self) -> List[str]:
+    def _getGeneratorNames(self) -> List[str]:
         pass
 
     @abc.abstractmethod
@@ -76,7 +76,7 @@ class GeneratorRegistry(abc.ABC):
     def Register(self, extractor:Generator, iter_mode:IterationMode):
         self._register(extractor=extractor, iter_mode=iter_mode)
 
-    def GetExtractorNames(self) -> List[str]:
+    def GetGeneratorNames(self) -> List[str]:
         """Function to generate a list names of all enabled features, given a GameSchema
         This is different from the FeatureNames property of GameSchema,
         which ignores the 'enabled' attribute and does not expand per-count features
@@ -88,7 +88,7 @@ class GeneratorRegistry(abc.ABC):
         :return: A list of feature names.
         :rtype: List[str]
         """
-        return self._getExtractorNames()
+        return self._getGeneratorNames()
 
     def LoadFromSchema(self, schema:GameSchema, loader:GeneratorLoader, overrides:Optional[List[str]]):
         self._loadFromSchema(schema=schema, loader=loader, overrides=overrides)

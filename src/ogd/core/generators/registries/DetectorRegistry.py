@@ -87,7 +87,7 @@ class DetectorRegistry(GeneratorRegistry):
         else:
             raise TypeError("DetectorRegistry was given an Extractor which was not a Detector!")
 
-    def _getExtractorNames(self) -> List[str]:
+    def _getGeneratorNames(self) -> List[str]:
         """Implementation of abstract function to retrieve the names of all extractors currently registered.
 
         :return: A list of all currently-registered detectors.

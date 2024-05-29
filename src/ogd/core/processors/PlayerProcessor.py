@@ -63,9 +63,9 @@ class PlayerProcessor(ExtractorProcessor):
     def _sessionID(self) -> str:
         return "player"
 
-    def _getExtractorNames(self) -> List[str]:
+    def _getGeneratorNames(self) -> List[str]:
         if isinstance(self._registry, ExtractorRegistry):
-            return ["PlayerID", "SessionCount"] + self._registry.GetExtractorNames()
+            return ["PlayerID", "SessionCount"] + self._registry.GetGeneratorNames()
         else:
             raise TypeError()
 

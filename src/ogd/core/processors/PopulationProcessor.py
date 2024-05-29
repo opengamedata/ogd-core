@@ -55,9 +55,9 @@ class PopulationProcessor(ExtractorProcessor):
     def _sessionID(self) -> str:
         return "population"
 
-    def _getExtractorNames(self) -> List[str]:
+    def _getGeneratorNames(self) -> List[str]:
         if isinstance(self._registry, ExtractorRegistry):
-            return ["PlayerCount", "SessionCount"] + self._registry.GetExtractorNames()
+            return ["PlayerCount", "SessionCount"] + self._registry.GetGeneratorNames()
         else:
             raise TypeError("PopulationProcessor's registry is not a ExtractorRegistry!")
 

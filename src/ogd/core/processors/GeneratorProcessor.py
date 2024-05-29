@@ -28,7 +28,7 @@ class GeneratorProcessor(Processor):
 
     ## Abstract declaration of a function to get the names of all features.
     @abc.abstractmethod
-    def _getExtractorNames(self) -> List[str]:
+    def _getGeneratorNames(self) -> List[str]:
         pass
 
     @property
@@ -55,9 +55,9 @@ class GeneratorProcessor(Processor):
         return f""
 
     @property
-    def ExtractorNames(self) -> List[str]:
+    def GeneratorNames(self) -> List[str]:
         # TODO: add error handling code, if applicable.
-        return self._getExtractorNames()
+        return self._getGeneratorNames()
 
     # *** PUBLIC STATICS ***
 

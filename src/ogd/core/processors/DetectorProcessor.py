@@ -35,7 +35,7 @@ class DetectorProcessor(GeneratorProcessor):
     def _sessionID(self) -> str:
         return "detectors"
 
-    def _getExtractorNames(self, order:int) -> Dict[str,List[FeatureData]]:
+    def _getGeneratorNames(self, order:int) -> Dict[str,List[FeatureData]]:
         raise NotImplementedError("Function stub! Haven't written name getter for detector processor.")
 
     def _processEvent(self, event:Event):
