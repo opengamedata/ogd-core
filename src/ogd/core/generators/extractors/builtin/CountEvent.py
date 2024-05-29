@@ -2,11 +2,11 @@
 import json
 from typing import Any, Dict, List, Optional, Type
 # import local files
-from generators.extractors.builtin.BuiltinExtractor import BuiltinExtractor
-from generators.Generator import GeneratorParameters
-from schemas.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
-from schemas.Event import Event
+from ogd.core.generators.extractors.builtin.BuiltinExtractor import BuiltinExtractor
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.schemas.Event import Event
 
 class CountEvent(BuiltinExtractor):
     """Template file to serve as a guide for creating custom Feature subclasses for games.

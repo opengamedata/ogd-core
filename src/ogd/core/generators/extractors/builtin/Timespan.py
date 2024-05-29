@@ -3,10 +3,10 @@ import logging
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Type
 # import local files
-from generators.extractors.builtin.BuiltinExtractor import BuiltinExtractor
-from generators.Generator import GeneratorParameters
-from schemas.FeatureData import FeatureData
-from schemas.Event import Event
+from ogd.core.generators.extractors.builtin.BuiltinExtractor import BuiltinExtractor
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.schemas.Event import Event
 
 class Timespan(BuiltinExtractor):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
