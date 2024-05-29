@@ -10,7 +10,7 @@ from ogd.core.generators.Generator import Generator
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.registries.GeneratorRegistry import GeneratorRegistry
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
@@ -94,7 +94,7 @@ class ExtractorRegistry(GeneratorRegistry):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _register(self, extractor:Generator, iter_mode:IterationMode):
-        if isinstance(extractor, Feature):
+        if isinstance(extractor, Extractor):
             _listener = GeneratorRegistry.Listener(name=extractor.Name, mode=iter_mode)
             _feature_deps = extractor.FeatureFilter(mode=self._mode)
             _event_deps   = extractor.EventFilter(mode=self._mode)
