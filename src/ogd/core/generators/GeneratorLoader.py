@@ -6,6 +6,7 @@ from types import ModuleType
 from typing import Any, Callable, Dict, List, Optional, Type
 # import locals
 from ogd.core.generators.extractors import builtin
+from ogd.core.generators.extractors.builtin.BuiltinExtractor import BuiltinExtractor
 from ogd.core.generators.extractors.builtin import *
 from ogd.core.generators.Generator import Generator, GeneratorParameters
 from ogd.core.generators.detectors.Detector import Detector
@@ -34,6 +35,7 @@ class GeneratorLoader(abc.ABC):
 
     # *** BUILT-INS & PROPERTIES ***
 
+    _derived_builtins : Dict[str, Type[BuiltinExtractor]] = {}
     def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
         """Base constructor for Extractor classes.
         The constructor sets an extractor's session id and range of levels,
@@ -77,12 +79,23 @@ class GeneratorLoader(abc.ABC):
 
     def GetFeatureClass(self, feature_type:str) -> Optional[Type[Extractor]]:
         ret_val : Optional[Type[Extractor]] = None
-        base_mod = self._getFeaturesModule()
+        game_module = self._getFeaturesModule()
         try:
-            feature_mod = getattr(base_mod, feature_type)
-            ret_val     = getattr(feature_mod, feature_type, getattr(builtin, feature_type))
+            feature_mod = getattr(game_module, feature_type, getattr(builtin, feature_type))
         except NameError as err:
-            Logger.Log(f"Could not find class {feature_type} in module `{feature_mod}` or `builtin`, a NameError occurred:\n{err}", logging.WARN)
+            Logger.Log(f"Could not find class {feature_type} in module `{game_module}` or in `builtin`, a NameError occurred:\n{err}\nSearching `builtin` module instead.", logging.WARN)
+        else:
+            ret_val = getattr(feature_mod, feature_type, self.GetBuiltinFeatureClass(feature_type=feature_type))
+        finally:
+            return ret_val
+
+    def GetBuiltinFeatureClass(self, feature_type:str) -> Optional[Type[Extractor]]:
+        ret_val : Optional[Type[BuiltinExtractor]] = None
+        try:
+            feature_mod = getattr(builtin, feature_type)
+            ret_val = getattr(feature_mod, feature_type)
+        except NameError as err:
+            Logger.Log(f"Could not find class {feature_type} in module game module or `builtin`, a NameError occurred:\n{err}", logging.WARN)
         finally:
             return ret_val
 
@@ -105,6 +118,9 @@ class GeneratorLoader(abc.ABC):
 
     def _loadBuiltinFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Extractor:
         ret_val : Extractor
+        if extractor_params._name not in GeneratorLoader._derived_builtins.keys():
+            feature_class = self.GetFeatureClass(feature_type=feature_type)
+            GeneratorLoader._derived_builtins[extractor_params._name] = feature_class._
         # Session-level features.
         if extractor_params._count_index is None:
             match feature_type:
