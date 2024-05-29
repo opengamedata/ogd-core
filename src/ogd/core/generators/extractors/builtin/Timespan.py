@@ -16,11 +16,11 @@ class Timespan(BuiltinExtractor):
     """
     _start_event = "NO EVENT"
     _end_event = "NO EVENT"
-    def __init__(self, params:GeneratorParameters, schema_args:dict):
+    def __init__(self, params:GeneratorParameters, schema_args:Dict[str,Any]):
         if params._count_index is not None and params._count_index != 0:
             self.WarningMessage(f"Session feature {params._name} got non-zero count index of {params._count_index}!")
         params._count_index = 0
-        super().__init__(params=params)
+        super().__init__(params=params, schema_args=schema_args)
         self._start_time : Optional[datetime] = None
         self._end_time   : Optional[datetime] = None
         self._span = timedelta()

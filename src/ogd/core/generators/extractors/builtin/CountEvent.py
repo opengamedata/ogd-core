@@ -15,9 +15,8 @@ class CountEvent(BuiltinExtractor):
     :type Feature: _type_
     """
     _target_event = "NO EVENTS"
-    def __init__(self, params:GeneratorParameters, schema_args:dict):
-        self._target_event = schema_args['target_event']
-        super().__init__(params=params)
+    def __init__(self, params:GeneratorParameters, schema_args:Dict[str,Any]):
+        super().__init__(params=params, schema_args=schema_args)
         self._count = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***

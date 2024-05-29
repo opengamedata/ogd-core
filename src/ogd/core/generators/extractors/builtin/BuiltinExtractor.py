@@ -26,7 +26,7 @@ class BuiltinExtractor(Extractor):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, params:GeneratorParameters):
+    def __init__(self, params:GeneratorParameters, schema_args:Dict[str,Any]):
         super().__init__(params=params)
 
     # *** PUBLIC STATICS ***
