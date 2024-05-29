@@ -1,14 +1,14 @@
 # import libraries
 import json
-from extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.generators.extractors.features.PerCountFeature import PerCountFeature
 from schemas import Event
 from typing import Any, Dict, List, Optional
 # import locals
-from extractors.features.PerLevelFeature import PerLevelFeature
-from extractors.Extractor import ExtractorParameters
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
+from ogd.core.generators.extractors.features.PerLevelFeature import PerLevelFeature
+from ogd.core.generators.extractors.Extractor import ExtractorParameters
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.FeatureData import FeatureData
 
 class FinalAttributes(PerLevelFeature):
     def __init__(self, params:ExtractorParameters):
