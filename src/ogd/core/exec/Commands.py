@@ -167,7 +167,7 @@ class OGDCommands:
     # 3. set up the outerface, based on the range and dataset_id.
         _cfg = GameSourceSchema(name="FILE DEST", all_elements={"database":"FILE", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
         file_outerface = TSVOuterface(game_id=args.game, config=_cfg, export_modes=export_modes, date_range=export_range.DateRange,
-                                    file_indexing=config.FileIndexConfig, dataset_id=dataset_id)
+                                    file_indexing=config.FileIndexConfig, dataset_id=dataset_id, with_zipping=not args.no_zips)
         outerfaces : Set[DataOuterface] = {file_outerface}
         # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
         if config.DebugLevel == "DEBUG":
