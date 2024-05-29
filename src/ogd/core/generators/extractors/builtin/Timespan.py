@@ -3,28 +3,42 @@ import logging
 from datetime import datetime, timedelta
 from typing import Any, List, Optional
 # import local files
+from generators.extractors.builtin.BuiltinExtractor import BuiltinExtractor
 from generators.extractors.SessionFeature import SessionFeature
 from generators.Generator import GeneratorParameters
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
-from utils import Logger
+from utils.Logger import Logger
 
-class Timespan(SessionFeature):
+class Timespan(BuiltinExtractor):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
+    _start_event = "NO EVENT"
+    _end_event = "NO EVENT"
     def __init__(self, params:GeneratorParameters, schema_args:dict):
-        self._start_event = schema_args['start_event']
-        self._end_event = schema_args['end_event']
+        if params._count_index is not None and params._count_index != 0:
+            self.WarningMessage(f"Session feature {params._name} got non-zero count index of {params._count_index}!")
+        params._count_index = 0
         super().__init__(params=params)
         self._start_time : Optional[datetime] = None
         self._end_time   : Optional[datetime] = None
         self._span = timedelta()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _eventFilter(self) -> List[str]:
+
+    @classmethod
+    def _createDerivedGenerator(cls, params:GeneratorParameters, schema_args:Dict[str,Any]) -> Type[BuiltinExtractor]:
+        class_params = {
+            "_start_event" : schema_args.get("start_event", cls._start_event),
+            "_end_event" : schema_args.get("end_event", cls._end_event)
+        }
+        return type(params._name, (Timespan,), class_params)
+
+    @classmethod
+    def _eventFilter(cls) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -32,7 +46,8 @@ class Timespan(SessionFeature):
         """
         return [self._start_event, self._end_event]
 
-    def _featureFilter(self) -> List[str]:
+    @classmethod
+    def _featureFilter(cls) -> List[str]:
         """_summary_
 
         :return: _description_

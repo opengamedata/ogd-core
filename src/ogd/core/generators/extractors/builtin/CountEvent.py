@@ -1,25 +1,31 @@
 # import libraries
 import json
-from typing import Any, List, Optional
+from typing import Any, Dict, List, Optional, Type
 # import local files
-from generators.extractors.Feature import Feature
+from generators.extractors.builtin.BuiltinExtractor import BuiltinExtractor
 from generators.Generator import GeneratorParameters
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
-class CountEvent(Feature):
+class CountEvent(BuiltinExtractor):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
+    _target_event = "NO EVENTS"
     def __init__(self, params:GeneratorParameters, schema_args:dict):
         self._target_event = schema_args['target_event']
         super().__init__(params=params)
         self._count = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
+
+    @classmethod
+    def _createDerivedGenerator(cls, params:GeneratorParameters, schema_args:Dict[str,Any]) -> Type[BuiltinExtractor]:
+        return type(params._name, (CountEvent,), {"_target_event" : schema_args.get("target", "NO EVENTS")})
+
     @classmethod
     def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
@@ -27,7 +33,7 @@ class CountEvent(Feature):
         :return: _description_
         :rtype: List[str]
         """
-        return [self._target_event]
+        return [cls._target_event]
 
     @classmethod
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
