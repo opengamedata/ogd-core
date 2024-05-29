@@ -75,12 +75,3 @@ class CountEvent(BuiltinExtractor):
     def Subfeatures(self) -> List[str]:
         return [] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
     
-    @staticmethod
-    def MinVersion() -> Optional[str]:
-        # >>> replace return statement below with a string defining the minimum logging version for events to be processed by this Feature. <<<
-        return super().MinVersion()
-
-    @staticmethod
-    def MaxVersion() -> Optional[str]:
-        # >>> replace return statement below with a string defining the maximum logging version for events to be processed by this Feature. <<<
-        return super().MaxVersion()

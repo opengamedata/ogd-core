@@ -1,14 +1,12 @@
 # import libraries
 import logging
 from datetime import datetime, timedelta
-from typing import Any, List, Optional
+from typing import Any, Dict, List, Optional, Type
 # import local files
 from generators.extractors.builtin.BuiltinExtractor import BuiltinExtractor
-from generators.extractors.SessionFeature import SessionFeature
 from generators.Generator import GeneratorParameters
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
-from utils.Logger import Logger
 
 class Timespan(BuiltinExtractor):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
@@ -44,7 +42,7 @@ class Timespan(BuiltinExtractor):
         :return: _description_
         :rtype: List[str]
         """
-        return [self._start_event, self._end_event]
+        return [cls._start_event, cls._end_event]
 
     @classmethod
     def _featureFilter(cls) -> List[str]:
