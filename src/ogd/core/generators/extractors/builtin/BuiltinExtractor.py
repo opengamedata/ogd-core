@@ -4,12 +4,10 @@ import logging
 from typing import Any, Dict, List, Optional, Self
 # import locals
 from ogd.core.generators.Generator import Generator, GeneratorParameters
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.utils.Logger import Logger
+from ogd.core.generators.extractors.Extractor import Extractor
 
 ## @class BuiltinGenerator
-class BuiltinGenerator(Generator):
+class BuiltinExtractor(Extractor):
 
     # *** ABSTRACTS ***
 
