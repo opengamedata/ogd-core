@@ -81,15 +81,18 @@ class GeneratorLoader(abc.ABC):
         ret_val : Optional[Type[Extractor]] = None
         game_module = self._getFeaturesModule()
         try:
+            # Try to find feature module in the game module, falling back on finding it in builtin module.
             feature_mod = getattr(game_module, feature_type, getattr(builtin, feature_type))
         except NameError as err:
             Logger.Log(f"Could not find class {feature_type} in module `{game_module}` or in `builtin`, a NameError occurred:\n{err}\nSearching `builtin` module instead.", logging.WARN)
         else:
+            # If the above did not generate an error, then try to get actual feature class from its module.
+            # If not found, then we fall back on getting builtin directly, though in practice this is probably redundant.
             ret_val = getattr(feature_mod, feature_type, self.GetBuiltinFeatureClass(feature_type=feature_type))
         finally:
             return ret_val
 
-    def GetBuiltinFeatureClass(self, feature_type:str) -> Optional[Type[Extractor]]:
+    def GetBuiltinFeatureClass(self, feature_type:str) -> Optional[Type[BuiltinExtractor]]:
         ret_val : Optional[Type[BuiltinExtractor]] = None
         try:
             feature_mod = getattr(builtin, feature_type)
@@ -117,25 +120,16 @@ class GeneratorLoader(abc.ABC):
         return ret_val
 
     def _loadBuiltinFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Extractor:
-        ret_val : Extractor
+        ret_val : BuiltinExtractor
         if extractor_params._name not in GeneratorLoader._derived_builtins.keys():
-            feature_class = self.GetFeatureClass(feature_type=feature_type)
-            GeneratorLoader._derived_builtins[extractor_params._name] = feature_class._
+            feature_class = self.GetBuiltinFeatureClass(feature_type=feature_type)
+            if feature_class is not None:
+                GeneratorLoader._derived_builtins[extractor_params._name] = feature_class._createDerivedGenerator(params=extractor_params, schema_args=schema_args)
         # Session-level features.
-        if extractor_params._count_index is None:
-            match feature_type:
-                case "CountEvent":
-                    ret_val = CountEvent.CountEvent(params=extractor_params, schema_args=schema_args)
-                case "Timespan":
-                    ret_val = Timespan.Timespan(params=extractor_params, schema_args=schema_args)
-                case _:
-                    raise NotImplementedError(f"'{feature_type}' is not a valid built-in session feature.")
-        # Per-count features
-        # level attempt features
+        if extractor_params._name in GeneratorLoader._derived_builtins.keys():
+            ret_val = GeneratorLoader._derived_builtins[extractor_params._name](params=extractor_params, schema_args=schema_args)
         else:
-            match feature_type:
-                case _:
-                    raise NotImplementedError(f"'{feature_type}' is not a valid built-in per-count feature.")
+            raise NotImplementedError(f"'{feature_type}' is not a valid built-in feature.")
         return ret_val
 
     def _loadBuiltinDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
