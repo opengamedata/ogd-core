@@ -6,15 +6,7 @@ run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' &
 on:
   push:
     paths:
-    - 'src/ogd/core/detectors/**'
-    - 'src/ogd/core/extractors/**'
-    - 'src/ogd/core/features/**'
-    - 'src/ogd/core/interfaces/**'
-    - 'src/ogd/core/managers/**'
-    - 'src/ogd/core/processors/**'
-    - 'src/ogd/core/schemas/*'
-    - 'src/ogd/core/schemas/*_schemas/**'
-    - 'src/ogd/core/utils/*'
+    - 'src/ogd/core/**'
     - 'main.py'
     - '.github/workflows/CI_OGD.yml'
     - '.github/actions/**'
