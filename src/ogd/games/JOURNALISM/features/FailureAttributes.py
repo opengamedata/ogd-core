@@ -7,7 +7,7 @@ from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
 from ogd.core.models.Event import Event
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.models.FeatureData import FeatureData
-from ogd.core.generators.extractors.Extractor import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
 
@@ -19,7 +19,7 @@ class FailureAttributes(PerLevelFeature):
     :param PerLevelFeature: Base class for a Custom Feature class.
     :type PerLevelFeature: _type_
     """
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         PerLevelFeature.__init__(self, params=params)
 

@@ -1,7 +1,7 @@
 import logging
 from typing import Any, List
 
-from ogd.core.generators.extractors.Extractor import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.models.Event import Event
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
@@ -61,7 +61,7 @@ class PlayLocations(SessionFeature):
         # Sessions that started in school
         return [self._in_school_sessions, self._session_times]
 
-    def __init__(self, params: ExtractorParameters):
+    def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
 
         # sessions that have been seen before.
