@@ -2,7 +2,7 @@ import logging
 from typing import Any, List
 
 from ogd.core.generators.extractors.Extractor import ExtractorParameters
-from ogd.core.generators.extractors.features.SessionFeature import SessionFeature
+from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData

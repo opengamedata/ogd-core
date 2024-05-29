@@ -1,10 +1,10 @@
 # import libraries
 import json
-from ogd.core.generators.extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from schemas import Event
 from typing import Any, Dict, List, Optional
 # import locals
-from ogd.core.generators.extractors.features.PerLevelFeature import PerLevelFeature
+from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
 from ogd.core.generators.extractors.Extractor import ExtractorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
