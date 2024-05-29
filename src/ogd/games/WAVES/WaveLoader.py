@@ -50,6 +50,8 @@ class WaveLoader(GeneratorLoader):
                     ret_val = PersistentSessionID.PersistentSessionID(params=extractor_params)
                 case "SessionID":
                     ret_val = SessionID.SessionID(params=extractor_params, sessionID=self._session_id)
+                case "SessionSucceedCount":
+                    ret_val = SessionSucceedCount.SessionSucceedCount(params=extractor_params)
                     # sequence features
                 case _:
                     Logger.Log(f"'{feature_type}' is not a valid aggregate feature for Waves.")
