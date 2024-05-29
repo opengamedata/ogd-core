@@ -5,6 +5,7 @@ from importlib import import_module
 from types import ModuleType
 from typing import Any, Callable, Dict, List, Optional, Type
 # import locals
+from ogd.core.generators.extractors import builtin
 from ogd.core.generators.extractors.builtin import *
 from ogd.core.generators.Generator import Generator, GeneratorParameters
 from ogd.core.generators.detectors.Detector import Detector
@@ -59,7 +60,8 @@ class GeneratorLoader(abc.ABC):
         ret_val = None
 
         params = GeneratorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
-        ret_val = self._loadDetector(detector_type=detector_type, extractor_params=params, schema_args=schema_args, trigger_callback=trigger_callback)
+        ret_val = self._loadDetector(detector_type=detector_type, extractor_params=params, schema_args=schema_args, trigger_callback=trigger_callback) \
+               or self._loadBuiltinDetector(detector_type=detector_type, extractor_params=params, schema_args=schema_args, trigger_callback=trigger_callback)
 
         return ret_val
 
@@ -68,7 +70,8 @@ class GeneratorLoader(abc.ABC):
 
         if self._validateMode(feature_type=feature_type):
             params = GeneratorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
-            ret_val = self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
+            ret_val = self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args) \
+                   or self._loadBuiltinFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
 
         return ret_val
 
@@ -77,9 +80,9 @@ class GeneratorLoader(abc.ABC):
         base_mod = self._getFeaturesModule()
         try:
             feature_mod = getattr(base_mod, feature_type)
-            ret_val     = getattr(feature_mod, feature_type, None)
+            ret_val     = getattr(feature_mod, feature_type, getattr(builtin, feature_type))
         except NameError as err:
-            Logger.Log(f"Could not get class {feature_type} from module {feature_mod}, a NameError occurred:\n{err}", logging.WARN)
+            Logger.Log(f"Could not find class {feature_type} in module `{feature_mod}` or `builtin`, a NameError occurred:\n{err}", logging.WARN)
         finally:
             return ret_val
 
@@ -92,19 +95,11 @@ class GeneratorLoader(abc.ABC):
     def _validateMode(self, feature_type) -> bool:
         ret_val = False
 
-        mod_name = f"ogd.games.{self._game_schema.GameName}.features.{feature_type}"
-        try:
-            feature_module = import_module(mod_name)
-        except ModuleNotFoundError:
-            Logger.Log(f"In GeneratorLoader, '{mod_name}' could not be found, skipping {feature_type}", logging.ERROR)
+        feature_class : Optional[Type[Extractor]]  = self.GetFeatureClass(feature_type=feature_type)
+        if feature_class is not None:
+            ret_val = self._mode in feature_class.AvailableModes()
         else:
-            # bit of a hack using globals() here, but theoretically this lets us access the class object with only a string.
-            # feature_class : Optional[Type[Extractor]] = globals().get(feature_type, None)
-            feature_class : Optional[Type[Extractor]] = getattr(feature_module, feature_type, None)
-            if feature_class is not None:
-                ret_val = self._mode in feature_class.AvailableModes()
-            else:
-                Logger.Log(f"In GeneratorLoader, feature class '{feature_type}' could not be found in module {feature_module}", logging.WARN)
+            Logger.Log(f"In GeneratorLoader, skipping feature class `{feature_type}`, which could not be found.", logging.WARN)
 
         return ret_val
 
@@ -127,5 +122,5 @@ class GeneratorLoader(abc.ABC):
                     raise NotImplementedError(f"'{feature_type}' is not a valid built-in per-count feature.")
         return ret_val
 
-    def _loadBuiltinDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
+    def _loadBuiltinDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         raise NotImplementedError(f"'{detector_type}' is not a valid built-in detector.")
