@@ -5,7 +5,7 @@ from typing import List, Dict, Type, Optional, Set
 # import local files
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.core.generators.registries.ExtractorRegistry import ExtractorRegistry
+from ogd.core.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExportMode import ExportMode

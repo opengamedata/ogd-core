@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional, Set
 from ogd.core.generators.Generator import Generator
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
-from ogd.core.generators.registries.GeneratorRegistry import GeneratorRegistry
+from ogd.core.registries.GeneratorRegistry import GeneratorRegistry
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode

@@ -6,7 +6,7 @@ from typing import Any, Callable, List, Optional, Set
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import Generator
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.core.generators.registries.GeneratorRegistry import GeneratorRegistry
+from ogd.core.registries.GeneratorRegistry import GeneratorRegistry
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
