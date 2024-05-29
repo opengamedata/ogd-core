@@ -67,7 +67,7 @@ class GeneratorRegistry(abc.ABC):
         _feature_registry maps feature names to Listener objects, which basically just say which 2nd-order feature(s) wants the given 1st-order feature.
         """
         self._event_registry : Dict[str,List[GeneratorRegistry.Listener]] = {"all_events":[]}
-        self._mode        : ExtractionMode = mode
+        self._mode           : ExtractionMode = mode
 
     # *** PUBLIC STATICS ***
 
@@ -88,9 +88,11 @@ class GeneratorRegistry(abc.ABC):
         :return: A list of feature names.
         :rtype: List[str]
         """
+        # TODO : Add error handling and/or timing and/or profiling
         return self._getGeneratorNames()
 
     def LoadFromSchema(self, schema:GameSchema, loader:GeneratorLoader, overrides:Optional[List[str]]):
+        # TODO : Add error handling and/or timing and/or profiling
         self._loadFromSchema(schema=schema, loader=loader, overrides=overrides)
 
     def UpdateFromEvent(self, event:Event) -> None:
@@ -102,6 +104,7 @@ class GeneratorRegistry(abc.ABC):
                              table assiciated with this game is structured.
         :type table_schema: TableSchema
         """
+        # TODO : Add error handling and/or timing and/or profiling
         self._updateFromEvent(event=event)
 
     def UpdateFromFeatureData(self, feature:FeatureData) -> None:
