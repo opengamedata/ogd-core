@@ -1,5 +1,5 @@
 # import libraries
-from ogd.core.schemas import Event
+from ogd.core.models import Event
 import typing
 from typing import Any, List, Optional
 # import locals

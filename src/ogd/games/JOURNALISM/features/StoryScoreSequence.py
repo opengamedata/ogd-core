@@ -1,6 +1,6 @@
 # import libraries
 from typing import Any, List
-from ogd.core.schemas import Event
+from ogd.core.models import Event
 from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.models.Event import Event

@@ -1,6 +1,6 @@
 # import libraries
 from os import truncate
-from ogd.core.schemas import Event
+from ogd.core.models import Event
 from typing import Any, List, Optional
 # import locals
 from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature

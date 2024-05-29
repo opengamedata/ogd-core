@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime, timedelta
 from ogd.games.JOURNALISM.features import PlayTime
-from ogd.core.schemas import Event
+from ogd.core.models import Event
 from typing import Any, Final, List, Optional
 # import locals
 from ogd.core.utils.Logger import Logger

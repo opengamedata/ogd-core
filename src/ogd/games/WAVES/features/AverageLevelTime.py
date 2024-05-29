@@ -1,7 +1,7 @@
 # import libraries
 import logging
 from datetime import datetime
-from ogd.core.schemas import Event
+from ogd.core.models import Event
 from typing import Any, Dict, List, Optional
 # import locals
 from ogd.core.utils.Logger import Logger
