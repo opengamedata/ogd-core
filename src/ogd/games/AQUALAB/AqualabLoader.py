@@ -2,6 +2,7 @@
 import itertools
 import json
 from pathlib import Path
+from types import ModuleType
 from typing import Any, Callable, Dict, Final, List, Optional
 # import local files
 from . import features
@@ -65,7 +66,7 @@ class AqualabLoader(GeneratorLoader):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     @staticmethod
-    def _getFeaturesModule():
+    def _getFeaturesModule() -> ModuleType:
         return features
 
     def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
