@@ -21,9 +21,9 @@ from ogd.core.requests.RequestResult import RequestResult, ResultStatus
 from ogd.core.requests.Request import Request, ExporterRange
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
-from ogd.core.schemas.ExportMode import ExportMode
+from ogd.core.models.enums.ExportMode import ExportMode
 from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.schemas.IDMode import IDMode
+from ogd.core.models.enums.IDMode import IDMode
 from ogd.core.schemas.tables.TableSchema import TableSchema
 from ogd.core.utils.Logger import Logger
 from ogd.core.utils.Readme import Readme

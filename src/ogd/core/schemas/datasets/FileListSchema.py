@@ -9,7 +9,7 @@ from ogd.core.schemas.Schema import Schema
 from ogd.core.utils.Logger import Logger
 
 # local imports
-from schemas.DatasetSchema import DatasetSchema
+from ogd.core.schemas.datasets.DatasetSchema import DatasetSchema
 
 class FileListConfigSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):
