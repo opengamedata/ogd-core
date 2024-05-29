@@ -3,14 +3,14 @@ import json
 from typing import Any, Dict, List, Optional
 # import locals
 from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
-from ogd.core.generators.extractors.Extractor import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.models.Event import Event
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.models.FeatureData import FeatureData
 
 class FinalAttributes(PerLevelFeature):
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         PerCountFeature.__init__(self, params=params)
         self._ATTRIBUTE_ENUM : List[str] = ["endurance", "resourceful", "tech","social","trust","research"]
         self._last_attribs : Dict[str, Optional[int]] = dict(zip(self._ATTRIBUTE_ENUM, [None]*len(self._ATTRIBUTE_ENUM)))
