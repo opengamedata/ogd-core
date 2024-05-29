@@ -82,10 +82,10 @@ class GeneratorLoader(abc.ABC):
         game_module = self._getFeaturesModule()
         try:
             # Try to find feature module in the game module, falling back on finding it in builtin module.
-            feature_mod = getattr(game_module, feature_type, None)
-            if feature_mod is None:
-                Logger.Log(f"Didn't find module for feature {feature_type} in module {game_module}, searching in builtin module instead.")
-                feature_mod = getattr(builtin, feature_type)
+            feature_mod = getattr(game_module, feature_type, None) or getattr(builtin, feature_type)
+            # if feature_mod is None:
+            #     Logger.Log(f"Didn't find module for feature {feature_type} in module {game_module}, searching in builtin module instead.")
+            #     feature_mod = 
                 # if feature_mod is None:
                 #     Logger.Log(f"Didn't find module for feature {feature_type} in builtin module.")
         except NameError as err:
@@ -94,7 +94,9 @@ class GeneratorLoader(abc.ABC):
         else:
             # If the above did not generate an error, then try to get actual feature class from its module.
             # If not found, then we fall back on getting builtin directly, though in practice this is probably redundant.
-            ret_val = getattr(feature_mod, feature_type, self.GetBuiltinFeatureClass(feature_type=feature_type))
+            ret_val = getattr(feature_mod, feature_type, None) or self.GetBuiltinFeatureClass(feature_type=feature_type)
+            # if ret_val is None:
+            #     ret_val = 
         finally:
             return ret_val
 
