@@ -51,7 +51,7 @@ class ExtractorRegistry(GeneratorRegistry):
         _feature_registry maps feature names to Listener objects, which basically just say which 2nd-order feature(s) wants the given 1st-order feature.
         """
         super().__init__(mode=mode)
-        self._features : List[OrderedDict[str, Feature]] = [OrderedDict() for i in range(order)]
+        self._features : List[OrderedDict[str, Extractor]] = [OrderedDict() for i in range(order)]
         self._feature_registry: Dict[str,List[GeneratorRegistry.Listener]] = {}
         # self._features : Dict[str, OrderedDict[str, Feature]] = {
         #     "first_order" : OrderedDict(),
