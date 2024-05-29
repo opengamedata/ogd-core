@@ -51,8 +51,6 @@ class WaveLoader(GeneratorLoader):
                 case "SessionID":
                     ret_val = SessionID.SessionID(params=extractor_params, sessionID=self._session_id)
                     # sequence features
-                case "SequenceLevel":
-                    ret_val = SequenceLevel.SequenceLevel(params=extractor_params)
                 case _:
                     Logger.Log(f"'{feature_type}' is not a valid aggregate feature for Waves.")
         # Per-count features
@@ -65,6 +63,8 @@ class WaveLoader(GeneratorLoader):
                     ret_val = Completed.Completed(params=extractor_params)
                 case "MenuButtonCount":
                     ret_val = MenuButtonCount.MenuButtonCount(params=extractor_params)
+                case "SequenceLevel":
+                    ret_val = SequenceLevel.SequenceLevel(params=extractor_params)
                 case "SucceedCount":
                     ret_val = SucceedCount.SucceedCount(params=extractor_params)
                 case "TotalFails":
