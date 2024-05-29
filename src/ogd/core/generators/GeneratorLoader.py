@@ -2,8 +2,10 @@
 import abc
 import logging
 from importlib import import_module
+from types import ModuleType
 from typing import Any, Callable, Dict, List, Optional, Type
 # import locals
+from ogd.core.generators.extractors.builtin import *
 from ogd.core.generators.Generator import Generator, GeneratorParameters
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.extractors.Extractor import Extractor
@@ -26,7 +28,7 @@ class GeneratorLoader(abc.ABC):
 
     @staticmethod
     @abc.abstractmethod
-    def _getFeaturesModule():
+    def _getFeaturesModule() -> ModuleType:
         pass
 
     # *** BUILT-INS & PROPERTIES ***
@@ -42,6 +44,7 @@ class GeneratorLoader(abc.ABC):
         :param game_schema: A dictionary that defines how the game data itself is structured.
         :type game_schema: GameSchema
         """
+        # TODO : seems like Loader shouldn't really need player ID and session ID, consider removing.
         self._player_id   : str            = player_id
         self._session_id  : str            = session_id
         self._game_schema : GameSchema     = game_schema
@@ -74,9 +77,9 @@ class GeneratorLoader(abc.ABC):
         base_mod = self._getFeaturesModule()
         try:
             feature_mod = getattr(base_mod, feature_type)
-            ret_val     = getattr(feature_mod, feature_type)
+            ret_val     = getattr(feature_mod, feature_type, None)
         except NameError as err:
-            Logger.Log(f"Could not get class {feature_type}, a NameError occurred:\n{err}", logging.WARN)
+            Logger.Log(f"Could not get class {feature_type} from module {feature_mod}, a NameError occurred:\n{err}", logging.WARN)
         finally:
             return ret_val
 
@@ -104,3 +107,25 @@ class GeneratorLoader(abc.ABC):
                 Logger.Log(f"In GeneratorLoader, feature class '{feature_type}' could not be found in module {feature_module}", logging.WARN)
 
         return ret_val
+
+    def _loadBuiltinFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Extractor:
+        ret_val : Extractor
+        # Session-level features.
+        if extractor_params._count_index is None:
+            match feature_type:
+                case "CountEvent":
+                    ret_val = CountEvent.CountEvent(params=extractor_params, schema_args=schema_args)
+                case "Timespan":
+                    ret_val = Timespan.Timespan(params=extractor_params, schema_args=schema_args)
+                case _:
+                    raise NotImplementedError(f"'{feature_type}' is not a valid built-in session feature.")
+        # Per-count features
+        # level attempt features
+        else:
+            match feature_type:
+                case _:
+                    raise NotImplementedError(f"'{feature_type}' is not a valid built-in per-count feature.")
+        return ret_val
+
+    def _loadBuiltinDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
+        raise NotImplementedError(f"'{detector_type}' is not a valid built-in detector.")
