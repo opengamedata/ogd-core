@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Optional
 from ogd.core.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
-from ogd.core.schemas.Event import Event
+from ogd.core.models.Event import Event
 
 
 

@@ -1,4 +1,5 @@
 __all__ = [
+	"models",
 	"utils",
 	"schemas",
     "generators",
@@ -7,6 +8,7 @@ __all__ = [
 	"requests"
 ]
 
+from . import models
 from . import utils
 from . import schemas
 from . import generators

@@ -1,13 +1,13 @@
 __all__ = [
-    "IDMode",
-    "Event",
-    "FeatureData",
-    "GameSchema",
-    "TableSchema",
+    "Schema",
+    "configs",
+    "datasets",
+    "games",
+    "tables"
 ]
 
-from . import IDMode
-from . import Event
-from . import FeatureData
-from ogd.core.schemas.games import GameSchema
-from ogd.core.schemas.tables import TableSchema
+from . import Schema
+from . import configs
+from . import datasets
+from . import games
+from . import tables

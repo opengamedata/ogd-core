@@ -4,9 +4,9 @@ from typing import Any, List
 # import locals
 from ogd.core.generators.extractors.Extractor import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.schemas.Event import Event, EventSource
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.models.Event import Event, EventSource
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.core.models.FeatureData import FeatureData
 from ogd.core.utils.Logger import Logger
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
