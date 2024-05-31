@@ -28,6 +28,7 @@ __all__ = [
     "ModelInterveneCount",
     "ModelPredictCount",
     "PlayerSummary",
+    "PlayLocations",
     "PopulationSummary",
     "RegionJobCount",
     "RegionName",
@@ -89,6 +90,7 @@ from . import ModelExportCount
 from . import ModelInterveneCount
 from . import ModelPredictCount
 from . import PlayerSummary
+from . import PlayLocations
 from . import PopulationSummary
 from . import RegionJobCount
 from . import RegionName
