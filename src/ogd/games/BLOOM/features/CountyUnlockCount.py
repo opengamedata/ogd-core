@@ -21,7 +21,7 @@ class CountyUnlockCount(Feature):
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        county_name = event.EventData.get("county_name", "")
+        county_name = event.EventData.get("county_name", None)
         if county_name:
             if county_name not in self.county_unlocks:
                 self.county_unlocks[county_name] = 1

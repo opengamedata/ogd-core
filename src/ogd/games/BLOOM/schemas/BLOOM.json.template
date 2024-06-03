@@ -505,7 +505,13 @@
             "type": "NumberOfSessionsPerPlayer",
             "description": "Number of sessions per player",
             "return_type": "int"
-        }
+        },
+        "AverageActiveTime": {
+         "enabled": true,
+         "type": "AverageActiveTime",
+         "description": "Average active time per player",
+         "return_type": "timedelta"
+     }
       }
    },
    
