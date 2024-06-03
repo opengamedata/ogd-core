@@ -82,6 +82,9 @@ class ActiveTime(Feature):
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
         return ["session_start", "pause_game", "unpause_game", "all_events"]
 
+    def Subfeatures(self) -> List[str]:
+        return ["Total", "Seconds", "Active", "ActiveSeconds", "Idle" "IdleSeconds", "MaxIdle"]
+
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
