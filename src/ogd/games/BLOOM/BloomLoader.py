@@ -62,7 +62,7 @@ class BloomLoader(GeneratorLoader):
         if extractor_params._count_index == None:
             match feature_type:
                 case "ActiveTime":
-                    ret_val = ActiveTime.ActiveTime(params=extractor_params, active_threads=schema_args.get("Active_threshold"))
+                    ret_val = ActiveTime.ActiveTime(params=extractor_params, idle_threshold=schema_args.get("threshold"))
                 case "NumberOfSessionsPerPlayer":
                     ret_val = NumberOfSessionsPerPlayer.NumberOfSessionsPerPlayer(params=extractor_params)
                 case "AverageActiveTime":

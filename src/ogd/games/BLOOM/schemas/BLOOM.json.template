@@ -495,6 +495,7 @@
       },
       "aggregate":{
          "ActiveTime": {
+             "threshold": 30,
              "enabled": true,
              "type": "ActiveTime",
              "description": "Active time of a player",
@@ -512,6 +513,7 @@
          "description": "Average active time per player",
          "return_type": "timedelta"
      }
+   
       }
    },
    

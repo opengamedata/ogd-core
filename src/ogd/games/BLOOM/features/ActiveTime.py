@@ -69,8 +69,9 @@ from ogd.core.schemas.FeatureData import FeatureData
 class ActiveTime(Feature):
     IDLE_THRESHOLD: Final[timedelta] = timedelta(seconds=30)
 
-    def __init__(self, params: GeneratorParameters):
+    def __init__(self, params: GeneratorParameters, idle_threshold: int):
         super().__init__(params=params)
+#        self.IDLE_THRESHOLD = timedelta (seconds = idle_threshold)
         self.max_idle: timedelta = timedelta(0)
         self.previous_time: Optional[datetime] = None
         self.idle_time: timedelta = timedelta(0)
