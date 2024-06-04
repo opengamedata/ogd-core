@@ -83,7 +83,7 @@ class ActiveTime(Feature):
         return ["session_start", "pause_game", "unpause_game", "all_events"]
 
     def Subfeatures(self) -> List[str]:
-        return ["Total", "Seconds", "Active", "ActiveSeconds", "Idle" "IdleSeconds", "MaxIdle"]
+        return ["Total", "Seconds", "ActiveSeconds", "Idle", "IdleSeconds", "MaxIdle"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
@@ -111,9 +111,9 @@ class ActiveTime(Feature):
     def _getFeatureValues(self) -> List[Any]:
         active_time = self.total_session_time - self.idle_time
         return [
+            active_time,
             self.total_session_time,
             self.total_session_time.total_seconds(),
-            active_time,
             active_time.total_seconds(),
             self.idle_time,
             self.idle_time.total_seconds(),

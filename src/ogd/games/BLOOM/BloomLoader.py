@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any, Callable, Dict, Final, List, Optional
 
-from ogd.games.BLOOM.features import AverageActiveTime
+from ogd.games.BLOOM.features import AverageActiveTime, CountyUnlockCount, FailCount, PersistedThroughFailure
 # import local files
 from . import features
 from ogd.games import BLOOM
@@ -66,7 +66,13 @@ class BloomLoader(GeneratorLoader):
                 case "NumberOfSessionsPerPlayer":
                     ret_val = NumberOfSessionsPerPlayer.NumberOfSessionsPerPlayer(params=extractor_params)
                 case "AverageActiveTime":
-                    ret_val = AverageActiveTime.AverageActiveTime(params=extractor_params)    
+                    ret_val = AverageActiveTime.AverageActiveTime(params=extractor_params)
+                case "CountyUnlockCount":
+                    ret_val = CountyUnlockCount.CountyUnlockCount(params=extractor_params)
+                case "FailCount":
+                    ret_val = FailCount.FailCount(params=extractor_params)       
+                case "PersistedThroughFailure":
+                    ret_val = PersistedThroughFailure.PersistedThroughFailure(params=extractor_params)
                 case _:
                     raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature type for Bloom.")
         # then run through per-count features.

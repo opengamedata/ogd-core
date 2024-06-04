@@ -507,12 +507,25 @@
             "description": "Number of sessions per player",
             "return_type": "int"
         },
-        "AverageActiveTime": {
+        "CountyUnlockCount": {
          "enabled": true,
-         "type": "AverageActiveTime",
-         "description": "Average active time per player",
-         "return_type": "timedelta"
-     }
+         "type": "CountyUnlockCount",
+         "description": "ANumber of Counties unlocked",
+         "return_type": "int"
+        },
+        "FailCount": {
+         "enabled": true,
+         "type": "FailCount",
+         "description": "Number of failure count",
+         "return_type": "int"
+        },
+        "PersistedThroughFailure": {
+         "enabled": true,
+         "type": "PersistedThroughFailure",
+         "description": "Number of times faied a but persisted through the task",
+         "return_type": "int"
+        }
+     
    
       }
    },

@@ -21,7 +21,7 @@ class NumberOfSessionsPerPlayer(Feature):
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        player_id = event.PlayerID
+        player_id = event.user_id
         if player_id not in self.session_count:
             self.session_count[player_id] = 1
         else:
