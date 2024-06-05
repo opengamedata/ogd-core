@@ -12,7 +12,7 @@ on:
     - 'src/ogd/core/interfaces/**'
     - 'src/ogd/core/managers/**'
     - 'src/ogd/core/processors/**'
-    - 'src/ogd/core/schemas/*'
+    - 'src/ogd/core/schemas/**'
     - 'src/ogd/core/schemas/*_schemas/**'
     - 'src/ogd/core/utils/*'
     - 'main.py'
