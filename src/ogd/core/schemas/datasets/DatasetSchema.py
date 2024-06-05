@@ -323,9 +323,11 @@ Last modified {self.DateModified.strftime('%m/%d/%Y') if type(self.DateModified)
         ret_val : date
         if isinstance(start_date, date):
             ret_val = start_date
-        else:
+        elif isinstance(start_date, str):
             ret_val = datetime.strptime(start_date, "%m/%d/%Y").date()
-            Logger.Log(f"Dataset start date was unexpected type {type(start_date)}, defaulting to strptime(start_date)={ret_val}.", logging.WARN)
+        else:
+            ret_val = datetime.strptime(str(start_date), "%m/%d/%Y").date()
+            Logger.Log(f"Dataset start date was unexpected type {type(start_date)}, defaulting to strptime(str(start_date))={ret_val}.", logging.WARN)
         return ret_val
 
     @staticmethod
@@ -333,9 +335,11 @@ Last modified {self.DateModified.strftime('%m/%d/%Y') if type(self.DateModified)
         ret_val : date
         if isinstance(end_date, date):
             ret_val = end_date
-        else:
+        elif isinstance(end_date, str):
             ret_val = datetime.strptime(end_date, "%m/%d/%Y").date()
-            Logger.Log(f"Dataset end date was unexpected type {type(end_date)}, defaulting to strptime(end_date)={ret_val}.", logging.WARN)
+        else:
+            ret_val = datetime.strptime(str(end_date), "%m/%d/%Y").date()
+            Logger.Log(f"Dataset end date was unexpected type {type(end_date)}, defaulting to strptime(str(end_date))={ret_val}.", logging.WARN)
         return ret_val
 
     @staticmethod
