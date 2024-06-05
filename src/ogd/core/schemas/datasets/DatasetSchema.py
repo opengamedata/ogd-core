@@ -313,9 +313,11 @@ Last modified {self.DateModified.strftime('%m/%d/%Y') if type(self.DateModified)
         ret_val : date
         if isinstance(date_modified, date):
             ret_val = date_modified
-        else:
+        elif isinstance(date_modified, str):
             ret_val = datetime.strptime(date_modified, "%m/%d/%Y").date()
-            Logger.Log(f"Dataset modified date was unexpected type {type(date_modified)}, defaulting to strptime(date_modified)={ret_val}.", logging.WARN)
+        else:
+            ret_val = datetime.strptime(str(date_modified), "%m/%d/%Y").date()
+            Logger.Log(f"Dataset modified date was unexpected type {type(date_modified)}, defaulting to strptime(str(date_modified))={ret_val}.", logging.WARN)
         return ret_val
 
     @staticmethod
