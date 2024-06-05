@@ -466,7 +466,7 @@ Last modified {self.DateModified.strftime('%m/%d/%Y') if type(self.DateModified)
         ret_val : Optional[Path]
         if sessions_tplate == None:
             ret_val = None
-        if isinstance(sessions_tplate, Path):
+        elif isinstance(sessions_tplate, Path):
             ret_val = sessions_tplate
         elif isinstance(sessions_tplate, str):
             ret_val = Path(sessions_tplate) if sessions_tplate != "" else None
