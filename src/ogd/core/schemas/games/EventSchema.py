@@ -56,7 +56,7 @@ class EventSchema(Schema):
 
     @property
     def AsMarkdownTable(self) -> str:
-        return "\n\n".join([
+        ret_val = "\n\n".join([
             f"### **{self.Name}**",
             f"{self.Description}",
             "#### Event Data",
@@ -65,12 +65,13 @@ class EventSchema(Schema):
                  "| ---      | ---      | ---             | ---         |"]
               + [elem.AsMarkdownRow for elem in self.EventData.values()]
             ),
-            "#### Other Elements",
-            "\n".join(
-                [f"- **{elem_name}**: {elem_desc}  " for elem_name,elem_desc in self.NonStandardElements]
-                if len(self.NonStandardElements) > 0 else ["- None"]
-            )
         ])
+        if len(self.NonStandardElements) > 0:
+            ret_val.append("#### Other Elements")
+            ret_val.append(
+                "\n".join( [f"- **{elem_name}**: {elem_desc}  " for elem_name,elem_desc in self.NonStandardElements] )
+            )
+        return ret_val
 
     @staticmethod
     def _parseEventDataElements(event_data):
