@@ -88,11 +88,7 @@ When the app is started and the gameplay session is assigned a session ID
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **game_start**
 
@@ -101,11 +97,7 @@ When the player starts a new game (at present, this happens automatically at lau
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **level_menu_displayed**
 
@@ -116,11 +108,7 @@ When the system displays a list of the game's levels.
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | unlocked_levels | List[Dict] | A list of all currently-unlocked levels, each indicating the level number, max moves allowed, and the player's best score, or null if unplayed. |**level_id** : int, **level_max_moves** : int, **best_score** : int | null |
-| locked_levels | List[Dict] | A list of all currently-locked levels, each indicating the level number and max moves allowed. |**level_id** : int, **level_max_moves** : int |
-
-#### Other Elements
-
-- None  
+| locked_levels | List[Dict] | A list of all currently-locked levels, each indicating the level number and max moves allowed. |**level_id** : int, **level_max_moves** : int |  
 
 ### **level_tier_unlocked**
 
@@ -130,11 +118,7 @@ When the player completes a tier of levels, and the system shows the next tier b
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| unlocked_levels | List[Dict] | A list of the newly-unlocked levels, each indicating the level number and max moves allowed. |**level_id** : int, **level_max_moves** : int |
-
-#### Other Elements
-
-- None  
+| unlocked_levels | List[Dict] | A list of the newly-unlocked levels, each indicating the level number and max moves allowed. |**level_id** : int, **level_max_moves** : int |  
 
 ### **click_select_level**
 
@@ -146,11 +130,7 @@ When the player selects a level from the menu.
 | ---      | ---      | ---             | ---         |
 | level_id | int | The level number for the level. | |
 | level_max_moves | int | The max number of moves allowed in the level. | |
-| best_score | int | null | The player's best score on the level, or null if they have not previously played the level. | |
-
-#### Other Elements
-
-- None  
+| best_score | int | null | The player's best score on the level, or null if they have not previously played the level. | |  
 
 ### **click_reset**
 
@@ -159,11 +139,7 @@ When the player clicks the button to reset the current puzzle.
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **click_confirm_reset**
 
@@ -172,11 +148,7 @@ When the player clicks the button to confirm they want to reset the current puzz
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **click_cancel_reset**
 
@@ -185,11 +157,7 @@ When the player clicks the button to cancel resetting the current puzzle.
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **select_block**
 
@@ -201,11 +169,7 @@ When the player selects a level from the menu.
 | ---      | ---      | ---             | ---         |
 | block | TBD | TODO - Placeholder for some representation of an individual block. | |
 | position | List[int] | The board coordinates of the selected block's anchor point. | |
-| is_connected | bool | Indicator for whether the selected block is currently connected to power (i.e. whether the wire is green or red). | |
-
-#### Other Elements
-
-- None  
+| is_connected | bool | Indicator for whether the selected block is currently connected to power (i.e. whether the wire is green or red). | |  
 
 ### **place_block**
 
@@ -218,11 +182,7 @@ When the player moves the selected block to a new position.
 | block | TBD | TODO - Placeholder for some representation of an individual block. | |
 | position | List[int] | The board coordinates at which the selected block's anchor point was placed. | |
 | is_connected | bool | Indicator for whether the block is now connected to power (i.e. whether the wire is green or red). | |
-| new_move_count | bool | The total moves the player has made on the current puzzle, after placing the block. | |
-
-#### Other Elements
-
-- None  
+| new_move_count | bool | The total moves the player has made on the current puzzle, after placing the block. | |  
 
 ### **rotate_block**
 
@@ -236,11 +196,7 @@ When the player clicks to rotate a block to a new orientation.
 | old_orientation | int | The orientation of the block before rotation, relative to its default, in degrees. | |
 | new_orientation | int | The orientation of the block after being rotated, relative to its default, in degrees. | |
 | is_connected | bool | Indicator for whether the block is now connected to power (i.e. whether the wire is green or red). | |
-| new_move_count | bool | The total moves the player has made on the current puzzle, after placing the block. | |
-
-#### Other Elements
-
-- None  
+| new_move_count | bool | The total moves the player has made on the current puzzle, after placing the block. | |  
 
 ### **block_destinations_highlighted**
 
@@ -250,11 +206,7 @@ When the system displays higlighting on the puzzle board for where the currently
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| highlighted_spaces | List[List] | A list of board coordinates, each indicating a highlighted space on the puzzle board. | |
-
-#### Other Elements
-
-- None  
+| highlighted_spaces | List[List] | A list of board coordinates, each indicating a highlighted space on the puzzle board. | |  
 
 ### **puzzle_solved**
 
@@ -263,11 +215,7 @@ When the puzzle enters the 'solved' state after the player has moved all pieces 
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **puzzle_solution_lost**
 
@@ -276,11 +224,7 @@ When the player makes a move after previously solving the puzzle, taking the puz
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **click_complete_level**
 
@@ -289,11 +233,7 @@ When the player clicks the button to complete the level, when the puzzle is in t
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **click_quit_level**
 
@@ -302,11 +242,7 @@ When the player clicks the button to quit the current level.
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **click_request_hint**
 
@@ -315,11 +251,7 @@ TODO - Placeholder for when hinting is implemented in the game.
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **select_hint_block**
 
@@ -328,11 +260,7 @@ TODO - Placeholder for when hinting is implemented in the game.
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **block_hint_displayed**
 
@@ -341,11 +269,7 @@ TODO - Placeholder for when hinting is implemented in the game.
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **start_survey**
 
@@ -355,11 +279,7 @@ When the player enters into a survey after a level
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| survey_id | str | An identifier for the specific survey. | |
-
-#### Other Elements
-
-- None  
+| survey_id | str | An identifier for the specific survey. | |  
 
 ### **survey_item_displayed**
 
@@ -372,11 +292,7 @@ When the system displays a multi-choice (i.e. select one) survey item.
 | survey_id | str | An identifier for the specific survey. | |
 | item_id | str | An identifier for the specific survey item. | |
 | prompt | str | The text content of the item prompt. | |
-| choices | List[str] | The list of possible choices for the survey item. | |
-
-#### Other Elements
-
-- None  
+| choices | List[str] | The list of possible choices for the survey item. | |  
 
 ### **select_survey_response**
 
@@ -389,11 +305,7 @@ When the player clicks on a choice in a multi-choice survey item, selecting the 
 | survey_id | str | An identifier for the specific survey. | |
 | item_id | str | An identifier for the specific survey item. | |
 | choice_value | int | The index of the selected choice among the available choices, or the value (if the multi-choice item uses a Likert scale or similar). | |
-| choice_string | str | The text content of the selected choice. | |
-
-#### Other Elements
-
-- None  
+| choice_string | str | The text content of the selected choice. | |  
 
 ### **submit_survey_response**
 
@@ -406,11 +318,7 @@ When the player clicks to submit their choice on a multi-choice survey item.
 | survey_id | str | An identifier for the specific survey. | |
 | item_id | str | An identifier for the specific survey item. | |
 | choice_value | int | The index of the submitted choice among the available choices, or the value (if the multi-choice item uses a Likert scale or similar). | |
-| choice_string | str | The text content of the submitted choice. | |
-
-#### Other Elements
-
-- None  
+| choice_string | str | The text content of the submitted choice. | |  
 
 ### **end_survey**
 
@@ -420,11 +328,7 @@ When the player finishes a survey
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| survey_id | str | An identifier for the specific survey. | |
-
-#### Other Elements
-
-- None  
+| survey_id | str | An identifier for the specific survey. | |  
 
 ## Detected Events  
 
