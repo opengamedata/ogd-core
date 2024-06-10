@@ -21,9 +21,9 @@ from ogd.core.requests.RequestResult import RequestResult, ResultStatus
 from ogd.core.requests.Request import Request, ExporterRange
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
-from ogd.core.schemas.ExportMode import ExportMode
+from ogd.core.models.enums.ExportMode import ExportMode
 from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.schemas.IDMode import IDMode
+from ogd.core.models.enums.IDMode import IDMode
 from ogd.core.schemas.tables.TableSchema import TableSchema
 from ogd.core.utils.Logger import Logger
 from ogd.core.utils.Readme import Readme
@@ -104,10 +104,10 @@ class OGDCommands:
         file_outerface : DataOuterface
         dataset_id     : Optional[str] = None
 
-        # 1. get exporter modes to run
+    # 1. get exporter modes to run
         export_modes = OGDGenerators.genModes(with_events=with_events, with_features=with_features,
                                               no_session_file=args.no_session_file, no_player_file=args.no_player_file, no_pop_file=args.no_pop_file)
-        # 2. figure out the interface and range; optionally set a different dataset_id
+    # 2. figure out the interface and range; optionally set a different dataset_id
         if args.file is not None and args.file != "":
             # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
             _ext = str(args.file).split('.')[-1]
@@ -118,9 +118,11 @@ class OGDCommands:
             range = ExporterRange.FromIDs(source=interface, ids=ids if ids is not None else [])
         else:
             interface = OGDGenerators.genDBInterface(config=config, game=args.game)
+        # a. Case where specific player ID was given
             if args.player is not None and args.player != "":
                 range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.USER)
                 dataset_id = f"{args.game}_{args.player}"
+        # b. Case where player ID file was given
             elif args.player_id_file is not None and args.player_id_file != "":
                 file_path = Path(args.player_id_file)
                 with open(file_path) as player_file:
@@ -129,9 +131,11 @@ class OGDCommands:
                     names = list(chain.from_iterable(file_contents)) # so, convert to single list
                     print(f"list of names: {list(names)}")
                     range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.USER)
+        # c. Case where specific session ID was given
             elif args.session is not None and args.session != "":
                 range = ExporterRange.FromIDs(source=interface, ids=[args.session], id_mode=IDMode.SESSION)
                 dataset_id = f"{args.game}_{args.session}"
+        # d. Case where session ID file was given
             elif args.session_id_file is not None and args.session_id_file != "":
                 file_path = Path(args.session_id_file)
                 with open(file_path) as session_file:
@@ -140,9 +144,10 @@ class OGDCommands:
                     names = list(chain.from_iterable(file_contents)) # so, convert to single list
                     print(f"list of sessions: {list(names)}")
                     range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.SESSION)
+        # e. Default case where we use date range
             else:
                 range = OGDGenerators.genDateRange(game=args.game, interface=interface, monthly=args.monthly, start_date=args.start_date, end_date=args.end_date)
-        # 3. set up the outerface, based on the range and dataset_id.
+    # 3. set up the outerface, based on the range and dataset_id.
         _cfg = GameSourceSchema(name="FILE DEST", all_elements={"database":"FILE", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
         file_outerface = TSVOuterface(game_id=args.game, config=_cfg, export_modes=export_modes, date_range=range.DateRange,
                                     file_indexing=config.FileIndexConfig, dataset_id=dataset_id)
@@ -152,7 +157,7 @@ class OGDCommands:
             _cfg = GameSourceSchema(name="DEBUG", all_elements={"database":"DEBUG", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
             outerfaces.add(DebugOuterface(game_id=args.game, config=_cfg, export_modes=export_modes))
 
-        # 4. Once we have the parameters parsed out, construct the request.
+    # 4. Once we have the parameters parsed out, construct the request.
         req = Request(range=range, exporter_modes=export_modes, interface=interface, outerfaces=outerfaces)
         if req.Interface.IsOpen():
             export_manager : ExportManager = ExportManager(config=config)

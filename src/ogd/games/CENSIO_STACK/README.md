@@ -96,11 +96,7 @@ When the app is started and the gameplay session is assigned a session ID
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **game_start**
 
@@ -109,11 +105,7 @@ When the player starts a new game (at present, this happens automatically at lau
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **level_preview_displayed**
 
@@ -126,11 +118,7 @@ When the system displays a preview of the upcoming level to the player, includin
 | level_id | int | The level number for the previewed level. | |
 | level_type | LevelType | The type of the previewed level. | |
 | duration | int | The allotted time for the level. | |
-| goal_score | int | The target score on the level. | |
-
-#### Other Elements
-
-- None  
+| goal_score | int | The target score on the level. | |  
 
 ### **click_level_play**
 
@@ -143,11 +131,7 @@ When the player clicks the 'play' button from the preview to start the level.
 | level_id | int | The level number for the level. | |
 | level_type | LevelType | The type of the level. | |
 | duration | int | The allotted time for the level. | |
-| goal_score | int | The target score on the level. | |
-
-#### Other Elements
-
-- None  
+| goal_score | int | The target score on the level. | |  
 
 ### **level_begin**
 
@@ -160,11 +144,7 @@ When a level actually begins, whether due to the player clicking 'play' from a n
 | level_id | int | The level number for the level. | |
 | level_type | LevelType | The type of the level. | |
 | duration | int | The allotted time for the level. | |
-| goal_score | int | The target score on the level. | |
-
-#### Other Elements
-
-- None  
+| goal_score | int | The target score on the level. | |  
 
 ### **piece_appeared**
 
@@ -174,11 +154,7 @@ When a new piece appears on the conveyer belt.
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| type | PieceShape | The type of piece that appeared on the belt. | |
-
-#### Other Elements
-
-- None  
+| type | PieceShape | The type of piece that appeared on the belt. | |  
 
 ### **piece_disappeared**
 
@@ -188,11 +164,7 @@ When a non-packed piece disappears off the conveyer belt.
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| type | PieceShape | The type of piece that left the belt. | |
-
-#### Other Elements
-
-- None  
+| type | PieceShape | The type of piece that left the belt. | |  
 
 ### **punch_launched**
 
@@ -202,11 +174,7 @@ When the player clicks (or presses key) to punch a piece into the box.
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| type | PunchType | Whether the player triggered the punch with a click or the spacebar. | |
-
-#### Other Elements
-
-- None  
+| type | PunchType | Whether the player triggered the punch with a click or the spacebar. | |  
 
 ### **piece_hit**
 
@@ -218,11 +186,7 @@ When a piece is hit by a punch, packing it into the box.
 | ---      | ---      | ---             | ---         |
 | piece | Dict | A dict describing the piece that was hit. Indicates the type of the piece, whether the piece was damaged, and whether it matched the level target. |**type** : PieceShape, **is_damaged** : bool, **is_target** : bool |
 | new_box_contents | List[Dict] | A list whose elements are dictionaries describing individual pieces placed in the current box, including the newly-packed piece. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target. |**type** : PieceShape, **is_damaged** : bool, **is_target** : bool |
-| accuracy | float | A value, from 0-1, indicating how close the player was to a 'perfectly accurate' punch. | |
-
-#### Other Elements
-
-- None  
+| accuracy | float | A value, from 0-1, indicating how close the player was to a 'perfectly accurate' punch. | |  
 
 ### **bomb_hit**
 
@@ -233,11 +197,7 @@ When a bomb is hit by a punch, destroying the current contents of the box.
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | pieces_destroyed | List[Dict] | A list whose elements are dictionaries describing individual pieces that were in the current box, and destroyed by the bomb. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target. |**type** : PieceShape, **is_damaged** : bool, **is_target** : bool |
-| accuracy | float | A value, from 0-1, indicating how close the player was to a 'perfectly accurate' punch. | |
-
-#### Other Elements
-
-- None  
+| accuracy | float | A value, from 0-1, indicating how close the player was to a 'perfectly accurate' punch. | |  
 
 ### **box_completed**
 
@@ -249,11 +209,7 @@ When a third piece is packed in a box, completing the box
 | ---      | ---      | ---             | ---         |
 | pieces | List[Dict] | A list whose elements are dictionaries describing individual pieces that were in the completed box. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target. |**type** : PieceShape, **is_damaged** : bool, **is_target** : bool |
 | score | int | The points earned for packing the box. | |
-| is_perfect | bool | Indicator for whether the box score is the maximum possible for the current level. | |
-
-#### Other Elements
-
-- None  
+| is_perfect | bool | Indicator for whether the box score is the maximum possible for the current level. | |  
 
 ### **target_pieces_changed**
 
@@ -263,11 +219,7 @@ When a player packs a box in a 'SHIFTING' level, and the target for the next box
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| new_target_pieces | List[PieceShape] | A list of the types of pieces accepted for the new target. If the game ever has 'shifting ordered set' levels, the order in the list indicates the order pieces must be placed. | |
-
-#### Other Elements
-
-- None  
+| new_target_pieces | List[PieceShape] | A list of the types of pieces accepted for the new target. If the game ever has 'shifting ordered set' levels, the order in the list indicates the order pieces must be placed. | |  
 
 ### **level_end**
 
@@ -277,11 +229,7 @@ When the level's timer runs out, ending the level.
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| receipts | List[Dict] | A list whose elements are dictionaries describing individual boxes that were completed in the level. Each dict contains a point value of the box, an indicator of whether the box was 'perfect', and a sub-list of receipt items; which each contain a ReceiptItem type and a point value. |**items** : List[Dict[ {'type':ReceiptItem, 'value':int} ]], **total_value** : int, **is_perfect** : bool |
-
-#### Other Elements
-
-- None  
+| receipts | List[Dict] | A list whose elements are dictionaries describing individual boxes that were completed in the level. Each dict contains a point value of the box, an indicator of whether the box was 'perfect', and a sub-list of receipt items; which each contain a ReceiptItem type and a point value. |**items** : List[Dict[ {'type':ReceiptItem, 'value':int} ]], **total_value** : int, **is_perfect** : bool |  
 
 ### **level_summary_displayed**
 
@@ -295,11 +243,7 @@ When the system displays a summary of the level results to the player.
 | level_type | LevelType | The type of the summarized level. | |
 | duration | int | The allotted time for the level. | |
 | goal_score | int | The target score on the level. | |
-| final_score | int | The actual score the player earned on the level. | |
-
-#### Other Elements
-
-- None  
+| final_score | int | The actual score the player earned on the level. | |  
 
 ### **click_replay_level**
 
@@ -313,11 +257,7 @@ When the player clicks the 'replay' button in the level summary screen
 | level_type | LevelType | The type of the replayed level. | |
 | duration | int | The allotted time for the level. | |
 | goal_score | int | The target score on the level. | |
-| final_score | int | The actual score the player earned on the level. | |
-
-#### Other Elements
-
-- None  
+| final_score | int | The actual score the player earned on the level. | |  
 
 ### **click_breakdown**
 
@@ -326,11 +266,7 @@ When the player clicks to view the 'breakdown' page for the level
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **breakdown_page_displayed**
 
@@ -341,11 +277,7 @@ When the system displays a 'page' of the level breakdown.
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | page_index | int | The index of the 'page' of the level breakdown, among the breakdown pages. | |
-| receipts | List[Dict] | A list whose elements are dictionaries describing individual boxes in the breakdown page. Each dict contains a point value of the box, an indicator of whether the box was 'perfect', and a sub-list of receipt items; which each contain a ReceiptItem type and a point value. |**items** : List[Dict[ {'type':ReceiptItem, 'value':int} ]], **total_value** : int, **is_perfect** : bool |
-
-#### Other Elements
-
-- None  
+| receipts | List[Dict] | A list whose elements are dictionaries describing individual boxes in the breakdown page. Each dict contains a point value of the box, an indicator of whether the box was 'perfect', and a sub-list of receipt items; which each contain a ReceiptItem type and a point value. |**items** : List[Dict[ {'type':ReceiptItem, 'value':int} ]], **total_value** : int, **is_perfect** : bool |  
 
 ### **click_next_breakdown_page**
 
@@ -355,11 +287,7 @@ When the player clicks to advance to the next 'breakdown' page for the level
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| old_page_index | int | The index of the 'page' of the player was on when they clicked the 'next' button. | |
-
-#### Other Elements
-
-- None  
+| old_page_index | int | The index of the 'page' of the player was on when they clicked the 'next' button. | |  
 
 ### **click_prev_breakdown_page**
 
@@ -369,11 +297,7 @@ When the player clicks to go to the previous 'breakdown' page for the level
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| old_page_index | int | The index of the 'page' of the player was on when they clicked the 'previous' button. | |
-
-#### Other Elements
-
-- None  
+| old_page_index | int | The index of the 'page' of the player was on when they clicked the 'previous' button. | |  
 
 ### **click_next_level**
 
@@ -382,11 +306,7 @@ When the player clicks to advance to the next level from the 'summary' page.
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **click_play_harder**
 
@@ -395,11 +315,7 @@ Placeholder for an event when the player clicks to play a level on 'hard' mode.
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **click_play_easier**
 
@@ -408,11 +324,7 @@ Placeholder for an event when the player clicks to play a level on 'normal' mode
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **start_survey**
 
@@ -422,11 +334,7 @@ When the player enters into a survey after a level
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| survey_id | str | An identifier for the specific survey. | |
-
-#### Other Elements
-
-- None  
+| survey_id | str | An identifier for the specific survey. | |  
 
 ### **multichoice_item_displayed**
 
@@ -439,11 +347,7 @@ When the system displays a multi-choice (i.e. select one) survey item.
 | survey_id | str | An identifier for the specific survey. | |
 | item_id | str | An identifier for the specific survey item. | |
 | prompt | str | The text content of the item prompt. | |
-| choices | List[str] | The list of possible choices for the survey item. | |
-
-#### Other Elements
-
-- None  
+| choices | List[str] | The list of possible choices for the survey item. | |  
 
 ### **select_multichoice_response**
 
@@ -456,11 +360,7 @@ When the player clicks on a choice in a multi-choice survey item, selecting the 
 | survey_id | str | An identifier for the specific survey. | |
 | item_id | str | An identifier for the specific survey item. | |
 | choice_value | int | The index of the selected choice among the available choices, or the value (if the multi-choice item uses a Likert scale or similar). | |
-| choice_string | str | The text content of the selected choice. | |
-
-#### Other Elements
-
-- None  
+| choice_string | str | The text content of the selected choice. | |  
 
 ### **submit_multichoice_response**
 
@@ -473,11 +373,7 @@ When the player clicks to submit their choice on a multi-choice survey item.
 | survey_id | str | An identifier for the specific survey. | |
 | item_id | str | An identifier for the specific survey item. | |
 | choice_value | int | The index of the submitted choice among the available choices, or the value (if the multi-choice item uses a Likert scale or similar). | |
-| choice_string | str | The text content of the submitted choice. | |
-
-#### Other Elements
-
-- None  
+| choice_string | str | The text content of the submitted choice. | |  
 
 ### **slider_item_displayed**
 
@@ -493,11 +389,7 @@ When the system displays a slider survey item.
 | min_value | float | int | The minimum value the player can select on the survey item. | |
 | max_value | float | int | The maximum value the player can select on the survey item. | |
 | reference_values | List[Dict] | A list of other labeled 'reference' values on the slider scale. Each item in the list gives the reference label as well as its value. |**label** : str, **value** : float | int |
-| current_value | float | int | The starting value of the slider. | |
-
-#### Other Elements
-
-- None  
+| current_value | float | int | The starting value of the slider. | |  
 
 ### **set_slider_position**
 
@@ -512,11 +404,7 @@ When the player drags the slider to a new position.
 | prompt | str | The text content of the item prompt. | |
 | start_value | float | int | The value of the slider before it was moved. | |
 | end_value | float | int | The value to which the player set the slider. | |
-| reference | str | null | The label of the reference value, if the new slider value matches one of the slider reference value, otherwise null. | |
-
-#### Other Elements
-
-- None  
+| reference | str | null | The label of the reference value, if the new slider value matches one of the slider reference value, otherwise null. | |  
 
 ### **submit_slider_response**
 
@@ -530,11 +418,7 @@ When the player clicks to submit their choice on a slider survey item.
 | item_id | str | An identifier for the specific survey item. | |
 | prompt | str | The text content of the item prompt. | |
 | value | float | int | The value of the slider when the item was submitted. | |
-| reference | str | null | The label of the reference value, if the slider was set to one of the slider reference values, otherwise null. | |
-
-#### Other Elements
-
-- None  
+| reference | str | null | The label of the reference value, if the slider was set to one of the slider reference values, otherwise null. | |  
 
 ### **end_survey**
 
@@ -544,11 +428,7 @@ When the player finishes a survey
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| survey_id | str | An identifier for the specific survey. | |
-
-#### Other Elements
-
-- None  
+| survey_id | str | An identifier for the specific survey. | |  
 
 ### **game_complete**
 
@@ -557,11 +437,7 @@ When the player completes the game
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ## Detected Events  
 

@@ -4,9 +4,9 @@ import json
 # import locals
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.core.models.FeatureData import FeatureData
 
 
 orderMapping = {'1. One Box': 1, '2. Separated Boxes': 2, '3. Rotate a Pyramid': 3, '4. Match Silhouettes': 4, '5. Removing Objects': 5, '6. Stretch a Ramp': 6, '7. Max 2 Boxes': 7, '8. Combine 2 Ramps': 8, '9. Scaling Round Objects': 9,
@@ -63,8 +63,8 @@ class SequenceBetweenPuzzles(SessionFeature):
 
             elif event.EventName == "puzzle_complete":
                 self._currentPuzzle["funnel"] = "completed"
-                
-            elif event.EventName in ["disconnect", "login_user", "exit_to_menu"]:
+
+            elif event.event_name in ["disconnect", "login_user", "exit_to_menu"] and self._activePuzzle != None:
                 #Add current data
                 self._userPuzzleDict[self._activePuzzle].append(json.dumps(self._currentPuzzle))
                 self._currentPuzzle = {}

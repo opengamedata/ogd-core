@@ -4,9 +4,9 @@ import json
 # import locals
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.core.models.FeatureData import FeatureData
 
 class FunnelByUser(SessionFeature):
     def __init__(self, params:GeneratorParameters):
@@ -26,22 +26,25 @@ class FunnelByUser(SessionFeature):
 
     def _updateFromEvent(self, event:Event) -> None:
         if event.EventName in ["start_level", "puzzle_started"]:
-            self._level = event.EventData["task_id"]
+            self._level = event.EventData.get("task_id")
+            if isinstance(self._level, dict):
+                self._level = self._level["string_value"]
 
             if self._level not in self._userFunnelDict.keys():
-                self._userFunnelDict[self._level] = json.loads('{"started": 0, "create_shape": 0, "submitted": 0, "completed": 0}')
+                self._userFunnelDict[self._level] = {"started": 0, "create_shape": 0, "submitted": 0, "completed": 0}
 
-        if event.EventName == "puzzle_started":
-            self._userFunnelDict[self._level]["started"] = 1
+        if self._level != None:
+            if event.EventName == "puzzle_started":
+                self._userFunnelDict[self._level]["started"] = 1
 
-        elif event.EventName == "create_shape":
-            self._userFunnelDict[self._level]["create_shape"] = 1
+            elif event.EventName == "create_shape":
+                self._userFunnelDict[self._level]["create_shape"] = 1
 
-        elif event.EventName == "check_solution":
-            self._userFunnelDict[self._level]["submitted"] = 1
+            elif event.EventName == "check_solution":
+                self._userFunnelDict[self._level]["submitted"] = 1
 
-        elif event.EventName == "puzzle_complete":
-            self._userFunnelDict[self._level]["completed"] = 1
+            elif event.EventName == "puzzle_complete":
+                self._userFunnelDict[self._level]["completed"] = 1
 
     def _updateFromFeatureData(self, feature:FeatureData):
         return
@@ -64,3 +67,4 @@ class FunnelByUser(SessionFeature):
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
         return ["started", "create_shape", "submitted", "completed"]
+

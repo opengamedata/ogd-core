@@ -8,8 +8,8 @@ from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.games.SHADOWSPECT.features import *
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
 
 ## @class ShadowspectExtractor
@@ -35,6 +35,8 @@ class ShadowspectLoader(GeneratorLoader):
                 ret_val = LevelsOfDifficulty.LevelsOfDifficulty(params=extractor_params)
             case "SequenceBetweenPuzzles":
                 ret_val = SequenceBetweenPuzzles.SequenceBetweenPuzzles(params=extractor_params)
+            case "SequenceWithinPuzzles":
+                ret_val = SequenceWithinPuzzles.SequenceWithinPuzzles(params=extractor_params)
             case _:
                 raise NotImplementedError(f"'{feature_type}' is not a valid feature for Shadowspect.")
         return ret_val

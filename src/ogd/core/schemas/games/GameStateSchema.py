@@ -39,7 +39,7 @@ class GameStateSchema(Schema):
 
     @property
     def AsMarkdownTable(self) -> str:
-        return "\n\n".join([
+        ret_val = [
             f"### **{self.Name}**",
             "#### Event Data",
             "\n".join(
@@ -47,12 +47,13 @@ class GameStateSchema(Schema):
                  "| ---      | ---      | ---             | ---              |"]
               + [elem.AsMarkdownRow for elem in self.GameStateElements.values()]
             ),
-            "#### Other Elements",
-            "\n".join(
-                [f"- **{elem_name}**: {elem_desc}  " for elem_name,elem_desc in self.NonStandardElements]
-                if len(self.NonStandardElements) > 0 else ["- None"]
+        ]
+        if len(self.NonStandardElements) > 0:
+            ret_val.append("#### Other Elements")
+            ret_val.append(
+                "\n".join( [f"- **{elem_name}**: {elem_desc}  " for elem_name,elem_desc in self.NonStandardElements] )
             )
-        ])
+        return "\n\n".join(ret_val)
 
     @staticmethod
     def _parseGameStateElements(event_data):

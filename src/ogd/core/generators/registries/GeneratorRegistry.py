@@ -6,11 +6,11 @@ from ogd.core.generators.GeneratorLoader import GeneratorLoader
 ## import local files
 from ogd.core.utils.Logger import Logger
 from ogd.core.generators.Generator import Generator
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.core.models.FeatureData import FeatureData
 from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.schemas.IterationMode import IterationMode
+from ogd.core.models.enums.IterationMode import IterationMode
 
 ## @class Extractor
 #  Abstract base class for game feature extractors.
