@@ -64,7 +64,7 @@ The individual fields encoded in the *game_state* and *user_data* Event element 
 | **Name** | **Values** |
 | ---      | ---        |
 | MapMode | ['VIEW', 'BUILD', 'DESTROY'] |
-| BuildingType | ['EMPTY', 'ROADONLY', 'TODO:ROADONLY -> ROAD, because ROADONLY would look weirder in a queue build event than ROAD looks as a state', 'TOLLBOOTH', 'CITY', 'DAIRYFARM', 'GRAINFARM', 'STORAGE', 'PROCESSOR', 'EXPORTDEPOT', 'PROCESSORBROKEN', 'OBSTACLE'] |
+| BuildingType | ['EMPTY', 'ROAD', 'TOLLBOOTH', 'CITY', 'DAIRYFARM', 'GRAINFARM', 'STORAGE', 'PROCESSOR', 'EXPORTDEPOT', 'PROCESSORBROKEN', 'OBSTACLE'] |
 | TileType | ['LAND', 'WATER', 'DEEP_WATER'] |
 | CardinalDirection | ['N', 'NE', 'SE', 'S', 'SW', 'NW'] |
 | PolicyCategory | ['ECONOMY', 'ECOLOGY'] |
@@ -239,8 +239,7 @@ When the player clicks or releases the music volume slider, setting a new volume
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | old_volume | float | The initial value of the slider. | |
-| new_volume | float | The initial value of the slider. | |
-| adjustment_type | enum('CLICK', 'SLIDE') | Whether the player used a click or a drag-and-release adjustment on the slider. | |  
+| new_volume | float | The initial value of the slider. | |  
 
 ### **county_unlocked**
 
@@ -578,7 +577,7 @@ When the inspector panel for a city is displayed to the user.
 
 ### **grain_inspector_displayed**
 
-When the inspector panel for a grain farm is displayed to the user. TODO : Review whether we've got the right policy cases in the tabs
+When the inspector panel for a grain farm is displayed to the user.
 
 #### Event Data
 
@@ -592,7 +591,7 @@ When the inspector panel for a grain farm is displayed to the user. TODO : Revie
 
 ### **dairy_inspector_displayed**
 
-When the inspector panel for a dairy farm is displayed to the user. TODO : Review whether we've got the right policy cases in the tabs
+When the inspector panel for a dairy farm is displayed to the user.
 
 #### Event Data
 
@@ -627,9 +626,9 @@ When the player clicks to switch to a particular tab of the inspector panel.
 | ---      | ---      | ---             | ---         |
 | tab_name | str | Whether the tab is grain, dairy, or fertilizer | |  
 
-### **queue_building**
+### **building_queued**
 
-When the player clicks a map point, adding a new building to the build queue.
+When the player clicks a map point, adding a new building to the build queue. Note that a road may be 'queued' as the result of undo-ing a road destroy.
 
 #### Event Data
 
@@ -640,20 +639,9 @@ When the player clicks a map point, adding a new building to the build queue.
 | total_cost | int | The new running total cost in the build queue. | |
 | funds_remaining | int | The remaining county funds, if the current queue is built (including the new building). | |  
 
-### **click_queue_invalid**
+### **building_dequeued**
 
-When the player clicks a map point, attempting to place a new building in the build queue, but the selected tile is not a valid option. TODO : changed name
-
-#### Event Data
-
-| **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-| tile_index | int | The index, within the global map, of the tile where the player tried to add the building. For roads, this is the 'start' tile, where the player started their click-drag to define the road. | |
-| building_type | BuildingType | The specific type of building added to the queue. | |  
-
-### **unqueue_building**
-
-When the player clicks a map point in destroy mode, removing a building to the build queue. TODO : not 100% sure if this is when we're in destroy mode, or what
+When the player clicks a map point in destroy mode, removing a building to the build queue.
 
 #### Event Data
 
@@ -663,6 +651,48 @@ When the player clicks a map point in destroy mode, removing a building to the b
 | building_type | BuildingType | The specific type of building removed from the queue. | |
 | total_cost | int | The new running total cost in the build queue. | |
 | funds_remaining | int | The remaining county funds, if the current queue is built (after the building is removed from the queue). | |  
+
+### **click_build**
+
+When the player clicks a map point, attempting to place a new building in the build queue.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| tile_index | int | The index, within the global map, of the tile where the player tried to add the building. For roads, this is the 'start' tile, where the player started their click-drag to define the road. | |
+| building_type | BuildingType | The specific type of building added to the queue. | |  
+
+### **click_destroy**
+
+When the player clicks a map point, attempting to destroy a building on the tile
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| tile_index | int | The index, within the global map, of the tile where the player tried to destroy a building. | |
+| building_type | BuildingType | The specific type of building, if any, on the tile. | |  
+
+### **click_undo**
+
+When the player clicks a map point, attempting to destroy a building on the tile
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
+
+### **click_build_invalid**
+
+When the player clicks a map point, attempting to place a new building in the build queue, but the selected tile is not a valid option.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| tile_index | int | The index, within the global map, of the tile where the player tried to add the building. For roads, this is the 'start' tile, where the player started their click-drag to define the road. | |
+| building_type | BuildingType | The specific type of building added to the queue. | |  
 
 ### **click_destroy_invalid**
 
@@ -677,7 +707,7 @@ When the player clicks a map point, attempting to destroy a building on the tile
 
 ### **execute_build_queue**
 
-When the player clicks to complete the building of all buildings in the build queue. TODO : Updated event name
+When the player clicks to complete the building of all buildings in the build queue.
 
 #### Event Data
 
@@ -749,7 +779,7 @@ When the player hovers the mouse over a candidate tile for destroying a building
 
 ### **building_type_unlocked**
 
-When a new building type is unlocked in the build list. TODO : renamed this event
+When a new building type is unlocked in the build list.
 
 #### Event Data
 
@@ -759,7 +789,7 @@ When a new building type is unlocked in the build list. TODO : renamed this even
 
 ### **policy_unlocked**
 
-When a new policy type is unlocked for the player's counties. TODO : renamed this event
+When a new policy type is unlocked for the player's counties.
 
 #### Event Data
 
@@ -769,7 +799,7 @@ When a new policy type is unlocked for the player's counties. TODO : renamed thi
 
 ### **view_unlocked**
 
-When a new view type is unlocked. TODO : renamed this event
+When a new view type is unlocked.
 
 #### Event Data
 
