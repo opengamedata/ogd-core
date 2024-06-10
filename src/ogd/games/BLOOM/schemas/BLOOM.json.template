@@ -1,7 +1,7 @@
 {
    "enums" : {
       "MapMode"           : ["VIEW", "BUILD", "DESTROY"],
-      "BuildingType"      : ["EMPTY", "ROADONLY", "TODO:ROADONLY -> ROAD, because ROADONLY would look weirder in a queue build event than ROAD looks as a state", "TOLLBOOTH", "CITY", "DAIRYFARM", "GRAINFARM", "STORAGE", "PROCESSOR", "EXPORTDEPOT", "PROCESSORBROKEN", "OBSTACLE"],
+      "BuildingType"      : ["EMPTY", "ROAD", "TOLLBOOTH", "CITY", "DAIRYFARM", "GRAINFARM", "STORAGE", "PROCESSOR", "EXPORTDEPOT", "PROCESSORBROKEN", "OBSTACLE"],
       "TileType"          : ["LAND", "WATER", "DEEP_WATER"],
       "CardinalDirection" : ["N", "NE", "SE", "S", "SW", "NW"],
       "PolicyCategory"    : ["ECONOMY", "ECOLOGY"],
@@ -171,10 +171,6 @@
             "new_volume" : {
                "type" : "float",
                "description" : "The initial value of the slider."
-            },
-            "adjustment_type" : {
-               "type" : "enum('CLICK', 'SLIDE')",
-               "description" : "Whether the player used a click or a drag-and-release adjustment on the slider."
             }
          }
       },
@@ -596,7 +592,7 @@
          }
       },
       "grain_inspector_displayed": {
-         "description": "When the inspector panel for a grain farm is displayed to the user. TODO : Review whether we've got the right policy cases in the tabs",
+         "description": "When the inspector panel for a grain farm is displayed to the user.",
          "event_data": {
             "tile_index" : {
                "type" : "int",
@@ -639,7 +635,7 @@
          }
       },
       "dairy_inspector_displayed": {
-         "description": "When the inspector panel for a dairy farm is displayed to the user. TODO : Review whether we've got the right policy cases in the tabs",
+         "description": "When the inspector panel for a dairy farm is displayed to the user.",
          "event_data": {
             "tile_index" : {
                "type" : "int",
@@ -719,8 +715,8 @@
             }
          }
       },
-      "queue_building": {
-         "description": "When the player clicks a map point, adding a new building to the build queue.",
+      "building_queued": {
+         "description": "When the player clicks a map point, adding a new building to the build queue. Note that a road may be 'queued' as the result of undo-ing a road destroy.",
          "event_data": {
             "tile_index" : {
                "type" : "int",
@@ -740,21 +736,8 @@
             }
          }
       },
-      "click_queue_invalid": {
-         "description": "When the player clicks a map point, attempting to place a new building in the build queue, but the selected tile is not a valid option. TODO : changed name",
-         "event_data": {
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the global map, of the tile where the player tried to add the building. For roads, this is the 'start' tile, where the player started their click-drag to define the road."
-            },
-            "building_type" : {
-               "type" : "BuildingType",
-               "description" : "The specific type of building added to the queue."
-            }
-         }
-      },
-      "unqueue_building": {
-         "description": "When the player clicks a map point in destroy mode, removing a building to the build queue. TODO : not 100% sure if this is when we're in destroy mode, or what",
+      "building_dequeued": {
+         "description": "When the player clicks a map point in destroy mode, removing a building to the build queue.",
          "event_data": {
             "tile_index" : {
                "type" : "int",
@@ -774,6 +757,50 @@
             }
          }
       },
+      "click_build": {
+         "description": "When the player clicks a map point, attempting to place a new building in the build queue.",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the global map, of the tile where the player tried to add the building. For roads, this is the 'start' tile, where the player started their click-drag to define the road."
+            },
+            "building_type" : {
+               "type" : "BuildingType",
+               "description" : "The specific type of building added to the queue."
+            }
+         }
+      },
+      "click_destroy": {
+         "description": "When the player clicks a map point, attempting to destroy a building on the tile",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the global map, of the tile where the player tried to destroy a building."
+            },
+            "building_type" : {
+               "type" : "BuildingType",
+               "description" : "The specific type of building, if any, on the tile."
+            }
+         }
+      },
+      "click_undo": {
+         "description": "When the player clicks a map point, attempting to destroy a building on the tile",
+         "event_data": {
+         }
+      },
+      "click_build_invalid": {
+         "description": "When the player clicks a map point, attempting to place a new building in the build queue, but the selected tile is not a valid option.",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the global map, of the tile where the player tried to add the building. For roads, this is the 'start' tile, where the player started their click-drag to define the road."
+            },
+            "building_type" : {
+               "type" : "BuildingType",
+               "description" : "The specific type of building added to the queue."
+            }
+         }
+      },
       "click_destroy_invalid": {
          "description": "When the player clicks a map point, attempting to destroy a building on the tile, but the tile does not contain a valid building to be destroyed",
          "event_data": {
@@ -788,7 +815,7 @@
          }
       },
       "execute_build_queue": {
-         "description": "When the player clicks to complete the building of all buildings in the build queue. TODO : Updated event name",
+         "description": "When the player clicks to complete the building of all buildings in the build queue.",
          "event_data": {
             "buildings" : {
                "type" : "List[BuildingType]",
@@ -859,7 +886,7 @@
          }
       },
       "building_type_unlocked": {
-         "description": "When a new building type is unlocked in the build list. TODO : renamed this event",
+         "description": "When a new building type is unlocked in the build list.",
          "event_data": {
             "building_type" : {
                "type" : "BuildingType",
@@ -868,7 +895,7 @@
          }
       },
       "policy_unlocked": {
-         "description": "When a new policy type is unlocked for the player's counties. TODO : renamed this event",
+         "description": "When a new policy type is unlocked for the player's counties.",
          "event_data": {
             "building_type" : {
                "type" : "PolicyType",
@@ -877,7 +904,7 @@
          }
       },
       "view_unlocked": {
-         "description": "When a new view type is unlocked. TODO : renamed this event",
+         "description": "When a new view type is unlocked.",
          "event_data": {
             "building_type" : {
                "type" : "ViewType",
@@ -942,23 +969,6 @@
             "is_dredger" : {
                "type" : "bool",
                "description" : "Whether the skimmer that disappeared was a dredger, or a regular skimmer."
-            }
-         }
-      },
-      "algae_growth_end": {
-         "description": "When a new bloom stops growing on a map tile, whether because it grew to its maximum or because the growth was stopped through good water management.",
-         "event_data": {
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the global map, of the tile where the algae grew."
-            },
-            "algae_percent" : {
-               "type" : "float",
-               "description" : "The proportion of algae that existed on the tile, at the time it stopped growing."
-            },
-            "phosphorus_value" : {
-               "type" : "int",
-               "description" : "The amount of phosphorus on the tile, at the time it stopped growing."
             }
          }
       },
