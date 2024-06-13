@@ -21,7 +21,7 @@ class PersistedThroughFailure(Feature):
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        event_type = event.EventType
+        event_type = event.EventName
         if event_type == "lose_game":
             self.failure_count += 1
         elif event_type == "win_game" and self.failure_count > 0:
