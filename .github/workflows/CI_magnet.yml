@@ -40,7 +40,7 @@ jobs:
         sql_host: ${{vars.FD_LOGGER_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
-        log_level: "DEBUG"
+        log_level: "INFO"
     - name: Set up Schema File
       uses: ./.github/actions/OGD_schema
       with:
