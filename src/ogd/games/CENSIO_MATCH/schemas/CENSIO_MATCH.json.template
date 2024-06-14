@@ -406,18 +406,40 @@
       "order_summary_displayed": {
          "description": "When the system displays a summary of the order results to the player.",
          "event_data": {
-            "TODO":"TODO"
+            "base_score" : {
+               "type":"int",
+               "description":"The player score prior to applying the score mulitplier."
+            },
+            "score_multiplier" : {
+               "type":"float",
+               "description":"The score multiplier on the order."
+            },
+            "total_score" : {
+               "type":"int",
+               "description":"The final score the player earned on the order."
+            },
+            "goal_score" : {
+               "type":"int",
+               "description":"The goal score on the order."
+            },
+            "player_average" : {
+               "type":"int",
+               "description":"The average score the player has scored, across all attempts of the order."
+            }
          }
       },
-      "click_summary_details": {
+      "click_summary_help": {
          "description": "When the player clicks to review the detailed summary of the order results.",
          "event_data": {
          }
       },
-      "summary_details_displayed": {
-         "description": "When the system displays the detailed summary of the order results to the player.",
+      "toggle_summary_help": {
+         "description": "When the player toggles the 'help' view of the 'order summary' on or off.",
          "event_data": {
-            "TODO":"TODO"
+            "toggle" : {
+               "type":"ToggleType",
+               "description":"Whether the view was toggled on or off."
+            }
          }
       },
       "click_try_again": {
