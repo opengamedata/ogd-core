@@ -72,13 +72,8 @@
                "description":"The orders that have been attempted, but only failed, so far."
             },
             "initial_grid" : {
-               "type":"List[Dict[str, Any]]",
-               "details" : {
-                  "x" : "int",
-                  "y" : "int",
-                  "tile" : "TileType"
-               },
-               "description":"A list of all tiles currently on the grid, with coordinates."
+               "type":"List[List[TileType]]",
+               "description":"A list of all rows containing tiles (starting from the bottom of the grid). Each row indicates the types of all tiles in the grid spaces of the row (or NONE for a grid space without a tile)."
             }
          }
       },
@@ -149,13 +144,8 @@
          "description": "When the system updates the starting grid based on a change to one of the part clutter.",
          "event_data": {
             "new_grid" : {
-               "type":"List[Dict[str, Any]]",
-               "details" : {
-                  "x" : "int",
-                  "y" : "int",
-                  "tile" : "TileType"
-               },
-               "description":"A list of all tiles currently on the grid, with coordinates."
+               "type":"List[List[TileType]]",
+               "description":"A list of all rows containing tiles (starting from the bottom of the grid). Each row indicates the types of all tiles in the grid spaces of the row (or NONE for a grid space without a tile)."
             }
          }
       },
@@ -223,13 +213,8 @@
                "description":"The overall score multiplier on the order, based on the settings."
             },
             "initial_grid" : {
-               "type":"List[Dict[str, Any]]",
-               "details" : {
-                  "x" : "int",
-                  "y" : "int",
-                  "tile" : "TileType"
-               },
-               "description":"A list of all tiles currently on the grid, with coordinates."
+               "type":"List[List[TileType]]",
+               "description":"A list of all rows containing tiles (starting from the bottom of the grid). Each row indicates the types of all tiles in the grid spaces of the row (or NONE for a grid space without a tile)."
             }
          }
       },
