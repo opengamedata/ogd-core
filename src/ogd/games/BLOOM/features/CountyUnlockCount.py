@@ -29,10 +29,14 @@ class CountyUnlockCount(Feature):
                 self.county_unlocks[county_name] += 1
 
     def _updateFromFeatureData(self, feature: FeatureData):
-        return
+        pass
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self.county_unlocks]
+        total_county_unlocks = sum(self.county_unlocks.values())
+        return [total_county_unlocks, self.county_unlocks]
+
+    def Subfeatures(self) -> List[str]:
+        return ["Breakdown"]
 
     # *** Optionally override public functions. ***
     @staticmethod

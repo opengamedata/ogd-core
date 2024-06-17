@@ -6,7 +6,7 @@ from ogd.core.models.Event import Event
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.models.FeatureData import FeatureData
 
-class FailCountFeature(Feature):
+class FailCount(Feature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.fail_count: Dict[str, int] = {
