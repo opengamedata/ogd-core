@@ -64,7 +64,7 @@ The individual fields encoded in the *game_state* and *user_data* Event element 
 | **Name** | **Values** |
 | ---      | ---        |
 | LevelType | ['DEFAULT', 'CLUTTER', 'BOMBS', 'FULL_SET', 'FULL_ORDERED_SET', 'SHIFTING'] |
-| LevelDifficulty | ['NORMAL', 'HARD'] |
+| LevelDifficulty | ['NORMAL', 'HARD', 'BONUS'] |
 | PieceShape | ['HEAD', 'ARM', 'BODY', 'LEG', 'BOMB'] |
 | ReceiptItem | ['GOOD', 'DAMAGED', 'JUNK', 'MISSED', 'FULL_SET', 'DUPLICATE', 'LEG_POS', 'TORSO_POS', 'HEAD_POS'] |
 | PunchType | ['CLICK', 'SPACEBAR'] |  
