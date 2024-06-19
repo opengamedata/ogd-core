@@ -67,15 +67,15 @@ from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.models.FeatureData import FeatureData
 
 class ActiveTime(Feature):
-    IDLE_THRESHOLD: Final[timedelta] = timedelta(seconds=30)
+    DEFAULT_IDLE_THRESHOLD: Final[timedelta] = timedelta(seconds=30)
 
-    def __init__(self, params: GeneratorParameters, idle_threshold: int):
+    def __init__(self, params: GeneratorParameters, idle_threshold: Optional[int]):
         super().__init__(params=params)
-#        self.IDLE_THRESHOLD = timedelta (seconds = idle_threshold)
-        self.max_idle: timedelta = timedelta(0)
-        self.previous_time: Optional[datetime] = None
-        self.idle_time: timedelta = timedelta(0)
-        self.total_session_time: timedelta = timedelta(0)
+        self.IDLE_THRESHOLD     : Final[timedelta] = timedelta(seconds=idle_threshold) if idle_threshold is not None else ActiveTime.DEFAULT_IDLE_THRESHOLD
+        self.max_idle           : timedelta = timedelta(0)
+        self.previous_time      : Optional[datetime] = None
+        self.idle_time          : timedelta = timedelta(0)
+        self.total_session_time : timedelta = timedelta(0)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -94,7 +94,7 @@ class ActiveTime(Feature):
             if self.previous_time is not None:
                 event_duration = event.Timestamp - self.previous_time
                 self.total_session_time += event_duration
-                if event_duration > ActiveTime.IDLE_THRESHOLD:
+                if event_duration > self.IDLE_THRESHOLD:
                     self.idle_time += event_duration
                     if event_duration > self.max_idle:
                         self.max_idle = event_duration
