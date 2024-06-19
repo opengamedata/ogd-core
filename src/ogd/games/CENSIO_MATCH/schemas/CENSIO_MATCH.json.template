@@ -171,6 +171,11 @@
             }
          }
       },
+      "click_reveal_drop_count" : {
+         "description" : "When the player clicks to reveal the number of drops they have used so far.",
+         "event_data": {
+         }
+      },
       "click_play_order": {
          "description": "When the player clicks to start an order from the menu.",
          "event_data": {
