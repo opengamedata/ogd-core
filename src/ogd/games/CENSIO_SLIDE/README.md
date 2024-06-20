@@ -64,7 +64,7 @@ The individual fields encoded in the *game_state* and *user_data* Event element 
 | **Name** | **Values** |
 | ---      | ---        |
 | MovementConstraint | ['NO_ROTATE', 'NO_VERTICAL', 'NO_HORIZONTAL'] |
-| ShapeFlag | ['ROTATION_BLOCK', 'LOCKED'] |
+| ShapeFlag | ['Basic', 'Locked', 'ConstrainedHorizontal', 'ConstrainedVertical', 'Rotate', 'Goal'] |
 | CardinalDirection | ['N', 'E', 'S', 'W'] |
 | EdgeType | ['OPEN', 'CLOSED'] |
 | RotationType | ['CW', 'CCW', 'NONE'] |  
@@ -254,7 +254,7 @@ When the player clicks the button to quit the current level.
 
 ### **click_request_hint**
 
-TODO - Placeholder for when hinting is implemented in the game.
+When the player clicks on the 'hint' button to display the correct final position of a block.
 
 #### Event Data
 
@@ -263,7 +263,7 @@ TODO - Placeholder for when hinting is implemented in the game.
 
 ### **block_hint_appeared**
 
-TODO - Placeholder for when hinting is implemented in the game.
+When the game displays the correct final position of a block, as a hint to the player.
 
 #### Event Data
 
@@ -272,7 +272,7 @@ TODO - Placeholder for when hinting is implemented in the game.
 
 ### **block_hint_disappeared**
 
-TODO - Placeholder for when hinting is implemented in the game.
+When the hinted block position disappears.
 
 #### Event Data
 
