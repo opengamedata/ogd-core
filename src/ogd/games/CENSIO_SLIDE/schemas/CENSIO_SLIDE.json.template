@@ -252,17 +252,17 @@
          }
       },
       "click_request_hint": {
-         "description": "TODO - Placeholder for when hinting is implemented in the game.",
+         "description": "When the player clicks on the 'hint' button to display the correct final position of a block.",
          "event_data": {
          }
       },
       "block_hint_appeared": {
-         "description": "TODO - Placeholder for when hinting is implemented in the game.",
+         "description": "When the game displays the correct final position of a block, as a hint to the player.",
          "event_data": {
          }
       },
       "block_hint_disappeared": {
-         "description": "TODO - Placeholder for when hinting is implemented in the game.",
+         "description": "When the hinted block position disappears.",
          "event_data": {
          }
       },
