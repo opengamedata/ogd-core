@@ -3,8 +3,8 @@ import abc
 import logging
 from typing import List, Optional
 # import locals
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.utils.Logger import Logger
 
 ## @class ExtractorParams

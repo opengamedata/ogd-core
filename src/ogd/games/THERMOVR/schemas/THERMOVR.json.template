@@ -36,6 +36,10 @@
             "type" : "float",
             "description" : "The current percentage (by mass) of water in the vapor phase in the piston"
         },
+        "heat_delta" : {
+            "type" : "float",
+            "description" : "Current readout of net heat change due to inputs from the workstation terminal"
+        },
         "pos_x" : {
             "type" : "float",
             "description" : "The current x-position of the headset at the moment the event occurred."
@@ -317,6 +321,19 @@
                 }
             }
         },
+        "click_shift_tablet": {
+            "description": "When the player releases the tablet object",
+            "event_data": {
+                "shift_direction": {
+                    "type":"enum(LEFT, RIGHT)",
+                    "description" : "TODO"
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player was moving the tablet with their right or left hand, or a mouse."
+                }
+            }
+        },
         "grab_workstation_handle": {
             "description": "When the player grabs the workstation adjustment handle",
             "event_data": {
@@ -416,16 +433,12 @@
                 }
             }
         },
-        "click_tool_increase": {
+        "enter_nudge_mode": {
             "description": "When the player clicks the button to nudge the tool value up",
             "event_data": {
                 "tool_name": {
                     "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
                     "description": "The tool whose increase button was clicked."
-                },
-                "end_value": {
-                    "type": "float",
-                    "description": "The tool value after being nudged."
                 },
                 "hand": {
                     "type": "enum(LEFT, RIGHT, MOUSE)",
@@ -433,16 +446,12 @@
                 }
             }
         },
-        "click_tool_decrease": {
+        "exit_nudge_mode": {
             "description": "When the player clicks the button to nudge the tool value down",
             "event_data": {
                 "tool_name": {
                     "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
                     "description": "The tool whose decrease button was clicked."
-                },
-                "end_value": {
-                    "type": "float",
-                    "description": "The tool value after being nudged."
                 },
                 "hand": {
                     "type": "enum(LEFT, RIGHT, MOUSE)",
@@ -488,6 +497,10 @@
                 }
             }
         },
+        "click_edit_tool_value"
+        "set_tool_value"
+        "set_invalid_tool_value"
+        "cancel_edit_tool_value"
         "gaze_object_end": {
             "description": "When the player has been looking at one of the major objects for at least a full second, and looks away.",
             "event_data": {
@@ -498,6 +511,22 @@
                 "gaze_duration": {
                     "type": "float",
                     "description": "The time in seconds the player spent looking at the object."
+                }
+            }
+        },
+        "critical_alert_displayed": {
+            "event_data": {
+            }
+        },
+        "critical_alert_ended" : {
+            "event_data": {
+            }
+        },
+        "click_reset_heat_delta" : {
+            "event_data": {
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
                 }
             }
         },
@@ -696,12 +725,13 @@
                 "task" : {
                     "type": "Dict[str, Any]",
                     "details": {
-                        "category":"enum(TARGET_STATE, CONSTANT_VARIABLE, MULTIPLE_CHOICE, MULTIPLE_SELECT, WORD_BANK)",
+                        "category":"enum(PlainText, TARGET_STATE, CONSTANT_VARIABLE, MULTIPLE_CHOICE, MULTIPLE_SELECT, WORD_BANK)",
                         "lab_name":"str",
                         "section_number":"str",
                         "task_number":"int",
                         "is_active":"bool",
                         "is_complete":"bool",
+                        "visual_aid":"bool",
                         "available_tools":"List[enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)]",
                         "prompts":"List[str]"
                     },
@@ -743,6 +773,7 @@
                         "task_number":"int",
                         "is_active":"bool",
                         "is_complete":"bool",
+                        "visual_aid":"bool",
                         "available_tools":"List[enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)]",
                         "prompts":"List[str]"
                     },
@@ -750,11 +781,24 @@
                 }
             }
         },
-        "target_state_achieved": {
+        "target_state_entered": {
             "description": "When the simulation reaches a target state defined for a lab task",
             "event_data": {
                 "target_state": {
                     "type": "Dict[enum(TEMPERATURE, PRESSURE, VOLUME, INTERNAL_ENERGY, ENTROPY, ENTHALPY, VAPOR_PROPORTION), float]",
+                    "description": "The specific details of the target state, as a mapping from sim properties to the target values (note, not every property will be included, only the ones that had a target value specified)."
+                },
+                "tolerances": {
+                    "type": "Dict[enum(TEMPERATURE, PRESSURE, VOLUME, INTERNAL_ENERGY, ENTROPY, ENTHALPY, VAPOR_PROPORTION), float]",
+                    "description": "The specific details of the target state, as a mapping from sim properties to the target values (note, not every property will be included, only the ones that had a target value specified)."
+                }
+            }
+        },
+        "target_state_completed": {
+            "description": "TODO",
+            "event_data": {
+                "target_state": {
+                    "type": "Dict[enum(TEMPERATURE, PRESSURE, VOLUME, INTERNAL_ENERGY, ENTROPY, ENTHALPY, VAPOR_PROPORTION) | Tool enum, float]",
                     "description": "The specific details of the target state, as a mapping from sim properties to the target values (note, not every property will be included, only the ones that had a target value specified)."
                 }
             }
@@ -769,6 +813,14 @@
                 "incorrect_variables" : {
                     "type": "List[enum(TEMPERATURE, PRESSURE, VOLUME, INTERNAL_ENERGY, ENTROPY, ENTHALPY, VAPOR_PROPORTION)]",
                     "description": "A list of which properties changed away from their target values."
+                },
+                "timer_elapsed" : {
+                    "type" : "float",
+                    ""
+                },
+                "timer_remaining" : {
+                    "type" : "float",
+                    ""
                 }
             }
         },
@@ -782,6 +834,8 @@
             "event_data": {
             }
         },
+        "target_state_task_began"
+        "target_state_task_ended"
         "click_select_answer": {
             "description": "When the player presses the button to select an answer to a quiz question",
             "event_data": {

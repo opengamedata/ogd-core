@@ -82,11 +82,7 @@ N/A
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **switch_job**
 
@@ -96,11 +92,7 @@ Event that occurs whenever the job switches, whether manually or through an `acc
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| prev_job_name | str | String name of the previous job, may be incorrect when coinciding with any `complete_job`, or with an `accept_job` at a time the user was actively in a job. | |
-
-#### Other Elements
-
-- None  
+| prev_job_name | str | String name of the previous job, may be incorrect when coinciding with any `complete_job`, or with an `accept_job` at a time the user was actively in a job. | |  
 
 ### **receive_fact**
 
@@ -115,11 +107,7 @@ N/A
 | fact_rate | bool | Whether the fact is a... rate fact? I don't really get this one... | |
 | fact_stressed | bool |  | |
 | fact_type | str | The type of fact | |
-| has_rate | bool | Whether the fact... has a rate? We need better naming of things I guess... | |
-
-#### Other Elements
-
-- None  
+| has_rate | bool | Whether the fact... has a rate? We need better naming of things I guess... | |  
 
 ### **receive_entity**
 
@@ -129,11 +117,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| entity_id | str | Unique ID for the given entity | |
-
-#### Other Elements
-
-- None  
+| entity_id | str | Unique ID for the given entity | |  
 
 ### **complete_job**
 
@@ -143,11 +127,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| job_name | str | String name of the completed job | |
-
-#### Other Elements
-
-- None  
+| job_name | str | String name of the completed job | |  
 
 ### **complete_task**
 
@@ -157,11 +137,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| task_id | str | ID of the completed task | |
-
-#### Other Elements
-
-- None  
+| task_id | str | ID of the completed task | |  
 
 ### **scene_changed**
 
@@ -171,11 +147,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| scene_name | str | Name of the loaded scene | |
-
-#### Other Elements
-
-- None  
+| scene_name | str | Name of the loaded scene | |  
 
 ### **room_changed**
 
@@ -185,11 +157,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| room_name | str | Name of the room being entered | |
-
-#### Other Elements
-
-- None  
+| room_name | str | Name of the room being entered | |  
 
 ### **begin_dive**
 
@@ -199,11 +167,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| site_id | str | ID of the dive site | |
-
-#### Other Elements
-
-- None  
+| site_id | str | ID of the dive site | |  
 
 ### **ask_for_help**
 
@@ -213,11 +177,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| node_id | str | Scripting ID for the hint response | |
-
-#### Other Elements
-
-- None  
+| node_id | str | Scripting ID for the hint response | |  
 
 ### **guide_script_triggered**
 
@@ -227,11 +187,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| node_id | str | Scripting ID for the guide's response | |
-
-#### Other Elements
-
-- None  
+| node_id | str | Scripting ID for the guide's response | |  
 
 ### **script_fired**
 
@@ -241,11 +197,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| node_id | str | ID of a given script node | |
-
-#### Other Elements
-
-- None  
+| node_id | str | ID of a given script node | |  
 
 ### **open_bestiary**
 
@@ -254,11 +206,7 @@ N/A
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **bestiary_open_species_tab**
 
@@ -267,11 +215,7 @@ N/A
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **bestiary_open_environments_tab**
 
@@ -280,11 +224,7 @@ N/A
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **bestiary_open_models_tab**
 
@@ -293,11 +233,7 @@ N/A
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **bestiary_select_species**
 
@@ -307,11 +243,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| species_id | str | ID of the selected species | |
-
-#### Other Elements
-
-- None  
+| species_id | str | ID of the selected species | |  
 
 ### **bestiary_select_environment**
 
@@ -321,11 +253,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| environment_id | str | ID of the selected environment | |
-
-#### Other Elements
-
-- None  
+| environment_id | str | ID of the selected environment | |  
 
 ### **bestiary_select_model**
 
@@ -335,11 +263,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| model_id | str | ID of the selected model | |
-
-#### Other Elements
-
-- None  
+| model_id | str | ID of the selected model | |  
 
 ### **close_bestiary**
 
@@ -348,11 +272,7 @@ N/A
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **open_status**
 
@@ -361,11 +281,7 @@ N/A
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **status_open_job_tab**
 
@@ -374,11 +290,7 @@ N/A
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **status_open_item_tab**
 
@@ -387,11 +299,7 @@ N/A
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **status_open_tech_tab**
 
@@ -400,11 +308,7 @@ N/A
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **close_status**
 
@@ -413,11 +317,7 @@ N/A
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **begin_model**
 
@@ -426,11 +326,7 @@ N/A
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **model_phase_changed**
 
@@ -440,11 +336,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| phase | str | The selected modeling phase | |
-
-#### Other Elements
-
-- None  
+| phase | str | The selected modeling phase | |  
 
 ### **model_ecosystem_selected**
 
@@ -454,11 +346,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| ecosystem | str | Ecosystem selected for modeling | |
-
-#### Other Elements
-
-- None  
+| ecosystem | str | Ecosystem selected for modeling | |  
 
 ### **model_concept_started**
 
@@ -468,11 +356,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| ecosystem | str | Ecosystem selected for modeling | |
-
-#### Other Elements
-
-- None  
+| ecosystem | str | Ecosystem selected for modeling | |  
 
 ### **model_concept_updated**
 
@@ -483,11 +367,7 @@ N/A
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | ecosystem | str | Ecosystem selected for modeling | |
-| status | str | Updated status of the concept model | |
-
-#### Other Elements
-
-- None  
+| status | str | Updated status of the concept model | |  
 
 ### **model_concept_exported**
 
@@ -497,11 +377,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| ecosystem | str | Ecosystem selected for modeling | |
-
-#### Other Elements
-
-- None  
+| ecosystem | str | Ecosystem selected for modeling | |  
 
 ### **begin_simulation**
 
@@ -511,11 +387,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| ecosystem | str | Ecosystem selected for modeling | |
-
-#### Other Elements
-
-- None  
+| ecosystem | str | Ecosystem selected for modeling | |  
 
 ### **model_sync_error**
 
@@ -526,11 +398,7 @@ N/A
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | ecosystem | str | Ecosystem selected for modeling | |
-| sync | int | Sync % achieved with the current model | |
-
-#### Other Elements
-
-- None  
+| sync | int | Sync % achieved with the current model | |  
 
 ### **simulation_sync_achieved**
 
@@ -540,11 +408,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| ecosystem | str | Ecosystem selected for modeling | |
-
-#### Other Elements
-
-- None  
+| ecosystem | str | Ecosystem selected for modeling | |  
 
 ### **model_predict_completed**
 
@@ -554,11 +418,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| ecosystem | str | Ecosystem selected for modeling | |
-
-#### Other Elements
-
-- None  
+| ecosystem | str | Ecosystem selected for modeling | |  
 
 ### **model_intervene_update**
 
@@ -570,11 +430,7 @@ N/A
 | ---      | ---      | ---             | ---         |
 | ecosystem | str | Ecosystem selected for modeling | |
 | organism | str | The organism having its population modified by the player | |
-| difference_value | None | The population change for the selected organism | |
-
-#### Other Elements
-
-- None  
+| difference_value | None | The population change for the selected organism | |  
 
 ### **model_intervene_error**
 
@@ -584,11 +440,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| ecosystem | str | Ecosystem selected for modeling | |
-
-#### Other Elements
-
-- None  
+| ecosystem | str | Ecosystem selected for modeling | |  
 
 ### **model_intervene_completed**
 
@@ -598,11 +450,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| ecosystem | str | Ecosystem selected for modeling | |
-
-#### Other Elements
-
-- None  
+| ecosystem | str | Ecosystem selected for modeling | |  
 
 ### **end_model**
 
@@ -613,11 +461,7 @@ N/A
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | phase | str | The selected modeling phase upon leaving | |
-| ecosystem | str | The selected ecosystem upon leaving | |
-
-#### Other Elements
-
-- None  
+| ecosystem | str | The selected ecosystem upon leaving | |  
 
 ### **purchase_upgrade**
 
@@ -629,11 +473,7 @@ N/A
 | ---      | ---      | ---             | ---         |
 | item_id | str | ID of the purchased item | |
 | item_name | str | String name of the purchased item | |
-| cost | None | Cost of the purchased item | |
-
-#### Other Elements
-
-- None  
+| cost | None | Cost of the purchased item | |  
 
 ### **insufficient_funds**
 
@@ -645,11 +485,7 @@ N/A
 | ---      | ---      | ---             | ---         |
 | item_id | str | ID of the item | |
 | item_name | str | String name of the item | |
-| cost | None | Cost of the item | |
-
-#### Other Elements
-
-- None  
+| cost | None | Cost of the item | |  
 
 ### **talk_to_shopkeep**
 
@@ -658,11 +494,7 @@ N/A
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **add_environment**
 
@@ -673,11 +505,7 @@ N/A
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | tank_type | str | Selected tank type for the experiment | |
-| environment | str | Name of the added environment | |
-
-#### Other Elements
-
-- None  
+| environment | str | Name of the added environment | |  
 
 ### **remove_environment**
 
@@ -688,11 +516,7 @@ N/A
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | tank_type | str | Selected tank type for the experiment | |
-| environment | str | Name of the removed environment | |
-
-#### Other Elements
-
-- None  
+| environment | str | Name of the removed environment | |  
 
 ### **add_critter**
 
@@ -704,11 +528,7 @@ N/A
 | ---      | ---      | ---             | ---         |
 | tank_type | str | Selected tank type for the experiment | |
 | environment | str | Selected environment for the experiment | |
-| critter | str | Name of the critter added to the tank | |
-
-#### Other Elements
-
-- None  
+| critter | str | Name of the critter added to the tank | |  
 
 ### **remove_critter**
 
@@ -720,11 +540,7 @@ N/A
 | ---      | ---      | ---             | ---         |
 | tank_type | str | Selected tank type for the experiment | |
 | environment | str | Selected environment for the experiment | |
-| critter | str | Name of the critter removed from the tank | |
-
-#### Other Elements
-
-- None  
+| critter | str | Name of the critter removed from the tank | |  
 
 ### **begin_experiment**
 
@@ -736,11 +552,7 @@ N/A
 | ---      | ---      | ---             | ---         |
 | tank_type | str | Selected tank type for the experiment | |
 | environment | str | Selected environment for the experiment | |
-| critters | str | Comma separated list of all critters added to the tank | |
-
-#### Other Elements
-
-- None  
+| critters | str | Comma separated list of all critters added to the tank | |  
 
 ### **end_experiment**
 
@@ -752,11 +564,7 @@ N/A
 | ---      | ---      | ---             | ---         |
 | tank_type | str | Selected tank type for the experiment | |
 | environment | str | Selected environment for the experiment | |
-| critters | str | Comma separated list of all critters added to the tank | |
-
-#### Other Elements
-
-- None  
+| critters | str | Comma separated list of all critters added to the tank | |  
 
 ### **begin_argument**
 
@@ -765,11 +573,7 @@ N/A
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **fact_submitted**
 
@@ -779,11 +583,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| fact_id | str | ID of the submitted fact | |
-
-#### Other Elements
-
-- None  
+| fact_id | str | ID of the submitted fact | |  
 
 ### **fact_rejected**
 
@@ -793,11 +593,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| fact_id | str | ID of the rejected fact | |
-
-#### Other Elements
-
-- None  
+| fact_id | str | ID of the rejected fact | |  
 
 ### **leave_argument**
 
@@ -806,11 +602,7 @@ N/A
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **complete_argument**
 
@@ -819,11 +611,7 @@ N/A
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ## Detected Events  
 

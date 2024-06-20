@@ -11,8 +11,8 @@ from ogd.core.generators.extractors.builtin import *
 from ogd.core.generators.Generator import Generator, GeneratorParameters
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.extractors.Extractor import Extractor
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.utils.Logger import Logger
 

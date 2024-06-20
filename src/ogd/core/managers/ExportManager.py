@@ -16,9 +16,9 @@ from ogd import games
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.managers.EventManager import EventManager
 from ogd.core.managers.FeatureManager import FeatureManager
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExportMode import ExportMode
-from ogd.core.schemas.IDMode import IDMode
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExportMode import ExportMode
+from ogd.core.models.enums.IDMode import IDMode
 from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.requests.Request import Request
@@ -233,6 +233,9 @@ class ExportManager:
             case "PENGUINS":
                 from ogd.games.PENGUINS.PenguinsLoader import PenguinsLoader
                 _loader_class = PenguinsLoader
+            case "BLOOM":
+                from ogd.games.BLOOM.BloomLoader import BloomLoader
+                _loader_class = BloomLoader
             case _:
                 if game_id in {"BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MASHOPOLIS", "WEATHER_STATION", "WIND"}:
                     # all games with data but no extractor.

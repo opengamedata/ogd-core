@@ -7,10 +7,10 @@ from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.core.processors.SessionProcessor import SessionProcessor
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExportMode import ExportMode
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExportMode import ExportMode
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.core.models.FeatureData import FeatureData
 from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.utils.Logger import Logger
 from ogd.core.utils.utils import ExportRow
