@@ -63,8 +63,11 @@ The individual fields encoded in the *game_state* and *user_data* Event element 
 
 | **Name** | **Values** |
 | ---      | ---        |
-| BlockType | ['WIRE', 'POWER', 'TRANSISTOR'] |
-| MovementConstraint | ['NO_ROTATE', 'NO_VERTICAL', 'NO_HORIZONTAL'] |  
+| MovementConstraint | ['NO_ROTATE', 'NO_VERTICAL', 'NO_HORIZONTAL'] |
+| ShapeFlag | ['ROTATION_BLOCK', 'LOCKED'] |
+| CardinalDirection | ['N', 'E', 'S', 'W'] |
+| EdgeType | ['OPEN', 'CLOSED'] |
+| RotationType | ['CW', 'CCW', 'NONE'] |  
 
 ### Game State  
 
@@ -74,7 +77,7 @@ The individual fields encoded in the *game_state* and *user_data* Event element 
 | level | int | The current level the player is in. | |
 | move_count | int | The number of moves the player has made on the current level. | |
 | level_max_moves | int | The maximum number of moves allowed in the current level. | |
-| board | N/A | TODO - Placeholder for some representation of the board state. |**N/A** : N/A |  
+| board | List[Dict[str, Any]] | A list of all shapes currently on the game board. Each shape is a sub-dictionary that includes 'flags' indicating any special attributes of the shape, and an index in the overall list for cross-referencing. They also include a 2D 'map' of the shape, which uses 0 (empty) and 1 (filled) to indicate the shape within a bounding box of board tiles. Finally, they include the position of the upper-left corner of the block map, in global coordinates. |**shape_flags** : List[ShapeFlag], **shape_index** : int, **position** : Dict[str, int], **block_map** : List[List[int]] |  
 
 ### User Data  
 
@@ -159,7 +162,7 @@ When the player clicks the button to cancel resetting the current puzzle.
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |  
 
-### **select_block**
+### **select_shape**
 
 When the player selects a level from the menu.
 
@@ -167,11 +170,13 @@ When the player selects a level from the menu.
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| block | TBD | TODO - Placeholder for some representation of an individual block. | |
-| position | List[int] | The board coordinates of the selected block's anchor point. | |
-| is_connected | bool | Indicator for whether the selected block is currently connected to power (i.e. whether the wire is green or red). | |  
+| shape_flags | List[ShapeFlag] | The list of 'flags' indicating any special attributes of the shape. | |
+| shape_index | int | The index of the shape within the overall list of shapes, used for cross-referencing | |
+| position | Dict[str,int] | The board coordinates of the upper-left corner of the selected shape's bounding box, in global coordinates. | |
+| block_map | List[List[int]] | A 2D 'map' of the shape, which uses 0 (empty) and 1 (filled) to indicate the shape within a bounding box of board tiles. The map is presented as the shape appears on the board, i.e. a rotated shape will have a rotated map | |
+| block_details | List[Dict[str, Any]] | A list of details for each block in the shape. Includes the block offset (in global coordinates) from the shape's position, which can be used to check which point the given block occupies in the block_map. Other details include any flags specific to the given block (such as whether the given block is the pivot for a rotating shape), and indication of whether each edge of the block is 'open' (carries charge) or 'closed', and specific attributes for rotation and sequenced blocks. |**block_offset** : Dict[str, int], **block_type** : ShapeFlag, **edges** : Dict[CardinalDirection, EdgeType], **charged** : bool, **rotation_direction** : RotationType, **sequence_goal** : int, **sequence_goal_met** : int |  
 
-### **place_block**
+### **place_shape**
 
 When the player moves the selected block to a new position.
 
@@ -179,12 +184,14 @@ When the player moves the selected block to a new position.
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| block | TBD | TODO - Placeholder for some representation of an individual block. | |
-| position | List[int] | The board coordinates at which the selected block's anchor point was placed. | |
-| is_connected | bool | Indicator for whether the block is now connected to power (i.e. whether the wire is green or red). | |
+| shape_flags | List[ShapeFlag] | The list of 'flags' indicating any special attributes of the shape. | |
+| shape_index | int | The index of the shape within the overall list of shapes, used for cross-referencing | |
+| position | Dict[str,int] | The board coordinates of the upper-left corner of the selected shape's bounding box, in global coordinates. | |
+| block_map | List[List[int]] | A 2D 'map' of the shape, which uses 0 (empty) and 1 (filled) to indicate the shape within a bounding box of board tiles. The map is presented as the shape appears on the board, i.e. a rotated shape will have a rotated map | |
+| block_details | List[Dict[str, Any]] | A list of details for each block in the shape. Includes the block offset (in global coordinates) from the shape's position, which can be used to check which point the given block occupies in the block_map. Other details include any flags specific to the given block (such as whether the given block is the pivot for a rotating shape), and indication of whether each edge of the block is 'open' (carries charge) or 'closed', and specific attributes for rotation and sequenced blocks. |**block_offset** : Dict[str, int], **block_type** : ShapeFlag, **edges** : Dict[CardinalDirection, EdgeType], **charged** : bool, **rotation_direction** : RotationType, **sequence_goal** : int, **sequence_goal_met** : int |
 | new_move_count | bool | The total moves the player has made on the current puzzle, after placing the block. | |  
 
-### **rotate_block**
+### **rotate_shape**
 
 When the player clicks to rotate a block to a new orientation.
 
@@ -192,13 +199,14 @@ When the player clicks to rotate a block to a new orientation.
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| block | TBD | TODO - Placeholder for some representation of an individual block. | |
-| old_orientation | int | The orientation of the block before rotation, relative to its default, in degrees. | |
-| new_orientation | int | The orientation of the block after being rotated, relative to its default, in degrees. | |
-| is_connected | bool | Indicator for whether the block is now connected to power (i.e. whether the wire is green or red). | |
+| shape_flags | List[ShapeFlag] | The list of 'flags' indicating any special attributes of the shape. | |
+| shape_index | int | The index of the shape within the overall list of shapes, used for cross-referencing | |
+| position | Dict[str,int] | The board coordinates of the upper-left corner of the selected shape's bounding box, in global coordinates. | |
+| block_map | List[List[int]] | A 2D 'map' of the shape, which uses 0 (empty) and 1 (filled) to indicate the shape within a bounding box of board tiles. The map is presented as the shape appears on the board, i.e. a rotated shape will have a rotated map | |
+| block_details | List[Dict[str, Any]] | A list of details for each block in the shape. Includes the block offset (in global coordinates) from the shape's position, which can be used to check which point the given block occupies in the block_map. Other details include any flags specific to the given block (such as whether the given block is the pivot for a rotating shape), and indication of whether each edge of the block is 'open' (carries charge) or 'closed', and specific attributes for rotation and sequenced blocks. |**block_offset** : Dict[str, int], **block_type** : ShapeFlag, **edges** : Dict[CardinalDirection, EdgeType], **charged** : bool, **rotation_direction** : RotationType, **sequence_goal** : int, **sequence_goal_met** : int |
 | new_move_count | bool | The total moves the player has made on the current puzzle, after placing the block. | |  
 
-### **block_destinations_highlighted**
+### **shape_destinations_highlighted**
 
 When the system displays higlighting on the puzzle board for where the currently-selected block may be placed.
 
@@ -253,7 +261,7 @@ TODO - Placeholder for when hinting is implemented in the game.
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |  
 
-### **select_hint_block**
+### **block_hint_appeared**
 
 TODO - Placeholder for when hinting is implemented in the game.
 
@@ -262,9 +270,27 @@ TODO - Placeholder for when hinting is implemented in the game.
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |  
 
-### **block_hint_displayed**
+### **block_hint_disappeared**
 
 TODO - Placeholder for when hinting is implemented in the game.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
+
+### **click_display_help**
+
+When the player clicks the button to display instructions on how to move blocks
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
+
+### **click_close_help**
+
+When the player clicks the button to close the instructions on how to move blocks
 
 #### Event Data
 
