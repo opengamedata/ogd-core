@@ -1,7 +1,7 @@
 {
    "enums": {
       "MovementConstraint": [ "NO_ROTATE", "NO_VERTICAL", "NO_HORIZONTAL" ],
-      "ShapeFlag": ["ROTATION_BLOCK", "LOCKED", ...],
+      "ShapeFlag": ["ROTATION_BLOCK", "LOCKED"],
       "CardinalDirection": ["N", "E", "S", "W"],
       "EdgeType": ["OPEN", "CLOSED"],
       "RotationType": ["CW", "CCW", "NONE"]
