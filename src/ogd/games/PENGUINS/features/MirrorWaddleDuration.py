@@ -5,9 +5,9 @@ from typing import Any, Dict, List, Optional
 from ogd.core.utils.Logger import Logger
 from datetime import datetime, timedelta
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.core.models.FeatureData import FeatureData
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
 class MirrorWaddleDuration(SessionFeature):

@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import List, Type, Optional
 # import locals
 from ogd.core.processors.Processor import Processor
-from ogd.core.schemas.Event import Event
+from ogd.core.models.Event import Event
 from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.utils.utils import ExportRow
 
