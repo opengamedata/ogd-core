@@ -57,7 +57,26 @@ The elements (member variables) of each Event object, available to programmers w
 
 ## Logged Events  
 
-The individual fields encoded in the *event_data* Event element for each type of event logged by the game.  
+The individual fields encoded in the *game_state* and *user_data* Event element for all event types, and the fields in the *event_data* Event element for each individual event type logged by the game.  
+
+### Enums  
+
+| **Name** | **Values** |
+| ---      | ---        |  
+
+### Game State  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| gameLevel | str | The name of the level in which the event occurred. | |
+| gameTime | int | The number of ?seconds? ?milliseconds? the player had spent in the game when the event occured. | |
+| logID | float | TODO | |
+| jotID | float | TODO | |  
+
+### User Data  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
 
 ### **region**
 
@@ -70,11 +89,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | city | str | TODO | |
 | region | str | TODO | |
 | country | str | TODO | |
-| zipCode | int | TODO | |
-
-#### Other Elements
-
-- None  
+| zipCode | int | TODO | |  
 
 ### **welcome**
 
@@ -86,11 +101,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | ---      | ---      | ---             | ---         |
 | agreed | ?bool? | TODO | |
 | age | int | TODO | |
-| deviceType | ?str? | TODO | |
-
-#### Other Elements
-
-- None  
+| deviceType | ?str? | TODO | |  
 
 ### **general_level_stats**
 
@@ -102,11 +113,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | ---      | ---      | ---             | ---         |
 | right | ?int? | TODO | |
 | wrong | ?int? | TODO | |
-| missed | ?int? | TODO | |
-
-#### Other Elements
-
-- None  
+| missed | ?int? | TODO | |  
 
 ### **general_game_stats**
 
@@ -118,11 +125,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | ---      | ---      | ---             | ---         |
 | right | ?int? | TODO | |
 | wrong | ?int? | TODO | |
-| missed | ?int? | TODO | |
-
-#### Other Elements
-
-- None  
+| missed | ?int? | TODO | |  
 
 ### **general_level_times**
 
@@ -135,11 +138,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | playTime | ?timedelta? | TODO | |
 | gameTime | ?timedelta? | TODO | |
 | averageTimeRight | ?timedelta? | TODO | |
-| averageTimeWrong | ?timedelta? | TODO | |
-
-#### Other Elements
-
-- None  
+| averageTimeWrong | ?timedelta? | TODO | |  
 
 ### **general_game_times**
 
@@ -152,11 +151,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | playTime | ?timedelta? | TODO | |
 | gameTime | ?timedelta? | TODO | |
 | averageTimeRight | ?timedelta? | TODO | |
-| averageTimeWrong | ?timedelta? | TODO | |
-
-#### Other Elements
-
-- None  
+| averageTimeWrong | ?timedelta? | TODO | |  
 
 ### **general_game_levels**
 
@@ -168,11 +163,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | ---      | ---      | ---             | ---         |
 | startLevel | ?str? | TODO | |
 | endLevel | ?str? | TODO | |
-| highestLevel | ?str? | TODO | |
-
-#### Other Elements
-
-- None  
+| highestLevel | ?str? | TODO | |  
 
 ### **start_game**
 
@@ -182,11 +173,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| gameName | str | TODO | |
-
-#### Other Elements
-
-- None  
+| gameName | str | TODO | |  
 
 ### **gamescribe_created**
 
@@ -196,11 +183,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| gamescribeMode | enum(trace, strict) | trace or strict (trace is for debug, strict for production) | |
-
-#### Other Elements
-
-- None  
+| gamescribeMode | enum(trace, strict) | trace or strict (trace is for debug, strict for production) | |  
 
 ### **settings**
 
@@ -210,11 +193,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| playTime | int | Amount of active play time research intended for players, as set in DREAM. Not counting instruction screens. | |
-
-#### Other Elements
-
-- None  
+| playTime | int | Amount of active play time research intended for players, as set in DREAM. Not counting instruction screens. | |  
 
 ### **main_menu_shown**
 
@@ -223,11 +202,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **level_menu_shown**
 
@@ -239,11 +214,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | ---      | ---      | ---             | ---         |
 | passedLevel | bool | Binary - did they complete the level or not? | |
 | highestPanelUnlocked | ?int? | This refers to the highest panel unlocked. The game organizes progess in levels and panels (i.e., dots at the bottom), with up to 20 (?) levels per panel.  | |
-| highestLevelUnlocked | ?int? | This shows the highest level unlocked. The game organizes progess in levels and panels, with up to 20 (?) levels per panel.  | |
-
-#### Other Elements
-
-- None  
+| highestLevelUnlocked | ?int? | This shows the highest level unlocked. The game organizes progess in levels and panels, with up to 20 (?) levels per panel.  | |  
 
 ### **level_start**
 
@@ -252,11 +223,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **tutorial_slide**
 
@@ -267,11 +234,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | slideNumber | int | TODO | |
-| moleInstructions | enum(NORMAL_MOLE, HAT_MOLE, BOMB_MOLE, NORMAL_AND_SPIKE_MOLE) | TODO | |
-
-#### Other Elements
-
-- None  
+| moleInstructions | enum(NORMAL_MOLE, HAT_MOLE, BOMB_MOLE, NORMAL_AND_SPIKE_MOLE) | TODO | |  
 
 ### **mole_appears**
 
@@ -284,11 +247,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | moleID | int | Number representing the order in which the avocado appeared, ranges from (1 - a number determined by level designer). | |
 | posX | float | X position where avocado was spawned, 0,0 is lower left corner | |
 | posY | float | Y position where avocado was spawned, 0,0 is lower left corner. | |
-| moleType | enum(NORMAL, SPIKE, HAT, ELECTRIC) | Regular, spike hat, hard hat, electric hat | |
-
-#### Other Elements
-
-- None  
+| moleType | enum(NORMAL, SPIKE, HAT, ELECTRIC) | Regular, spike hat, hard hat, electric hat | |  
 
 ### **mole_disappears**
 
@@ -301,11 +260,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | moleID | int | Number representing the order in which the avocado appeared, ranges from (1 - a number determined by level designer). | |
 | hitType | enum(CORRECT_HIT, INCORRECT_HIT, CORRECT_MISSED, INCORRECT_MISSED) | Label for CORRECT_HIT, WRONG_HIT, CORRECT_MISSED, WRONG_MISSED if action is correct vs wrong | |
 | reactionTime | float | Time between when the ... appears onscreen, vs when the player crushes the avocado | |
-| score | int | Points received for that avocado | |
-
-#### Other Elements
-
-- None  
+| score | int | Points received for that avocado | |  
 
 ### **summary_screen**
 
@@ -318,11 +273,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | levelPoints | int | Summarizes points the participant earned during the level; never negative to protect feelings. Since this can never go below 0, may be different from LevelRealPoints | |
 | levelRealPoints | int | Summarizes points the participant earned during the level; can be negative | |
 | maxLevelPoints | int | Maximum points it would have been possible to earn | |
-| numStars | int | Number of stars displayed after completing the level; depends on percentage | |
-
-#### Other Elements
-
-- None  
+| numStars | int | Number of stars displayed after completing the level; depends on percentage | |  
 
 ### **leaderboard_shown**
 
@@ -335,11 +286,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | totalPoints | ?int? | Total points displayed to participant (?) | |
 | totalRealPoints | ?int? | Total points actually earned by participant (?) | |
 | classPoints | ?int? | Total points earned by the class (i.e., same access code) | |
-| highestClassPoints | ?int? | Highest point value earned by any class (in a Dream table, EF Leaderboard) | |
-
-#### Other Elements
-
-- None  
+| highestClassPoints | ?int? | Highest point value earned by any class (in a Dream table, EF Leaderboard) | |  
 
 ### **leaderboard_closed**
 
@@ -348,11 +295,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **motivational_agent**
 
@@ -363,11 +306,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | message | str | TODO | |
-| type | int | Category of game message shown (0 - acknowledgement, 1 - encouragement) | |
-
-#### Other Elements
-
-- None  
+| type | int | Category of game message shown (0 - acknowledgement, 1 - encouragement) | |  
 
 ### **next_level_summary**
 
@@ -376,11 +315,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **level_clicked**
 
@@ -390,11 +325,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| level | ?int? | TODO | |
-
-#### Other Elements
-
-- None  
+| level | ?int? | TODO | |  
 
 ### **pre_level_screen**
 
@@ -404,11 +335,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| level | ?int? | TODO | |
-
-#### Other Elements
-
-- None  
+| level | ?int? | TODO | |  
 
 ## Detected Events  
 
@@ -420,7 +347,17 @@ None
 
 The features/metrics calculated from this game's event logs by OpenGameData when an 'export' is run.  
 
-None
+None  
+
+## Other Elements  
+
+Other (potentially non-standard) elements specified in the game's schema, which may be referenced by event/feature processors.  
+
+### Other Ranges  
+
+Extra ranges specified in the game's schema, which may be referenced by event/feature processors.  
+
+level_range : range(0, 3)
 
 No changelog prepared
 

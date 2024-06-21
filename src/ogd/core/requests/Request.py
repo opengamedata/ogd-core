@@ -5,8 +5,8 @@ from typing import Dict, List, Optional, Set
 # import local files
 from ogd.core.interfaces.DataInterface import DataInterface
 from ogd.core.interfaces.outerfaces.DataOuterface import DataOuterface
-from ogd.core.schemas.IDMode import IDMode
-from ogd.core.schemas.ExportMode import ExportMode
+from ogd.core.models.enums.IDMode import IDMode
+from ogd.core.models.enums.ExportMode import ExportMode
 from ogd.core.utils.Logger import Logger
 
 class ExporterRange:

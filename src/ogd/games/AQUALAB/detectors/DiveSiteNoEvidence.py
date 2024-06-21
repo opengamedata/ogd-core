@@ -5,8 +5,8 @@ from typing import Any, Callable, List, Optional
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
 
 class DiveSiteNoEvidence(Detector):
     """Template file to serve as a guide for creating custom Feature subclasses for games.

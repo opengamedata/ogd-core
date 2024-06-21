@@ -3,12 +3,12 @@ import abc
 from typing import Dict, List, Type, Optional, Set
 
 # import locals
-from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.models.FeatureData import FeatureData
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.processors.GeneratorProcessor import GeneratorProcessor
 from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.schemas.ExportMode import ExportMode
+from ogd.core.models.enums.ExportMode import ExportMode
 from ogd.core.utils.utils import ExportRow
 
 ## @class Processor

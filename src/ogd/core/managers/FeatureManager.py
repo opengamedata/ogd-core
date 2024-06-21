@@ -10,7 +10,7 @@ from ogd.core.processors.PopulationProcessor import PopulationProcessor
 from ogd.core.processors.PlayerProcessor import PlayerProcessor
 from ogd.core.processors.SessionProcessor import SessionProcessor
 from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.schemas.Event import Event
+from ogd.core.models.Event import Event
 from ogd.core.utils.Logger import Logger
 from ogd.core.utils.utils import ExportRow
 
