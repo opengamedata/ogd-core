@@ -140,7 +140,7 @@
                   "charged": "bool",
                   "rotation_direction": "RotationType",
                   "sequence_goal": "int",
-                  "sequence_goal_met": "int"
+                  "sequence_goal_met": "bool"
                },
                "description" : "A list of details for each block in the shape. Includes the block offset (in global coordinates) from the shape's position, which can be used to check which point the given block occupies in the block_map. Other details include any flags specific to the given block (such as whether the given block is the pivot for a rotating shape), and indication of whether each edge of the block is 'open' (carries charge) or 'closed', and specific attributes for rotation and sequenced blocks."
             }
