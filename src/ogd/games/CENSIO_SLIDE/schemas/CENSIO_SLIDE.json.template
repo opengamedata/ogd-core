@@ -24,6 +24,14 @@
          "type": "int",
          "description": "The maximum number of moves allowed in the current level."
       },
+      "level_min_moves": {
+         "type": "int",
+         "description": "The minimum number of moves needed in the current level."
+      },
+      "level_avg_moves": {
+         "type": "int",
+         "description": "The average number of moves the player's peers needed to complete the current level. NOT YET IMPLEMENTED"
+      },
       "board": {
          "type" : "List[Dict[str, Any]]",
          "details" : {
@@ -94,6 +102,15 @@
             "best_score" : {
                "type":"int | null",
                "description":"The player's best score on the level, or null if they have not previously played the level."
+            }
+         }
+      },
+      "click_undo": {
+         "description": "When the player clicks the button to reset the current puzzle.",
+         "event_data": {
+            "num_undo_used": {
+               "type":"int",
+               "description": "Cumulative, inclusive number of undos the player has used so far in this level"
             }
          }
       },
@@ -244,6 +261,14 @@
       "click_complete_level": {
          "description": "When the player clicks the button to complete the level, when the puzzle is in the 'solved' state.",
          "event_data": {
+            "turns_over_min": {
+               "type": "int",
+               "description": "The number of moves above the minimum that the player used."
+            },
+            "turns_over_avg": {
+               "type": "int",
+               "description": "The number of moves above the peer average that the player used."
+            }
          }
       },
       "click_quit_level": {
@@ -271,8 +296,33 @@
          "event_data" : {
          }
       },
+      "click_open_key": {
+         "description" : "When the player clicks the button to display instructions on how to move blocks. TODO: remove, redundant with click_display_help",
+         "event_data" : {
+         }
+      },
       "click_close_help": {
          "description" : "When the player clicks the button to close the instructions on how to move blocks",
+         "event_data" : {
+         }
+      },
+      "click_reveal_move_count": {
+         "description" : "When the player clicks the button to reveal how many moves they have used so far",
+         "event_data" : {
+         }
+      },
+      "click_reveal_min_moves": {
+         "description" : "When the player, during a level, clicks the button to reveal the minimum number of moves needed to solve the level. Todo: Add level_completed parameter - level_completed: { bool:bool, description:True if the player revealed the minimum moves after they completed the level, false if they revealed the minimum moves during play. }",
+         "event_data" : {
+         }
+      },
+      "click_reveal_min_moves_end": {
+         "description" : "When the player, after completing a level, clicks the button to reveal the minimum number of moves needed to solve the level. Todo: merge into click_reveal_min_moves",
+         "event_data" : {
+         }
+      },
+      "click_reveal_peer_avg_moves": {
+         "description" : "When the player clicks the button to reveal the average number of moves used by their peers to complete the level",
          "event_data" : {
          }
       },
