@@ -161,7 +161,7 @@ N/A
 
 ### **begin_dive**
 
-N/A
+When the player enters a dive site in their submarine
 
 #### Event Data
 
@@ -668,7 +668,7 @@ List of all app versions encountered.
   
 
 **ActiveTime** : *timedelta*, *Aggregate feature*  (disabled)  
-Total time spent actively playing  
+Total time spent actively playing the game  
   
 
 **EventList** : *list*, *Aggregate feature*  (disabled)  
