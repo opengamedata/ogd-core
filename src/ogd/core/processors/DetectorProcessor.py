@@ -1,7 +1,7 @@
 # import libraries
 from typing import Any, Callable, Dict, List, Type, Optional
 # import locals
-from ogd.core.generators.registries.DetectorRegistry import DetectorRegistry
+from ogd.core.registries.DetectorRegistry import DetectorRegistry
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.processors.GeneratorProcessor import GeneratorProcessor
 from ogd.core.models.Event import Event
