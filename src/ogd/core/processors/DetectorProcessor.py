@@ -2,10 +2,10 @@
 from typing import Any, Callable, Dict, List, Type, Optional
 # import locals
 from ogd.core.generators.registries.DetectorRegistry import DetectorRegistry
-from ogd.core.models.FeatureData import FeatureData
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.processors.GeneratorProcessor import GeneratorProcessor
 from ogd.core.models.Event import Event
+from ogd.core.models.FeatureData import FeatureData
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.utils.utils import ExportRow
