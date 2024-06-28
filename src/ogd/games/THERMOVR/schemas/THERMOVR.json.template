@@ -1,6 +1,8 @@
 {
     "enums" : {
-        "HandType" : ["LEFT", "RIGHT", "MOUSE"]
+        "HandType" : ["LEFT", "RIGHT", "MOUSE"],
+        "Platform" : ["VR, WEB"],
+        "ToolType" : ["INSULATION", "LOWER_STOP", "UPPER_STOP", "INCREASE_WEIGHT", "DECREASE_WEIGHT", "HEAT", "COOLING", "CHAMBER_TEMPERATURE", "CHAMBER_PRESSURE"]
     },
 
     "game_state" : {
@@ -185,7 +187,7 @@
             "description": "When a new game is started",
             "event_data": {
                 "mode": {
-                    "type": "enum(VR, WEB)",
+                    "type": "Platform",
                     "description": "The mode of the game being started, either on a VR headset or the web-based version."
                 }
             }
@@ -420,7 +422,7 @@
             "description": "When the player clicks the button to enable/disable a tool",
             "event_data": {
                 "tool_name": {
-                    "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
+                    "type": "ToolType",
                     "description": "The tool whose toggle button was clicked."
                 },
                 "tool_enabled": {
@@ -441,8 +443,8 @@
             "description": "When the player clicks the button to nudge the tool value up",
             "event_data": {
                 "tool_name": {
-                    "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
-                    "description": "The tool whose increase button was clicked."
+                    "type": "ToolType",
+                    "description": "The tool that was nudged."
                 },
                 "hand": {
                     "type": "HandType",
@@ -454,8 +456,8 @@
             "description": "When the player clicks the button to nudge the tool value down",
             "event_data": {
                 "tool_name": {
-                    "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
-                    "description": "The tool whose decrease button was clicked."
+                    "type": "ToolType",
+                    "description": "The tool that was nudged."
                 },
                 "hand": {
                     "type": "HandType",
@@ -467,8 +469,8 @@
             "description": "When the player grabs the tool slider to adjust the value",
             "event_data": {
                 "tool_name": {
-                    "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
-                    "description": "The tool whose decrease button was clicked."
+                    "type": "ToolType",
+                    "description": "The tool whose slider was grabbed."
                 },
                 "start_value": {
                     "type": "float",
@@ -484,8 +486,8 @@
             "description": "When the player releases the tool slider after adjusting the value",
             "event_data": {
                 "tool_name": {
-                    "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
-                    "description": "The tool whose decrease button was clicked."
+                    "type": "ToolType",
+                    "description": "The tool that was adjusted."
                 },
                 "end_value": {
                     "type": "float",
@@ -505,8 +507,8 @@
             "description": "When the player clicks onto a tool to manually edit the value",
             "event_data": {
                 "tool_name": {
-                    "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
-                    "description": "The tool whose decrease button was clicked."
+                    "type": "ToolType",
+                    "description": "The tool whose edit area was clicked."
                 },
                 "hand": {
                     "type": "HandType",
@@ -515,28 +517,40 @@
             }
         },
         "set_tool_value": {
-            "description": "When the player clicks onto a tool to manually edit the value",
+            "description": "When the player sets a custom value for a given tool.",
             "event_data": {
                 "tool_name": {
-                    "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
-                    "description": "The tool whose decrease button was clicked."
+                    "type": "ToolType",
+                    "description": "The tool whose value was set."
                 },
-                "end_value": {
+                "new_value": {
                     "type": "float",
-                    "description": "The tool value after the slider was released, in the tool's units."
-                },
-                "auto_release" : {
-                    "type" : "bool",
-                    "description" : "Indicator for whether the release of the slider was automatically enforced by the system. This could be either because the player's hand got too far from the slider, or because the player pressed another button, such as reset, while dragging the slider."
-                },
-                "hand": {
-                    "type": "HandType",
-                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                    "description": "The tool value entered by the player."
                 }
             }
-        }
-        "set_invalid_tool_value"
-        "cancel_edit_tool_value"
+        },
+        "set_invalid_tool_value": {
+            "description": "When the player attempts to enter a custom value, but it is not in the valid range, or is an invalid type.",
+            "event_data": {
+                "tool_name": {
+                    "type": "ToolType",
+                    "description": "The tool whose value was set."
+                },
+                "bad_value": {
+                    "type": "str",
+                    "description": "The tool value after the slider was released, in the tool's units."
+                }
+            }
+        },
+        "cancel_edit_tool_value": {
+            "description": "When the player exits the custom value box, without setting a value.",
+            "event_data": {
+                "tool_name": {
+                    "type": "ToolType",
+                    "description": "The tool whose value was set."
+                }
+            }
+        },
         "gaze_object_end": {
             "description": "When the player has been looking at one of the major objects for at least a full second, and looks away.",
             "event_data": {
@@ -596,7 +610,7 @@
             "description": "When a lab task locks a specific tool, making it unvailable to the player",
             "event_data": {
                 "hand": {
-                    "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
+                    "type": "ToolType",
                     "description": "The specific tool that was locked."
                 }
             }
@@ -605,7 +619,7 @@
             "description": "When a lab task unlocks a specific tool, making it ailable to the player. Also occurs when returning to Sandbox mode.",
             "event_data": {
                 "hand": {
-                    "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
+                    "type": "ToolType",
                     "description": "The specific tool that was unlocked."
                 }
             }
