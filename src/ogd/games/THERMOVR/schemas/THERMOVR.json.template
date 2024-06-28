@@ -866,11 +866,11 @@
                 },
                 "timer_elapsed" : {
                     "type" : "float",
-                    ""
+                    "description" : "The amount of time elapsed before losing the target state."
                 },
                 "timer_remaining" : {
                     "type" : "float",
-                    ""
+                    "description" : "The amount of time remaining to complete the target state, when the state was lost."
                 }
             }
         },
@@ -884,8 +884,16 @@
             "event_data": {
             }
         },
-        "target_state_task_began"
-        "target_state_task_ended"
+        "target_state_task_began": {
+            "description": "When the player has selected a target state task.",
+            "event_data": {
+            }
+        },
+        "target_state_task_ended": {
+            "description": "When the player ends the target state task, moving to another task.",
+            "event_data": {
+            }
+        },
         "click_select_answer": {
             "description": "When the player presses the button to select an answer to a quiz question",
             "event_data": {
