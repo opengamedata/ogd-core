@@ -22,6 +22,8 @@ class t_SemanticVersion_eq(TestCase):
     def RunAll(self):
         self.test_EqualInvalids()
         self.test_UnequalInvalids()
+        self.test_LeftInvalid()
+        self.test_RightInvalid()
         print("Ran all t_SemanticVersion_eq tests.")
 
     def test_EqualInvalids(self):

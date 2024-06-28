@@ -5,9 +5,9 @@ import logging
 from datetime import datetime
 from typing import Any, Dict, List, Type, Optional
 # import locals
-from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.models.FeatureData import FeatureData
 from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.schemas.Event import Event
+from ogd.core.models.Event import Event
 from ogd.core.utils.utils import ExportRow, Logger
 
 ## @class Processor

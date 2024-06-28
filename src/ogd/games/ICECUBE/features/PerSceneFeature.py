@@ -1,8 +1,8 @@
 # import locals
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.games.ICECUBE.DBExport import scenes_list
 ## @class PerLevelFeature
 class PerSceneFeature(PerCountFeature):

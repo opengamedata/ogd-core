@@ -6,13 +6,13 @@ run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' &
 on:
   push:
     paths:
-    - 'src/ogd/core/detectors/**'
-    - 'src/ogd/core/extractors/**'
-    - 'src/ogd/core/features/**'
+    - 'src/ogd/core/generators/**'
     - 'src/ogd/core/interfaces/**'
     - 'src/ogd/core/managers/**'
+    - 'src/ogd/core/models/**'
     - 'src/ogd/core/processors/**'
-    - 'src/ogd/core/schemas/*'
+    - 'src/ogd/core/registries/**'
+    - 'src/ogd/core/schemas/**'
     - 'src/ogd/core/schemas/*_schemas/**'
     - 'src/ogd/core/utils/*'
     - 'main.py'
@@ -25,7 +25,7 @@ jobs:
     name: CI Export of Aqualab Data
     runs-on: ubuntu-22.04
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
       cancel-in-progress: true
 
     steps:
@@ -51,7 +51,7 @@ jobs:
         sql_host: ${{vars.FD_LOGGER_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
-        log_level: "DEBUG"
+        log_level: "INFO"
     - name: Set up Schema File for Crystal
       uses: ./.github/actions/OGD_schema
       with:

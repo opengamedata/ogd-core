@@ -6,11 +6,11 @@ from ogd.core.generators.GeneratorLoader import GeneratorLoader
 ## import local files
 from ogd.core.utils.Logger import Logger
 from ogd.core.generators.Generator import Generator
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.core.models.FeatureData import FeatureData
 from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.schemas.IterationMode import IterationMode
+from ogd.core.models.enums.IterationMode import IterationMode
 
 ## @class Extractor
 #  Abstract base class for game feature extractors.
@@ -40,7 +40,7 @@ class GeneratorRegistry(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _getExtractorNames(self) -> List[str]:
+    def _getGeneratorNames(self) -> List[str]:
         pass
 
     @abc.abstractmethod
@@ -67,7 +67,7 @@ class GeneratorRegistry(abc.ABC):
         _feature_registry maps feature names to Listener objects, which basically just say which 2nd-order feature(s) wants the given 1st-order feature.
         """
         self._event_registry : Dict[str,List[GeneratorRegistry.Listener]] = {"all_events":[]}
-        self._mode        : ExtractionMode = mode
+        self._mode           : ExtractionMode = mode
 
     # *** PUBLIC STATICS ***
 
@@ -76,7 +76,7 @@ class GeneratorRegistry(abc.ABC):
     def Register(self, extractor:Generator, iter_mode:IterationMode):
         self._register(extractor=extractor, iter_mode=iter_mode)
 
-    def GetExtractorNames(self) -> List[str]:
+    def GetGeneratorNames(self) -> List[str]:
         """Function to generate a list names of all enabled features, given a GameSchema
         This is different from the FeatureNames property of GameSchema,
         which ignores the 'enabled' attribute and does not expand per-count features
@@ -88,9 +88,11 @@ class GeneratorRegistry(abc.ABC):
         :return: A list of feature names.
         :rtype: List[str]
         """
-        return self._getExtractorNames()
+        # TODO : Add error handling and/or timing and/or profiling
+        return self._getGeneratorNames()
 
     def LoadFromSchema(self, schema:GameSchema, loader:GeneratorLoader, overrides:Optional[List[str]]):
+        # TODO : Add error handling and/or timing and/or profiling
         self._loadFromSchema(schema=schema, loader=loader, overrides=overrides)
 
     def UpdateFromEvent(self, event:Event) -> None:
@@ -102,6 +104,7 @@ class GeneratorRegistry(abc.ABC):
                              table assiciated with this game is structured.
         :type table_schema: TableSchema
         """
+        # TODO : Add error handling and/or timing and/or profiling
         self._updateFromEvent(event=event)
 
     def UpdateFromFeatureData(self, feature:FeatureData) -> None:

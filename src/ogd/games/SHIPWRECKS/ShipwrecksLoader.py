@@ -8,25 +8,16 @@ from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.games.SHIPWRECKS.features import *
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.core.utils.Logger import Logger
 
 ## @class ShipwrecksLoader
-#  Extractor subclass for extracting features from Shipwrecks game data.
 class ShipwrecksLoader(GeneratorLoader):
-    ## Constructor for the ShipwrecksLoader class.
-    #  Initializes some custom private data (not present in base class) for use
-    #  when calculating some features.
-    #  Sets the sessionID feature.
-    #  Further, initializes all Q&A features to -1, representing unanswered questions.
-    #
-    #  @param session_id The id number for the session whose data is being processed
-    #                    by this extractor instance.
-    #  @param game_table A data structure containing information on how the db
-    #                    table assiciated with this game is structured. 
-    #  @param game_schema A dictionary that defines how the game data itself is
-    #                     structured.
+    """
+    Extractor subclass for extracting features from Shipwrecks game data.
+    """
     def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
 
@@ -34,8 +25,8 @@ class ShipwrecksLoader(GeneratorLoader):
     def _getFeaturesModule():
         return features
 
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
-        ret_val : Feature
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
+        ret_val : Optional[Feature] = None
         if extractor_params._count_index is None:
             match feature_type:
                 case "ActiveJobs":
@@ -61,7 +52,7 @@ class ShipwrecksLoader(GeneratorLoader):
                 case "TotalDiveTime":
                     ret_val = TotalDiveTime.TotalDiveTime(params=extractor_params)
                 case _:
-                    raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature for Shipwrecks.")
+                    Logger.Log(f"'{feature_type}' is not a valid aggregate feature for Shipwrecks.")
         else:
             match feature_type:
                 case "MissionDiveTime":
@@ -71,8 +62,9 @@ class ShipwrecksLoader(GeneratorLoader):
                 case "MissionSonarTimeToComplete":
                     ret_val = MissionSonarTimeToComplete.MissionSonarTimeToComplete(params=extractor_params)
                 case _:
-                    raise NotImplementedError(f"'{feature_type}' is not a valid per-count feature for Shipwrecks.")
+                    Logger.Log(f"'{feature_type}' is not a valid per-count feature for Shipwrecks.")
         return ret_val
 
-    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
-        raise NotImplementedError(f"'{detector_type}' is not a valid feature for Shipwrecks.")
+    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Optional[Detector]:
+        Logger.Log(f"'{detector_type}' is not a valid feature for Shipwrecks.")
+        return None

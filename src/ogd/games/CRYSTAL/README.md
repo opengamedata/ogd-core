@@ -57,7 +57,22 @@ The elements (member variables) of each Event object, available to programmers w
 
 ## Logged Events  
 
-The individual fields encoded in the *event_data* Event element for each type of event logged by the game.  
+The individual fields encoded in the *game_state* and *user_data* Event element for all event types, and the fields in the *event_data* Event element for each individual event type logged by the game.  
+
+### Enums  
+
+| **Name** | **Values** |
+| ---      | ---        |  
+
+### Game State  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
+
+### User Data  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
 
 ### **COMPLETE**
 
@@ -76,11 +91,7 @@ N/A
 | 6 | int | N/A | |
 | 7 | int | N/A | |
 | 8 | int | N/A | |
-| stability | Dict | N/A |**pack** : int, **charge** : int |
-
-#### Other Elements
-
-- None  
+| stability | Dict | N/A |**pack** : int, **charge** : int |  
 
 ### **BEGIN**
 
@@ -98,11 +109,7 @@ N/A
 | stars_5 | int | N/A | |
 | stars_6 | int | N/A | |
 | stars_7 | int | N/A | |
-| stars_8 | int | N/A | |
-
-#### Other Elements
-
-- None  
+| stars_8 | int | N/A | |  
 
 ### **MOLECULE_RELEASE**
 
@@ -117,11 +124,7 @@ N/A
 | endPosition | Dict | may be more coords, not sure if upper limit exists |**coord_0** : {'x': 'int', 'y': 'int'}, **coord_1** : {'x': 'int', 'y': 'int'}, **coord_2** : {'x': 'int', 'y': 'int'} |
 | time | float | N/A | |
 | startStability | Dict | Starting stability when the molecule was 'grabbed'. |**pack** : int, **charge** : int |
-| endStability | Dict | Ending stability when the molecule was 'released'. |**pack** : int, **charge** : int |
-
-#### Other Elements
-
-- None  
+| endStability | Dict | Ending stability when the molecule was 'released'. |**pack** : int, **charge** : int |  
 
 ### **MOLECULE_ROTATE**
 
@@ -137,11 +140,7 @@ N/A
 | endRotation | int | N/A | |
 | numRotations | int | N/A | |
 | startStability | Dict | Starting stability when the molecule was 'grabbed'. |**pack** : int, **charge** : int |
-| endStability | Dict | Ending stability after the molecule was rotated. |**pack** : int, **charge** : int |
-
-#### Other Elements
-
-- None  
+| endStability | Dict | Ending stability after the molecule was rotated. |**pack** : int, **charge** : int |  
 
 ### **CLEAR_BTN_PRESS**
 
@@ -154,11 +153,7 @@ N/A
 | event_custom | string | N/A | |
 | numTimesPressed | int | N/A | |
 | numMolecules | int | N/A | |
-| stability | Unknown | Unknown | |
-
-#### Other Elements
-
-- None  
+| stability | Unknown | Unknown | |  
 
 ### **QUESTION_ANSWER**
 
@@ -171,11 +166,7 @@ N/A
 | event_custom | string | N/A | |
 | answer | int | N/A | |
 | answered | int | N/A | |
-| question | int | N/A | |
-
-#### Other Elements
-
-- None  
+| question | int | N/A | |  
 
 ### **MUSEUM_CLOSE**
 
@@ -186,11 +177,7 @@ N/A
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | event_custom | string | N/A | |
-| timeOpen | float | N/A | |
-
-#### Other Elements
-
-- None  
+| timeOpen | float | N/A | |  
 
 ### **BACK_TO_MENU**
 
@@ -200,11 +187,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| event_custom | enum(BACK_TO_MENU) | N/A | |
-
-#### Other Elements
-
-- None  
+| event_custom | enum(BACK_TO_MENU) | N/A | |  
 
 ## Detected Events  
 
@@ -258,7 +241,17 @@ The answer the user gave to a given question (or -1 if unanswered)
 
 **questionCorrect** : *bool*, *Per-count feature*  (disabled)  
 0 if user answered the question incorrectly, 1 if answered correctly, -1 if unanswered  
+  
 
+## Other Elements  
+
+Other (potentially non-standard) elements specified in the game's schema, which may be referenced by event/feature processors.  
+
+### Other Ranges  
+
+Extra ranges specified in the game's schema, which may be referenced by event/feature processors.  
+
+level_range : range(0, 8)
 
 No changelog prepared
 

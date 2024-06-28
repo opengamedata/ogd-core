@@ -57,7 +57,22 @@ The elements (member variables) of each Event object, available to programmers w
 
 ## Logged Events  
 
-The individual fields encoded in the *event_data* Event element for each type of event logged by the game.  
+The individual fields encoded in the *game_state* and *user_data* Event element for all event types, and the fields in the *event_data* Event element for each individual event type logged by the game.  
+
+### Enums  
+
+| **Name** | **Values** |
+| ---      | ---        |  
+
+### Game State  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
+
+### User Data  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
 
 ### **COMPLETE.0**
 
@@ -74,11 +89,7 @@ N/A
 | amplitude_right | float | N/A | |
 | wavelength_right | float | N/A | |
 | offset_right | float | N/A | |
-| closeness | float | N/A | |
-
-#### Other Elements
-
-- None  
+| closeness | float | N/A | |  
 
 ### **SUCCEED.0**
 
@@ -95,11 +106,7 @@ N/A
 | amplitude_right | float | N/A | |
 | wavelength_right | float | N/A | |
 | offset_right | float | N/A | |
-| closeness | float | N/A | |
-
-#### Other Elements
-
-- None  
+| closeness | float | N/A | |  
 
 ### **FAIL.0**
 
@@ -116,11 +123,7 @@ N/A
 | amplitude_right | float | N/A | |
 | wavelength_right | float | N/A | |
 | offset_right | float | N/A | |
-| closeness | float | N/A | |
-
-#### Other Elements
-
-- None  
+| closeness | float | N/A | |  
 
 ### **CUSTOM.1**
 
@@ -143,11 +146,7 @@ N/A
 | drag_length_ticks | int | N/A | |
 | direction_shifts | int | N/A | |
 | stdev_val | float | N/A | |
-| correct_val | float | N/A | |
-
-#### Other Elements
-
-- None  
+| correct_val | float | N/A | |  
 
 ### **CUSTOM.2**
 
@@ -163,11 +162,7 @@ N/A
 | begin_val | float | N/A | |
 | end_val | float | N/A | |
 | closeness | float | N/A | |
-| correct_val | float | N/A | |
-
-#### Other Elements
-
-- None  
+| correct_val | float | N/A | |  
 
 ### **CUSTOM.3**
 
@@ -180,11 +175,7 @@ N/A
 | event_custom | enum(QUESTION_ANSWER) | N/A | |
 | answer | int | N/A | |
 | answered | int | N/A | |
-| question | int | N/A | |
-
-#### Other Elements
-
-- None  
+| question | int | N/A | |  
 
 ### **CUSTOM.4**
 
@@ -201,11 +192,7 @@ N/A
 | amplitude_right | float | N/A | |
 | wavelength_right | float | N/A | |
 | offset_right | float | N/A | |
-| closeness | float | N/A | |
-
-#### Other Elements
-
-- None  
+| closeness | float | N/A | |  
 
 ### **CUSTOM.5**
 
@@ -215,11 +202,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| event_custom | enum(MENU_BUTTON) | N/A | |
-
-#### Other Elements
-
-- None  
+| event_custom | enum(MENU_BUTTON) | N/A | |  
 
 ### **CUSTOM.6**
 
@@ -229,11 +212,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| event_custom | enum(SKIP_BUTTON) | N/A | |
-
-#### Other Elements
-
-- None  
+| event_custom | enum(SKIP_BUTTON) | N/A | |  
 
 ### **CUSTOM.7**
 
@@ -243,11 +222,7 @@ N/A
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| event_custom | enum(DISMISS_MENU_BUTTON) | N/A | |
-
-#### Other Elements
-
-- None  
+| event_custom | enum(DISMISS_MENU_BUTTON) | N/A | |  
 
 ## Detected Events  
 
@@ -302,6 +277,12 @@ Average range of slider moves over a whole session
 **OverallSliderAverageStandardDeviations** : *float*, *Aggregate feature*   
 Average standard deviation of slider moves over a whole sessioin  
   
+
+**SessionSucceedCount** : *int*, *Aggregate feature*   
+number of times a 'SUCCEED' event occurs, across the whole session. [count of 'SUCCEED' events]  
+*Other elements*:  
+
+target : SUCCEED.0  
 
 **BeginCount** : *int*, *Per-count feature*   
 number of times a player 'began' the level. [count of 'BEGIN' events]  
@@ -412,7 +393,17 @@ The time, in milliseconds, taken by the player before answering the question
 
 **SequenceLevel** : *str*, *Per-count feature*   
 Sequence of slider interactions (e.g. 'wow' for Wavelength, Offset, Wavelength)  
+  
 
+## Other Elements  
+
+Other (potentially non-standard) elements specified in the game's schema, which may be referenced by event/feature processors.  
+
+### Other Ranges  
+
+Extra ranges specified in the game's schema, which may be referenced by event/feature processors.  
+
+level_range : range(0, 34)
 
 No changelog prepared
 

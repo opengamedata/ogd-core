@@ -4,6 +4,7 @@ run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' &
 on:
   push:
     paths:
+    - 'src/ogd/core/generators/**'
     - 'src/ogd/games/SHIPWRECKS/**'
     - '.github/workflows/CI_shipwrecks.yml'
     - '.github/actions/export_last_week/**'
@@ -14,7 +15,7 @@ jobs:
     name: CI Export of Shipwrecks (Legend of the Lost Emerald) Data
     runs-on: ubuntu-22.04
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
       cancel-in-progress: true
 
     steps:
@@ -40,7 +41,7 @@ jobs:
         sql_host: ${{vars.FD_LOGGER_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
-        log_level: "DEBUG"
+        log_level: "INFO"
     - name: Set up Schema File
       uses: ./.github/actions/OGD_schema
       with:

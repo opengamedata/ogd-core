@@ -57,7 +57,22 @@ The elements (member variables) of each Event object, available to programmers w
 
 ## Logged Events  
 
-The individual fields encoded in the *event_data* Event element for each type of event logged by the game.  
+The individual fields encoded in the *game_state* and *user_data* Event element for all event types, and the fields in the *event_data* Event element for each individual event type logged by the game.  
+
+### Enums  
+
+| **Name** | **Values** |
+| ---      | ---        |  
+
+### Game State  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
+
+### User Data  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
 
 ### **region**
 
@@ -70,11 +85,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | city | str | TODO | |
 | region | str | TODO | |
 | country | str | TODO | |
-| zipCode | int | TODO | |
-
-#### Other Elements
-
-- None  
+| zipCode | int | TODO | |  
 
 ### **welcome**
 
@@ -86,11 +97,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | ---      | ---      | ---             | ---         |
 | agreed | ?bool? | TODO | |
 | age | int | TODO | |
-| deviceType | ?str? | TODO | |
-
-#### Other Elements
-
-- None  
+| deviceType | ?str? | TODO | |  
 
 ### **general_level_stats**
 
@@ -102,11 +109,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | ---      | ---      | ---             | ---         |
 | right | ?int? | TODO | |
 | wrong | ?int? | TODO | |
-| missed | ?int? | TODO | |
-
-#### Other Elements
-
-- None  
+| missed | ?int? | TODO | |  
 
 ### **general_game_stats**
 
@@ -118,11 +121,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | ---      | ---      | ---             | ---         |
 | right | ?int? | TODO | |
 | wrong | ?int? | TODO | |
-| missed | ?int? | TODO | |
-
-#### Other Elements
-
-- None  
+| missed | ?int? | TODO | |  
 
 ### **general_level_times**
 
@@ -135,11 +134,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | playTime | ?timedelta? | TODO | |
 | gameTime | ?timedelta? | TODO | |
 | averageTimeRight | ?timedelta? | TODO | |
-| averageTimeWrong | ?timedelta? | TODO | |
-
-#### Other Elements
-
-- None  
+| averageTimeWrong | ?timedelta? | TODO | |  
 
 ### **general_game_times**
 
@@ -152,11 +147,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | playTime | ?timedelta? | TODO | |
 | gameTime | ?timedelta? | TODO | |
 | averageTimeRight | ?timedelta? | TODO | |
-| averageTimeWrong | ?timedelta? | TODO | |
-
-#### Other Elements
-
-- None  
+| averageTimeWrong | ?timedelta? | TODO | |  
 
 ### **general_game_levels**
 
@@ -168,11 +159,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | ---      | ---      | ---             | ---         |
 | startLevel | ?str? | TODO | |
 | endLevel | ?str? | TODO | |
-| highestLevel | ?str? | TODO | |
-
-#### Other Elements
-
-- None  
+| highestLevel | ?str? | TODO | |  
 
 ### **start_game**
 
@@ -182,11 +169,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| gameName | str | TODO | |
-
-#### Other Elements
-
-- None  
+| gameName | str | TODO | |  
 
 ### **gamescribe_created**
 
@@ -196,11 +179,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| gamescribeMode | enum(trace, strict) | trace or strict (trace is for debug, strict for production) | |
-
-#### Other Elements
-
-- None  
+| gamescribeMode | enum(trace, strict) | trace or strict (trace is for debug, strict for production) | |  
 
 ### **settings**
 
@@ -210,11 +189,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| playTime | int | Amount of active play time research intended for players, as set in DREAM. Not counting instruction screens. | |
-
-#### Other Elements
-
-- None  
+| playTime | int | Amount of active play time research intended for players, as set in DREAM. Not counting instruction screens. | |  
 
 ### **main_menu_shown**
 
@@ -223,11 +198,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **level_menu_shown**
 
@@ -239,11 +210,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | ---      | ---      | ---             | ---         |
 | passedLevel | bool | Binary - did they complete the level or not? | |
 | highestPanelUnlocked | ?int? | This refers to the highest panel unlocked. The game organizes progess in levels and panels (i.e., dots at the bottom), with up to 20 (?) levels per panel.  | |
-| highestLevelUnlocked | ?int? | This shows the highest level unlocked. The game organizes progess in levels and panels, with up to 20 (?) levels per panel.  | |
-
-#### Other Elements
-
-- None  
+| highestLevelUnlocked | ?int? | This shows the highest level unlocked. The game organizes progess in levels and panels, with up to 20 (?) levels per panel.  | |  
 
 ### **level_start**
 
@@ -252,11 +219,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **bubble_shown**
 
@@ -266,11 +229,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| id | int | TODO | |
-
-#### Other Elements
-
-- None  
+| id | int | TODO | |  
 
 ### **bubble_hidden**
 
@@ -280,11 +239,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| id | int | TODO | |
-
-#### Other Elements
-
-- None  
+| id | int | TODO | |  
 
 ### **bubble_active**
 
@@ -294,11 +249,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| id | int | TODO | |
-
-#### Other Elements
-
-- None  
+| id | int | TODO | |  
 
 ### **bubble_chosen**
 
@@ -309,11 +260,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | id | int | id of the bubble whose UI has been unfolded | |
-| bubblesArray | List[Dict] | A list of bubbles |**color** : enum(ALREADY_SUBMITTED, GREEN, YELLOW, RED, PINK, PURPLE), **shape** : enum(ALREADY_SUBMITTED, CRAB, JELLYFISH, STARFISH, STINGRAY, LOBSTER), **id** : int |
-
-#### Other Elements
-
-- None  
+| bubblesArray | List[Dict] | A list of bubbles |**color** : enum(ALREADY_SUBMITTED, GREEN, YELLOW, RED, PINK, PURPLE), **shape** : enum(ALREADY_SUBMITTED, CRAB, JELLYFISH, STARFISH, STINGRAY, LOBSTER), **id** : int |  
 
 ### **color_animal_selection**
 
@@ -325,11 +272,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | ---      | ---      | ---             | ---         |
 | id | int | TODO | |
 | color | enum(ALREADY_SUBMITTED, GREEN, YELLOW, RED, PINK, PURPLE) | TODO | |
-| shape | enum(ALREADY_SUBMITTED, CRAB, JELLYFISH, STARFISH, STINGRAY, LOBSTER) | TODO | |
-
-#### Other Elements
-
-- None  
+| shape | enum(ALREADY_SUBMITTED, CRAB, JELLYFISH, STARFISH, STINGRAY, LOBSTER) | TODO | |  
 
 ### **bubble_done**
 
@@ -342,11 +285,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | id | int | TODO | |
 | color | enum(ALREADY_SUBMITTED, GREEN, YELLOW, RED, PINK, PURPLE) | TODO | |
 | shape | enum(ALREADY_SUBMITTED, CRAB, JELLYFISH, STARFISH, STINGRAY, LOBSTER) | TODO | |
-| bubblesArray | List[Dict] | TODO |**color** : enum(ALREADY_SUBMITTED, GREEN, YELLOW, RED, PINK, PURPLE), **shape** : enum(ALREADY_SUBMITTED, CRAB, JELLYFISH, STARFISH, STINGRAY, LOBSTER), **id** : int |
-
-#### Other Elements
-
-- None  
+| bubblesArray | List[Dict] | TODO |**color** : enum(ALREADY_SUBMITTED, GREEN, YELLOW, RED, PINK, PURPLE), **shape** : enum(ALREADY_SUBMITTED, CRAB, JELLYFISH, STARFISH, STINGRAY, LOBSTER), **id** : int |  
 
 ### **summary_screen**
 
@@ -359,11 +298,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | levelPoints | int | Summarizes points the participant earned during the level; never negative to protect feelings. Since this can never go below 0, may be different from LevelRealPoints | |
 | levelRealPoints | int | Summarizes points the participant earned during the level; can be negative | |
 | maxLevelPoints | int | Maximum points it would have been possible to earn | |
-| numStars | int | Number of stars displayed after completing the level; depends on percentage | |
-
-#### Other Elements
-
-- None  
+| numStars | int | Number of stars displayed after completing the level; depends on percentage | |  
 
 ### **leaderboard_shown**
 
@@ -376,11 +311,7 @@ The individual fields encoded in the *event_data* Event element for each type of
 | totalPoints | ?int? | Total points displayed to participant (?) | |
 | totalRealPoints | ?int? | Total points actually earned by participant (?) | |
 | classPoints | ?int? | Total points earned by the class (i.e., same access code) | |
-| highestClassPoints | ?int? | Highest point value earned by any class (in a Dream table, EF Leaderboard) | |
-
-#### Other Elements
-
-- None  
+| highestClassPoints | ?int? | Highest point value earned by any class (in a Dream table, EF Leaderboard) | |  
 
 ### **leaderboard_closed**
 
@@ -389,11 +320,7 @@ TODO
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ## Detected Events  
 
@@ -405,7 +332,17 @@ None
 
 The features/metrics calculated from this game's event logs by OpenGameData when an 'export' is run.  
 
-None
+None  
+
+## Other Elements  
+
+Other (potentially non-standard) elements specified in the game's schema, which may be referenced by event/feature processors.  
+
+### Other Ranges  
+
+Extra ranges specified in the game's schema, which may be referenced by event/feature processors.  
+
+level_range : range(0, 3)
 
 No changelog prepared
 

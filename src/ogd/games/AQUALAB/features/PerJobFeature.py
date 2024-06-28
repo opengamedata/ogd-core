@@ -5,7 +5,7 @@ from typing import Optional
 from ogd.core.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
-from ogd.core.schemas.Event import Event
+from ogd.core.models.Event import Event
 
 class PerJobFeature(PerCountFeature):
     def __init__(self, params:GeneratorParameters, job_map:dict):

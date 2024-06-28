@@ -6,9 +6,9 @@ import numpy as np
 from ogd.core.generators.Generator import GeneratorParameters
 # import local files
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
-from ogd.core.schemas.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.core.models.FeatureData import FeatureData
+from ogd.core.models.Event import Event
 from datetime import datetime, timedelta
 from ogd.games.JOWILDER import Jowilder_Enumerators as je
 from ogd.games.JOWILDER.features.Interaction import clicks_track

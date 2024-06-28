@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any, Dict, Final, List, Tuple, Optional, Union
 ## import local files
 from ogd.core import schemas
-from ogd.core.schemas.Event import Event, EventSource
+from ogd.core.models.Event import Event, EventSource
 from ogd.core.schemas.tables.ColumnMapSchema import ColumnMapSchema
 from ogd.core.schemas.tables.ColumnSchema import ColumnSchema
 from ogd.core.utils import utils

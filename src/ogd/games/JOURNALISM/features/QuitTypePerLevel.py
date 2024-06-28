@@ -4,9 +4,9 @@ from typing import Any, Final, List, Optional
 import json
 # import local files
 from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.core.models.FeatureData import FeatureData
 from ogd.core.generators.Generator import GeneratorParameters
 
 

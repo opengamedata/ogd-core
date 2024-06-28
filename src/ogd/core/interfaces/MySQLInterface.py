@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import Dict, Final, List, Tuple, Optional
 # import locals
 from ogd.core.interfaces.DataInterface import DataInterface
-from ogd.core.schemas.IDMode import IDMode
+from ogd.core.models.enums.IDMode import IDMode
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
 from ogd.core.utils.Logger import Logger

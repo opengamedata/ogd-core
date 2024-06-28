@@ -103,7 +103,7 @@
             }
         },
         "begin_dive": {
-            "description": "N/A",
+            "description": "When the player enters a dive site in their submarine",
             "event_data": {
                 "site_id": {
                     "type": "str",
@@ -783,7 +783,7 @@
             "ActiveTime": {
                 "enabled": false,
                 "type": "ActiveTime",
-                "description": "Total time spent actively playing",
+                "description": "Total time spent actively playing the game",
                 "return_type": "timedelta"
             },
             "EventList": {
