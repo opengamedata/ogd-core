@@ -9,13 +9,10 @@ from ogd.core.models.FeatureData import FeatureData
 from ogd.core.models.Event import Event
 
 class Timespan(BuiltinExtractor):
-    """Template file to serve as a guide for creating custom Feature subclasses for games.
-
-    :param Feature: Base class for a Custom Feature class.
-    :type Feature: _type_
-    """
+    """Universal feature for finding the span of time between the first occurrence of a "start" event, and last occurrence of an "end" event."""
     _start_event = "NO EVENT"
-    _end_event = "NO EVENT"
+    _end_event   = "NO EVENT"
+
     def __init__(self, params:GeneratorParameters, schema_args:Dict[str,Any]):
         if params._count_index is not None and params._count_index != 0:
             self.WarningMessage(f"Session feature {params._name} got non-zero count index of {params._count_index}!")
@@ -31,7 +28,7 @@ class Timespan(BuiltinExtractor):
     def _createDerivedGenerator(cls, params:GeneratorParameters, schema_args:Dict[str,Any]) -> Type[BuiltinExtractor]:
         class_params = {
             "_start_event" : schema_args.get("start_event", cls._start_event),
-            "_end_event" : schema_args.get("end_event", cls._end_event)
+            "_end_event"   : schema_args.get("end_event",   cls._end_event)
         }
         return type(params._name, (Timespan,), class_params)
 
@@ -59,18 +56,21 @@ class Timespan(BuiltinExtractor):
         :param event: _description_
         :type event: Event
         """
-        if event.EventName == self._start_event:
-            if self._start_time is None:
-                self._start_time = event.Timestamp
-            else:
-                self.WarningMessage(f"{self.Name} received a second {self._start_event} (start-of-span) event! This occurred {event.Timestamp - self._start_time} after the initial {self._start_event} event.")
-        if event.EventName == self._end_event:
-            if self._start_time is not None:
-                if self._end_time is not None:
-                    self.WarningMessage(f"{self.Name} received a second {self._end_event} (end-of-span) event! This occurred {event.Timestamp - self._end_time} after the initial {self._end_event} event. Using the later event's timestamp for span.")
-                self._end_time = event.Timestamp
-            else:
-                self.WarningMessage(f"{self.Name} received a {self._end_event} event (end-of-span event) when no {self._start_event} event (start-of-span event) had occurred!")
+        match event.EventName:
+            case self._start_event:
+                if self._start_time is not None:
+                    self.WarningMessage(f"{self.Name} received a second {self._start_event} (start-of-span) event! This occurred {event.Timestamp - self._start_time} after the initial {self._start_event} event.")
+                else:
+                    self._start_time = event.Timestamp
+            case self._end_event:
+                if self._start_time is not None:
+                    if self._end_time is not None:
+                        self.WarningMessage(f"{self.Name} received a second {self._end_event} (end-of-span) event! This occurred {event.Timestamp - self._end_time} after the initial {self._end_event} event. Using the later event's timestamp for span.")
+                    self._end_time = event.Timestamp
+                else:
+                    self.WarningMessage(f"{self.Name} received a {self._end_event} event (end-of-span event) when no {self._start_event} event (start-of-span event) had occurred!")
+            case _:
+                pass
         return
 
     def _updateFromFeatureData(self, feature: FeatureData):
