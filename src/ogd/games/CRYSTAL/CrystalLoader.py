@@ -10,6 +10,7 @@ from ogd.games.CRYSTAL.features.CrystalExtractor import CrystalExtractor
 from ogd.core.models.Event import Event
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.core.utils.Logger import Logger
 
 class CrystalLoader(LegacyLoader):
 
@@ -19,11 +20,11 @@ class CrystalLoader(LegacyLoader):
     def _getFeaturesModule():
         return ogd.games.CRYSTAL.features
 
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
         return CrystalExtractor(params=extractor_params, game_schema=self._game_schema, session_id=self._session_id)
 
-    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
-        raise NotImplementedError(f"'{detector_type}' is not a valid feature for Lakeland.")
+    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Optional[Detector]:
+        Logger.Log(f"'{detector_type}' is not a valid detector for Crystal.")
 
     # *** BUILT-INS & PROPERTIES ***
 

@@ -3,7 +3,7 @@ import abc
 import logging
 from typing import Dict, List, Type, Optional, Set
 # import locals
-from ogd.core.generators.registries.GeneratorRegistry import GeneratorRegistry
+from ogd.core.registries.GeneratorRegistry import GeneratorRegistry
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.models.FeatureData import FeatureData
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
@@ -28,7 +28,7 @@ class GeneratorProcessor(Processor):
 
     ## Abstract declaration of a function to get the names of all features.
     @abc.abstractmethod
-    def _getExtractorNames(self) -> List[str]:
+    def _getGeneratorNames(self) -> List[str]:
         pass
 
     @property
@@ -45,19 +45,18 @@ class GeneratorProcessor(Processor):
 
     def __init__(self, game_schema: GameSchema, LoaderClass:Type[GeneratorLoader], feature_overrides:Optional[List[str]]=None):
         super().__init__(game_schema=game_schema)
-        self._LoaderClass : Type[GeneratorLoader] = LoaderClass
         self._overrides   : Optional[List[str]]   = feature_overrides
         self._loader      : GeneratorLoader       = LoaderClass(player_id=self._playerID, session_id=self._sessionID, game_schema=self._game_schema,
                                                                 mode=self._mode, feature_overrides=self._overrides)
-        self._registry    : Optional[GeneratorRegistry] = None
+        self._registry    : Optional[GeneratorRegistry] = None # Set to 0, let subclasses create own instances.
 
     def __str__(self):
         return f""
 
     @property
-    def ExtractorNames(self) -> List[str]:
+    def GeneratorNames(self) -> List[str]:
         # TODO: add error handling code, if applicable.
-        return self._getExtractorNames()
+        return self._getGeneratorNames()
 
     # *** PUBLIC STATICS ***
 
