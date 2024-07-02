@@ -1,8 +1,4 @@
-# __all__ = [
-#     "JobTriesInArgument",
-# ]
-
-# from . import JobTriesInArgument
+"""Initializer for ThermoVR features"""
 
 __all__ = [
     "LabCompleteCount",
@@ -15,8 +11,6 @@ __all__ = [
     "ToolSliderTime",
 
 ]
-
-
 
 from . import LabCompleteCount
 from . import LeftHandMoves

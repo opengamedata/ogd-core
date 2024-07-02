@@ -1,3 +1,5 @@
+"""Initializer for Bloom features"""
+
 __all__ = [
     "ActiveTime",
     "AverageActiveTime",

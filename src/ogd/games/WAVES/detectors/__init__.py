@@ -1,4 +1,4 @@
-"""Initializer for Aqualab detectors"""
+"""Initializer for Wave Combinator detectors"""
 
 __all__ = [
 
