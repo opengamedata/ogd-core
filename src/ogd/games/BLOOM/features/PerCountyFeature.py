@@ -7,7 +7,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.models.Event import Event
 
-class PerCounty(PerCountFeature):
+class PerCountyFeature(PerCountFeature):
     def __init__(self, params: GeneratorParameters, county_map: dict):
         super().__init__(params=params)
         self._county_map = county_map
