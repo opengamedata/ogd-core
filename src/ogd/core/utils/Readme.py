@@ -39,7 +39,7 @@ class Readme:
     def DatasetChangelog(self) -> str:
         return self._changelog
 
-    def GenerateReadme(self, path:Path = Path("./")):
+    def ToFile(self, path:Path = Path("./")):
         try:
             os.makedirs(name=path, exist_ok=True)
             with open(path / "README.md", "w") as readme:

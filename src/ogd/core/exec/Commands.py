@@ -74,7 +74,7 @@ class OGDCommands:
             game_schema = GameSchema.FromFile(game_id=game, schema_path=Path("src") / "ogd" / "games" / game / "schemas")
             table_schema = TableSchema(schema_name=f"{config.GameSourceMap[game].TableSchema}.json")
             readme = Readme(game_schema=game_schema, table_schema=table_schema)
-            readme.GenerateReadme(path=path)
+            readme.ToFile(path=path)
         except Exception as err:
             msg = f"Could not create a readme for {game}: {type(err)} {str(err)}"
             Logger.Log(msg, logging.ERROR)
