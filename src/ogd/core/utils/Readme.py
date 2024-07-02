@@ -1,13 +1,7 @@
-import json
 import logging
 import os
-import re
-import shutil
-import sys
 import traceback
-from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, IO, List, Optional, Set
 
 # import local files
 from ogd.core.schemas.games.GameSchema import GameSchema
