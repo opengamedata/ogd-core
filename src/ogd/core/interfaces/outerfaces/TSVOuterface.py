@@ -105,7 +105,7 @@ class TSVOuterface(DataOuterface):
         finally:
             self._closeFiles()
             self._finalizeFiles()
-            self._writeMetadataFile(num_sess=self.SessionCount)
+            self._meta.ToFile(num_sess=self.SessionCount, path=self._game_data_dir, zip_paths=self._final_paths)
             self._updateFileExportList(num_sess=self.SessionCount)
             return True
 

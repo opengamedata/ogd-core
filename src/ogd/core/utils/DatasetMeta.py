@@ -1,4 +1,5 @@
 # import standard libraries
+import json
 import logging
 import os
 import re
@@ -53,7 +54,7 @@ class DatasetMeta:
     # *** PUBLIC METHODS ***
 
     ## Public function to write out a tiny metadata file for indexing OGD data files.
-    def ToFile(self, num_sess:int, path:Path = Path("./")) -> None:
+    def ToFile(self, num_sess:int, path:Path = Path("./"), zip_paths:Dict[str, Optional[Path]] = {}) -> None:
         """Private function to write out a tiny metadata file for indexing OGD data files.
         Using the paths of the exported files, and given some other variables for
         deriving file metadata, this simply outputs a new file_name.meta file.
@@ -65,26 +66,26 @@ class DatasetMeta:
         """
         # First, ensure we have a data directory.
         try:
-            self._game_data_dir.mkdir(exist_ok=True, parents=True)
+            path.mkdir(exist_ok=True, parents=True)
         except Exception as err:
-            msg = f"Could not set up folder {self._game_data_dir}. {type(err)} {str(err)}"
+            msg = f"Could not set up folder {path}. {type(err)} {str(err)}"
             Logger.Log(msg, logging.WARNING)
         else:
             # Second, remove old metas, if they exist.
             start_range = self._date_range['min'].strftime("%Y%m%d") if self._date_range['min'] is not None else "Unknown"
             end_range   = self._date_range['max'].strftime("%Y%m%d") if self._date_range['max'] is not None else "Unknown"
             match_string = f"{self._game_id}_{start_range}_to_{end_range}_\\w*\\.meta"
-            old_metas = [f for f in os.listdir(self._game_data_dir) if re.match(match_string, f)]
+            old_metas = [f for f in os.listdir(path) if re.match(match_string, f)]
             for old_meta in old_metas:
                 try:
                     Logger.Log(f"Removing old meta file, {old_meta}")
-                    os.remove(self._game_data_dir / old_meta)
+                    os.remove(path / old_meta)
                 except Exception as err:
                     msg = f"Could not remove old meta file {old_meta}. {type(err)} {str(err)}"
                     Logger.Log(msg, logging.WARNING)
             # Third, write the new meta file.
             # calculate the path and name of the metadata file, and open/make it.
-            meta_file_path : Path = self._game_data_dir/ f"{self._dataset_id}_{self._short_hash}.meta"
+            meta_file_path : Path = path / f"{self._dataset_id}_{self._short_hash}.meta"
             with open(meta_file_path, "w", encoding="utf-8") as meta_file :
                 metadata  = \
                 {
@@ -95,16 +96,16 @@ class DatasetMeta:
                     "end_date"     :self._date_range['max'].strftime("%m/%d/%Y") if self._date_range['max'] is not None else "Unknown",
                     "date_modified":datetime.now().strftime("%m/%d/%Y"),
                     "sessions"     :num_sess,
-                    "population_file"     : str(self._zip_paths['population'])       if self._zip_paths['population']       else None,
-                    "population_template" : f'/tree/{self._game_id.lower()}'         if self._zip_paths['population']       else None,
-                    "players_file"        : str(self._zip_paths['players'])          if self._zip_paths['players']          else None,
-                    "players_template"    : f'/tree/{self._game_id.lower()}'         if self._zip_paths['players']          else None,
-                    "sessions_file"       : str(self._zip_paths['sessions'])         if self._zip_paths['sessions']         else None,
-                    "sessions_template"   : f'/tree/{self._game_id.lower()}'         if self._zip_paths['sessions']         else None,
-                    "raw_file"            : str(self._zip_paths['raw_events'])       if self._zip_paths['raw_events']       else None,
-                    "events_template"     : f'/tree/{self._game_id.lower()}'         if self._zip_paths['raw_events']       else None,
-                    "events_file"         : str(self._zip_paths['processed_events']) if self._zip_paths['processed_events'] else None,
-                    "all_events_template" : f'/tree/{self._game_id.lower()}'         if self._zip_paths['processed_events'] else None
+                    "population_file"     : str(zip_paths['population'])           if zip_paths['population']       else None,
+                    "population_template" : f'/tree/{self.GameName.lower()}' if zip_paths['population']       else None,
+                    "players_file"        : str(zip_paths['players'])              if zip_paths['players']          else None,
+                    "players_template"    : f'/tree/{self.GameName.lower()}' if zip_paths['players']          else None,
+                    "sessions_file"       : str(zip_paths['sessions'])             if zip_paths['sessions']         else None,
+                    "sessions_template"   : f'/tree/{self.GameName.lower()}' if zip_paths['sessions']         else None,
+                    "raw_file"            : str(zip_paths['raw_events'])           if zip_paths['raw_events']       else None,
+                    "events_template"     : f'/tree/{self.GameName.lower()}' if zip_paths['raw_events']       else None,
+                    "events_file"         : str(zip_paths['processed_events'])     if zip_paths['processed_events'] else None,
+                    "all_events_template" : f'/tree/{self.GameName.lower()}' if zip_paths['processed_events'] else None
                 }
                 meta_file.write(json.dumps(metadata, indent=4))
                 meta_file.close()
