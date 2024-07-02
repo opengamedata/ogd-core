@@ -116,7 +116,7 @@ class SemanticVersion:
         # f. Otherwise, we're not bigger.
         return False
 
-    def __ge__(self, RHS:Any):
+    def __ge__(self, RHS:Any) -> bool:
     # 1. Handle cases where RHS is not a SemanticVersion, or self is not a valid SemVer string.
         # a. If we're not valid, we're not bigger, so return whether we're equal
         if not self.IsValid:
@@ -185,7 +185,7 @@ class SemanticVersion:
         # f. Otherwise, we're not smaller.
         return False
 
-    def __le__(self, RHS:Any):
+    def __le__(self, RHS:Any) -> bool:
     # 1. Handle cases where RHS is not a SemanticVersion, or self is not a valid SemVer string.
         # a. If we're not valid, we're smaller (or equal)
         if not self.IsValid:
