@@ -34,52 +34,44 @@ class TSVOuterface(DataOuterface):
     def __init__(self, game_id:str, config:GameSourceSchema, export_modes:Set[ExportMode], date_range:Dict[str,Optional[datetime]], file_indexing:FileIndexingSchema, extension:str="tsv", dataset_id:Optional[str]=None, with_zipping:bool=True):
         super().__init__(game_id=game_id, config=config, export_modes=export_modes)
         self._files         : Dict[str,Optional[IO]]   = {"population":None, "players":None, "sessions":None, "processed_events":None, "raw_events":None}
+        """The actual file handles to write"""
         self._file_paths    : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "processed_events":None, "raw_events":None}
-        self._final_paths   : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "processed_events":None, "raw_events":None}
+        """Paths to the output files, used for file operations such as renaming"""
+        # self._final_paths   : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "processed_events":None, "raw_events":None}
         self._file_indexing : FileIndexingSchema = file_indexing
         self._data_dir      : Path               = Path(f"./{self._file_indexing.LocalDirectory}")
+        """Path to the base data directory, used for updating the index of available datasets"""
         self._game_data_dir : Path               = self._data_dir / self._game_id
-        self._readme_path   : Path               = self._game_data_dir / "README.md"
+        """Path to the game-specific data directory"""
         self._extension     : str                = extension
         self._date_range    : Dict[str,Optional[datetime]] = date_range
         self._use_zipping   : bool               = with_zipping
-        self._short_hash    : str                = ""
+        self._short_hash    : str                = TSVOuterface._generateShortHash()
         self._dataset_id    : str
         # self._sess_count    : int  = 0
         # figure out dataset ID.
         start = self._date_range['min'].strftime("%Y%m%d") if self._date_range['min'] is not None else "UNKNOWN"
         end   = self._date_range['max'].strftime("%Y%m%d") if self._date_range['max'] is not None else "UNKNOWN"
         self._dataset_id = dataset_id or f"{self._game_id}_{start}_to_{end}"
-        # get hash
-        try:
-            repo = Repo(search_parent_directories=True)
-            if repo.git is not None:
-                self._short_hash = str(repo.git.rev_parse(repo.head.object.hexsha, short=7))
-        except InvalidGitRepositoryError as err:
-            msg = f"Code is not in a valid Git repository:\n{str(err)}"
-            Logger.Log(msg, logging.ERROR)
-        except NoSuchPathError as err:
-            msg = f"Unable to access proper file paths for Git repository:\n{str(err)}"
-            Logger.Log(msg, logging.ERROR)
         # then set up our paths, and ensure each exists.
         base_file_name    : str  = f"{self._dataset_id}_{self._short_hash}"
         # finally, generate file names.
         _final_extension = "zip" if self._use_zipping else self._extension
         if ExportMode.EVENTS in export_modes:
             self._file_paths['raw_events']        = self._game_data_dir / f"{base_file_name}_events.{self._extension}"
-            self._final_paths['raw_events']       = self._game_data_dir / f"{base_file_name}_events.{_final_extension}"
+            # self._final_paths['raw_events']       = self._game_data_dir / f"{base_file_name}_events.{_final_extension}"
         if ExportMode.DETECTORS in export_modes:
             self._file_paths['processed_events']  = self._game_data_dir / f"{base_file_name}_all-events.{self._extension}"
-            self._final_paths['processed_events'] = self._game_data_dir / f"{base_file_name}_all-events.{_final_extension}"
+            # self._final_paths['processed_events'] = self._game_data_dir / f"{base_file_name}_all-events.{_final_extension}"
         if ExportMode.SESSION in export_modes:
             self._file_paths['sessions']          = self._game_data_dir / f"{base_file_name}_session-features.{self._extension}"
-            self._final_paths['sessions']         = self._game_data_dir / f"{base_file_name}_session-features.{_final_extension}"
+            # self._final_paths['sessions']         = self._game_data_dir / f"{base_file_name}_session-features.{_final_extension}"
         if ExportMode.PLAYER in export_modes:
             self._file_paths['players']           = self._game_data_dir / f"{base_file_name}_player-features.{self._extension}"
-            self._final_paths['players']          = self._game_data_dir / f"{base_file_name}_player-features.{_final_extension}"
+            # self._final_paths['players']          = self._game_data_dir / f"{base_file_name}_player-features.{_final_extension}"
         if ExportMode.POPULATION in export_modes:
             self._file_paths['population']        = self._game_data_dir / f"{base_file_name}_population-features.{self._extension}"
-            self._final_paths['population']       = self._game_data_dir / f"{base_file_name}_population-features.{_final_extension}"
+            # self._final_paths['population']       = self._game_data_dir / f"{base_file_name}_population-features.{_final_extension}"
         # self.Open()
 
     def __del__(self):
@@ -105,14 +97,14 @@ class TSVOuterface(DataOuterface):
         Logger.Log(f"Closing TSV outerface...")
         try:
             # before we zip stuff up, let's check if the readme is in place:
-            readme = open(self._readme_path, mode='r')
+            readme = open(self._game_data_dir / "README.md", mode='r')
         except FileNotFoundError:
             # if not in place, generate the readme
             Logger.Log(f"Missing readme for {self._game_id}, generating new readme...", logging.WARNING, depth=1)
             _games_path  = Path(games.__file__) if Path(games.__file__).is_dir() else Path(games.__file__).parent
-            game_schema  : GameSchema  = GameSchema.FromFile(game_id=self._game_id, schema_path=_games_path / self._game_id / "schemas")
-            table_schema = TableSchema(schema_name=self._config.TableSchema)
-            readme = Readme(game_schema=game_schema, table_schema=table_schema)
+            _game_schema  : GameSchema  = GameSchema.FromFile(game_id=self._game_id, schema_path=_games_path / self._game_id / "schemas")
+            _table_schema = TableSchema(schema_name=self._config.TableSchema)
+            readme = Readme(game_schema=_game_schema, table_schema=_table_schema)
             readme.GenerateReadme(path=self._game_data_dir)
         else:
             # otherwise, readme is there, so just close it and move on.
@@ -126,7 +118,7 @@ class TSVOuterface(DataOuterface):
             return True
 
     def _destination(self, mode:ExportMode) -> str:
-        ret_val = ""
+        ret_val : str = ""
         match mode:
             case ExportMode.EVENTS:
                 ret_val = str(self._file_paths['raw_events'])
@@ -149,31 +141,31 @@ class TSVOuterface(DataOuterface):
                     self._files['raw_events'].close()
                 self._files['raw_events']       = None
                 self._file_paths['raw_events']  = None
-                self._final_paths['raw_events'] = None
+                # self._final_paths['raw_events'] = None
             case ExportMode.DETECTORS:
                 if self._files['processed_events'] is not None:
                     self._files['processed_events'].close()
                 self._files['processed_events']      = None
                 self._file_paths['processed_events'] = None
-                self._final_paths['processed_events']  = None
+                # self._final_paths['processed_events']  = None
             case ExportMode.SESSION:
                 if self._files['sessions'] is not None:
                     self._files['sessions'].close()
                 self._files['sessions']       = None
                 self._file_paths['sessions']  = None
-                self._final_paths['sessions'] = None
+                # self._final_paths['sessions'] = None
             case ExportMode.PLAYER:
                 if self._files['players'] is not None:
                     self._files['players'].close()
                 self._files['players']       = None
                 self._file_paths['players']  = None
-                self._final_paths['players'] = None
+                # self._final_paths['players'] = None
             case ExportMode.POPULATION:
                 if self._files['population'] is not None:
                     self._files['population'].close()
                 self._files['population']       = None
                 self._file_paths['population']  = None
-                self._final_paths['population'] = None
+                # self._final_paths['population'] = None
 
     def _writeRawEventsHeader(self, header:List[str]) -> None:
         cols = TSVOuterface._cleanSpecialChars(vals=header)
@@ -275,7 +267,35 @@ class TSVOuterface(DataOuterface):
     # *** PRIVATE STATICS ***
 
     @staticmethod
+    def _generateShortHash() -> str:
+        ret_val = "NO_HASH"
+        try:
+            repo = Repo(search_parent_directories=True)
+            if repo.git is not None:
+                ret_val = str(repo.git.rev_parse(repo.head.object.hexsha, short=7))
+        except InvalidGitRepositoryError as err:
+            msg = f"Code is not in a valid Git repository:\n{str(err)}"
+            Logger.Log(msg, logging.ERROR)
+        except NoSuchPathError as err:
+            msg = f"Unable to access proper file paths for Git repository:\n{str(err)}"
+            Logger.Log(msg, logging.ERROR)
+        finally:
+            return ret_val
+
+    @staticmethod
     def _cleanSpecialChars(vals:List[Any], tab_width:int=3) -> List[str]:
+        """Function to check exported lines for special TSV characters before writing to file.
+
+        In particular, we need to make sure any data that contains tab or newline characters
+        has those characters sanitized to avoid throwing off TSV parsing for users of the file.
+
+        :param vals: Values to be cleaned
+        :type vals: List[Any]
+        :param tab_width: The width, in spaces, to use for tabs; defaults to 3
+        :type tab_width: int, optional
+        :return: The cleaned list of values.
+        :rtype: List[str]
+        """
         # check all return values for strings, and ensure no newlines or tabs get through, as they could throw off our outputs.
         for i in range(len(vals)):
             vals[i] = str(vals[i]).replace('\n', ' ').replace('\t', ' '*tab_width)
@@ -355,13 +375,14 @@ class TSVOuterface(DataOuterface):
                 traceback.print_tb(err.__traceback__)
 
     def _zipFiles(self):
+        _readme_path = self._game_data_dir / "README.md"
         if self._zip_paths['population'] is not None:
             with zipfile.ZipFile(self._zip_paths["population"], "w", compression=zipfile.ZIP_DEFLATED) as population_zip_file:
                 try:
                     population_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_population-features.{self._extension}"
                     readme_file  = Path(self._dataset_id) / "README.md"
                     TSVOuterface._addToZip(path=self._file_paths["population"], zip_file=population_zip_file, path_in_zip=population_file)
-                    TSVOuterface._addToZip(path=self._readme_path,              zip_file=population_zip_file, path_in_zip=readme_file)
+                    TSVOuterface._addToZip(path=_readme_path,                   zip_file=population_zip_file, path_in_zip=readme_file)
                     population_zip_file.close()
                     if self._file_paths["population"] is not None:
                         os.remove(self._file_paths["population"])
@@ -374,7 +395,7 @@ class TSVOuterface(DataOuterface):
                     player_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_player-features.{self._extension}"
                     readme_file  = Path(self._dataset_id) / "README.md"
                     TSVOuterface._addToZip(path=self._file_paths["players"], zip_file=players_zip_file, path_in_zip=player_file)
-                    TSVOuterface._addToZip(path=self._readme_path,           zip_file=players_zip_file, path_in_zip=readme_file)
+                    TSVOuterface._addToZip(path=_readme_path,                zip_file=players_zip_file, path_in_zip=readme_file)
                     players_zip_file.close()
                     if self._file_paths["players"] is not None:
                         os.remove(self._file_paths["players"])
@@ -387,7 +408,7 @@ class TSVOuterface(DataOuterface):
                     session_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_session-features.{self._extension}"
                     readme_file  = Path(self._dataset_id) / "README.md"
                     TSVOuterface._addToZip(path=self._file_paths["sessions"], zip_file=sessions_zip_file, path_in_zip=session_file)
-                    TSVOuterface._addToZip(path=self._readme_path,            zip_file=sessions_zip_file, path_in_zip=readme_file)
+                    TSVOuterface._addToZip(path=_readme_path,                 zip_file=sessions_zip_file, path_in_zip=readme_file)
                     sessions_zip_file.close()
                     if self._file_paths["sessions"] is not None:
                         os.remove(self._file_paths["sessions"])
