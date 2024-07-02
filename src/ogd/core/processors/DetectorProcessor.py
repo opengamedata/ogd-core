@@ -1,11 +1,11 @@
 # import libraries
 from typing import Any, Callable, Dict, List, Type, Optional
 # import locals
-from ogd.core.generators.registries.DetectorRegistry import DetectorRegistry
-from ogd.core.models.FeatureData import FeatureData
+from ogd.core.registries.DetectorRegistry import DetectorRegistry
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.processors.GeneratorProcessor import GeneratorProcessor
 from ogd.core.models.Event import Event
+from ogd.core.models.FeatureData import FeatureData
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.utils.utils import ExportRow
@@ -35,7 +35,7 @@ class DetectorProcessor(GeneratorProcessor):
     def _sessionID(self) -> str:
         return "detectors"
 
-    def _getExtractorNames(self, order:int) -> Dict[str,List[FeatureData]]:
+    def _getGeneratorNames(self, order:int) -> Dict[str,List[FeatureData]]:
         raise NotImplementedError("Function stub! Haven't written name getter for detector processor.")
 
     def _processEvent(self, event:Event):

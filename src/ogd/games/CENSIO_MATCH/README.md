@@ -1,4 +1,4 @@
-# Game: CENSIO_STACK
+# Game: CENSIO_MATCH
 
 No game-specific readme content prepared
 
@@ -63,26 +63,26 @@ The individual fields encoded in the *game_state* and *user_data* Event element 
 
 | **Name** | **Values** |
 | ---      | ---        |
-| LevelType | ['DEFAULT', 'CLUTTER', 'BOMBS', 'FULL_SET', 'FULL_ORDERED_SET', 'SHIFTING'] |
-| LevelDifficulty | ['NORMAL', 'HARD', 'BONUS'] |
-| PieceShape | ['HEAD', 'ARM', 'BODY', 'LEG', 'BOMB'] |
-| ReceiptItem | ['GOOD', 'DAMAGED', 'JUNK', 'MISSED', 'FULL_SET', 'DUPLICATE', 'LEG_POS', 'TORSO_POS', 'HEAD_POS'] |
-| PunchType | ['CLICK', 'SPACEBAR'] |  
+| OrderType | ['LEGS', 'HEAD1', 'HEAD2', 'BODY'] |
+| OrderStatus | ['COMPLETED', 'FAILED', 'NOT_TRIED'] |
+| ToggleType | ['ON', 'OFF'] |
+| DropPoint | ['LEFT', 'MIDDLE', 'RIGHT'] |
+| PowerType | ['SPIN', 'FLIP', 'SWAP', 'MOVE'] |
+| TargetType | ['SPIN', 'FLIP', 'SWAP_ORIGIN', 'SWAP_DESTINATION', 'MOVE_ORIGIN', 'MOVE_DESTINATION'] |
+| TileType | ['GEAR', 'NUT', 'SCREW', 'SPRING', 'NONE'] |
+| SlideType | ['LEFT', 'DOWN', 'RIGHT'] |  
 
 ### Game State  
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | seconds_from_launch | float | The number of seconds of game time elapsed since the game was launched. | |
-| level | int | The current level the player is in (1-6, or 0 when not in a level). | |
-| level_info | Dict | A dict, containing elements to indicate the type of level the player is on, and whether they are playing in 'hard' mode or not. Note, currently, there's just one level of each type, but this may change in the future. |**type** : LevelType, **difficulty** : LevelDifficulty |
-| level_time | int | The number of seconds elapsed since the start of the level. | |
-| level_max_time | int | The number of seconds the player has to complete the level, i.e. the starting value of the level's countdown timer. | |
-| score | int | The player's score on the current level. | |
-| box_count | int | The number of boxes the player has filled on the current level, which count towards the current score. During the level, this is the number of filled boxes; when the level ends a partially-filled box will also count as it is automatically 'packaged' before the final score is given. | |
-| piece_count | int | The total number of pieces the player has pushed into boxes on the current level. | |
-| target_pieces | List[PieceType] | A list of the types of pieces accepted on the given level's target board. For 'ordered set' levels, the order in the list indicates the order pieces must be placed. | |
-| box_contents | List[Dict] | A list whose elements are dictionaries describing individual pieces placed in the current box. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target. |**type** : PieceType, **is_damaged** : bool, **is_target** : bool |  
+| order | OrderType | The current order the player is trying to fulfill. | |
+| tile_counts | Dict[str, int] | A dict, containing elements to indicate the number of each tile type the player has collected on the current order. |**gear** : int, **nut** : int, **screw** : int, **spring** : int |
+| tile_targets | Dict[str, int] | A dict, containing elements to indicate the number of each tile type the player needs to collect to complete the current order. |**gear** : int, **nut** : int, **screw** : int, **spring** : int |
+| drop_count | int | The number drops the player has used on the current order. | |
+| drop_limit | int | The maximum number of drops the player can use on the current order. | |
+| tile_overflow | int | The number of excess tiles the player has collected. | |  
 
 ### User Data  
 
@@ -100,226 +100,314 @@ When the app is started and the gameplay session is assigned a session ID
 
 ### **game_start**
 
-When the player starts a new game (at present, this happens automatically at launch, but in the future the player may launch a new game from a menu).
+When the player presses the new game button, or resumes.
 
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |  
 
-### **level_preview_displayed**
+### **order_menu_displayed**
 
-When the system displays a preview of the upcoming level to the player, including the target score and allowed time.
-
-#### Event Data
-
-| **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-| level_id | int | The level number for the previewed level. | |
-| level_type | LevelType | The type of the previewed level. | |
-| duration | int | The allotted time for the level. | |
-| goal_score | int | The target score on the level. | |  
-
-### **click_level_play**
-
-When the player clicks the 'play' button from the preview to start the level.
+When the system displays the order selection menu.
 
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| level_id | int | The level number for the level. | |
-| level_type | LevelType | The type of the level. | |
-| duration | int | The allotted time for the level. | |
-| goal_score | int | The target score on the level. | |  
+| completed_orders | List[OrderType] | The orders that have been completed so far. | |
+| failed_orders | List[OrderType] | The orders that have been attempted, but only failed, so far. | |
+| initial_grid | List[List[TileType]] | A list of all rows containing tiles (starting from the bottom of the grid). Each row indicates the types of all tiles in the grid spaces of the row (or NONE for a grid space without a tile). | |  
 
-### **level_begin**
+### **adjust_part_clutter**
 
-When a level actually begins, whether due to the player clicking 'play' from a new level preview, or clicking 'replay' in a level summary.
-
-#### Event Data
-
-| **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-| level_id | int | The level number for the level. | |
-| level_type | LevelType | The type of the level. | |
-| duration | int | The allotted time for the level. | |
-| goal_score | int | The target score on the level. | |  
-
-### **piece_appeared**
-
-When a new piece appears on the conveyer belt.
+When the player selects a new setting for the part clutter on their next order.
 
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| type | PieceShape | The type of piece that appeared on the belt. | |  
+| old_clutter | float | The prior level of clutter, on a 0-1 scale. | |
+| old_score_adjustment | float | The adjustment contributed to the overall score multiplier, by the prior setting. | |
+| new_clutter | float | The newly-selected level of clutter, on a 0-1 scale. | |
+| new_score_adjustment | float | The adjustment contributed to the overall score multiplier, by the new setting. | |  
 
-### **piece_disappeared**
+### **adjust_drop_limit**
 
-When a non-packed piece disappears off the conveyer belt.
-
-#### Event Data
-
-| **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-| type | PieceShape | The type of piece that left the belt. | |  
-
-### **punch_launched**
-
-When the player clicks (or presses key) to punch a piece into the box.
+When the player selects a new setting for the drop limit on their next order.
 
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| type | PunchType | Whether the player triggered the punch with a click or the spacebar. | |  
+| old_limit | int | The prior drop limit. | |
+| old_score_adjustment | float | The adjustment contributed to the overall score multiplier, by the prior setting. | |
+| new_limit | int | The newly-selected drop limit. | |
+| new_score_adjustment | float | The adjustment contributed to the overall score multiplier, by the new setting. | |  
 
-### **piece_hit**
+### **adjust_drop_speed**
 
-When a piece is hit by a punch, packing it into the box.
-
-#### Event Data
-
-| **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-| piece | Dict | A dict describing the piece that was hit. Indicates the type of the piece, whether the piece was damaged, and whether it matched the level target. |**type** : PieceShape, **is_damaged** : bool, **is_target** : bool |
-| new_box_contents | List[Dict] | A list whose elements are dictionaries describing individual pieces placed in the current box, including the newly-packed piece. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target. |**type** : PieceShape, **is_damaged** : bool, **is_target** : bool |
-| accuracy | float | A value, from 0-1, indicating how close the player was to a 'perfectly accurate' punch. | |  
-
-### **bomb_hit**
-
-When a bomb is hit by a punch, destroying the current contents of the box.
+When the player selects a new setting for the drop speed on their next order.
 
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| pieces_destroyed | List[Dict] | A list whose elements are dictionaries describing individual pieces that were in the current box, and destroyed by the bomb. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target. |**type** : PieceShape, **is_damaged** : bool, **is_target** : bool |
-| accuracy | float | A value, from 0-1, indicating how close the player was to a 'perfectly accurate' punch. | |  
+| old_speed | float | The prior drop speed, on a 0-1 scale. | |
+| old_score_adjustment | float | The adjustment contributed to the overall score multiplier, by the prior setting. | |
+| new_speed | float | The newly-selected drop speed, on a 0-1 scale. | |
+| new_score_adjustment | float | The adjustment contributed to the overall score multiplier, by the new setting. | |  
 
-### **box_completed**
+### **grid_updated**
 
-When a third piece is packed in a box, completing the box
-
-#### Event Data
-
-| **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-| pieces | List[Dict] | A list whose elements are dictionaries describing individual pieces that were in the completed box. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target. |**type** : PieceShape, **is_damaged** : bool, **is_target** : bool |
-| score | int | The points earned for packing the box. | |
-| is_perfect | bool | Indicator for whether the box score is the maximum possible for the current level. | |  
-
-### **target_pieces_changed**
-
-When a player packs a box in a 'SHIFTING' level, and the target for the next box is randomly changed.
+When the system updates the starting grid based on a change to one of the part clutter.
 
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| new_target_pieces | List[PieceShape] | A list of the types of pieces accepted for the new target. If the game ever has 'shifting ordered set' levels, the order in the list indicates the order pieces must be placed. | |  
+| new_grid | List[List[TileType]] | A list of all rows containing tiles (starting from the bottom of the grid). Each row indicates the types of all tiles in the grid spaces of the row (or NONE for a grid space without a tile). | |  
 
-### **level_end**
+### **click_select_order**
 
-When the level's timer runs out, ending the level.
-
-#### Event Data
-
-| **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-| receipts | List[Dict] | A list whose elements are dictionaries describing individual boxes that were completed in the level. Each dict contains a point value of the box, an indicator of whether the box was 'perfect', and a sub-list of receipt items; which each contain a ReceiptItem type and a point value. |**items** : List[Dict[ {'type':ReceiptItem, 'value':int} ]], **total_value** : int, **is_perfect** : bool |  
-
-### **level_summary_displayed**
-
-When the system displays a summary of the level results to the player.
+When the player selects a new order from the menu list.
 
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| level_id | int | The level number for the summarized level. | |
-| level_type | LevelType | The type of the summarized level. | |
-| duration | int | The allotted time for the level. | |
-| goal_score | int | The target score on the level. | |
-| final_score | int | The actual score the player earned on the level. | |  
+| new_order | OrderType | The new order the player selected. | |
+| status | OrderStatus | The completion status of the selected order (completed, failed only, or not attempted). | |  
 
-### **click_replay_level**
+### **click_toggle_order_target**
 
-When the player clicks the 'replay' button in the level summary screen
+When the player toggles the 'target' view for the current order on or off.
 
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| level_id | int | The level number for the replayed level. | |
-| level_type | LevelType | The type of the replayed level. | |
-| duration | int | The allotted time for the level. | |
-| goal_score | int | The target score on the level. | |
-| final_score | int | The actual score the player earned on the level. | |  
+| toggle | ToggleType | Whether the view was toggled on or off. | |  
 
-### **click_breakdown**
+### **click_play_order**
 
-When the player clicks to view the 'breakdown' page for the level
+When the player clicks to start an order from the menu.
 
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |  
 
-### **breakdown_page_displayed**
+### **click_play_order_invalid**
 
-When the system displays a 'page' of the level breakdown.
-
-#### Event Data
-
-| **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-| page_index | int | The index of the 'page' of the level breakdown, among the breakdown pages. | |
-| receipts | List[Dict] | A list whose elements are dictionaries describing individual boxes in the breakdown page. Each dict contains a point value of the box, an indicator of whether the box was 'perfect', and a sub-list of receipt items; which each contain a ReceiptItem type and a point value. |**items** : List[Dict[ {'type':ReceiptItem, 'value':int} ]], **total_value** : int, **is_perfect** : bool |  
-
-### **click_next_breakdown_page**
-
-When the player clicks to advance to the next 'breakdown' page for the level
-
-#### Event Data
-
-| **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-| old_page_index | int | The index of the 'page' of the player was on when they clicked the 'next' button. | |  
-
-### **click_prev_breakdown_page**
-
-When the player clicks to go to the previous 'breakdown' page for the level
-
-#### Event Data
-
-| **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-| old_page_index | int | The index of the 'page' of the player was on when they clicked the 'previous' button. | |  
-
-### **click_next_level**
-
-When the player clicks to advance to the next level from the 'summary' page.
+When the player clicks to start an order from the menu, but has not yet selected a valid order.
 
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |  
 
-### **click_play_harder**
+### **order_begin**
 
-Placeholder for an event when the player clicks to play a level on 'hard' mode.
+When playing an order actually begins, whether due to the player clicking 'play' from a new level preview, or clicking 'replay' in a level summary.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| order_type | OrderType | The type of the order being attempted. | |
+| order_status | OrderStatus | The previous completion status of the order (completed, failed only, or not attempted). | |
+| high_score | int | The previous high score on the order. | |
+| part_clutter | float | The level of clutter, on a 0-1 scale. | |
+| drop_limit | int | The number of drops allowed on the order. | |
+| drop_speed | float | The speed of drops, on a 0-1 scale. | |
+| score_multipliers | float | The overall score multiplier on the order, based on the settings. | |
+| initial_grid | List[List[TileType]] | A list of all rows containing tiles (starting from the bottom of the grid). Each row indicates the types of all tiles in the grid spaces of the row (or NONE for a grid space without a tile). | |  
+
+### **click_toggle_help**
+
+When the player toggles the 'help' view of the 'powers' box on or off.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| toggle | ToggleType | Whether the view was toggled on or off. | |  
+
+### **select_power**
+
+When the player selects a power to use.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| power | PowerType | Which power the player selected. | |  
+
+### **cancel_power**
+
+When the player cancels the use of a selected power.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| power | PowerType | Which power the player canceled. | |  
+
+### **hover_power_target**
+
+When the player hovers over a new target tile for the selected power.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| power | TargetType | Which kind of power target is currently being set. | |
+| target_point | List[int] | The x, y coordinates of the targeted point. | |
+| target_tile | TileType | The type of tile on the hovered point. | |  
+
+### **execute_power**
+
+When the player clicks to confirm and execute the selected power.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| power | PowerType | Which power the player canceled. | |
+| cost | Dict[str, Any] | A dict, indicating which type of tile was spent on the power, and how many tiles were spent. |**type** : TileType, **count** : int |
+| tile_updates | List[Dict[str, Any]] | A list of all changes to tile positions, each list element indicating the old and new points for a tile of given type. |**type** : TileType, **old_point** : List[int], **new_point** : List[int] |  
+
+### **click_reveal_drops**
+
+When the player clicks the 'reveal' button on one of the drop points.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| drop_point | DropPoint | Which drop point the player clicked to reveal. | |
+| tile_pairs | List[List[TileType]] | A list of tile pairs revealed in the drop. Empty if the click was not a valid reveal (e.g. if the drop point already had revealed pairs). | |  
+
+### **click_drop_pair**
+
+When the player clicks to drop a new tile pair onto the grid.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| drop_point | DropPoint | Which drop point the player clicked to reveal. | |
+| tile_pair | List[TileType] | The types of the two tiles in the pair. | |  
+
+### **drop_pair_landed**
+
+When the a dropping pair of tiles lands on the other tiles below.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| tile_pair | List[Dict[str, Any]] | The types and landed positions of the two tiles in the pair. |**type** : TileType, **point** : List[int] |  
+
+### **rotate_drop_pair**
+
+When the player rotates a dropping pair.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| tile_updates | List[Dict[str, Any]] | A list of changes to tile positions of the two tiles, resulting from the rotation. |**type** : TileType, **old_point** : List[int], **new_point** : List[int] |  
+
+### **slide_drop_pair**
+
+When the player slides a dropping pair left or right, or accelerates the pair down.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| tile_updates | List[Dict[str, Any]] | A list of changes to tile positions of the two tiles, resulting from the slide. |**type** : TileType, **old_point** : List[int], **new_point** : List[int] |  
+
+### **tile_fell**
+
+When the space below a tile is empty, and 'gravity' causes the tile to fall and 'land' on another tile (or ground).
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| tile_update | Dict[str, Any] | A dict indicating what type of tile fell, and which points it started and ended at. |**type** : TileType, **old_point** : List[int], **new_point** : List[int] |  
+
+### **match_completed**
+
+When three or more tiles are in a row, and a match is completed.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| matches | List[Dict[str, Any]] | A dict indicating what type of tile was matched, and the list of points where the matching tiles were located. |**type** : TileType, **tile_points** : List[List[int]] |  
+
+### **order_complete**
+
+When the player has used all drops, completing the order.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| successful | bool | Whether the order was completed successfully or not. | |
+| score | int | The score the player earned on the order. | |
+| high_score | int | The highest score the player has earned on the given job. | |
+| moves_left | int | The number of remaining moves (TODO : determine whether players who complete the order targets with leftover drops are forced to use the remaining drops or not). | |  
+
+### **order_summary_displayed**
+
+When the system displays a summary of the order results to the player.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| base_score | int | The player score prior to applying the score mulitplier. | |
+| score_multiplier | float | The score multiplier on the order. | |
+| total_score | int | The final score the player earned on the order. | |
+| goal_score | int | The goal score on the order. | |
+| player_average | int | The average score the player has scored, across all attempts of the order. | |  
+
+### **click_summary_help**
+
+When the player clicks to review the detailed summary of the order results.
 
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |  
 
-### **click_play_easier**
+### **toggle_summary_help**
 
-Placeholder for an event when the player clicks to play a level on 'normal' mode.
+When the player toggles the 'help' view of the 'order summary' on or off.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| toggle | ToggleType | Whether the view was toggled on or off. | |  
+
+### **click_try_again**
+
+When the player clicks the button to replay the order
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
+
+### **click_new_order**
+
+When the player clicks the button to return to the main menu and choose a new order
 
 #### Event Data
 
@@ -429,15 +517,6 @@ When the player finishes a survey
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | survey_id | str | An identifier for the specific survey. | |  
-
-### **game_complete**
-
-When the player completes the game
-
-#### Event Data
-
-| **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |  
 
 ## Detected Events  
 

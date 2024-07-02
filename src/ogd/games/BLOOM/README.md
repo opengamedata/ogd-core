@@ -873,7 +873,27 @@ None
 
 The features/metrics calculated from this game's event logs by OpenGameData when an 'export' is run.  
 
-None  
+**ActiveTime** : *timedelta*, *Aggregate feature*   
+Active time of a player  
+*Other elements*:  
+
+threshold : 30  
+
+**NumberOfSessionsPerPlayer** : *int*, *Aggregate feature*   
+Number of sessions per player  
+  
+
+**CountyUnlockCount** : *int*, *Aggregate feature*   
+ANumber of Counties unlocked  
+  
+
+**FailCount** : *int*, *Aggregate feature*   
+Number of failure count  
+  
+
+**PersistedThroughFailure** : *int*, *Aggregate feature*   
+Number of times faied a but persisted through the task  
+  
 
 ## Other Elements  
 

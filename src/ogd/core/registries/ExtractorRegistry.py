@@ -9,8 +9,8 @@ from typing import Any, Dict, List, Optional, Set
 from ogd.core.generators.Generator import Generator
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
-from ogd.core.generators.registries.GeneratorRegistry import GeneratorRegistry
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.registries.GeneratorRegistry import GeneratorRegistry
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.core.models.Event import Event
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.models.FeatureData import FeatureData
@@ -51,7 +51,7 @@ class ExtractorRegistry(GeneratorRegistry):
         _feature_registry maps feature names to Listener objects, which basically just say which 2nd-order feature(s) wants the given 1st-order feature.
         """
         super().__init__(mode=mode)
-        self._features : List[OrderedDict[str, Feature]] = [OrderedDict() for i in range(order)]
+        self._features : List[OrderedDict[str, Extractor]] = [OrderedDict() for i in range(order)]
         self._feature_registry: Dict[str,List[GeneratorRegistry.Listener]] = {}
         # self._features : Dict[str, OrderedDict[str, Feature]] = {
         #     "first_order" : OrderedDict(),
@@ -94,7 +94,7 @@ class ExtractorRegistry(GeneratorRegistry):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _register(self, extractor:Generator, iter_mode:IterationMode):
-        if isinstance(extractor, Feature):
+        if isinstance(extractor, Extractor):
             _listener = GeneratorRegistry.Listener(name=extractor.Name, mode=iter_mode)
             _feature_deps = extractor.FeatureFilter(mode=self._mode)
             _event_deps   = extractor.EventFilter(mode=self._mode)
@@ -120,7 +120,7 @@ class ExtractorRegistry(GeneratorRegistry):
         else:
             raise TypeError("ExtractorRegistry was given an Extractor which was not a Feature!")
 
-    def _getExtractorNames(self) -> List[str]:
+    def _getGeneratorNames(self) -> List[str]:
         """Implementation of abstract function to retrieve the names of all extractors currently registered.
 
         :return: A list of all currently-registered features.

@@ -2,6 +2,7 @@
 import itertools
 import json
 from pathlib import Path
+from types import ModuleType
 from typing import Any, Callable, Dict, Final, List, Optional
 # import local files
 from . import features
@@ -16,6 +17,7 @@ from ogd.core.models.Event import Event
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.utils.utils import loadJSONFile
+from ogd.core.utils.Logger import Logger
 
 EXPORT_PATH : Final[str] = "games/AQUALAB/DBExport.json"
 
@@ -64,11 +66,11 @@ class AqualabLoader(GeneratorLoader):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     @staticmethod
-    def _getFeaturesModule():
+    def _getFeaturesModule() -> ModuleType:
         return features
 
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
-        ret_val : Feature
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
+        ret_val : Optional[Feature] = None
         # First run through aggregate features
         if extractor_params._count_index == None:
             match feature_type:
@@ -139,7 +141,7 @@ class AqualabLoader(GeneratorLoader):
                 case "UserTotalSessionDuration":
                     ret_val = UserTotalSessionDuration.UserTotalSessionDuration(params=extractor_params, player_id=self._player_id)
                 case _:
-                    raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature type for Aqualab.")
+                    Logger.Log(f"'{feature_type}' is not a valid aggregate feature type for Aqualab.")
         # then run through per-count features.
         else:
             match feature_type:
@@ -180,11 +182,12 @@ class AqualabLoader(GeneratorLoader):
                 case "SyncCompletionTime":
                     ret_val = SyncCompletionTime.SyncCompletionTime(params=extractor_params)
                 case _:
-                    raise NotImplementedError(f"'{feature_type}' is not a valid per-count feature type for Aqualab.")
+                    Logger.Log(f"'{feature_type}' is not a valid per-count feature type for Aqualab.")
         return ret_val
 
-    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
-        ret_val : Detector
+    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Optional[Detector]:
+        ret_val : Optional[Detector] = None
+
         match detector_type:
             case "CollectFactNoJob":
                 ret_val = CollectFactNoJob.CollectFactNoJob(params=extractor_params, trigger_callback=trigger_callback)
@@ -201,7 +204,7 @@ class AqualabLoader(GeneratorLoader):
             case "TwoHints":
                 ret_val = TwoHints.TwoHints(params=extractor_params, trigger_callback=trigger_callback, time_threshold=schema_args.get("threshold"))
             case _:
-                raise NotImplementedError(f"'{detector_type}' is not a valid detector for Aqualab.")
+                Logger.Log(f"'{detector_type}' is not a valid detector for Aqualab.")
         return ret_val
 
     @property

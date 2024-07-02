@@ -23,7 +23,8 @@ class CustomFeature(PerCountFeature):
     def _validateEventCountIndex(self, event: Event):
         return self.CountIndex == None
 
-    def _eventFilter(self) -> List[str]:
+    @classmethod
+    def _eventFilter(cls) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -31,7 +32,8 @@ class CustomFeature(PerCountFeature):
         """
         return [] # >>> fill in names of events this Feature should use for extraction. <<<
 
-    def _featureFilter(self) -> List[str]:
+    @classmethod
+    def _featureFilter(cls) -> List[str]:
         """_summary_
 
         :return: _description_
