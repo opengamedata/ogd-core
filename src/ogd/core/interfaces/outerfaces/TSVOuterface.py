@@ -443,11 +443,14 @@ class TSVOuterface(DataOuterface):
                     traceback.print_tb(err.__traceback__)
 
     ## Public function to write out a tiny metadata file for indexing OGD data files.
-    #  Using the paths of the exported files, and given some other variables for
-    #  deriving file metadata, this simply outputs a new file_name.meta file.
-    #  @param date_range    The range of dates included in the exported data.
-    #  @param num_sess      The number of sessions included in the recent export.
     def _writeMetadataFile(self, num_sess:int) -> None:
+        """Private function to write out a tiny metadata file for indexing OGD data files.
+        Using the paths of the exported files, and given some other variables for
+        deriving file metadata, this simply outputs a new file_name.meta file.
+
+        :param num_sess: The number of sessions included in the recent export.
+        :type num_sess: int
+        """
         # First, ensure we have a data directory.
         try:
             self._game_data_dir.mkdir(exist_ok=True, parents=True)
@@ -494,13 +497,15 @@ class TSVOuterface(DataOuterface):
                 meta_file.write(json.dumps(metadata, indent=4))
                 meta_file.close()
 
-    ## Public function to update the list of exported files.
-    #  Using the paths of the exported files, and given some other variables for
-    #  deriving file metadata, this simply updates the JSON file to the latest
-    #  list of files.
-    #  @param date_range    The range of dates included in the exported data.
-    #  @param num_sess      The number of sessions included in the recent export.
+    ## Private function to update the list of exported files.
     def _updateFileExportList(self, num_sess: int) -> None:
+        """Private function to update the list of exported files.
+        Using the paths of the exported files, and given some other variables for
+        deriving file metadata, this simply updates the JSON file to the latest
+        list of files.
+        :param num_sess: The number of sessions included in the recent export.
+        :type num_sess: int
+        """
         self._backupFileExportList()
         file_index = {}
         existing_datasets = {}
