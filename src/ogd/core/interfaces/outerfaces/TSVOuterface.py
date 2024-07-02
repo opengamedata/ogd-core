@@ -1,15 +1,12 @@
-## import standard libraries
+# import standard libraries
 import json
 import logging
 import os
-import re
 import shutil
 import sys
 import traceback
 import zipfile
 from datetime import datetime
-from git.repo import Repo
-from git.exc import InvalidGitRepositoryError, NoSuchPathError
 from pathlib import Path
 from typing import Any, Dict, IO, List, Optional, Set
 
@@ -23,6 +20,7 @@ from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.schemas.tables.TableSchema import TableSchema
 from ogd.core.schemas.configs.IndexingSchema import FileIndexingSchema
 from ogd.core.utils import utils
+from ogd.core.utils.DatasetMeta import DatasetMeta
 from ogd.core.utils.Logger import Logger
 from ogd.core.utils.utils import ExportRow
 from ogd.core.utils.Readme import Readme
@@ -33,6 +31,7 @@ class TSVOuterface(DataOuterface):
 
     def __init__(self, game_id:str, config:GameSourceSchema, export_modes:Set[ExportMode], date_range:Dict[str,Optional[datetime]], file_indexing:FileIndexingSchema, extension:str="tsv", dataset_id:Optional[str]=None, with_zipping:bool=True):
         super().__init__(game_id=game_id, config=config, export_modes=export_modes)
+        self._meta          : DatasetMeta = DatasetMeta(game_id=game_id, date_range=date_range, dataset_id_default=dataset_id)
         self._files         : Dict[str,Optional[IO]]   = {"population":None, "players":None, "sessions":None, "processed_events":None, "raw_events":None}
         """The actual file handles to write"""
         self._file_paths    : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "processed_events":None, "raw_events":None}
@@ -41,22 +40,15 @@ class TSVOuterface(DataOuterface):
         self._file_indexing : FileIndexingSchema = file_indexing
         self._data_dir      : Path               = Path(f"./{self._file_indexing.LocalDirectory}")
         """Path to the base data directory, used for updating the index of available datasets"""
-        self._game_data_dir : Path               = self._data_dir / self._game_id
+        self._game_data_dir : Path               = self._data_dir / self._meta.GameName
         """Path to the game-specific data directory"""
         self._extension     : str                = extension
-        self._date_range    : Dict[str,Optional[datetime]] = date_range
         self._use_zipping   : bool               = with_zipping
-        self._short_hash    : str                = TSVOuterface._generateShortHash()
-        self._dataset_id    : str
         # self._sess_count    : int  = 0
-        # figure out dataset ID.
-        start = self._date_range['min'].strftime("%Y%m%d") if self._date_range['min'] is not None else "UNKNOWN"
-        end   = self._date_range['max'].strftime("%Y%m%d") if self._date_range['max'] is not None else "UNKNOWN"
-        self._dataset_id = dataset_id or f"{self._game_id}_{start}_to_{end}"
         # then set up our paths, and ensure each exists.
-        base_file_name    : str  = f"{self._dataset_id}_{self._short_hash}"
+        base_file_name    : str  = f"{self._meta.DatasetID}_{self._meta.ShortHash}"
         # finally, generate file names.
-        _final_extension = "zip" if self._use_zipping else self._extension
+        # _final_extension = "zip" if self._use_zipping else self._extension
         if ExportMode.EVENTS in export_modes:
             self._file_paths['raw_events']        = self._game_data_dir / f"{base_file_name}_events.{self._extension}"
             # self._final_paths['raw_events']       = self._game_data_dir / f"{base_file_name}_events.{_final_extension}"
@@ -100,10 +92,10 @@ class TSVOuterface(DataOuterface):
             readme = open(self._game_data_dir / "README.md", mode='r')
         except FileNotFoundError:
             # if not in place, generate the readme
-            Logger.Log(f"Missing readme for {self._game_id}, generating new readme...", logging.WARNING, depth=1)
-            _games_path  = Path(games.__file__) if Path(games.__file__).is_dir() else Path(games.__file__).parent
-            _game_schema  : GameSchema  = GameSchema.FromFile(game_id=self._game_id, schema_path=_games_path / self._game_id / "schemas")
-            _table_schema = TableSchema(schema_name=self._config.TableSchema)
+            Logger.Log(f"Missing readme for {self._meta.GameName}, generating new readme...", logging.WARNING, depth=1)
+            _games_path   : Path        = Path(games.__file__) if Path(games.__file__).is_dir() else Path(games.__file__).parent
+            _game_schema  : GameSchema  = GameSchema.FromFile(game_id=self._meta.GameName, schema_path=_games_path / self._meta.GameName / "schemas")
+            _table_schema : TableSchema = TableSchema(schema_name=self._config.TableSchema)
             readme = Readme(game_schema=_game_schema, table_schema=_table_schema)
             readme.ToFile(path=self._game_data_dir)
         else:
@@ -267,22 +259,6 @@ class TSVOuterface(DataOuterface):
     # *** PRIVATE STATICS ***
 
     @staticmethod
-    def _generateShortHash() -> str:
-        ret_val = "NO_HASH"
-        try:
-            repo = Repo(search_parent_directories=True)
-            if repo.git is not None:
-                ret_val = str(repo.git.rev_parse(repo.head.object.hexsha, short=7))
-        except InvalidGitRepositoryError as err:
-            msg = f"Code is not in a valid Git repository:\n{str(err)}"
-            Logger.Log(msg, logging.ERROR)
-        except NoSuchPathError as err:
-            msg = f"Unable to access proper file paths for Git repository:\n{str(err)}"
-            Logger.Log(msg, logging.ERROR)
-        finally:
-            return ret_val
-
-    @staticmethod
     def _cleanSpecialChars(vals:List[Any], tab_width:int=3) -> List[str]:
         """Function to check exported lines for special TSV characters before writing to file.
 
@@ -327,7 +303,7 @@ class TSVOuterface(DataOuterface):
         existing_datasets = {}
         try:
             file_list         : Dict[str, Dict[str, Any]] = utils.loadJSONFile(filename="file_list.json", path=self._data_dir)
-            existing_datasets : Dict[str, Dict[str, Any]] = file_list.get(self._game_id, {})
+            existing_datasets : Dict[str, Dict[str, Any]] = file_list.get(self._meta.GameName, {})
         except FileNotFoundError as err:
             Logger.Log("file_list.json does not exist.", logging.WARNING)
         except json.decoder.JSONDecodeError as err:
@@ -335,7 +311,7 @@ class TSVOuterface(DataOuterface):
         else:
             # if we have already done this dataset before, rename old zip files
             # (of course, first check if we ever exported this game before).
-            self._updateOldZips(dataset_meta=existing_datasets.get(self._dataset_id, None))
+            self._updateOldZips(dataset_meta=existing_datasets.get(self._meta.DatasetID, None))
             # for each file, try to save out the csv/tsv to a file - if it's one that should be exported, that is.
             if self._use_zipping:
                 self._zipFiles()
@@ -379,8 +355,8 @@ class TSVOuterface(DataOuterface):
         if self._zip_paths['population'] is not None:
             with zipfile.ZipFile(self._zip_paths["population"], "w", compression=zipfile.ZIP_DEFLATED) as population_zip_file:
                 try:
-                    population_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_population-features.{self._extension}"
-                    readme_file  = Path(self._dataset_id) / "README.md"
+                    population_file = Path(self._meta.DatasetID) / f"{self._meta.DatasetID}_{self._meta.ShortHash}_population-features.{self._extension}"
+                    readme_file  = Path(self._meta.DatasetID) / "README.md"
                     TSVOuterface._addToZip(path=self._file_paths["population"], zip_file=population_zip_file, path_in_zip=population_file)
                     TSVOuterface._addToZip(path=_readme_path,                   zip_file=population_zip_file, path_in_zip=readme_file)
                     population_zip_file.close()
@@ -392,8 +368,8 @@ class TSVOuterface(DataOuterface):
         if self._zip_paths['players'] is not None:
             with zipfile.ZipFile(self._zip_paths["players"], "w", compression=zipfile.ZIP_DEFLATED) as players_zip_file:
                 try:
-                    player_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_player-features.{self._extension}"
-                    readme_file  = Path(self._dataset_id) / "README.md"
+                    player_file = Path(self._meta.DatasetID) / f"{self._meta.DatasetID}_{self._meta.ShortHash}_player-features.{self._extension}"
+                    readme_file  = Path(self._meta.DatasetID) / "README.md"
                     TSVOuterface._addToZip(path=self._file_paths["players"], zip_file=players_zip_file, path_in_zip=player_file)
                     TSVOuterface._addToZip(path=_readme_path,                zip_file=players_zip_file, path_in_zip=readme_file)
                     players_zip_file.close()
@@ -405,8 +381,8 @@ class TSVOuterface(DataOuterface):
         if self._zip_paths['sessions'] is not None:
             with zipfile.ZipFile(self._zip_paths["sessions"], "w", compression=zipfile.ZIP_DEFLATED) as sessions_zip_file:
                 try:
-                    session_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_session-features.{self._extension}"
-                    readme_file  = Path(self._dataset_id) / "README.md"
+                    session_file = Path(self._meta.DatasetID) / f"{self._meta.DatasetID}_{self._meta.ShortHash}_session-features.{self._extension}"
+                    readme_file  = Path(self._meta.DatasetID) / "README.md"
                     TSVOuterface._addToZip(path=self._file_paths["sessions"], zip_file=sessions_zip_file, path_in_zip=session_file)
                     TSVOuterface._addToZip(path=_readme_path,                 zip_file=sessions_zip_file, path_in_zip=readme_file)
                     sessions_zip_file.close()
@@ -418,8 +394,8 @@ class TSVOuterface(DataOuterface):
         if self._zip_paths['raw_events'] is not None:
             with zipfile.ZipFile(self._zip_paths["raw_events"], "w", compression=zipfile.ZIP_DEFLATED) as _raw_events_zip_file:
                 try:
-                    events_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_events.{self._extension}"
-                    readme_file = Path(self._dataset_id) / "README.md"
+                    events_file = Path(self._meta.DatasetID) / f"{self._meta.DatasetID}_{self._meta.ShortHash}_events.{self._extension}"
+                    readme_file = Path(self._meta.DatasetID) / "README.md"
                     TSVOuterface._addToZip(path=self._file_paths["raw_events"], zip_file=_raw_events_zip_file, path_in_zip=events_file)
                     TSVOuterface._addToZip(path=self._readme_path,          zip_file=_raw_events_zip_file, path_in_zip=readme_file)
                     _raw_events_zip_file.close()
@@ -431,8 +407,8 @@ class TSVOuterface(DataOuterface):
         if self._zip_paths['processed_events'] is not None:
             with zipfile.ZipFile(self._zip_paths["processed_events"], "w", compression=zipfile.ZIP_DEFLATED) as _processed_events_zip_file:
                 try:
-                    events_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_all-events.{self._extension}"
-                    readme_file = Path(self._dataset_id) / "README.md"
+                    events_file = Path(self._meta.DatasetID) / f"{self._meta.DatasetID}_{self._meta.ShortHash}_all-events.{self._extension}"
+                    readme_file = Path(self._meta.DatasetID) / "README.md"
                     TSVOuterface._addToZip(path=self._file_paths["processed_events"], zip_file=_processed_events_zip_file, path_in_zip=events_file)
                     TSVOuterface._addToZip(path=self._readme_path,          zip_file=_processed_events_zip_file, path_in_zip=readme_file)
                     _processed_events_zip_file.close()
@@ -441,61 +417,6 @@ class TSVOuterface(DataOuterface):
                 except FileNotFoundError as err:
                     Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
                     traceback.print_tb(err.__traceback__)
-
-    ## Public function to write out a tiny metadata file for indexing OGD data files.
-    def _writeMetadataFile(self, num_sess:int) -> None:
-        """Private function to write out a tiny metadata file for indexing OGD data files.
-        Using the paths of the exported files, and given some other variables for
-        deriving file metadata, this simply outputs a new file_name.meta file.
-
-        :param num_sess: The number of sessions included in the recent export.
-        :type num_sess: int
-        """
-        # First, ensure we have a data directory.
-        try:
-            self._game_data_dir.mkdir(exist_ok=True, parents=True)
-        except Exception as err:
-            msg = f"Could not set up folder {self._game_data_dir}. {type(err)} {str(err)}"
-            Logger.Log(msg, logging.WARNING)
-        else:
-            # Second, remove old metas, if they exist.
-            start_range = self._date_range['min'].strftime("%Y%m%d") if self._date_range['min'] is not None else "Unknown"
-            end_range   = self._date_range['max'].strftime("%Y%m%d") if self._date_range['max'] is not None else "Unknown"
-            match_string = f"{self._game_id}_{start_range}_to_{end_range}_\\w*\\.meta"
-            old_metas = [f for f in os.listdir(self._game_data_dir) if re.match(match_string, f)]
-            for old_meta in old_metas:
-                try:
-                    Logger.Log(f"Removing old meta file, {old_meta}")
-                    os.remove(self._game_data_dir / old_meta)
-                except Exception as err:
-                    msg = f"Could not remove old meta file {old_meta}. {type(err)} {str(err)}"
-                    Logger.Log(msg, logging.WARNING)
-            # Third, write the new meta file.
-            # calculate the path and name of the metadata file, and open/make it.
-            meta_file_path : Path = self._game_data_dir/ f"{self._dataset_id}_{self._short_hash}.meta"
-            with open(meta_file_path, "w", encoding="utf-8") as meta_file :
-                metadata  = \
-                {
-                    "game_id"      :self._game_id,
-                    "dataset_id"   :self._dataset_id,
-                    "ogd_revision" :self._short_hash,
-                    "start_date"   :self._date_range['min'].strftime("%m/%d/%Y") if self._date_range['min'] is not None else "Unknown",
-                    "end_date"     :self._date_range['max'].strftime("%m/%d/%Y") if self._date_range['max'] is not None else "Unknown",
-                    "date_modified":datetime.now().strftime("%m/%d/%Y"),
-                    "sessions"     :num_sess,
-                    "population_file"     : str(self._zip_paths['population'])       if self._zip_paths['population']       else None,
-                    "population_template" : f'/tree/{self._game_id.lower()}'         if self._zip_paths['population']       else None,
-                    "players_file"        : str(self._zip_paths['players'])          if self._zip_paths['players']          else None,
-                    "players_template"    : f'/tree/{self._game_id.lower()}'         if self._zip_paths['players']          else None,
-                    "sessions_file"       : str(self._zip_paths['sessions'])         if self._zip_paths['sessions']         else None,
-                    "sessions_template"   : f'/tree/{self._game_id.lower()}'         if self._zip_paths['sessions']         else None,
-                    "raw_file"            : str(self._zip_paths['raw_events'])       if self._zip_paths['raw_events']       else None,
-                    "events_template"     : f'/tree/{self._game_id.lower()}'         if self._zip_paths['raw_events']       else None,
-                    "events_file"         : str(self._zip_paths['processed_events']) if self._zip_paths['processed_events'] else None,
-                    "all_events_template" : f'/tree/{self._game_id.lower()}'         if self._zip_paths['processed_events'] else None
-                }
-                meta_file.write(json.dumps(metadata, indent=4))
-                meta_file.close()
 
     ## Private function to update the list of exported files.
     def _updateFileExportList(self, num_sess: int) -> None:
@@ -522,22 +443,22 @@ class TSVOuterface(DataOuterface):
                     "files_base" : self._file_indexing.RemoteURL,
                     "templates_base" : self._file_indexing.TemplatesURL
                 }
-            if not self._game_id in file_index.keys():
-                file_index[self._game_id] = {}
-            existing_datasets  = file_index[self._game_id]
+            if not self._meta.GameName in file_index.keys():
+                file_index[self._meta.GameName] = {}
+            existing_datasets  = file_index[self._meta.GameName]
             with open(self._data_dir / "file_list.json", "w") as existing_csv_file:
                 Logger.Log(f"Opened file list for writing at {existing_csv_file.name}", logging.INFO)
-                existing_metadata = existing_datasets.get(self._dataset_id, {})
+                existing_metadata = existing_datasets.get(self._meta.DatasetID, {})
                 population_path = self._zip_paths.get("population") or existing_metadata.get("population")
                 players_path    = self._zip_paths.get("players")    or existing_metadata.get("players")
                 sessions_path   = self._zip_paths.get("sessions")   or existing_metadata.get("sessions")
                 raw_events_path = self._zip_paths.get("raw_events") or existing_metadata.get("raw_events") or existing_metadata.get("events")
                 processed_events_path = self._zip_paths.get("processed_events") or existing_metadata.get("processed_events")
-                file_index[self._game_id][self._dataset_id] = \
+                file_index[self._meta.GameName][self._meta.DatasetID] = \
                 {
-                    "ogd_revision"          : self._short_hash,
-                    "start_date"            : self._date_range['min'].strftime("%m/%d/%Y") if self._date_range['min'] is not None else "Unknown",
-                    "end_date"              : self._date_range['max'].strftime("%m/%d/%Y") if self._date_range['max'] is not None else "Unknown",
+                    "ogd_revision"          : self._meta.ShortHash,
+                    "start_date"            : self._meta.DateRange['min'].strftime("%m/%d/%Y") if self._meta.DateRange['min'] is not None else "Unknown",
+                    "end_date"              : self._meta.DateRange['max'].strftime("%m/%d/%Y") if self._meta.DateRange['max'] is not None else "Unknown",
                     "date_modified"         : datetime.now().strftime("%m/%d/%Y"),
                     "sessions"              : num_sess,
                     "population_file"       : str(population_path)       if population_path       is not None else None,
