@@ -1,3 +1,4 @@
+"""Module containing all the commands available through the OGD CLI"""
 # import standard libraries
 import csv
 import logging
@@ -32,13 +33,18 @@ from ogd.core.utils.Readme import Readme
 class OGDCommands:
     """Utility class to collect functions for each of the commands that can be run when executing ogd-core as a module.
     """
+
+    # *** BUILT-INS & PROPERTIES ***
+
+    # *** PUBLIC STATICS ***
+
     @staticmethod
     def ListGames(games_list:List[str]) -> bool:
         """Command to list out the games available for export.
 
-        :param games_list: _description_
+        :param games_list: The list of available games, which the command should display.
         :type games_list: List[str]
-        :return: _description_
+        :return: True if the list was successfully displayed, else False.
         :rtype: bool
         """
         print(f"The games available for export are:\n{games_list}")
@@ -103,12 +109,14 @@ class OGDCommands:
         :type features: bool, optional
         :return: _description_
         :rtype: bool
+
+        .. todo:: Make use of destination parameter
         """
         success : bool = False
 
         export_modes   : Set[ExportMode]
         interface      : DataInterface
-        range          : ExporterRange
+        export_range   : ExporterRange
         file_outerface : DataOuterface
         dataset_id     : Optional[str] = None
 
@@ -123,12 +131,12 @@ class OGDCommands:
             interface = CSVInterface(game_id=args.game, config=_cfg, fail_fast=config.FailFast, filepath=Path(args.file), delim="\t" if _ext == 'tsv' else ',')
             # retrieve/calculate id range.
             ids = interface.AllIDs()
-            range = ExporterRange.FromIDs(source=interface, ids=ids if ids is not None else [])
+            export_range = ExporterRange.FromIDs(source=interface, ids=ids if ids is not None else [])
         else:
             interface = OGDGenerators.genDBInterface(config=config, game=args.game)
         # a. Case where specific player ID was given
             if args.player is not None and args.player != "":
-                range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.USER)
+                export_range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.USER)
                 dataset_id = f"{args.game}_{args.player}"
         # b. Case where player ID file was given
             elif args.player_id_file is not None and args.player_id_file != "":
@@ -138,10 +146,10 @@ class OGDCommands:
                     file_contents = list(reader) # this gives list of lines, each line a list
                     names = list(chain.from_iterable(file_contents)) # so, convert to single list
                     print(f"list of names: {list(names)}")
-                    range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.USER)
+                    export_range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.USER)
         # c. Case where specific session ID was given
             elif args.session is not None and args.session != "":
-                range = ExporterRange.FromIDs(source=interface, ids=[args.session], id_mode=IDMode.SESSION)
+                export_range = ExporterRange.FromIDs(source=interface, ids=[args.session], id_mode=IDMode.SESSION)
                 dataset_id = f"{args.game}_{args.session}"
         # d. Case where session ID file was given
             elif args.session_id_file is not None and args.session_id_file != "":
@@ -151,13 +159,13 @@ class OGDCommands:
                     file_contents = list(reader) # this gives list of lines, each line a list
                     names = list(chain.from_iterable(file_contents)) # so, convert to single list
                     print(f"list of sessions: {list(names)}")
-                    range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.SESSION)
+                    export_range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.SESSION)
         # e. Default case where we use date range
             else:
-                range = OGDGenerators.genDateRange(game=args.game, interface=interface, monthly=args.monthly, start_date=args.start_date, end_date=args.end_date)
+                export_range = OGDGenerators.genDateRange(game=args.game, interface=interface, monthly=args.monthly, start_date=args.start_date, end_date=args.end_date)
     # 3. set up the outerface, based on the range and dataset_id.
         _cfg = GameSourceSchema(name="FILE DEST", all_elements={"database":"FILE", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
-        file_outerface = TSVOuterface(game_id=args.game, config=_cfg, export_modes=export_modes, date_range=range.DateRange,
+        file_outerface = TSVOuterface(game_id=args.game, config=_cfg, export_modes=export_modes, date_range=export_range.DateRange,
                                     file_indexing=config.FileIndexConfig, dataset_id=dataset_id)
         outerfaces : Set[DataOuterface] = {file_outerface}
         # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
@@ -166,7 +174,7 @@ class OGDCommands:
             outerfaces.add(DebugOuterface(game_id=args.game, config=_cfg, export_modes=export_modes))
 
     # 4. Once we have the parameters parsed out, construct the request.
-        req = Request(range=range, exporter_modes=export_modes, interface=interface, outerfaces=outerfaces)
+        req = Request(range=export_range, exporter_modes=export_modes, interface=interface, outerfaces=outerfaces)
         if req.Interface.IsOpen():
             export_manager : ExportManager = ExportManager(config=config)
             result         : RequestResult = export_manager.ExecuteRequest(request=req)
@@ -177,3 +185,9 @@ class OGDCommands:
             # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
                             # {'req':req, 'feature_exporter':feature_exporter}, {})
         return success
+
+    # *** PUBLIC METHODS ***
+
+    # *** PRIVATE STATICS ***
+
+    # *** PRIVATE METHODS ***
