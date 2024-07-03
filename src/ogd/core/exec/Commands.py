@@ -111,6 +111,7 @@ class OGDCommands:
         :rtype: bool
 
         .. todo:: Make use of destination parameter
+        .. todo:: Refactor "step 2" logic into smaller functions, probably a "get case", then pass in to a "get range" and "get dataset ID"
         """
         success : bool = False
 
@@ -129,9 +130,7 @@ class OGDCommands:
             _ext = str(args.file).rsplit('.', maxsplit=1)[-1]
             _cfg = GameSourceSchema(name="FILE SOURCE", all_elements={"schema":"OGD_EVENT_FILE"}, data_sources={})
             interface = CSVInterface(game_id=args.game, config=_cfg, fail_fast=config.FailFast, filepath=Path(args.file), delim="\t" if _ext == 'tsv' else ',')
-            # retrieve/calculate id range.
-            ids = interface.AllIDs()
-            export_range = ExporterRange.FromIDs(source=interface, ids=ids if ids is not None else [])
+            export_range = ExporterRange.FromIDs(source=interface, ids=interface.AllIDs() or [])
         else:
             interface = OGDGenerators.genDBInterface(config=config, game=args.game)
         # a. Case where specific player ID was given
@@ -147,6 +146,7 @@ class OGDCommands:
                     names = list(chain.from_iterable(file_contents)) # so, convert to single list
                     print(f"list of names: {list(names)}")
                     export_range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.USER)
+                dataset_id = f"{args.game}_from_{file_path.name}"
         # c. Case where specific session ID was given
             elif args.session is not None and args.session != "":
                 export_range = ExporterRange.FromIDs(source=interface, ids=[args.session], id_mode=IDMode.SESSION)
@@ -160,6 +160,7 @@ class OGDCommands:
                     names = list(chain.from_iterable(file_contents)) # so, convert to single list
                     print(f"list of sessions: {list(names)}")
                     export_range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.SESSION)
+                dataset_id = f"{args.game}_from_{file_path.name}"
         # e. Default case where we use date range
             else:
                 export_range = OGDGenerators.genDateRange(game=args.game, interface=interface, monthly=args.monthly, start_date=args.start_date, end_date=args.end_date)
