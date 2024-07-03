@@ -11,7 +11,7 @@ from typing import Any, List, Optional, Set, Tuple
 # import 3rd-party libraries
 
 # import OGD files
-from ogd.core.exec.Generators import OGDGenerators
+# from ogd.core.exec.Generators import OGDGenerators
 from ogd.core.interfaces.CSVInterface import CSVInterface
 from ogd.core.interfaces.DataInterface import DataInterface
 from ogd.core.interfaces.outerfaces.DataOuterface import DataOuterface
@@ -28,6 +28,7 @@ from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.schemas.tables.TableSchema import TableSchema
 from ogd.core.utils.Logger import Logger
 from ogd.core.utils.Readme import Readme
+from .Generators import OGDGenerators
 
 
 class OGDCommands:
