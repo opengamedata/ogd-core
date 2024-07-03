@@ -103,7 +103,7 @@ class OGDParsers:
 
     @staticmethod
     def DestinationParser() -> ArgumentParser:
-        """Create an arg parser for getting a destination parameter for various commands
+        """Create an arg parser for getting a destination parameter for various commands.
         Available parameters are:
         
         * --destination
