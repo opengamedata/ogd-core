@@ -1,16 +1,36 @@
+"""Module for setting up parsers for the OGD CLI"""
 # import standard libraries
-
 from argparse import ArgumentParser, SUPPRESS
-from pathlib import Path
 from typing import List
 
 # import 3rd-party libraries
 
-# import local files
+# import OGD files
 
 class OGDParsers:
+    """Utility class to collect functions for setting up each of the parsers that are used by the various commands."""
+
+    # *** BUILT-INS & PROPERTIES ***
+
+    # *** PUBLIC STATICS ***
+
     @staticmethod
     def CommandParser(games_list:List[str]) -> ArgumentParser:
+        """Create an arg parser for getting top-level command.
+        Available commands are:
+
+        * export
+        * export-events
+        * export-features
+        * info
+        * readme
+        * list-games
+
+        :param games_list: List of games available for export.
+        :type games_list: List[str]
+        :return: A parser that recognizes the available top-level commands
+        :rtype: ArgumentParser
+        """
         game_parser = OGDParsers.GameParser(games_list=games_list) 
         export_parser = OGDParsers.ExportParser(parents=[game_parser])
         destination_parser = OGDParsers.DestinationParser()
@@ -35,6 +55,26 @@ class OGDParsers:
 
     @staticmethod
     def ExportParser(parents:List[ArgumentParser]) -> ArgumentParser:
+        """Create an arg parser for getting parameters specific to export commands.
+        Available parameters are:
+        
+        * start_date
+        * end_date
+        * --player
+        * --session
+        * --player_id_file
+        * --session_id_file
+        * --file
+        * --monthly
+        * --no_session_file
+        * --no_player_file
+        * --no_pop_file
+
+        :param parents: The parent parser(s) that the export parsers contributes to.
+        :type parents: List[ArgumentParser]
+        :return: A parser that recognizes the available export parameters.
+        :rtype: ArgumentParser
+        """
         export_parser = ArgumentParser(add_help=False, parents=parents)
         export_parser.add_argument("start_date", nargs="?", default=None,
                             help="The starting date of an export range in MM/DD/YYYY format (defaults to today).")
@@ -63,6 +103,14 @@ class OGDParsers:
 
     @staticmethod
     def DestinationParser() -> ArgumentParser:
+        """Create an arg parser for getting a destination parameter for various commands
+        Available parameters are:
+        
+        * --destination
+
+        :return: A parser that recognizes the available `destination` parameter.
+        :rtype: ArgumentParser
+        """
         destination_parser = ArgumentParser(add_help=False)
         destination_parser.add_argument("-d", "--destination", default=SUPPRESS, type=str,
                             help="The destination folder for the readme.")
@@ -70,7 +118,23 @@ class OGDParsers:
 
     @staticmethod
     def GameParser(games_list:List[str]) -> ArgumentParser:
+        """Create an arg parser for getting a game parameter for various commands
+        Available parameters are:
+        
+        * game
+
+        :param games_list: List of games available for export.
+        :type games_list: List[str]
+        :return: A parser that recognizes the available `game` parameter.
+        :rtype: ArgumentParser
+        """
         game_parser = ArgumentParser(add_help=False)
         game_parser.add_argument("game", type=str.upper, choices=games_list,
                             help="The game to use with the given command.")
         return game_parser
+
+    # *** PUBLIC METHODS ***
+
+    # *** PRIVATE STATICS ***
+
+    # *** PRIVATE METHODS ***

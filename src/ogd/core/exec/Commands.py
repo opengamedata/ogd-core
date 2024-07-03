@@ -32,8 +32,7 @@ from .Generators import OGDGenerators
 
 
 class OGDCommands:
-    """Utility class to collect functions for each of the commands that can be run when executing ogd-core as a module.
-    """
+    """Utility class to collect functions for each of the commands that can be run when executing ogd-core as a module."""
 
     # *** BUILT-INS & PROPERTIES ***
 
