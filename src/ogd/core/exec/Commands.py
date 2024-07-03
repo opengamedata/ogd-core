@@ -126,7 +126,7 @@ class OGDCommands:
     # 2. figure out the interface and range; optionally set a different dataset_id
         if args.file is not None and args.file != "":
             # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
-            _ext = str(args.file).split('.')[-1]
+            _ext = str(args.file).rsplit('.', maxsplit=1)[-1]
             _cfg = GameSourceSchema(name="FILE SOURCE", all_elements={"schema":"OGD_EVENT_FILE"}, data_sources={})
             interface = CSVInterface(game_id=args.game, config=_cfg, fail_fast=config.FailFast, filepath=Path(args.file), delim="\t" if _ext == 'tsv' else ',')
             # retrieve/calculate id range.
