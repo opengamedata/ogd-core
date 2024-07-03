@@ -1,3 +1,4 @@
+"""Module for generating certain objects for internal use in the OGD CLI"""
 # import standard libraries
 import logging
 from calendar import monthrange
@@ -17,6 +18,10 @@ from ogd.core.models.enums.ExportMode import ExportMode
 from ogd.core.utils.Logger import Logger
 
 class OGDGenerators:
+    """Utility class to collect functions for generating objects used to execute certain commands.
+    Essentially, 
+    """
+
     @staticmethod
     def genDBInterface(config:ConfigSchema, game:str) -> DataInterface:
         ret_val : DataInterface

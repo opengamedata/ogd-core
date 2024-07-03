@@ -17,8 +17,8 @@ class OGDParsers:
     @staticmethod
     def CommandParser(games_list:List[str]) -> ArgumentParser:
         """Create an arg parser for getting top-level command.
-        Available commands are:
 
+        Available commands are:
         * export
         * export-events
         * export-features
@@ -56,8 +56,8 @@ class OGDParsers:
     @staticmethod
     def ExportParser(parents:List[ArgumentParser]) -> ArgumentParser:
         """Create an arg parser for getting parameters specific to export commands.
+
         Available parameters are:
-        
         * start_date
         * end_date
         * --player
@@ -104,8 +104,9 @@ class OGDParsers:
     @staticmethod
     def DestinationParser() -> ArgumentParser:
         """Create an arg parser for getting a destination parameter for various commands.
+
         Available parameters are:
-        
+
         * --destination
 
         :return: A parser that recognizes the available `destination` parameter.
