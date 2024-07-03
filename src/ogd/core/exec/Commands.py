@@ -9,30 +9,38 @@ from typing import Any, List, Optional, Set, Tuple
 
 # import 3rd-party libraries
 
-# import local files
+# import OGD files
 from ogd.core.exec.Generators import OGDGenerators
-from ogd.core.interfaces.DataInterface import DataInterface
 from ogd.core.interfaces.CSVInterface import CSVInterface
+from ogd.core.interfaces.DataInterface import DataInterface
 from ogd.core.interfaces.outerfaces.DataOuterface import DataOuterface
-from ogd.core.interfaces.outerfaces.TSVOuterface import TSVOuterface
 from ogd.core.interfaces.outerfaces.DebugOuterface import DebugOuterface
+from ogd.core.interfaces.outerfaces.TSVOuterface import TSVOuterface
 from ogd.core.managers.ExportManager import ExportManager
+from ogd.core.models.enums.ExportMode import ExportMode
+from ogd.core.models.enums.IDMode import IDMode
+from ogd.core.requests.Request import ExporterRange, Request
 from ogd.core.requests.RequestResult import RequestResult, ResultStatus
-from ogd.core.requests.Request import Request, ExporterRange
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
-from ogd.core.models.enums.ExportMode import ExportMode
 from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.models.enums.IDMode import IDMode
 from ogd.core.schemas.tables.TableSchema import TableSchema
 from ogd.core.utils.Logger import Logger
 from ogd.core.utils.Readme import Readme
+
 
 class OGDCommands:
     """Utility class to collect functions for each of the commands that can be run when executing ogd-core as a module.
     """
     @staticmethod
     def ListGames(games_list:List[str]) -> bool:
+        """Command to list out the games available for export.
+
+        :param games_list: _description_
+        :type games_list: List[str]
+        :return: _description_
+        :rtype: bool
+        """
         print(f"The games available for export are:\n{games_list}")
         return True
 
