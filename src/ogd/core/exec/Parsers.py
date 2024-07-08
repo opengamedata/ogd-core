@@ -120,6 +120,7 @@ class OGDParsers:
     @staticmethod
     def GameParser(games_list:List[str]) -> ArgumentParser:
         """Create an arg parser for getting a game parameter for various commands
+
         Available parameters are:
         
         * game

@@ -19,11 +19,26 @@ from ogd.core.utils.Logger import Logger
 
 class OGDGenerators:
     """Utility class to collect functions for generating objects used to execute certain commands.
-    Essentially, 
+    
+    Essentially, just a collection of random stuff that we didn't want cluttering other files.
     """
 
     @staticmethod
     def genDBInterface(config:ConfigSchema, game:str) -> DataInterface:
+        """Create a data interface based on a config and desired game.
+
+        :param config: The current OGD configuration
+        :type config: ConfigSchema
+        :param game: The ID of the game whose data should be retrieved from the interface
+        :type game: str
+        :raises Exception: If the configuration for the given game does not give a valid type of database for the source.
+        :raises ValueError: If the given game does not exist in the GameSourceMap of the given configuration.
+        :return: A data interface for the configured type of database.
+        :rtype: DataInterface
+
+        .. todo:: Accept a GameSourceSchema instead of a full ConfigSchema
+        .. todo:: Use the "upper" of the source type, instead of checking for capitalized and non-capitalized versions of names.
+        """
         ret_val : DataInterface
         _game_cfg = config.GameSourceMap.get(game)
         if _game_cfg is not None and _game_cfg.Source is not None:
@@ -42,6 +57,21 @@ class OGDGenerators:
 
     @staticmethod
     def genModes(with_events:bool, with_features:bool, no_session_file:bool, no_player_file:bool, no_pop_file:bool) -> Set[ExportMode]:
+        """Convert a series of booleans for each type of export mode into a set of ExportMode enum values.
+
+        :param with_events: Whether to include `EVENTS` and `DETECTORS` in the set
+        :type with_events: bool
+        :param with_features: Whether to include any feature types in the set
+        :type with_features: bool
+        :param no_session_file: Whether to include `SESSION` in the set
+        :type no_session_file: bool
+        :param no_player_file: Whether to include `PLAYER` in the set
+        :type no_player_file: bool
+        :param no_pop_file: Whether to include `POPULATION` in the set
+        :type no_pop_file: bool
+        :return: A set of ExportModes, based on the arguments
+        :rtype: Set[ExportMode]
+        """
         ret_val = set()
 
         if with_events:
