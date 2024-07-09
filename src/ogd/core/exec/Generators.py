@@ -24,7 +24,7 @@ class OGDGenerators:
     """
 
     @staticmethod
-    def genDBInterface(config:ConfigSchema, game:str) -> DataInterface:
+    def GenDBInterface(config:ConfigSchema, game:str) -> DataInterface:
         """Create a data interface based on a config and desired game.
 
         :param config: The current OGD configuration
@@ -56,7 +56,7 @@ class OGDGenerators:
             raise ValueError(f"Config for {game} was invalid or not found!")
 
     @staticmethod
-    def genModes(with_events:bool, with_features:bool, no_session_file:bool, no_player_file:bool, no_pop_file:bool) -> Set[ExportMode]:
+    def GenModes(with_events:bool, with_features:bool, no_session_file:bool, no_player_file:bool, no_pop_file:bool) -> Set[ExportMode]:
         """Convert a series of booleans for each type of export mode into a set of ExportMode enum values.
 
         :param with_events: Whether to include `EVENTS` and `DETECTORS` in the set
@@ -89,7 +89,7 @@ class OGDGenerators:
 
     # retrieve/calculate date range.
     @staticmethod
-    def genDateRange(game:str, interface:DataInterface, monthly:bool, start_date:str, end_date:Optional[str]) -> ExporterRange:
+    def GenDateRange(game:str, interface:DataInterface, monthly:bool, start_date:str, end_date:Optional[str]) -> ExporterRange:
         """Use a pair of date strings to create an `ExporterRange` for use with an interface.
 
         Also allows the range to be specified as "monthly,"

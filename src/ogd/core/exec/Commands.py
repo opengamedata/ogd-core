@@ -122,7 +122,7 @@ class OGDCommands:
         dataset_id     : Optional[str] = None
 
     # 1. get exporter modes to run
-        export_modes = OGDGenerators.genModes(with_events=with_events, with_features=with_features,
+        export_modes = OGDGenerators.GenModes(with_events=with_events, with_features=with_features,
                                               no_session_file=args.no_session_file, no_player_file=args.no_player_file, no_pop_file=args.no_pop_file)
     # 2. figure out the interface and range; optionally set a different dataset_id
         if args.file is not None and args.file != "":
@@ -132,7 +132,7 @@ class OGDCommands:
             interface = CSVInterface(game_id=args.game, config=_cfg, fail_fast=config.FailFast, filepath=Path(args.file), delim="\t" if _ext == 'tsv' else ',')
             export_range = ExporterRange.FromIDs(source=interface, ids=interface.AllIDs() or [])
         else:
-            interface = OGDGenerators.genDBInterface(config=config, game=args.game)
+            interface = OGDGenerators.GenDBInterface(config=config, game=args.game)
         # a. Case where specific player ID was given
             if args.player is not None and args.player != "":
                 export_range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.USER)
@@ -163,7 +163,7 @@ class OGDCommands:
                 dataset_id = f"{args.game}_from_{file_path.name}"
         # e. Default case where we use date range
             else:
-                export_range = OGDGenerators.genDateRange(game=args.game, interface=interface, monthly=args.monthly, start_date=args.start_date, end_date=args.end_date)
+                export_range = OGDGenerators.GenDateRange(game=args.game, interface=interface, monthly=args.monthly, start_date=args.start_date, end_date=args.end_date)
     # 3. set up the outerface, based on the range and dataset_id.
         _cfg = GameSourceSchema(name="FILE DEST", all_elements={"database":"FILE", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
         file_outerface = TSVOuterface(game_id=args.game, config=_cfg, export_modes=export_modes, date_range=export_range.DateRange,
