@@ -8,7 +8,7 @@ from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.models.Event import Event
 
 class PerCountyFeature(PerCountFeature):
-    COUNTY_LIST = ["Hillsaide", "Forest", "Prairie", "Wetland", "Urban"]
+    COUNTY_LIST = ["Hillside", "Forest", "Prairie", "Wetland", "Urban"]
 
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)

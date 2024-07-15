@@ -7,11 +7,12 @@ from ogd.core.models.FeatureData import FeatureData
 
 # import PerCountyFeature
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
+from ogd.games.BLOOM.features.PerCountyFeature import PerCountyFeature
 
-class CountyLatestMoney(PerCountFeature):
-    def __init__(self, params: GeneratorParameters, county_map: Dict[str, int]):
-        super().__init__(params=params, county_map=county_map)
-        self.latest_money: Dict[str, Optional[int]] = {county: None for county in county_map.keys()}
+class CountyLatestMoney(PerCountyFeature):
+    def __init__(self, params: GeneratorParameters):
+        super().__init__(params=params)
+        self.latest_money: Dict[str, Optional[int]] = {county: None for county in self.COUNTY_LIST}
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod

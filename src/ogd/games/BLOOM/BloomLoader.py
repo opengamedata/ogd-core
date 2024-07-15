@@ -69,6 +69,21 @@ class BloomLoader(GeneratorLoader):
                     ret_val = BuildCount.BuildCount(params=extractor_params)
                 case "BuildingUnlockCount":
                     ret_val = BuildingUnlockCount.BuildingUnlockCount(params=extractor_params)
+                case "FailCount":
+                    ret_val = FailCount.FailCount(params=extractor_params)
+                case "GameCompletionStatus":
+                    ret_val = GameCompletionStatus.GameCompletionStatus(params=extractor_params)
+                case "NumberOfSessionsPerPlayer":
+                    ret_val = NumberOfSessionsPerPlayer.NumberOfSessionsPerPlayer(params=extractor_params)
+                case "PersistedThroughFailure":
+                    ret_val = PersistedThroughFailure.PersistedThroughFailure(params=extractor_params)
+                case "CountyUnlockCount":
+                    ret_val = CountyUnlockCount.CountyUnlockCount(params=extractor_params)
+                case _:
+                    raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature type for Bloom.")
+        # then run through per-count features.
+        else:
+            match feature_type:
                 case "CountyBloomAlertCount":
                     ret_val = CountyBloomAlertCount.CountyBloomAlertCount(params=extractor_params)
                 case "CountyBuildCount":
@@ -77,25 +92,9 @@ class BloomLoader(GeneratorLoader):
                     ret_val = CountyFinalPolicySettings.CountyFinalPolicySettings(params=extractor_params)
                 case "CountyLatestMoney":
                     ret_val = CountyLatestMoney.CountyLatestMoney(params=extractor_params)
-                case "CountyUnlockCount":
-                    ret_val = CountyUnlockCount.CountyUnlockCount(params=extractor_params)
-                case "FailCount":
-                    ret_val = FailCount.FailCount(params=extractor_params)
-                case "GameCompletionStatus":
-                    ret_val = GameCompletionStatus.GameCompletionStatus(params=extractor_params)
-                case "NumberOfSessionsPerPlayer":
-                    ret_val = NumberOfSessionsPerPlayer.NumberOfSessionsPerPlayer(params=extractor_params)
-                case "PerCountyFeature":
-                    ret_val = PerCountyFeature.PerCountyFeature(params=extractor_params)
-                case "PersistedThroughFailure":
-                    ret_val = PersistedThroughFailure.PersistedThroughFailure(params=extractor_params)
-                case _:
-                    raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature type for Bloom.")
-        # then run through per-count features.
-        else:
-            match feature_type:
                 case _:
                     raise NotImplementedError(f"'{feature_type}' is not a valid per-count feature type for Bloom.")
+                
         return ret_val
 
     def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:

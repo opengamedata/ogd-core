@@ -47,11 +47,12 @@ from ogd.core.models.FeatureData import FeatureData
 
 # import PerCountyFeature
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
+from ogd.games.BLOOM.features.PerCountyFeature import PerCountyFeature
 
-class PerCountyBuildCount(PerCountFeature):
-    def __init__(self, params: GeneratorParameters, county_map: Dict[str, int]):
-        super().__init__(params=params, county_map=county_map)
-        self.build_counts: Dict[str, Dict[str, int]] = {county: 0 for county in county_map.keys()}
+class CountyBuildCount(PerCountyFeature):
+    def __init__(self, params: GeneratorParameters):
+        super().__init__(params=params)
+        self.build_counts: Dict[str, Dict[str, int]] = {county: 0 for county in self.COUNTY_LIST}
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
