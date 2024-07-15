@@ -48,7 +48,7 @@ from ogd.core.models.FeatureData import FeatureData
 # import PerCountyFeature
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 
-class PerCountyBuildCount(PerCountyFeature):
+class PerCountyBuildCount(PerCountFeature):
     def __init__(self, params: GeneratorParameters, county_map: Dict[str, int]):
         super().__init__(params=params, county_map=county_map)
         self.build_counts: Dict[str, Dict[str, int]] = {county: 0 for county in county_map.keys()}

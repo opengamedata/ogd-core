@@ -8,7 +8,7 @@ from ogd.core.models.FeatureData import FeatureData
 # import PerCountyFeature
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 
-class CountyLatestMoney(PerCountyFeature):
+class CountyLatestMoney(PerCountFeature):
     def __init__(self, params: GeneratorParameters, county_map: Dict[str, int]):
         super().__init__(params=params, county_map=county_map)
         self.latest_money: Dict[str, Optional[int]] = {county: None for county in county_map.keys()}

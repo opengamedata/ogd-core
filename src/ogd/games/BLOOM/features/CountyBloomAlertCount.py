@@ -14,7 +14,7 @@ class CountyBloomAlertCount(Feature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["algae_growth_begin", "algae_growth_end"]
+        return ["bloom_alert_displayed"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:

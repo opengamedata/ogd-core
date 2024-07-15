@@ -24,8 +24,7 @@ class GameCompletionStatus(Feature):
         if event.EventName == "win_game":
             self.status = "WIN"
         elif event.EventName == "lose_game":
-            if self.status != "WIN":
-                self.status = "LOSS"
+            self.status = "LOSS"
 
     def _updateFromFeatureData(self, feature: FeatureData):
         pass

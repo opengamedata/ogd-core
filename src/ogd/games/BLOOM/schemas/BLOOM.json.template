@@ -988,36 +988,96 @@
       },
       "aggregate":{
          "ActiveTime": {
-             "threshold": 30,
-             "enabled": true,
-             "type": "ActiveTime",
-             "description": "Active time of a player",
-             "return_type": "timedelta"
+            "threshold": 30,
+            "enabled": true,
+            "type": "ActiveTime",
+            "description": "Active time of a player",
+            "return_type": "timedelta"
+         },
+         "AverageActiveTime": {
+            "enabled": true,
+            "type": "AverageActiveTime",
+            "description": "Average active time of a player",
+            "return_type": "timedelta"
+         },
+         "BloomAlertCount": {
+            "enabled": true,
+            "type": "BloomAlertCount",
+            "description": "Count of bloom alerts",
+            "return_type": "int"
+         },
+         "BuildCount": {
+            "enabled": true,
+            "type": "BuildCount",
+            "description": "Count of builds",
+            "return_type": "int"
+         },
+         "BuildingUnlockCount": {
+            "enabled": true,
+            "type": "BuildingUnlockCount",
+            "description": "Count of building unlocks",
+            "return_type": "int"
+         },
+         "CountyBloomAlertCount": {
+            "enabled": true,
+            "type": "CountyBloomAlertCount",
+            "description": "Count of bloom alerts per county",
+            "return_type": "int"
+         },
+         "CountyBuildCount": {
+            "enabled": true,
+            "type": "CountyBuildCount",
+            "description": "Count of builds per county",
+            "return_type": "int"
+         },
+         "CountyFinalPolicySettings": {
+            "enabled": true,
+            "type": "CountyFinalPolicySettings",
+            "description": "Final policy settings per county",
+            "return_type": "dict"
+         },
+         "CountyLatestMoney": {
+            "enabled": true,
+            "type": "CountyLatestMoney",
+            "description": "Latest money per county",
+            "return_type": "float"
+         },
+         "CountyUnlockCount": {
+            "enabled": true,
+            "type": "CountyUnlockCount",
+            "description": "Number of counties unlocked",
+            "return_type": "int"
+         },
+         "FailCount": {
+            "enabled": true,
+            "type": "FailCount",
+            "description": "Number of failure count",
+            "return_type": "int"
+         },
+         "GameCompletionStatus": {
+            "enabled": true,
+            "type": "GameCompletionStatus",
+            "description": "Game completion status",
+            "return_type": "str"
          },
          "NumberOfSessionsPerPlayer": {
             "enabled": true,
             "type": "NumberOfSessionsPerPlayer",
             "description": "Number of sessions per player",
             "return_type": "int"
-        },
-        "CountyUnlockCount": {
-         "enabled": true,
-         "type": "CountyUnlockCount",
-         "description": "ANumber of Counties unlocked",
-         "return_type": "int"
-        },
-        "FailCount": {
-         "enabled": true,
-         "type": "FailCount",
-         "description": "Number of failure count",
-         "return_type": "int"
-        },
-        "PersistedThroughFailure": {
-         "enabled": true,
-         "type": "PersistedThroughFailure",
-         "description": "Number of times faied a but persisted through the task",
-         "return_type": "int"
-        }
+         },
+         "PerCountyFeature": {
+            "enabled": true,
+            "type": "PerCountyFeature",
+            "description": "Generic per county feature",
+            "return_type": "dict"
+         },
+         "PersistedThroughFailure": {
+            "enabled": true,
+            "type": "PersistedThroughFailure",
+            "description": "Number of times failed but persisted through the task",
+            "return_type": "int"
+         }
      
    
       }

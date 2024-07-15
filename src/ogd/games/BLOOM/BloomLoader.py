@@ -61,14 +61,32 @@ class BloomLoader(GeneratorLoader):
             match feature_type:
                 case "ActiveTime":
                     ret_val = ActiveTime.ActiveTime(params=extractor_params, idle_threshold=schema_args.get("threshold", 30))
-                case "NumberOfSessionsPerPlayer":
-                    ret_val = NumberOfSessionsPerPlayer.NumberOfSessionsPerPlayer(params=extractor_params)
                 case "AverageActiveTime":
                     ret_val = AverageActiveTime.AverageActiveTime(params=extractor_params)
+                case "BloomAlertCount":
+                    ret_val = BloomAlertCount.BloomAlertCount(params=extractor_params)
+                case "BuildCount":
+                    ret_val = BuildCount.BuildCount(params=extractor_params)
+                case "BuildingUnlockCount":
+                    ret_val = BuildingUnlockCount.BuildingUnlockCount(params=extractor_params)
+                case "CountyBloomAlertCount":
+                    ret_val = CountyBloomAlertCount.CountyBloomAlertCount(params=extractor_params)
+                case "CountyBuildCount":
+                    ret_val = CountyBuildCount.CountyBuildCount(params=extractor_params)
+                case "CountyFinalPolicySettings":
+                    ret_val = CountyFinalPolicySettings.CountyFinalPolicySettings(params=extractor_params)
+                case "CountyLatestMoney":
+                    ret_val = CountyLatestMoney.CountyLatestMoney(params=extractor_params)
                 case "CountyUnlockCount":
                     ret_val = CountyUnlockCount.CountyUnlockCount(params=extractor_params)
                 case "FailCount":
-                    ret_val = FailCount.FailCount(params=extractor_params)       
+                    ret_val = FailCount.FailCount(params=extractor_params)
+                case "GameCompletionStatus":
+                    ret_val = GameCompletionStatus.GameCompletionStatus(params=extractor_params)
+                case "NumberOfSessionsPerPlayer":
+                    ret_val = NumberOfSessionsPerPlayer.NumberOfSessionsPerPlayer(params=extractor_params)
+                case "PerCountyFeature":
+                    ret_val = PerCountyFeature.PerCountyFeature(params=extractor_params)
                 case "PersistedThroughFailure":
                     ret_val = PersistedThroughFailure.PersistedThroughFailure(params=extractor_params)
                 case _:
