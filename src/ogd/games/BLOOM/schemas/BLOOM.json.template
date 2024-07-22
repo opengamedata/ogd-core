@@ -400,7 +400,7 @@
             }
          }
       },
-      "bloom_alert_displayed": {
+      "bloom_alert": {
          "description": "When game displays a 'bloom' alert pop-up, which appears above a newly-formed bloom, and does not pause game time.",
          "event_data": {
             "tile_index" : {
@@ -814,7 +814,7 @@
             }
          }
       },
-      "execute_build_queue": {
+      "click_execute_build": {
          "description": "When the player clicks to complete the building of all buildings in the build queue.",
          "event_data": {
             "buildings" : {
