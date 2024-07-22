@@ -31,7 +31,8 @@ class NumberOfSessionsPerPlayer(Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self.session_count]
+        total_sessions = sum(self.session_count.values())
+        return [total_sessions]
 
     # *** Optionally override public functions. ***
     @staticmethod
