@@ -1080,8 +1080,6 @@
             "description": "Number of times failed but persisted through the task",
             "return_type": "int"
          }
-     
-   
       }
    },
    
