@@ -1069,7 +1069,7 @@
             "return_type": "str"
          },
          "NumberOfSessionsPerPlayer": {
-            "enabled": true,
+            "enabled": false,
             "type": "NumberOfSessionsPerPlayer",
             "description": "Number of sessions per player",
             "return_type": "int"
