@@ -7,7 +7,8 @@
       "PowerType": [ "SPIN", "FLIP", "SWAP", "MOVE" ],
       "TargetType": [ "SPIN", "FLIP", "SWAP_ORIGIN", "SWAP_DESTINATION", "MOVE_ORIGIN", "MOVE_DESTINATION" ],
       "TileType": [ "GEAR", "NUT", "SCREW", "SPRING", "NONE" ],
-      "SlideType": [ "LEFT", "DOWN", "RIGHT" ]
+      "SlideType": [ "LEFT", "DOWN", "RIGHT" ],
+      "GoalType": [ "Self", "Other" ]
    },
    "game_state": {
       "seconds_from_launch": {
@@ -17,6 +18,14 @@
       "order": {
          "type": "OrderType",
          "description": "The current order the player is trying to fulfill."
+      },
+      "goal_value" : {
+         "type" : "int",
+         "description" : "TODO : The goal score the player selected for the current order. `null` if the player is in the menu, or in the first order (when a goal has not been set)."
+      },
+      "goal_type" : {
+         "type" : "GoalType",
+         "description" : "TODO : Whether the player selected 'Self' or 'Other' for the current order. `null` if the player is in the menu, or in the first order (when a goal has not been set)."
       },
       "tile_counts": {
          "type" : "Dict[str, int]",

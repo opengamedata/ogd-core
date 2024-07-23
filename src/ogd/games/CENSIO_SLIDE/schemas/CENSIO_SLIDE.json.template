@@ -248,6 +248,11 @@
             }
          }
       },
+      "out_of_moves" : {
+         "description": "TODO : When the player has made the last allowed move, but not solved the puzzle, and the game displays an 'out of moves' popup.",
+         "event_data": {
+         }
+      },
       "puzzle_solved": {
          "description": "When the puzzle enters the 'solved' state after the player has moved all pieces to complete the circuit.",
          "event_data": {
