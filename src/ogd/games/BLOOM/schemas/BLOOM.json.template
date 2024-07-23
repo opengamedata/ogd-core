@@ -985,6 +985,38 @@
    
    "features": {
       "per_count": {
+         "CountyBloomAlertCount": {
+            "enabled": true,
+            "type": "CountyBloomAlertCount",
+            "prefix": "cty",
+            "count": 5,
+            "description": "Count of bloom alerts per county",
+            "return_type": "int"
+         },
+         "CountyBuildCount": {
+            "enabled": true,
+            "type": "CountyBuildCount",
+            "prefix": "cty",
+            "count": 5,
+            "description": "Count of builds per county",
+            "return_type": "int"
+         },
+         "CountyFinalPolicySettings": {
+            "enabled": true,
+            "type": "CountyFinalPolicySettings",
+            "prefix": "cty",
+            "count": 5,
+            "description": "Final policy settings per county",
+            "return_type": "dict"
+         },
+         "CountyLatestMoney": {
+            "enabled": true,
+            "type": "CountyLatestMoney",
+            "prefix": "cty",
+            "count": 5,
+            "description": "Latest money per county",
+            "return_type": "float"
+         }
       },
       "aggregate":{
          "ActiveTime": {
@@ -1018,30 +1050,6 @@
             "description": "Count of building unlocks",
             "return_type": "int"
          },
-         "CountyBloomAlertCount": {
-            "enabled": true,
-            "type": "CountyBloomAlertCount",
-            "description": "Count of bloom alerts per county",
-            "return_type": "int"
-         },
-         "CountyBuildCount": {
-            "enabled": true,
-            "type": "CountyBuildCount",
-            "description": "Count of builds per county",
-            "return_type": "int"
-         },
-         "CountyFinalPolicySettings": {
-            "enabled": true,
-            "type": "CountyFinalPolicySettings",
-            "description": "Final policy settings per county",
-            "return_type": "dict"
-         },
-         "CountyLatestMoney": {
-            "enabled": true,
-            "type": "CountyLatestMoney",
-            "description": "Latest money per county",
-            "return_type": "float"
-         },
          "CountyUnlockCount": {
             "enabled": true,
             "type": "CountyUnlockCount",
@@ -1065,12 +1073,6 @@
             "type": "NumberOfSessionsPerPlayer",
             "description": "Number of sessions per player",
             "return_type": "int"
-         },
-         "PerCountyFeature": {
-            "enabled": true,
-            "type": "PerCountyFeature",
-            "description": "Generic per county feature",
-            "return_type": "dict"
          },
          "PersistedThroughFailure": {
             "enabled": true,
