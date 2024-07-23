@@ -37,17 +37,22 @@ class GeneratorLoader(abc.ABC):
 
     _derived_builtins : Dict[str, Type[BuiltinExtractor]] = {}
     def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
-        """Base constructor for Extractor classes.
-        The constructor sets an extractor's session id and range of levels,
-        as well as initializing the feature
-        es dictionary and list of played levels.
+        """Base constructor for Loader classes.
+        Sets the player and session identifiers, as well as the mode in which to load generators.
+        Also sets the schema, which contains config info, and any overrides.
 
+        :param player_id: _description_
+        :type player_id: str
         :param session_id: The id of the session from which we will extract features.
         :type session_id: str
         :param game_schema: A dictionary that defines how the game data itself is structured.
         :type game_schema: GameSchema
+        :param mode: _description_
+        :type mode: ExtractionMode
+        :param feature_overrides: _description_
+        :type feature_overrides: Optional[List[str]]
         """
-        # TODO : seems like Loader shouldn't really need player ID and session ID, consider removing.
+        # TODO : seems like Loader shouldn't really need player ID,  session ID, or overrides, consider removing.
         self._player_id   : str            = player_id
         self._session_id  : str            = session_id
         self._game_schema : GameSchema     = game_schema

@@ -1,4 +1,7 @@
+"""Initializer for Bloom features"""
+
 __all__ = [
+    "PerCountyFeature",
     "ActiveTime",
     "AverageActiveTime",
     "BloomAlertCount",
@@ -12,11 +15,11 @@ __all__ = [
     "FailCount",
     "GameCompletionStatus",
     "NumberOfSessionsPerPlayer",
-    "PerCountyFeature",
     "PersistedThroughFailure"
 
 ]
 
+from . import PerCountyFeature
 from . import ActiveTime
 from . import AverageActiveTime
 from . import BloomAlertCount
@@ -30,5 +33,4 @@ from . import CountyUnlockCount
 from . import FailCount
 from . import GameCompletionStatus
 from . import NumberOfSessionsPerPlayer
-from . import PerCountyFeature
 from . import PersistedThroughFailure

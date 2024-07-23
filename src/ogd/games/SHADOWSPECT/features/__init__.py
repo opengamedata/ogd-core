@@ -1,3 +1,5 @@
+"""Initializer for Shadowspect features"""
+
 __all__ = [
     "MoveShapeCount",
     "SessionID",
