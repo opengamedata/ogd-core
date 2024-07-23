@@ -228,6 +228,15 @@ When the system displays higlighting on the puzzle board for where the currently
 | ---      | ---      | ---             | ---         |
 | highlighted_spaces | List[List] | A list of board coordinates, each indicating a highlighted space on the puzzle board. | |  
 
+### **out_of_moves**
+
+TODO : When the player has made the last allowed move, but not solved the puzzle, and the game displays an 'out of moves' popup.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
+
 ### **puzzle_solved**
 
 When the puzzle enters the 'solved' state after the player has moved all pieces to complete the circuit.
