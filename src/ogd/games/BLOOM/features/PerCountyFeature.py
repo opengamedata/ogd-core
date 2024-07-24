@@ -18,14 +18,14 @@ class PerCountyFeature(PerCountFeature):
     def _validateEventCountIndex(self, event: Event):
         ret_val: bool = False
 
-        county_name = event.GameState.get('county_name', event.EventData.get('county_name', "COUNTY NAME NOT FOUND"))
+        county_name = event.GameState.get('current_county', event.EventData.get('current_county', "COUNTY NAME NOT FOUND"))
         if county_name is not None:
             try:
                 if self.COUNTY_LIST.index(county_name) == self.CountIndex:
                     ret_val = True
             except ValueError:
-                self.WarningMessage(f"County name {county_name} not found in COUNTY_LIST in {type(self).__name__}")
+                self.WarningMessage(f"County name {county_name} not found in COUNTY_LIST in {type(self).__name__} event name = {event.event_name}")
         else:
-            self.WarningMessage(f"Got invalid county_name data in {type(self).__name__}")
+            self.WarningMessage(f"Got invalid current_county data in {type(self).__name__}")
 
         return ret_val

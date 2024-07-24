@@ -14,19 +14,19 @@ class BloomAlertCount(Feature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["bloom_alert_displayed"]
+        return ["bloom_alert"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        county_name = event.EventData.get("county_name", None)
-        if county_name:
-            if county_name not in self.bloom_alert_counts:
-                self.bloom_alert_counts[county_name] = 1
+        current_county = event.GameState.get("current_county", None)
+        if current_county:
+            if current_county not in self.bloom_alert_counts:
+                self.bloom_alert_counts[current_county] = 1
             else:
-                self.bloom_alert_counts[county_name] += 1
+                self.bloom_alert_counts[current_county] += 1
 
     def _updateFromFeatureData(self, feature: FeatureData):
         pass

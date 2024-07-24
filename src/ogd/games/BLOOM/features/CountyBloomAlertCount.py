@@ -6,7 +6,9 @@ from ogd.core.models.Event import Event
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.models.FeatureData import FeatureData
 
-class CountyBloomAlertCount(Feature):
+from ogd.games.BLOOM.features.PerCountyFeature import PerCountyFeature
+
+class CountyBloomAlertCount(PerCountyFeature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.county_bloom_alert_counts: Dict[str, int] = {}
@@ -15,7 +17,7 @@ class CountyBloomAlertCount(Feature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["bloom_alert_displayed", "switch_county"]
+        return ["bloom_alert", "switch_county"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
@@ -23,9 +25,9 @@ class CountyBloomAlertCount(Feature):
 
     def _updateFromEvent(self, event: Event) -> None:
         if event.EventName == "switch_county":
-            self.focused_county = event.EventData.get("county_name", None)
-        elif event.EventName == "bloom_alert_displayed":
-            county_name = event.EventData.get("county_name", None)
+            self.focused_county = event.GameState.get("current_county", None)
+        elif event.EventName == "bloom_alert":
+            county_name = event.GameState.get("current_county", None)
             if county_name:
                 if county_name not in self.county_bloom_alert_counts:
                     self.county_bloom_alert_counts[county_name] = 1

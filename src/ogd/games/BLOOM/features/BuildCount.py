@@ -21,7 +21,7 @@ class BuildCount(Feature):
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        county_name = event.EventData.get("county_name", None)
+        county_name = event.GameState.get("current_county", None)
         if county_name:
             if county_name not in self.build_counts:
                 self.build_counts[county_name] = 1
