@@ -27,7 +27,7 @@ class DataInterface(Interface):
 
     @abc.abstractmethod
     def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None, exclude_rows:Optional[List[str]] = None) -> List[Tuple]:
-        """_summary_
+        """Function to retrieve all rows for a given set of Session or Player IDs, which can be converted to Event objects by a TableSchema
 
         :param id_list: List of IDs whose events should be retrieved from the database. These are session IDs if id_mode is SESSION, or user IDs if id_mode is USER.
         :type id_list: List[str]
