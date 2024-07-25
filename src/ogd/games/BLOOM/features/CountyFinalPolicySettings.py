@@ -29,7 +29,7 @@ class CountyFinalPolicySettings(Feature):
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        county_name = event.EventData.get("county_name", None)
+        county_name = event.GameState.get("current_county", None)
         policy_name = event.EventData.get("policy", None)
         choice_name = event.EventData.get("choice_name", None)
 

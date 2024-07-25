@@ -79,17 +79,17 @@ class CountyLatestMoney(PerCountyFeature):
     def _validateEventCountIndex(self, event: Event):
         ret_val: bool = False
 
-        county_name = event.EventData.get('county_name', "COUNTY NAME NOT FOUND")
+        county_name = event.GameState.get('current_county', "COUNTY NAME NOT FOUND")
         if county_name is not None:
             if county_name in self._county_map and self._county_map[county_name] == self.CountIndex:
                 ret_val = True
         else:
-            self.WarningMessage(f"Got invalid county_name data in {type(self).__name__}")
+            self.WarningMessage(f"Got invalid current_county data in {type(self).__name__}")
 
         return ret_val
 
     def _updateFromEvent(self, event: Event) -> None:
-        county_name = event.EventData.get("county_name", None)
+        county_name = event.GameState.get("current_county", None)
         current_money = event.GameState.get("current_money", None)
         if county_name and current_money is not None and county_name in self.latest_money:
             self.latest_money[county_name] = current_money
