@@ -27,6 +27,19 @@ class DataInterface(Interface):
 
     @abc.abstractmethod
     def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None, exclude_rows:Optional[List[str]] = None) -> List[Tuple]:
+        """_summary_
+
+        :param id_list: List of IDs whose events should be retrieved from the database. These are session IDs if id_mode is SESSION, or user IDs if id_mode is USER.
+        :type id_list: List[str]
+        :param id_mode: The mode of ID to use for interpreting the id_list, defaults to IDMode.SESSION
+        :type id_mode: IDMode, optional
+        :param versions: List of log_versions to include in the query, any versions not in the list will be ignored. Defaults to None
+        :type versions: Optional[List[int]], optional
+        :param exclude_rows: List of event names to be excluded from the query, defaults to None
+        :type exclude_rows: Optional[List[str]], optional
+        :return: A list of raw results from the query.
+        :rtype: List[Tuple]
+        """
         pass
 
     @abc.abstractmethod
