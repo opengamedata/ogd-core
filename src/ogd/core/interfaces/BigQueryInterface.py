@@ -6,7 +6,7 @@ from google.cloud import bigquery
 from google.api_core.exceptions import BadRequest
 from typing import Dict, Final, List, Tuple, Optional
 # import locals
-from ogd.core.interfaces.DataInterface import DataInterface
+from ogd.core.interfaces.EventInterface import EventInterface
 from ogd.core.models.enums.IDMode import IDMode
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
@@ -14,7 +14,7 @@ from ogd.core.utils.Logger import Logger
 
 AQUALAB_MIN_VERSION : Final[float] = 6.2
 
-class BigQueryInterface(DataInterface):
+class BigQueryInterface(EventInterface):
 
     # *** BUILT-INS & PROPERTIES ***
 

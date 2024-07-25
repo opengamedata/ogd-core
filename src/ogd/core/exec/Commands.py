@@ -13,7 +13,7 @@ from typing import Any, List, Optional, Set, Tuple
 # import OGD files
 # from ogd.core.exec.Generators import OGDGenerators
 from ogd.core.interfaces.CSVInterface import CSVInterface
-from ogd.core.interfaces.DataInterface import DataInterface
+from ogd.core.interfaces.EventInterface import EventInterface
 from ogd.core.interfaces.outerfaces.DataOuterface import DataOuterface
 from ogd.core.interfaces.outerfaces.DebugOuterface import DebugOuterface
 from ogd.core.interfaces.outerfaces.TSVOuterface import TSVOuterface
@@ -116,7 +116,7 @@ class OGDCommands:
         success : bool = False
 
         export_modes   : Set[ExportMode]
-        interface      : DataInterface
+        interface      : EventInterface
         export_range   : ExporterRange
         file_outerface : DataOuterface
         dataset_id     : Optional[str] = None
