@@ -1,5 +1,5 @@
 import logging
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from enum import IntEnum
 from typing import Dict, List, Optional, Union
 
@@ -16,7 +16,7 @@ class Event:
     def __init__(self, session_id:str, app_id:str,     timestamp:datetime,
                  event_name:str, event_data:utils.map, event_source:EventSource,
                  app_version:Optional[str] = None,     app_branch:Optional[str] = None,
-                 log_version:Optional[str] = None,     time_offset:Optional[timedelta] = None,
+                 log_version:Optional[str] = None,     time_offset:Optional[timezone] = None,
                  user_id:Optional[str] = "",           user_data:Optional[utils.map] = {},
                  game_state:Optional[utils.map] = {},  event_sequence_index:Optional[int] = None):
         """Constructor for an Event object.
@@ -56,7 +56,7 @@ class Event:
         self.app_version          : str           = app_version if app_version is not None else "0"
         self.app_branch           : str           = app_branch  if app_branch  is not None else "main"
         self.log_version          : str           = log_version if log_version is not None else "0"
-        self.time_offset          : Optional[timedelta] = time_offset
+        self.time_offset          : Optional[timezone] = time_offset
         self.user_id              : Optional[str] = user_id
         self.user_data            : utils.map     = user_data if user_data is not None else {}
         self.game_state           : utils.map     = game_state if game_state is not None else {}
@@ -72,7 +72,7 @@ class Event:
              + f"app_version  : {self.app_version}\n"\
              + f"app_branch   : {self.app_branch}\n"\
              + f"log_version  : {self.log_version}\n"\
-             + f"offset       : {self.time_offset}\n"\
+             + f"offset       : {self.time_offset.tzname(None)}\n"\
              + f"user_id      : {self.user_id}\n"\
              + f"user_data    : {self.user_data}\n"\
              + f"game_state   : {self.game_state}\n"\
@@ -148,7 +148,7 @@ class Event:
                 "log_version", "offset",        "user_id",    "user_data",
                 "game_state",  "index"]
 
-    def ColumnValues(self) -> List[Union[str, datetime, timedelta, utils.map, int, None]]:
+    def ColumnValues(self) -> List[Union[str, datetime, timezone, utils.map, int, None]]:
         return [self.session_id,  self.app_id,             self.timestamp,   self.event_name,
                 self.event_data,  self.event_source.name,  self.app_version, self.app_branch,
                 self.log_version, self.time_offset,        self.user_id,     self.user_data,
@@ -190,7 +190,7 @@ class Event:
         return self.timestamp
 
     @property
-    def TimeOffset(self) -> Optional[timedelta]:
+    def TimeOffset(self) -> Optional[timezone]:
         """A timedelta for the offset from GMT to the local time zone of the game client that sent the Event
 
         Some legacy games do not include an offset, and instead log the Timestamp based on the local time zone.
