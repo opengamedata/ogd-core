@@ -313,7 +313,7 @@ class TableSchema:
         if isinstance(offset, timedelta):
             if "offset" not in TableSchema._conversion_warnings:
                 Logger.Log(f"{self._table_format_name} table schema set offset as {type(offset)}, but offset should be a timezone", logging.WARN)
-                TableSchema._conversion_warnings.append("uid")
+                TableSchema._conversion_warnings.append("offset")
             offset = timezone(offset)
 
         uid     = self._getValueFromRow(row=row, indices=self._column_map.UserID,      concatenator=concatenator, fallback=fallbacks.get('user_id'))
