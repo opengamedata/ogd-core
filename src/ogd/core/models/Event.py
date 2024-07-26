@@ -72,7 +72,7 @@ class Event:
              + f"app_version  : {self.app_version}\n"\
              + f"app_branch   : {self.app_branch}\n"\
              + f"log_version  : {self.log_version}\n"\
-             + f"offset       : {self.time_offset.tzname(None)}\n"\
+             + f"offset       : {self.TimeOffsetString}\n"\
              + f"user_id      : {self.user_id}\n"\
              + f"user_data    : {self.user_data}\n"\
              + f"game_state   : {self.game_state}\n"\
@@ -149,9 +149,16 @@ class Event:
                 "game_state",  "index"]
 
     def ColumnValues(self) -> List[Union[str, datetime, timezone, utils.map, int, None]]:
+        """A list of all values for the row, in order they appear in the `ColumnNames` function.
+
+        .. todo:: Technically, this should be string representations of each, but we're technically not enforcing that yet.
+
+        :return: The list of values.
+        :rtype: List[Union[str, datetime, timezone, utils.map, int, None]]
+        """
         return [self.session_id,  self.app_id,             self.timestamp,   self.event_name,
                 self.event_data,  self.event_source.name,  self.app_version, self.app_branch,
-                self.log_version, self.time_offset,        self.user_id,     self.user_data,
+                self.log_version, self.TimeOffsetString,   self.user_id,     self.user_data,
                 self.game_state,  self.event_sequence_index]
 
     @property
@@ -199,6 +206,17 @@ class Event:
         :rtype: Optional[timedelta]
         """
         return self.time_offset
+
+    @property
+    def TimeOffsetString(self) -> Optional[str]:
+        """A string representation of the offset from GMT to the local time zone of the game client that sent the Event
+
+        Some legacy games do not include an offset, and instead log the Timestamp based on the local time zone.
+
+        :return: A timedelta for the offset from GMT to the local time zone of the game client that sent the Event
+        :rtype: Optional[timedelta]
+        """
+        return self.time_offset.tzname(None) if self.time_offset is not None else None
 
     @property
     def EventName(self) -> str:
