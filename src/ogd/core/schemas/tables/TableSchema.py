@@ -414,7 +414,7 @@ class TableSchema:
 
         if time_str == "None" or time_str == "none" or time_str == "null" or time_str == "nan":
             return None
-        elif re.fullmatch(pattern="\d+:\d+:\d+(\.\d+)?", string=time_str):
+        elif re.fullmatch(pattern=r"\d+:\d+:\d+(\.\d+)?", string=time_str):
             try:
                 pieces = time_str.split(':')
                 seconds_pieces = pieces[2].split('.')
@@ -428,7 +428,7 @@ class TableSchema:
                 pass
             else:
                 return ret_val
-        elif re.fullmatch(pattern="-?\d+", string=time_str):
+        elif re.fullmatch(pattern=r"-?\d+", string=time_str):
             try:
                 ret_val = timedelta(seconds=int(time_str))
             except ValueError as err:
@@ -443,7 +443,7 @@ class TableSchema:
 
         if time_str == "None" or time_str == "none" or time_str == "null" or time_str == "nan":
             return None
-        elif re.fullmatch(pattern="UTC[+-]\d+:\d+", string=time_str):
+        elif re.fullmatch(pattern=r"UTC[+-]\d+:\d+", string=time_str):
             try:
                 pieces = time_str.removeprefix("UTC").split(":")
                 ret_val = timezone(timedelta(hours=int(pieces[0]), minutes=int(pieces[1])))
