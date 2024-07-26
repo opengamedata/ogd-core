@@ -423,7 +423,7 @@ class TableSchema:
                 return ret_val
         elif re.fullmatch(pattern="-?\d+", string=time_str):
             try:
-                ret_val = timedelta(milliseconds=int(time_str))
+                ret_val = timedelta(seconds=int(time_str))
             except ValueError as err:
                 pass
             else:
