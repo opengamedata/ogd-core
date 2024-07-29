@@ -238,7 +238,8 @@ class BigQueryInterface(EventInterface):
         # 3) Set up WHERE clause based on whether we need Aqualab min version or not.
         where_clause = f" WHERE {id_clause}"
         if exclude_rows is not None:
-            where_clause += f" AND event_name not in ({exclude_rows})"
+            exclude_string = ','.join([f"'{x}'" for x in exclude_rows])
+            where_clause += f" AND event_name not in ({exclude_string})"
 
         # 4) Set up actual query
         # TODO Order by user_id, and by timestamp within that.
