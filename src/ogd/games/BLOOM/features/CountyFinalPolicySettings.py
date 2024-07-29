@@ -9,7 +9,7 @@ from ogd.core.models.FeatureData import FeatureData
 class CountyFinalPolicySettings(Feature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        self.policy_settings: Dict[str, Optional[str]] = {"policy1": None, "policy2": None, "policy3": None}
+        self.policy_settings: Dict[str, Optional[str]] = {"SalesTaxPolicy": None, "RunoffPolicy": None, "ImportTaxPolicy": None, "SkimmingPolicy": None}
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -27,6 +27,8 @@ class CountyFinalPolicySettings(Feature):
         if policy_name is not None and choice_name is not None:
             if policy_name in self.policy_settings:
                 self.policy_settings[policy_name] = choice_name
+            else:
+                self.WarningMessage(f"Got a select_policy_card with unexpected policy type {policy_name}")
 
     def _updateFromFeatureData(self, feature: FeatureData):
         pass

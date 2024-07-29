@@ -5,7 +5,7 @@
       "TileType"          : ["LAND", "WATER", "DEEP_WATER"],
       "CardinalDirection" : ["N", "NE", "SE", "S", "SW", "NW"],
       "PolicyCategory"    : ["ECONOMY", "ECOLOGY"],
-      "PolicyType"        : ["SALES", "IMPORT", "RUNOFF", "CLEANUP"],
+      "PolicyType"        : ["SalesTaxPolicy", "IMPORT", "RunoffPolicy", "CLEANUP"],
       "SalesPolicy"       : ["NOT_SET", "NONE", "LOW_TAX", "HIGH_TAX", "SUBSIDY"],
       "ImportPolicy"      : ["NOT_SET", "NONE", "MILK", "GRAIN", "FERTILIZER"],
       "RunoffPolicy"      : ["NOT_SET", "NONE", "LOW", "HIGH", "VERY_HIGH"],
