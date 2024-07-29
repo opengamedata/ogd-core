@@ -13,7 +13,7 @@ from ogd.core.schemas.tables.TableSchema import TableSchema
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.utils.Logger import Logger
 
-class DataInterface(Interface):
+class EventInterface(Interface):
 
     # *** ABSTRACTS ***
 
