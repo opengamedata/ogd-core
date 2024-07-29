@@ -306,6 +306,15 @@
             }
          }
       },
+      "switch_county": {
+         "description": "When player crosses from one county to another and the interface updates to show the new county's money, policies, etc.",
+         "event_data": {
+            "new_mode" : {
+               "type" : "str",
+               "description" : "The county the player switched into."
+            }
+         }
+      },
       "open_economy_view": {
          "description": "When the player clicks to open the economy breakdown view",
          "event_data": {
