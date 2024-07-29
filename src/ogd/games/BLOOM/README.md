@@ -342,6 +342,15 @@ When the player finishes reading the current line of dialog, and clicks to advan
 | character_type | CharacterType | The kind of character who is 'speaking,' such as an advisor or farmer. | |
 | line_text | str | The actual content of the line of dialog that was just completed (not the line that will be shown next). | |  
 
+### **switch_county**
+
+When player has crossed from one county to another and the interface updates to show the new county's money, policies, etc.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
+
 ### **open_economy_view**
 
 When the player clicks to open the economy breakdown view
@@ -705,7 +714,7 @@ When the player clicks a map point, attempting to destroy a building on the tile
 | tile_index | int | The index, within the global map, of the tile where the player tried to destroy a building. | |
 | building_type | BuildingType | The specific type of building, if any, on the tile. | |  
 
-### **execute_build_queue**
+### **click_execute_build**
 
 When the player clicks to complete the building of all buildings in the build queue.
 
@@ -713,7 +722,7 @@ When the player clicks to complete the building of all buildings in the build qu
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| buildings | List[BuildingType] | The specific buildings in the build queue. | |
+| built_items | List[BuildingType] | The specific buildings in the build queue. | |
 | total_cost | int | The total cost of the buildings in the build queue. | |
 | funds_remaining | int | The remaining county funds, after building all buildings in the queue. | |  
 
