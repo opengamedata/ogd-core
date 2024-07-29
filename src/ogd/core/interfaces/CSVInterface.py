@@ -65,8 +65,8 @@ class CSVInterface(EventInterface):
             else:
                 _data = self._data.loc[self._data['session_id'].isin(id_list)]
             if exclude_rows is not None:
-                _mask = _data[_data['event_name'].isin(exclude_rows)]
-                _data = _data.drop(~_mask)
+                _mask = _data['event_name'].isin(exclude_rows)
+                _data = _data[~_mask]
             ret_val = list(_data.itertuples(index=False, name=None))
         return ret_val
 
