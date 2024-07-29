@@ -344,13 +344,12 @@ When the player finishes reading the current line of dialog, and clicks to advan
 
 ### **switch_county**
 
-When player crosses from one county to another and the interface updates to show the new county's money, policies, etc.
+When player has crossed from one county to another and the interface updates to show the new county's money, policies, etc.
 
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-| new_mode | str | The county the player switched into. | |  
+| ---      | ---      | ---             | ---         |  
 
 ### **open_economy_view**
 
@@ -715,7 +714,7 @@ When the player clicks a map point, attempting to destroy a building on the tile
 | tile_index | int | The index, within the global map, of the tile where the player tried to destroy a building. | |
 | building_type | BuildingType | The specific type of building, if any, on the tile. | |  
 
-### **execute_build_queue**
+### **click_execute_build**
 
 When the player clicks to complete the building of all buildings in the build queue.
 
