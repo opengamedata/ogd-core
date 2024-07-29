@@ -1,5 +1,5 @@
 # import libraries
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.models.Event import Event
@@ -9,15 +9,7 @@ from ogd.core.models.FeatureData import FeatureData
 class CountyFinalPolicySettings(Feature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        self.policy_settings: Dict[str, Dict[str, str]] = {
-            "Hillsaide": {},
-            "Forest": {},
-            "Prairie": {},
-            "Wetland": {},
-            "Urban": {}
-        }
-        for county in self.policy_settings.keys():
-            self.policy_settings[county] = {"policy1": None, "policy2": None, "policy3": None}
+        self.policy_settings: Dict[str, Optional[str]] = {"policy1": None, "policy2": None, "policy3": None}
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -29,13 +21,12 @@ class CountyFinalPolicySettings(Feature):
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        county_name = event.GameState.get("current_county", None)
         policy_name = event.EventData.get("policy", None)
         choice_name = event.EventData.get("choice_name", None)
 
-        if county_name and policy_name and choice_name is not None:
-            if county_name in self.policy_settings:
-                self.policy_settings[county_name][policy_name] = choice_name
+        if policy_name is not None and choice_name is not None:
+            if policy_name in self.policy_settings:
+                self.policy_settings[policy_name] = choice_name
 
     def _updateFromFeatureData(self, feature: FeatureData):
         pass
