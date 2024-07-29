@@ -822,7 +822,7 @@
       "click_execute_build": {
          "description": "When the player clicks to complete the building of all buildings in the build queue.",
          "event_data": {
-            "buildings" : {
+            "built_items" : {
                "type" : "List[BuildingType]",
                "description" : "The specific buildings in the build queue."
             },
