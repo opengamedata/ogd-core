@@ -1038,10 +1038,11 @@
             "description": "Count of bloom alerts",
             "return_type": "int"
          },
-         "BuildCount": {
+         "BuildCountBuiltin": {
             "enabled": true,
-            "type": "BuildCount",
+            "type": "CountEvent",
             "description": "Count of builds",
+            "target": "click_execute_build",
             "return_type": "int"
          },
          "BuildingUnlockCount": {
