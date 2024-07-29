@@ -722,7 +722,7 @@ When the player clicks to complete the building of all buildings in the build qu
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| buildings | List[BuildingType] | The specific buildings in the build queue. | |
+| built_items | List[BuildingType] | The specific buildings in the build queue. | |
 | total_cost | int | The total cost of the buildings in the build queue. | |
 | funds_remaining | int | The remaining county funds, after building all buildings in the queue. | |  
 
