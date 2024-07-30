@@ -12,41 +12,27 @@ from ogd.games.BLOOM.features.PerCountyFeature import PerCountyFeature
 class CountyLatestMoney(PerCountyFeature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        self.latest_money: Dict[str, Optional[int]] = {county: None for county in self.COUNTY_LIST}
+        self.latest_money: Optional[int] = None
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
+        # return ["all_events"]
         return ["switch_county"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
-    def _validateEventCountIndex(self, event: Event):
-        ret_val: bool = False
-
-        county_name = event.GameState.get('current_county', "COUNTY NAME NOT FOUND")
-        if county_name is not None:
-            if county_name in self._county_map and self._county_map[county_name] == self.CountIndex:
-                ret_val = True
-        else:
-            self.WarningMessage(f"Got invalid current_county data in {type(self).__name__}")
-
-        return ret_val
-
     def _updateFromEvent(self, event: Event) -> None:
-        county_name = event.GameState.get("current_county", None)
         current_money = event.GameState.get("current_money", None)
-        if county_name and current_money is not None and county_name in self.latest_money:
-            self.latest_money[county_name] = current_money
+        self.latest_money = current_money
 
     def _updateFromFeatureData(self, feature: FeatureData):
         pass
 
     def _getFeatureValues(self) -> List[Any]:
-        total_latest_money = sum(value for value in self.latest_money.values() if value is not None)
-        return [total_latest_money]
+        return [self.latest_money]
 
     def Subfeatures(self) -> List[str]:
         return []
