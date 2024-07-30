@@ -342,14 +342,25 @@ When the player finishes reading the current line of dialog, and clicks to advan
 | character_type | CharacterType | The kind of character who is 'speaking,' such as an advisor or farmer. | |
 | line_text | str | The actual content of the line of dialog that was just completed (not the line that will be shown next). | |  
 
-### **switch_county**
+### **leave_county**
 
-When player has crossed from one county to another and the interface updates to show the new county's money, policies, etc.
+When player leaves from one county to another.
 
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |  
+| ---      | ---      | ---             | ---         |
+| to_county | str | The new county the player is entering as they leave the current county. | |  
+
+### **enter_county**
+
+When player has crossed into a county from another, and the interface updates to show the new county's money, policies, etc.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| from_county | str | The county the player left to enter the current one. | |  
 
 ### **open_economy_view**
 
