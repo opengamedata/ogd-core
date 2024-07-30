@@ -106,12 +106,12 @@ from ogd.games.BLOOM.features.PerCountyFeature import PerCountyFeature
 class CountyBuildCount(PerCountyFeature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        self.build_counts: Dict[str, Dict[str, int]] = {county: 0 for county in self.COUNTY_LIST}
+        self.count : int = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["click_execute_build"]
+        return ["execute_build_queue"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
@@ -119,16 +119,13 @@ class CountyBuildCount(PerCountyFeature):
 
 
     def _updateFromEvent(self, event: Event) -> None:
-        county_name = event.GameState.get("current_county", None)
-        if county_name and county_name in self.build_counts:
-            self.build_counts[county_name] += 1
+        self.count += 1
 
     def _updateFromFeatureData(self, feature: FeatureData):
         pass
 
     def _getFeatureValues(self) -> List[Any]:
-        total_build_counts = sum(self.build_counts.values())
-        return [total_build_counts]
+        return [self.count]
 
     def Subfeatures(self) -> List[str]:
         return []
