@@ -1062,6 +1062,13 @@
             "description": "Number of counties unlocked",
             "return_type": "int"
          },
+         "EconomyViewCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Count of times the player viewed the economy view",
+            "target": "open_economy_view",
+            "return_type": "int"
+         },
          "FailCount": {
             "enabled": true,
             "type": "FailCount",
