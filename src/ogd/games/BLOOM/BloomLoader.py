@@ -4,7 +4,6 @@ import json
 from pathlib import Path
 from typing import Any, Callable, Dict, Final, List, Optional
 
-from ogd.games.BLOOM.features import AverageActiveTime, CountyUnlockCount, FailCount, PersistedThroughFailure
 # import local files
 from ogd.games import BLOOM
 from ogd.games.BLOOM.detectors import * 
@@ -75,8 +74,8 @@ class BloomLoader(GeneratorLoader):
                     ret_val = GameCompletionStatus.GameCompletionStatus(params=extractor_params)
                 case "NumberOfSessionsPerPlayer":
                     ret_val = NumberOfSessionsPerPlayer.NumberOfSessionsPerPlayer(params=extractor_params)
-                case "PersistedThroughFailure":
-                    ret_val = PersistedThroughFailure.PersistedThroughFailure(params=extractor_params)
+                case "SucceededThroughFailure":
+                    ret_val = SucceededThroughFailure.SucceededThroughFailure(params=extractor_params)
                 case "CountyUnlockCount":
                     ret_val = CountyUnlockCount.CountyUnlockCount(params=extractor_params)
                 case _:

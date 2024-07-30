@@ -5,7 +5,7 @@ from ogd.core.models.Event import Event
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.models.FeatureData import FeatureData
 
-class PersistedThroughFailure(Feature):
+class SucceededThroughFailure(Feature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.failure_count: int = 0

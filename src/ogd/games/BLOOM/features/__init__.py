@@ -15,7 +15,7 @@ __all__ = [
     "FailCount",
     "GameCompletionStatus",
     "NumberOfSessionsPerPlayer",
-    "PersistedThroughFailure"
+    "SucceededThroughFailure"
 
 ]
 
@@ -33,4 +33,4 @@ from . import CountyUnlockCount
 from . import FailCount
 from . import GameCompletionStatus
 from . import NumberOfSessionsPerPlayer
-from . import PersistedThroughFailure
+from . import SucceededThroughFailure

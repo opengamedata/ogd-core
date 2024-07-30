@@ -5,7 +5,7 @@
       "TileType"          : ["LAND", "WATER", "DEEP_WATER"],
       "CardinalDirection" : ["N", "NE", "SE", "S", "SW", "NW"],
       "PolicyCategory"    : ["ECONOMY", "ECOLOGY"],
-      "PolicyType"        : ["SalesTaxPolicy", "IMPORT", "RunoffPolicy", "CLEANUP"],
+      "PolicyType"        : ["SalesTaxPolicy", "ImportTaxPolicy", "RunoffPolicy", "SkimmingPolicy"],
       "SalesPolicy"       : ["NOT_SET", "NONE", "LOW_TAX", "HIGH_TAX", "SUBSIDY"],
       "ImportPolicy"      : ["NOT_SET", "NONE", "MILK", "GRAIN", "FERTILIZER"],
       "RunoffPolicy"      : ["NOT_SET", "NONE", "LOW", "HIGH", "VERY_HIGH"],
@@ -1080,9 +1080,9 @@
             "description": "Number of sessions per player",
             "return_type": "int"
          },
-         "PersistedThroughFailure": {
+         "SucceededThroughFailure": {
             "enabled": true,
-            "type": "PersistedThroughFailure",
+            "type": "SucceededThroughFailure",
             "description": "Number of times failed but persisted through the task",
             "return_type": "int"
          }
