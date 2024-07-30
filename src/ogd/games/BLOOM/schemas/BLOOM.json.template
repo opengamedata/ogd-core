@@ -1043,7 +1043,7 @@
             "description": "Count of bloom alerts",
             "return_type": "int"
          },
-         "BuildCountBuiltin": {
+         "BuildCount": {
             "enabled": true,
             "type": "CountEvent",
             "description": "Count of builds",
@@ -1078,6 +1078,13 @@
             "enabled": false,
             "type": "NumberOfSessionsPerPlayer",
             "description": "Number of sessions per player",
+            "return_type": "int"
+         },
+         "PolicyAdjustments" : {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Count of policy changes",
+            "target": "select_policy_card",
             "return_type": "int"
          },
          "SucceededThroughFailure": {
