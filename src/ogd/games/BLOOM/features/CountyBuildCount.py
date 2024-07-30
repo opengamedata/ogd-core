@@ -111,7 +111,7 @@ class CountyBuildCount(PerCountyFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["execute_build_queue"]
+        return ["click_execute_build"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
