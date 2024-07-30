@@ -6,7 +6,7 @@ on:
     branches:
     - master
     paths:
-    - 'src/ogd/games/CENSIO_MATCH/schemas/MATCH.json.template'
+    - 'src/ogd/games/CENSIO_MATCH/schemas/CENSIO_MATCH.json.template'
     - '.github/workflows/README_censio_match.yml'
     - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
