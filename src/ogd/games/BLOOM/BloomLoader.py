@@ -54,8 +54,8 @@ class BloomLoader(GeneratorLoader):
     def _getFeaturesModule():
         return features
 
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
-        ret_val : Feature
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
+        ret_val : Optional[Feature]
         # First run through aggregate features
         if extractor_params._count_index == None:
             match feature_type:
@@ -80,7 +80,7 @@ class BloomLoader(GeneratorLoader):
                 case "CountyUnlockCount":
                     ret_val = CountyUnlockCount.CountyUnlockCount(params=extractor_params)
                 case _:
-                    raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature type for Bloom.")
+                    ret_val = None
         # then run through per-count features.
         else:
             match feature_type:
@@ -93,7 +93,7 @@ class BloomLoader(GeneratorLoader):
                 case "CountyLatestMoney":
                     ret_val = CountyLatestMoney.CountyLatestMoney(params=extractor_params)
                 case _:
-                    raise NotImplementedError(f"'{feature_type}' is not a valid per-count feature type for Bloom.")
+                    ret_val = None
                 
         return ret_val
 
