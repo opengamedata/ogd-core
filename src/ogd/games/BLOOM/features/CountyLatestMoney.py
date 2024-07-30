@@ -17,8 +17,8 @@ class CountyLatestMoney(PerCountyFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        # return ["all_events"]
-        return ["switch_county"]
+        return ["all_events"]
+        # return ["switch_county"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
