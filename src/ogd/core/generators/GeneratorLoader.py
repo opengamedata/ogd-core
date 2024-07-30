@@ -21,7 +21,7 @@ class GeneratorLoader(abc.ABC):
     # *** ABSTRACTS ***
     
     @abc.abstractmethod
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Extractor:
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Extractor]:
         pass
     
     @abc.abstractmethod
