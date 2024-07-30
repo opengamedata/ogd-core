@@ -13,7 +13,7 @@ class BuildingUnlockCount(Feature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["building_type_unlocked"]
+        return ["unlock_building_type"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
