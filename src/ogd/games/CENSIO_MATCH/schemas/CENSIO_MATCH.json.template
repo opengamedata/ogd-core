@@ -21,7 +21,7 @@
       },
       "goal_value" : {
          "type" : "int",
-         "description" : "TODO : The goal score the player selected for the current order. `null` if the player is in the menu, or in the first order (when a goal has not been set)."
+         "description" : "The goal score the player selected for the current order. Always 0 if the player is in the menu, or in the first order (when a goal has not been set)."
       },
       "goal_type" : {
          "type" : "GoalType",
@@ -206,6 +206,10 @@
                "type":"OrderStatus",
                "description":"The previous completion status of the order (completed, failed only, or not attempted)."
             },
+            "order_is_optimal" : {
+               "type":"bool",
+               "description":"True if the selected order matches the level’s most prevalent part."
+            },
             "high_score" : {
                "type":"int",
                "description":"The previous high score on the order."
@@ -226,14 +230,36 @@
                "type":"float",
                "description":"The overall score multiplier on the order, based on the settings."
             },
+            "sandbox_enabled" : {
+               "type":"bool",
+               "description":"Whether the order began with the sandbox practice mode enabled or not."
+            },
             "initial_grid" : {
                "type":"List[List[TileType]]",
                "description":"A list of all rows containing tiles (starting from the bottom of the grid). Each row indicates the types of all tiles in the grid spaces of the row (or NONE for a grid space without a tile)."
             }
          }
       },
-      "click_toggle_help": {
+      "toggle_sandbox": {
+         "description": "When the player turns the sandbox practice mode on or off.",
+         "event_data": {
+            "toggle" : {
+               "type":"ToggleType",
+               "description":"Whether the sandbox mode was toggled on or off."
+            }
+         }
+      },
+      "toggle_power_info": {
          "description": "When the player toggles the 'help' view of the 'powers' box on or off.",
+         "event_data": {
+            "toggle" : {
+               "type":"ToggleType",
+               "description":"Whether the view was toggled on or off."
+            }
+         }
+      },
+      "click_toggle_help": {
+         "description": "TODO : remove.",
          "event_data": {
             "toggle" : {
                "type":"ToggleType",
@@ -393,10 +419,14 @@
                   "tile_points" : "List[List[int]]"
                },
                "description":"A dict indicating what type of tile was matched, and the list of points where the matching tiles were located."
+            },
+            "combo_round" : {
+               "type":"int",
+               "description":"number of times matches have been made without player intervention (i.e. pieces falling into a match position)."
             }
          }
       },
-      "order_complete": {
+      "order_completed": {
          "description": "When the player has used all drops, completing the order.",
          "event_data": {
             "successful" : {
@@ -414,6 +444,10 @@
             "moves_left" : {
                "type":"int",
                "description":"The number of remaining moves (TODO : determine whether players who complete the order targets with leftover drops are forced to use the remaining drops or not)."
+            },
+            "sandbox_enabled" : {
+               "type":"bool",
+               "description":"Whether the order had the sandbox practice mode enabled or not."
             }
          }
       },
