@@ -267,6 +267,7 @@ class ExportManager:
         start : datetime = datetime.now()
         # TODO : Add a way to configure what to exclude at higher level, here. So we can easily choose to leave out certain events.
         _exclude_rows = None
+        # HACK : setting to skip algae events here directly
         if request.GameID == 'BLOOM':
             _exclude_rows = ['algae_growth_end', 'algae_growth_begin']
         ret_val = request.Interface.EventsFromIDs(id_list=next_slice_ids, id_mode=request.Range.IDMode, exclude_rows=_exclude_rows)
