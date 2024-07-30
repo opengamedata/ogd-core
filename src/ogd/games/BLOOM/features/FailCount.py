@@ -35,7 +35,7 @@ class FailCount(Feature):
 
     def _getFeatureValues(self) -> List[Any]:
         _total = sum([val for val in self.fail_counts.values()])
-        return [self.fail_counts]
+        return [_total, self.fail_counts]
 
     def Subfeatures(self) -> List[str]:
         return ["Breakdown"]
