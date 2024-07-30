@@ -19,7 +19,7 @@ class PerCountyFeature(PerCountFeature):
         ret_val: bool = False
 
         county_name = event.GameState.get('current_county', event.EventData.get('current_county', "COUNTY NAME NOT FOUND"))
-        if county_name is not None:
+        if county_name != "COUNTY NAME NOT FOUND":
             try:
                 if self.COUNTY_LIST.index(county_name) == self.CountIndex:
                     ret_val = True
