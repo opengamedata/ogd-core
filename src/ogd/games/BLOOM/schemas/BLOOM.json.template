@@ -306,9 +306,22 @@
             }
          }
       },
-      "switch_county": {
-         "description": "When player has crossed from one county to another and the interface updates to show the new county's money, policies, etc.",
+      "leave_county": {
+         "description": "When player leaves from one county to another.",
          "event_data": {
+            "to_county" : {
+               "type" : "str",
+               "description" : "The new county the player is entering as they leave the current county."
+            }
+         }
+      },
+      "enter_county": {
+         "description": "When player has crossed into a county from another, and the interface updates to show the new county's money, policies, etc.",
+         "event_data": {
+            "from_county" : {
+               "type" : "str",
+               "description" : "The county the player left to enter the current one."
+            }
          }
       },
       "open_economy_view": {
