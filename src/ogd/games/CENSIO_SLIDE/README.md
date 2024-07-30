@@ -104,6 +104,15 @@ When the player starts a new game (at present, this happens automatically at lau
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |  
 
+### **game_complete**
+
+When the player completes the last level of the game, thus completing the game itself.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
+
 ### **level_menu_displayed**
 
 When the system displays a list of the game's levels.
@@ -136,6 +145,17 @@ When the player selects a level from the menu.
 | level_id | int | The level number for the level. | |
 | level_max_moves | int | The max number of moves allowed in the level. | |
 | best_score | int | null | The player's best score on the level, or null if they have not previously played the level. | |  
+
+### **level_loaded**
+
+When the selected level is loaded and play can begin.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| level_id | int | The level that was loaded | |
+| solution_state | List[Dict[str, Any]] | The final solution state for the board. This uses the same format and set of elements as the game state's board. |**shape_flags** : List[ShapeFlag], **shape_index** : int, **position** : Dict[str, int], **block_map** : List[List[int]] |  
 
 ### **click_undo**
 
