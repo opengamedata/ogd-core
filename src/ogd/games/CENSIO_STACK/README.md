@@ -107,6 +107,15 @@ When the player starts a new game (at present, this happens automatically at lau
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |  
 
+### **game_complete**
+
+When the player completes the last level of the game, thus completing the game itself.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
+
 ### **level_preview_displayed**
 
 When the system displays a preview of the upcoming level to the player, including the target score and allowed time.
@@ -429,15 +438,6 @@ When the player finishes a survey
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | survey_id | str | An identifier for the specific survey. | |  
-
-### **game_complete**
-
-When the player completes the game
-
-#### Event Data
-
-| **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |  
 
 ## Detected Events  
 
