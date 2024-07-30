@@ -70,7 +70,7 @@
          "event_data": {}
       },
       "game_complete": {
-         "description": "When the player completes the last level of the game, thus completing the game itself.",
+         "description": "When the player completes the last order of the game, thus completing the game itself.",
          "event_data": {}
       },
       "order_menu_displayed": {
