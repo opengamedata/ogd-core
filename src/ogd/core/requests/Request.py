@@ -3,8 +3,8 @@ import abc
 from datetime import datetime
 from typing import Dict, List, Optional, Set
 # import local files
-from ogd.core.interfaces.EventInterface import EventInterface
-from ogd.core.interfaces.outerfaces.DataOuterface import DataOuterface
+from ogd.core.connectors.interfaces.EventInterface import EventInterface
+from ogd.core.connectors.outerfaces.DataOuterface import DataOuterface
 from ogd.core.models.enums.IDMode import IDMode
 from ogd.core.models.enums.ExportMode import ExportMode
 from ogd.core.utils.Logger import Logger

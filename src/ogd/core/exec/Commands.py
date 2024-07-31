@@ -12,11 +12,11 @@ from typing import Any, List, Optional, Set, Tuple
 
 # import OGD files
 # from ogd.core.exec.Generators import OGDGenerators
-from ogd.core.interfaces.CSVInterface import CSVInterface
-from ogd.core.interfaces.EventInterface import EventInterface
-from ogd.core.interfaces.outerfaces.DataOuterface import DataOuterface
-from ogd.core.interfaces.outerfaces.DebugOuterface import DebugOuterface
-from ogd.core.interfaces.outerfaces.TSVOuterface import TSVOuterface
+from ogd.core.connectors.interfaces.CSVInterface import CSVInterface
+from ogd.core.connectors.interfaces.EventInterface import EventInterface
+from ogd.core.connectors.outerfaces.DataOuterface import DataOuterface
+from ogd.core.connectors.outerfaces.DebugOuterface import DebugOuterface
+from ogd.core.connectors.outerfaces.TSVOuterface import TSVOuterface
 from ogd.core.managers.ExportManager import ExportManager
 from ogd.core.models.enums.ExportMode import ExportMode
 from ogd.core.models.enums.IDMode import IDMode
