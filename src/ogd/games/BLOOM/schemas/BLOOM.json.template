@@ -1,0 +1,1123 @@
+{
+   "enums" : {
+      "MapMode"           : ["VIEW", "BUILD", "DESTROY"],
+      "BuildingType"      : ["EMPTY", "ROAD", "TOLLBOOTH", "CITY", "DAIRYFARM", "GRAINFARM", "STORAGE", "PROCESSOR", "EXPORTDEPOT", "PROCESSORBROKEN", "OBSTACLE"],
+      "TileType"          : ["LAND", "WATER", "DEEP_WATER"],
+      "CardinalDirection" : ["N", "NE", "SE", "S", "SW", "NW"],
+      "PolicyCategory"    : ["ECONOMY", "ECOLOGY"],
+      "PolicyType"        : ["SalesTaxPolicy", "ImportTaxPolicy", "RunoffPolicy", "SkimmingPolicy"],
+      "SalesPolicy"       : ["NOT_SET", "NONE", "LOW_TAX", "HIGH_TAX", "SUBSIDY"],
+      "ImportPolicy"      : ["NOT_SET", "NONE", "MILK", "GRAIN", "FERTILIZER"],
+      "RunoffPolicy"      : ["NOT_SET", "NONE", "LOW", "HIGH", "VERY_HIGH"],
+      "CleanupPolicy"     : ["NOT_SET", "NONE", "LOW_SKIMMING", "HIGH_SKIMMING", "SKIM_AND_DREDGE"],
+      "CharacterClass"    : ["TODO : This includes ECONOMY_ADVISOR, ECOLOGY_ADVISOR, PHOS4US, GRAIN_FARMER, DAIRY_FARMER, etc. but need to get full list"],
+      "AlertType"         : ["null", "Bloom", "ExcessRunoff", "DieOff", "CritImbalance", "UnusedProcessor", "DecliningPop", "SellingLoss", "Disconnected", "Dialogue", "Global"],
+      "ZoomType"          : ["BUTTON", "SCROLL"],
+      "LossType"          : ["CityFailed", "TooManyBlooms", "OutOfMoney"],
+      "AttributeStatus"   : ["GOOD", "OK", "BAD"],
+      "ViewType"          : ["PHOSPHORUS_VIEW", "ECONOMY_VIEW"]
+   },
+   "game_state" : {
+      "seconds_from_launch" : {
+         "type" : "float",
+         "description" : "The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*."
+      },
+      "current_county" : {
+         "type" : "str",
+         "description" : "The current county where the player is located"
+      },
+      "current_money" : {
+         "type" : "int",
+         "description" : "The current amount of money the county has available"
+      },
+      "map_mode" : {
+         "type" : "MapMode",
+         "description" : "Whether the player is currently in view, build, or destroy mode."
+      },
+      "county_policies" : {
+         "type": "Dict[str, Any]",
+         "details": {
+            "sales":"Dict",
+            "import_subsidy":"Dict{policy_choice, is_locked}",
+            "runoff" : "Dict{policy_choice, is_locked}",
+            "cleanup" : "Dict{policy_choice, is_locked}"
+         },
+         "description": "The set of policies in the current county. Has elements for each of the four policy choices, which each in turn are subdictionaries that have elements with the policy choice and whether the choice is locked."
+      },
+      "phosphorus_view_enabled" : {
+         "type" : "bool",
+         "description" : "Whether the player currently has the phosphorus overlay mode enabled"
+      }
+   },
+   
+   "events": {
+      "session_start": {
+         "description": "When the app is started and the gameplay session is assigned a session ID",
+         "event_data": {
+         }
+      },
+      "game_start": {
+         "description": "When a game is actually loaded/started, showing the player their interface and map.",
+         "event_data": {
+            "music_volume" : {
+               "type" : "float",
+               "description" : "The volume for the in-game music, set in the new/resume game panel."
+            },
+            "fullscreen_enabled" : {
+               "type" : "bool",
+               "description" : "True if the player has enabled fullscreen play, or false if not."
+            },
+            "hq_graphics_enabled" : {
+               "type" : "bool",
+               "description" : "True if the player has enabled high-quality graphics, or false if not."
+            },
+            "map_state" : {
+               "type" : "Dict[str, List[Dict]]",
+               "details": {
+                  "index"  : "int",
+                  "height" : "int",
+                  "type"   : "TileType",
+                  "building" : "BuildingType",
+                  "connections" : "List[CardinalDirection]"
+               },
+               "description" : "A collection of individual county maps for the game, in their initial states at load time. Each county map is made up of a list of sub-dictionaries defining individual build tiles, which contain the tile's hex coordinates, elevation, tile type, and objects on the tile. If this event is a 'resume', some of the tiles will contain buildings (a sub-dict with tile ID, building type, and list of road connections on the tile)."
+            }
+         }
+      },
+      "win_game": {
+         "description": "When the player enters the game win state, and is shown the 'you win' cutscene",
+         "event_data": {
+            "map_state" : {
+               "type" : "TODO : BuildMap",
+               "description" : "The state of the build map when the player entered the win state."
+            }
+         }
+      },
+      "lose_game": {
+         "description": "When the player enters the game lose state, and is taken back to a checkpoint to try again.",
+         "event_data": {
+            "lose_condition" : {
+               "type" : "LossType",
+               "description" : "The state of the build map when the player entered the win state."
+            }
+         }
+      },
+
+      "click_new_game": {
+         "description": "When the player clicks the button for a new game. This should bring the 'new game' menu",
+         "event_data": {
+         }
+      },
+      "click_resume_game": {
+         "description": "When the player clicks the button for a new game. This should bring up the 'resume' game menu",
+         "event_data": {
+         }
+      },
+      "click_play_game": {
+         "description": "When the player clicks the button to actually launch the game, whether from the 'new' or 'resume' menu",
+         "event_data": {
+         }
+      },
+      "pause_game": {
+         "description": "When the player presses the spacebar or escape key to pause the game",
+         "event_data": {
+         }
+      },
+      "unpause_game": {
+         "description": "When the player presses the spacebar or escape key to un-pause the game",
+         "event_data": {
+         }
+      },
+      "click_credits": {
+         "description": "When the player clicks to play the game credits. Not actually sure if this feature still exists...",
+         "event_data": {
+         }
+      },
+      "close_credits": {
+         "description": "When the player exits the credits sequence",
+         "event_data": {
+         }
+      },
+      "click_return_main_menu": {
+         "description": "When the player clicks the button to return to the main menu from the (not sure if this used to be from the game or the new/resume game menu, in either case, it seems like this no longer exists...)",
+         "event_data": {
+         }
+      },
+      "toggle_fullscreen_setting": {
+         "description": "When the player ticks/unticks the fullscreen setting the new/resume game panel",
+         "event_data": {
+            "enabled" : {
+               "type" : "bool",
+               "description" : "True if the click enabled the fullscreen setting, or false if it disabled the setting."
+            }
+         }
+      },
+      "toggle_hq_graphics": {
+         "description": "When the player ticks/unticks the box for the high-quality graphics setting the new/resume game panel",
+         "event_data": {
+            "enabled" : {
+               "type" : "bool",
+               "description" : "True if the click enabled the hq graphics setting, or false if it disabled the setting."
+            }
+         }
+      },
+      "set_music_volume": {
+         "description": "When the player clicks or releases the music volume slider, setting a new volume level",
+         "event_data": {
+            "old_volume" : {
+               "type" : "float",
+               "description" : "The initial value of the slider."
+            },
+            "new_volume" : {
+               "type" : "float",
+               "description" : "The initial value of the slider."
+            }
+         }
+      },
+      "county_unlocked": {
+         "description": "When the game unlocks a new county for the player to explore",
+         "event_data": {
+            "county_name" : {
+               "type" : "str",
+               "description" : "The name of the newly-unlocked county."
+            },
+            "county_state" : {
+               "type" : "List[Dict]",
+               "details": {
+                  "index"  : "int",
+                  "height" : "int",
+                  "type"   : "TileType",
+                  "building" : "BuildingType",
+                  "connections" : "List[CardinalDirection]"
+               },
+               "description" : "A collection of sub-dictionaries defining individual build tiles in the county map, which contain the tile's hex coordinates, elevation, tile type, and objects on the tile."
+            }
+         }
+      },
+      "cutscene_start": {
+         "description": "When a game cutscene is triggered",
+         "event_data": {
+            "cutscene_id" : {
+               "type" : "str",
+               "description" : "The ID for the specific cutscene."
+            }
+         }
+      },
+      "cutscene_end": {
+         "description": "When a game cutscene is completed",
+         "event_data": {
+            "cutscene_id" : {
+               "type" : "str",
+               "description" : "The ID for the specific cutscene."
+            }
+         }
+      },
+      "cutscene_page_displayed": {
+         "description": "When a new page of the cutscene is displayed for the player to read",
+         "event_data": {
+            "cutscene_id" : {
+               "type" : "str",
+               "description" : "The ID for the specific cutscene."
+            },
+            "page_id" : {
+               "type" : "str",
+               "description" : "The ID for the specific page of the cutscene, which can be cross-referenced with game metadata."
+            },
+            "frame_ids" : {
+               "type" : "List[str]",
+               "description" : "The list, in order, of IDs for each frame within the given cutscene page."
+            },
+            "page_text" : {
+               "type" : "str",
+               "description" : "The text content of the cutscene page."
+            }
+         }
+      },
+      "click_cutscene_next": {
+         "description": "When the player has finished reading the current cutscene page, and clicks to advance to the next one.",
+         "event_data": {
+            "cutscene_id" : {
+               "type" : "str",
+               "description" : "The ID for the specific cutscene."
+            },
+            "page_id" : {
+               "type" : "str",
+               "description" : "The ID for the specific cutscene page that was just finished, which can be cross-referenced with game metadata."
+            }
+         }
+      },
+      "dialog_start": {
+         "description": "When an in-game dialog scene begins, whether a part of a tutorial, the result of the player clicking a dialog notification, or clicking a warning notification",
+         "event_data": {
+            "node_id" : {
+               "type" : "str",
+               "description" : "The ID for the specific dialog node, which can be cross-referenced with game metadata to recover the contents of the dialog."
+            },
+            "skippable" : {
+               "type" : "bool",
+               "description" : "Whether this particular dialog can be skipped/ignored, or must be viewed before resuming the game."
+            }
+         }
+      },
+      "dialog_end": {
+         "description": "When an in-game dialog scene completes, whether it was triggered as a part of a tutorial, the result of the player clicking a dialog notification, or clicking a warning notification",
+         "event_data": {
+            "node_id" : {
+               "type" : "str",
+               "description" : "The ID for the specific dialog node, which can be cross-referenced with game metadata to recover the contents of the dialog."
+            },
+            "skippable" : {
+               "type" : "bool",
+               "description" : "Whether this particular dialog can be skipped/ignored, or must be viewed before resuming the game."
+            }
+         }
+      },
+      "character_line_displayed": {
+         "description": "When a character has a line displayed during in-game dialog",
+         "event_data": {
+            "character_name" : {
+               "type" : "str",
+               "description" : "The specific name of the character 'speaking' the line of dialog."
+            },
+            "character_type" : {
+               "type" : "CharacterType",
+               "description" : "The kind of character who is 'speaking,' such as an advisor or farmer."
+            },
+            "line_text" : {
+               "type" : "str",
+               "description" : "The actual content of the line of dialog."
+            }
+         }
+      },
+      "click_next_character_line": {
+         "description": "When the player finishes reading the current line of dialog, and clicks to advance to the next",
+         "event_data": {
+            "character_name" : {
+               "type" : "str",
+               "description" : "The specific name of the character 'speaking' the line of dialog."
+            },
+            "character_type" : {
+               "type" : "CharacterType",
+               "description" : "The kind of character who is 'speaking,' such as an advisor or farmer."
+            },
+            "line_text" : {
+               "type" : "str",
+               "description" : "The actual content of the line of dialog that was just completed (not the line that will be shown next)."
+            }
+         }
+      },
+      "leave_county": {
+         "description": "When player leaves from one county to another.",
+         "event_data": {
+            "to_county" : {
+               "type" : "str",
+               "description" : "The new county the player is entering as they leave the current county."
+            }
+         }
+      },
+      "enter_county": {
+         "description": "When player has crossed into a county from another, and the interface updates to show the new county's money, policies, etc.",
+         "event_data": {
+            "from_county" : {
+               "type" : "str",
+               "description" : "The county the player left to enter the current one."
+            }
+         }
+      },
+      "open_economy_view": {
+         "description": "When the player clicks to open the economy breakdown view",
+         "event_data": {
+         }
+      },
+      "close_economy_view": {
+         "description": "When the player exits the economy breakdown view",
+         "event_data": {
+         }
+      },
+      "toggle_map_mode": {
+         "description": "When the player toggles between view and build mode for the map.",
+         "event_data": {
+            "new_mode" : {
+               "type" : "MapMode",
+               "description" : "The mode the player toggled into, should only be able to go into VIEW or BUILD modes"
+            }
+         }
+      },
+      "build_menu_displayed": {
+         "description": "When the game displays the build menu, in response to the player entering build mode.",
+         "event_data": {
+            "available_buildings" : {
+               "type" : "List[Dict]",
+               "details": {
+                  "name":"str",
+                  "price":"int"
+               },
+               "description" : "The buildings available for the player to construct"
+            }
+         }
+      },
+      "enter_destroy_mode": {
+         "description": "When the player is in build mode, and clicks the 'destroy' button to go into destroy mode",
+         "event_data": {
+         }
+      },
+      "exit_destroy_mode": {
+         "description": "When the player is in destroy mode, and clicks to return to normal build mode",
+         "event_data": {
+         }
+      },
+      "global_alert_displayed": {
+         "description": "When game displays a 'global' alert pop-up, which pauses game time until the player clicks the alert.",
+         "event_data": {
+            "alert_type" : {
+               "type" : "AlertType",
+               "description" : "The kind of alert that was displayed."
+            }
+         }
+      },
+      "click_global_alert": {
+         "description": "When the player clicks on a 'global' in-game alert pop-up, which will in turn trigger a dialog to begin.",
+         "event_data": {
+            "alert_type" : {
+               "type" : "AlertType",
+               "description" : "The kind of alert the player clicked."
+            },
+            "node_id" : {
+               "type" : "str",
+               "description" : "The ID of the node displayed when the alert is clicked"
+            }
+         }
+      },
+      "local_alert_displayed": {
+         "description": "When game displays a 'local' alert pop-up, which appears above the building tile for which the alert occurred, and does not pause game time.",
+         "event_data": {
+            "alert_type" : {
+               "type" : "AlertType",
+               "description" : "The kind of alert that was displayed."
+            },
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the global map, of the tile containing the building with the alert."
+            }
+         }
+      },
+      "click_local_alert": {
+         "description": "When the player clicks on a 'local' in-game alert pop-up, which will in turn trigger a dialog to begin.",
+         "event_data": {
+            "alert_type" : {
+               "type" : "AlertType",
+               "description" : "The kind of alert the player clicked."
+            },
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the global map, of the tile containing the building with the alert."
+            },
+            "node_id" : {
+               "type" : "str",
+               "description" : "The ID of the node displayed when the alert is clicked"
+            }
+         }
+      },
+      "bloom_alert": {
+         "description": "When game displays a 'bloom' alert pop-up, which appears above a newly-formed bloom, and does not pause game time.",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the global map, of the tile containing the bloom."
+            },
+            "phosphorus_value" : {
+               "type" : "int",
+               "description" : "The amount of phosphorus on the tile."
+            }
+         }
+      },
+      "click_bloom_alert": {
+         "description": "When the player clicks on a 'bloom' in-game alert pop-up, which will in turn trigger a dialog to begin.",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the global map, of the tile containing the building with the alert."
+            },
+            "phosphorus_value" : {
+               "type" : "int",
+               "description" : "The amount of phosphorus on the tile."
+            },
+            "node_id" : {
+               "type" : "str",
+               "description" : "The ID of the node displayed when the alert is clicked"
+            }
+         }
+      },
+      "change_zoom": {
+         "description": "When the player clicks on an in-game notification/alert pop-up, such as a bloom warning, a farm losing money, or an optional dialog.",
+         "event_data": {
+            "zoom_type" : {
+               "type" : "ZoomType",
+               "description" : "Whether the player zoomed with the zoom buttons or a mouse/trackpad scroll."
+            },
+            "start_zoom" : {
+               "type" : "float",
+               "description" : "The initial zoom level, before the button click/scroll"
+            },
+            "end_zoom" : {
+               "type" : "float",
+               "description" : "The final zoom level, after the button click/scroll"
+            }
+         }
+      },
+      "click_open_policy_category": {
+         "description": "When the player clicks to pop up the list of policies within the economy or ecology policy category.",
+         "event_data": {
+            "category" : {
+               "type" : "PolicyCategory",
+               "description" : "Whether the player opened up the economic or ecologic category."
+            }
+         }
+      },
+      "click_open_policy": {
+         "description": "When the player clicks to open the policy card choices for a specific policy type.",
+         "event_data": {
+            "policy" : {
+               "type" : "PolicyType",
+               "description" : "The specific policy that was clicked, i.e. sales tax, import subsidy, runoff fine, or cleanup initiative."
+            },
+            "from_taskbar" : {
+               "type" : "bool",
+               "description" : "Whether the player opened the policy from the county taskbar. If false, the policy was opened from the 'category' open as in a click_open_policy_category event."
+            }
+         }
+      },
+      "hover_policy_card": {
+         "description": "When the player moves their mouse over a new policy card.",
+         "event_data": {
+            "policy" : {
+               "type" : "PolicyType",
+               "description" : "The specific policy whose cards are displayed, i.e. sales tax, import subsidy, runoff fine, or cleanup initiative."
+            },
+            "choice_number" : {
+               "type" : "int",
+               "description" : "The index, among all cards for the given policy, of the hovered policy."
+            },
+            "choice_name" : {
+               "type" : "SalesPolicy | ImportPolicy | RunoffPolicy | CleanupPolicy",
+               "description" : "The enum-ified name of the hovered policy."
+            },
+            "choice_text" : {
+               "type" : "str",
+               "description" : "The text content of the hovered card."
+            }
+         }
+      },
+      "select_policy_card": {
+         "description": "When the player clicks a policy card, selecting it as the new setting for the given policy in the current county.",
+         "event_data": {
+            "policy" : {
+               "type" : "PolicyType",
+               "description" : "The specific policy whose card was selected."
+            },
+            "choice_number" : {
+               "type" : "int",
+               "description" : "The index, among all cards for the given policy, of the selected policy."
+            },
+            "choice_name" : {
+               "type" : "SalesPolicy | ImportPolicy | RunoffPolicy | CleanupPolicy",
+               "description" : "The enum-ified name of the selected policy."
+            },
+            "choice_text" : {
+               "type" : "str",
+               "description" : "The text content of the selected card."
+            }
+         }
+      },
+      "click_inspect_building": {
+         "description": "When the player clicks a building on the map, to review its current state.",
+         "event_data": {
+            "building_type" : {
+               "type" : "BuildingType",
+               "description" : "The specific type of building selected for inspection."
+            },
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the county map, of the tile containing the building being inspected."
+            },
+            "connections" : {
+               "type" : "List[CardinalDirection]",
+               "description" : "The directions on the tile containing road connections."
+            }
+         }
+      },
+      "building_inspector_displayed": {
+         "description": "When the inspector panel for a building is displayed to the user, for any building that does not have a more-specific `*_inspector_displayed` event.",
+         "event_data": {
+            "building_type" : {
+               "type" : "BuildingType",
+               "description" : "The specific type of building selected for inspection."
+            },
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the county map, of the tile containing the building being inspected."
+            },
+            "connections" : {
+               "type" : "List[CardinalDirection]",
+               "description" : "The directions on the tile containing road connections."
+            }
+         }
+      },
+      "storage_inspector_displayed": {
+         "description": "When the inspector panel for a manure storage building is displayed to the user.",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the county map, of the tile containing the building being inspected."
+            },
+            "connections" : {
+               "type" : "List[CardinalDirection]",
+               "description" : "The directions on the tile containing road connections."
+            },
+            "units_filled" : {
+               "type" : "int",
+               "description" : "The number of storage units filled within the storage building, as displayed in the panel."
+            }
+         }
+      },
+      "city_inspector_displayed": {
+         "description": "When the inspector panel for a city is displayed to the user.",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the county map, of the tile containing the building being inspected."
+            },
+            "connections" : {
+               "type" : "List[CardinalDirection]",
+               "description" : "The directions on the tile containing road connections."
+            },
+            "city_name" : {
+               "type" : "str",
+               "description" : "The display name of the city/town being inspected."
+            },
+            "population" : {
+               "type" : "AttributeStatus",
+               "description" : "Whether the population is growing (GOOD), stable (OK), or falling (BAD)."
+            },
+            "water" : {
+               "type" : "AttributeStatus",
+               "description" : "Whether the local water quality is good, ok, or bad."
+            },
+            "milk" : {
+               "type" : "AttributeStatus",
+               "description" : "Whether the available quantity of milk is plenty (GOOD), enough (OK), or not enough (BAD)."
+            }
+         }
+      },
+      "grain_inspector_displayed": {
+         "description": "When the inspector panel for a grain farm is displayed to the user.",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the county map, of the tile containing the building being inspected."
+            },
+            "farm_name" : {
+               "type" : "str",
+               "description" : "The name of the specific farm being displayed."
+            },
+            "connections" : {
+               "type" : "List[CardinalDirection]",
+               "description" : "The directions on the tile containing road connections."
+            },
+            "grain_tab" : {
+               "type" : "Dict[str, bool | str | int]",
+               "details": {
+                  "is_active_tab" : "bool",
+                  "buyer_name"    : "str",
+                  "buyer_county"  : "str",
+                  "base_price"    : "int",
+                  "shipping_cost" : "int",
+                  "total_profit"  : "int"
+               },
+               "description" : "A data displayed in the grain tab of the grain farm inspector."
+            },
+            "fertilizer_tab" : {
+               "type" : "Dict[str, bool | str | int]",
+               "details": {
+                  "is_active_tab" : "bool",
+                  "seller_name"   : "str",
+                  "seller_county" : "str",
+                  "base_price"    : "int",
+                  "shipping_cost" : "int",
+                  "sales_policy"  : "int",
+                  "import_policy" : "int",
+                  "total_profit"  : "int"
+               },
+               "description" : "A data displayed in the grain tab of the grain farm inspector."
+            }
+         }
+      },
+      "dairy_inspector_displayed": {
+         "description": "When the inspector panel for a dairy farm is displayed to the user.",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the county map, of the tile containing the building being inspected."
+            },
+            "farm_name" : {
+               "type" : "str",
+               "description" : "The name of the specific farm being displayed."
+            },
+            "connections" : {
+               "type" : "List[CardinalDirection]",
+               "description" : "The directions on the tile containing road connections."
+            },
+            "grain_tab" : {
+               "type" : "Dict[str, bool | str | int]",
+               "details": {
+                  "is_active_tab" : "bool",
+                  "seller_name"    : "str",
+                  "seller_county"  : "str",
+                  "base_price"    : "int",
+                  "shipping_cost" : "int",
+                  "sales_policy"  : "int",
+                  "import_policy" : "int",
+                  "total_profit"  : "int"
+               },
+               "description" : "A data displayed in the grain tab of the grain farm inspector."
+            },
+            "dairy_tab" : {
+               "type" : "Dict[str, bool | str | int]",
+               "details": {
+                  "is_active_tab" : "bool",
+                  "buyer_name"    : "str",
+                  "buyer_county"  : "str",
+                  "base_price"    : "int",
+                  "total_profit"  : "int"
+               },
+               "description" : "A data displayed in the grain tab of the grain farm inspector."
+            },
+            "fertilizer_tab" : {
+               "type" : "Dict[str, bool | str | int]",
+               "details": {
+                  "is_active_tab" : "bool",
+                  "buyer_name"    : "str",
+                  "buyer_county"  : "str",
+                  "base_price"    : "int",
+                  "shipping_cost" : "int",
+                  "runoff_fine"   : "int",
+                  "total_profit"  : "int"
+               },
+               "description" : "A data displayed in the grain tab of the grain farm inspector."
+            }
+         }
+      },
+      "dismiss_building_inspector": {
+         "description": "When the player clicks away from a building inspector.",
+         "event_data": {
+            "building_type" : {
+               "type" : "BuildingType",
+               "description" : "The specific type of building that was inspected."
+            },
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, among all cards for the given policy, of the selected policy."
+            },
+            "connections" : {
+               "type" : "List[CardinalDirection]",
+               "description" : "The text content of the selected card."
+            }
+         }
+      },
+      "click_inspector_tab": {
+         "description": "When the player clicks to switch to a particular tab of the inspector panel.",
+         "event_data": {
+            "tab_name" : {
+               "type" : "str",
+               "description" : "Whether the tab is grain, dairy, or fertilizer"
+            }
+         }
+      },
+      "building_queued": {
+         "description": "When the player clicks a map point, adding a new building to the build queue. Note that a road may be 'queued' as the result of undo-ing a road destroy.",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the global map, of the tile where the building was placed. For roads, this is the 'start' tile, where the player started their click-drag to define the road."
+            },
+            "building_type" : {
+               "type" : "BuildingType",
+               "description" : "The specific type of building added to the queue."
+            },
+            "total_cost" : {
+               "type" : "int",
+               "description" : "The new running total cost in the build queue."
+            },
+            "funds_remaining" : {
+               "type" : "int",
+               "description" : "The remaining county funds, if the current queue is built (including the new building)."
+            }
+         }
+      },
+      "building_dequeued": {
+         "description": "When the player clicks a map point in destroy mode, removing a building to the build queue.",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the global map, of the tile where the player removed the building. For roads, this is the 'start' tile, where the player started their click-drag to define the road."
+            },
+            "building_type" : {
+               "type" : "BuildingType",
+               "description" : "The specific type of building removed from the queue."
+            },
+            "total_cost" : {
+               "type" : "int",
+               "description" : "The new running total cost in the build queue."
+            },
+            "funds_remaining" : {
+               "type" : "int",
+               "description" : "The remaining county funds, if the current queue is built (after the building is removed from the queue)."
+            }
+         }
+      },
+      "click_build": {
+         "description": "When the player clicks a map point, attempting to place a new building in the build queue.",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the global map, of the tile where the player tried to add the building. For roads, this is the 'start' tile, where the player started their click-drag to define the road."
+            },
+            "building_type" : {
+               "type" : "BuildingType",
+               "description" : "The specific type of building added to the queue."
+            }
+         }
+      },
+      "click_destroy": {
+         "description": "When the player clicks a map point, attempting to destroy a building on the tile",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the global map, of the tile where the player tried to destroy a building."
+            },
+            "building_type" : {
+               "type" : "BuildingType",
+               "description" : "The specific type of building, if any, on the tile."
+            }
+         }
+      },
+      "click_undo": {
+         "description": "When the player clicks a map point, attempting to destroy a building on the tile",
+         "event_data": {
+         }
+      },
+      "click_build_invalid": {
+         "description": "When the player clicks a map point, attempting to place a new building in the build queue, but the selected tile is not a valid option.",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the global map, of the tile where the player tried to add the building. For roads, this is the 'start' tile, where the player started their click-drag to define the road."
+            },
+            "building_type" : {
+               "type" : "BuildingType",
+               "description" : "The specific type of building added to the queue."
+            }
+         }
+      },
+      "click_destroy_invalid": {
+         "description": "When the player clicks a map point, attempting to destroy a building on the tile, but the tile does not contain a valid building to be destroyed",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the global map, of the tile where the player tried to destroy a building."
+            },
+            "building_type" : {
+               "type" : "BuildingType",
+               "description" : "The specific type of building, if any, on the tile."
+            }
+         }
+      },
+      "click_execute_build": {
+         "description": "When the player clicks to complete the building of all buildings in the build queue.",
+         "event_data": {
+            "built_items" : {
+               "type" : "List[BuildingType]",
+               "description" : "The specific buildings in the build queue."
+            },
+            "total_cost" : {
+               "type" : "int",
+               "description" : "The total cost of the buildings in the build queue."
+            },
+            "funds_remaining" : {
+               "type" : "int",
+               "description" : "The remaining county funds, after building all buildings in the queue."
+            }
+         }
+      },
+      "click_destroy_mode": {
+         "description": "When the player clicks to enter destroy mode.",
+         "event_data": {
+         }
+      },
+      "click_confirm_destroy": {
+         "description": "When the player clicks to confirm destruction of the selected... things to be destroyed. TODO: need to confirm this, like do we actually destroy existing buildings? And is there a queue-ing mechanism?",
+         "event_data": {
+         }
+      },
+      "click_exit_destroy": {
+         "description": "When the player clicks to leave destroy mode, without performing any destructions.",
+         "event_data": {
+         }
+      },
+      "select_building_type": {
+         "description": "When the player selects a new type of building from the list of options to build",
+         "event_data": {
+            "building_type" : {
+               "type" : "BuildingType",
+               "description" : "The specific type of building removed from the queue."
+            },
+            "cost" : {
+               "type" : "int",
+               "description" : "The cost to build the given building."
+            }
+         }
+      },
+      "hover_build_tile": {
+         "description": "When the player hovers the mouse over a candidate tile for adding a new building",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the global map, of the tile being hovered."
+            },
+            "is_valid" : {
+               "type" : "bool",
+               "description" : "Whether the given building type can be placed on the given tile."
+            }
+         }
+      },
+      "hover_destroy_tile": {
+         "description": "When the player hovers the mouse over a candidate tile for destroying a building",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the global map, of the tile being hovered."
+            },
+            "is_valid" : {
+               "type" : "bool",
+               "description" : "Whether the hovered tile has a building that can be destroyed."
+            }
+         }
+      },
+      "building_type_unlocked": {
+         "description": "When a new building type is unlocked in the build list.",
+         "event_data": {
+            "building_type" : {
+               "type" : "BuildingType",
+               "description" : "The specific type of building that was unlocked."
+            }
+         }
+      },
+      "policy_unlocked": {
+         "description": "When a new policy type is unlocked for the player's counties.",
+         "event_data": {
+            "building_type" : {
+               "type" : "PolicyType",
+               "description" : "The specific type of building that was unlocked."
+            }
+         }
+      },
+      "view_unlocked": {
+         "description": "When a new view type is unlocked.",
+         "event_data": {
+            "building_type" : {
+               "type" : "ViewType",
+               "description" : "Which type of view was unlocked."
+            }
+         }
+      },
+      "algae_growth_begin": {
+         "description": "When a new bloom begins to grow on a map tile",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the global map, of the tile where the algae grew."
+            },
+            "algae_percent" : {
+               "type" : "float",
+               "description" : "The proportion of algae that already existed on the tile, at the time it began to grow."
+            },
+            "phosphorus_value" : {
+               "type" : "int",
+               "description" : "The amount of phosphorus on the tile, at the time it began to grow."
+            }
+         }
+      },
+      "algae_growth_end": {
+         "description": "When a new bloom stops growing on a map tile, whether because it grew to its maximum or because the growth was stopped through good water management.",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the global map, of the tile where the algae grew."
+            },
+            "algae_percent" : {
+               "type" : "float",
+               "description" : "The proportion of algae that existed on the tile, at the time it stopped growing."
+            },
+            "phosphorus_value" : {
+               "type" : "int",
+               "description" : "The amount of phosphorus on the tile, at the time it stopped growing."
+            }
+         }
+      },
+      "skimmer_appeared": {
+         "description": "When a new skimmer appears on a lake tile, as a result of policy funding for skimmers/dredgers.",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the global map, of the tile where the skimmer appeared."
+            },
+            "is_dredger" : {
+               "type" : "bool",
+               "description" : "Whether the skimmer that appeared is a dredger, or a regular skimmer."
+            }
+         }
+      },
+      "skimmer_disappeared": {
+         "description": "When a skimmer leaves a lake tile, as a result of revoked policy funding for skimmers/dredgers.",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the global map, of the tile where the skimmer disappeared."
+            },
+            "is_dredger" : {
+               "type" : "bool",
+               "description" : "Whether the skimmer that disappeared was a dredger, or a regular skimmer."
+            }
+         }
+      },
+      "export_depot_spawned": {
+         "description": "When the export depot spawns in the map.",
+         "event_data": {
+            "tile_index" : {
+               "type" : "int",
+               "description" : "The index, within the global map, of the tile where the export depot appeared."
+            }
+         }
+      }
+   },
+   
+   "features": {
+      "per_count": {
+         "CountyBloomAlertCount": {
+            "enabled": true,
+            "type": "CountyBloomAlertCount",
+            "prefix": "cty",
+            "count": 5,
+            "description": "Count of bloom alerts per county",
+            "return_type": "int"
+         },
+         "CountyBuildCount": {
+            "enabled": true,
+            "type": "CountyBuildCount",
+            "prefix": "cty",
+            "count": 5,
+            "description": "Count of builds per county",
+            "return_type": "int"
+         },
+         "CountyFinalPolicySettings": {
+            "enabled": true,
+            "type": "CountyFinalPolicySettings",
+            "prefix": "cty",
+            "count": 5,
+            "description": "Final policy settings per county",
+            "return_type": "dict"
+         },
+         "CountyLatestMoney": {
+            "enabled": true,
+            "type": "CountyLatestMoney",
+            "prefix": "cty",
+            "count": 5,
+            "description": "Latest money per county",
+            "return_type": "float"
+         }
+      },
+      "aggregate":{
+         "ActiveTime": {
+            "threshold": 30,
+            "enabled": true,
+            "type": "ActiveTime",
+            "description": "Active time of a player",
+            "return_type": "timedelta"
+         },
+         "AverageActiveTime": {
+            "enabled": true,
+            "type": "AverageActiveTime",
+            "description": "Average active time of a player",
+            "return_type": "timedelta"
+         },
+         "BloomAlertCount": {
+            "enabled": true,
+            "type": "BloomAlertCount",
+            "description": "Count of bloom alerts",
+            "return_type": "int"
+         },
+         "BuildCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Count of builds",
+            "target": "click_execute_build",
+            "return_type": "int"
+         },
+         "BuildingUnlockCount": {
+            "enabled": true,
+            "type": "BuildingUnlockCount",
+            "description": "Count of building unlocks",
+            "return_type": "int"
+         },
+         "CountyUnlockCount": {
+            "enabled": true,
+            "type": "CountyUnlockCount",
+            "description": "Number of counties unlocked",
+            "return_type": "int"
+         },
+         "EconomyViewCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Count of times the player viewed the economy view",
+            "target": "open_economy_view",
+            "return_type": "int"
+         },
+         "FailCount": {
+            "enabled": true,
+            "type": "FailCount",
+            "description": "Number of failure count",
+            "return_type": "int"
+         },
+         "GameCompletionStatus": {
+            "enabled": true,
+            "type": "GameCompletionStatus",
+            "description": "Game completion status",
+            "return_type": "str"
+         },
+         "NumberOfSessionsPerPlayer": {
+            "enabled": false,
+            "type": "NumberOfSessionsPerPlayer",
+            "description": "Number of sessions per player",
+            "return_type": "int"
+         },
+         "PolicyAdjustments" : {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Count of policy changes",
+            "target": "select_policy_card",
+            "return_type": "int"
+         },
+         "SucceededThroughFailure": {
+            "enabled": true,
+            "type": "SucceededThroughFailure",
+            "description": "Number of times failed but persisted through the task",
+            "return_type": "int"
+         }
+      }
+   },
+   
+   "config": {
+      "SUPPORTED_VERS": [1]
+   }
+}
+

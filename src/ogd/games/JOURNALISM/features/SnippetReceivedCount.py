@@ -3,9 +3,9 @@ import json
 from typing import Any, List, Optional
 # import local files
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.core.models.FeatureData import FeatureData
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
@@ -21,9 +21,8 @@ class SnippetReceivedCount(SessionFeature):
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         choice_type_names = ["BAD", "GOOD", "GREAT"]
-        self._init_vals = {name: 0 for name in choice_type_names}
-
-        self._snippet_receive_count : int = 0;
+        self._quality_counts = {name: 0 for name in choice_type_names}
+        self._snippet_receive_count : int = 0
         
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -51,19 +50,10 @@ class SnippetReceivedCount(SessionFeature):
         :param event: _description_
         :type event: Event
         """
-        # >>> use the data in the Event object to update state variables as needed. <<<
-        # Note that this function runs once on each Event whose name matches one of the strings returned by _eventFilter()
-        #
-        # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
-        
-        
-        self._choice_click_count += 1
-        for key in self._init_vals:
-            if key in event.event_data.snippet_quality:
-                self._init_vals[key] +=1
-
-        
-        
+        self._snippet_receive_count += 1
+        _quality = event.EventData.get("snippet_quality", "QUALITY NOT FOUND").upper()
+        if _quality is not None and _quality in self._quality_counts.keys():
+            self._quality_counts[_quality] += 1
         return
 
     def _updateFromFeatureData(self, feature: FeatureData):
@@ -83,23 +73,8 @@ class SnippetReceivedCount(SessionFeature):
         :return: _description_
         :rtype: List[Any]
         """
-        
-        # >>> use state variables to calculate the return value(s) of the base Feature and any Subfeatures. <<<
-        # >>> put the calculated value(s) into a list as the function return value. <<<
-        # >>> definitely don't return ["template"], unless you really find that useful... <<<
-        #
-        # e.g. use the self._found_click, which was created/initialized in __init__(...), and updated in _updateFromEvent(...):
-        # if self._found_click:
-        #     ret_val = [True]
-        # else:
-        #     ret_val = [False]
-        # return ret_val
-        #
-        # note the code above is redundant, we could just return [self._found_click] to get the same result;
-        # the more-verbose code is here for illustrative purposes.
-        
-        return [self._snippet_receive_count, self._init_vals["BAD"],
-        self._init_vals["GOOD"], self._init_vals["GREAT"]]
+        return [self._snippet_receive_count, self._quality_counts["BAD"],
+        self._quality_counts["GOOD"], self._quality_counts["GREAT"]]
 
 
     # *** Optionally override public functions. ***

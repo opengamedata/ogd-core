@@ -6,9 +6,9 @@ from time import time
 from datetime  import timedelta, datetime
 # import local files
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.core.models.FeatureData import FeatureData
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
@@ -26,7 +26,7 @@ class UserPlayTime(SessionFeature):
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._cumulative_play_time : Optional[timedelta] = None 
-        self._cumulative_total_time : Optional[timedelta] = None
+        self._cumulative_active_time : Optional[timedelta] = None
         
 
 
@@ -72,15 +72,15 @@ class UserPlayTime(SessionFeature):
         # Exception handling for empty sessions
         if(not self._cumulative_play_time):
             self._cumulative_play_time = feature._vals[0]
-        if(not self._cumulative_total_time):
-            self._cumulative_total_time = feature._vals[1]
+        if(not self._cumulative_active_time):
+            self._cumulative_active_time = feature._vals[1]
 
         try:
-            self._cumulative_play_time+=feature._vals[0]
-            self._cumulative_total_time+= feature._vals[1]
+            self._cumulative_play_time  += feature.FeatureValues[0]
+            self._cumulative_active_time += feature.FeatureValues[1]
         except:
-            self._cumulative_play_time += 0
-            self._cumulative_total_time += 0
+            self._cumulative_play_time += timedelta(0)
+            self._cumulative_active_time += timedelta(0)
 
         
         
@@ -93,16 +93,16 @@ class UserPlayTime(SessionFeature):
         :rtype: List[Any]
         """
 
-        return [self._cumulative_play_time, self._cumulative_total_time]
+        return [self._cumulative_play_time, self._cumulative_active_time]
 
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return ["Total Time"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
+        return ["Active"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
     
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
-        return [ExtractionMode.PLAYER,ExtractionMode.DETECTOR] # >>> delete any modes you don't want run for your Feature. <<<
+        return [ExtractionMode.PLAYER] # >>> delete any modes you don't want run for your Feature. <<<
     
     # @staticmethod
     # def MinVersion() -> Optional[str]:

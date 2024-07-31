@@ -3,9 +3,9 @@ import json
 from typing import Any, List, Optional
 # import local files
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.core.models.FeatureData import FeatureData
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
@@ -103,7 +103,7 @@ class SkillSequenceCount(SessionFeature):
 
         # print("TOTAL DEBUG: " + self._total_upgrades)
         # print(self._total_upgrades)
-        return [self._total_upgrades, event_string]
+        return [self._total_upgrades, self._skill_event_sequence]
 
 
     # *** Optionally override public functions. ***

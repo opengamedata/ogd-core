@@ -4,9 +4,9 @@ from typing import Any, Final, List, Optional
 import json
 from datetime  import timedelta, datetime
 # import local files
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.core.models.FeatureData import FeatureData
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
@@ -111,10 +111,9 @@ class PlayTime(SessionFeature):
         try:
             total_time : timedelta = self._last_event_timestamp - self._first_event_timestamp
             play_time : timedelta = total_time - self._idle_time
-
         except:
-            total_time = 0
-            play_time = 0
+            total_time = timedelta(0)
+            play_time  = timedelta(0)
 
 
         return [total_time, play_time, self._idle_time]

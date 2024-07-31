@@ -10,11 +10,10 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.games.JOURNALISM.features import StoryScoreSequence
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
-
-
+from ogd.core.utils.Logger import Logger
 
 class JournalismLoader(GeneratorLoader):
 
@@ -24,14 +23,18 @@ class JournalismLoader(GeneratorLoader):
     def _getFeaturesModule():
         return features
 
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
-        ret_val : Feature
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
+        ret_val : Optional[Feature] = None
         if extractor_params._count_index == None:
             match feature_type:
                 case "ChoiceClickCount":
                     ret_val = ChoiceClickCount.ChoiceClickCount(params=extractor_params)
                 case "SessionPlayTime":
                     ret_val = SessionPlayTime.SessionPlayTime(params=extractor_params, threshold=schema_args.get("IDLE_THRESH_SECONDS", SessionPlayTime.SessionPlayTime.IDLE_TIME_THRESHOLD))
+                case "FinalAttributes":
+                    ret_val = FinalAttributes.FinalAttributes(params=extractor_params)
+                case "FailureAttributes":
+                    ret_val = FailureAttributes.FailureAttributes(params=extractor_params)
                 case "SkillSequenceCount":
                     ret_val = SkillSequenceCount.SkillSequenceCount(params = extractor_params)
                 case "MeanSnippetTime":
@@ -69,8 +72,7 @@ class JournalismLoader(GeneratorLoader):
                 case "QuitNode":
                     ret_val = QuitNode.QuitNode(params=extractor_params)
                 case _:
-                    raise NotImplementedError(
-                        f"'{feature_type}' is not a valid aggregate feature for Journalism.")
+                    Logger.Log(f"'{feature_type}' is not a valid aggregate feature for Journalism.")
         ##per-count features
         else:
             match feature_type:
@@ -109,13 +111,13 @@ class JournalismLoader(GeneratorLoader):
                 case "SnippetsSubmitted":
                     ret_val= SnippetsSubmitted.SnippetsSubmitted(params=extractor_params)
                 case _:
-                    raise NotImplementedError(
-                        f"'{feature_type}' is not a valid per-count feature for Journalism.")
+                    Logger.Log(f"'{feature_type}' is not a valid per-count feature for Journalism.")
         return ret_val
     
 
-    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
-        raise NotImplementedError(f"'{detector_type}' is not a valid detector for Journalism.")
+    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Optional[Detector]:
+        Logger.Log(f"'{detector_type}' is not a valid detector for Journalism.")
+        return None
 
     # *** BUILT-INS & PROPERTIES ***
 

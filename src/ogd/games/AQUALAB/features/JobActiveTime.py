@@ -6,9 +6,9 @@ from typing import Any, List, Optional
 from ogd.core.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.core.models.FeatureData import FeatureData
 
 class JobActiveTime(PerJobFeature):
 
@@ -19,6 +19,9 @@ class JobActiveTime(PerJobFeature):
             self._session_id      = None
             self._last_start_time = None
             self._last_event_time = None
+            self._last_event_session = None
+            self._last_event_name = None
+            self._last_event_index = None
             self._last_event_session = None
             self._last_event_name = None
             self._last_event_index = None

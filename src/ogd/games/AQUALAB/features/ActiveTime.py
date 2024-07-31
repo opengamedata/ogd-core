@@ -6,9 +6,9 @@ from typing import Any, Final, List, Optional
 from ogd.core.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.core.models.FeatureData import FeatureData
 
 class ActiveTime(Feature):
     IDLE_LEVEL : Final[int] = 30
@@ -37,8 +37,8 @@ class ActiveTime(Feature):
             self._client_start_time = event.Timestamp
         self._client_end_time = event.Timestamp
         
-        if event.EventName != "Idle":
-            return
+        # if event.EventName != "Idle":
+        #     return
 
         if not self.active_level:
             self.active_level = event.EventData.get("level")

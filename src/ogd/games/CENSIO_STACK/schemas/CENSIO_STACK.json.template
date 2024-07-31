@@ -1,7 +1,7 @@
 {
    "enums": {
       "LevelType": [ "DEFAULT", "CLUTTER", "BOMBS", "FULL_SET", "FULL_ORDERED_SET", "SHIFTING" ],
-      "LevelDifficulty": ["NORMAL", "HARD"],
+      "LevelDifficulty": ["NORMAL", "HARD", "BONUS"],
       "PieceShape": [ "HEAD", "ARM", "BODY", "LEG", "BOMB" ],
       "ReceiptItem": [ "GOOD", "DAMAGED", "JUNK", "MISSED", "FULL_SET", "DUPLICATE", "LEG_POS", "TORSO_POS", "HEAD_POS" ],
       "PunchType": [ "CLICK", "SPACEBAR" ]
@@ -64,6 +64,10 @@
       },
       "game_start": {
          "description": "When the player starts a new game (at present, this happens automatically at launch, but in the future the player may launch a new game from a menu).",
+         "event_data": {}
+      },
+      "game_complete": {
+         "description": "When the player completes the last level of the game, thus completing the game itself.",
          "event_data": {}
       },
       "level_preview_displayed": {
@@ -133,7 +137,7 @@
          "description": "When a new piece appears on the conveyer belt.",
          "event_data": {
             "type" : {
-               "type":"PieceType",
+               "type":"PieceShape",
                "description":"The type of piece that appeared on the belt."
             }
          }
@@ -142,7 +146,7 @@
          "description": "When a non-packed piece disappears off the conveyer belt.",
          "event_data": {
             "type" : {
-               "type":"PieceType",
+               "type":"PieceShape",
                "description":"The type of piece that left the belt."
             }
          }
@@ -162,7 +166,7 @@
             "piece": {
                "type" : "Dict",
                "details" : {
-                  "type" : "PieceType",
+                  "type" : "PieceShape",
                   "is_damaged" : "bool",
                   "is_target" : "bool"
                },
@@ -171,7 +175,7 @@
             "new_box_contents": {
                "type" : "List[Dict]",
                "details" : {
-                  "type" : "PieceType",
+                  "type" : "PieceShape",
                   "is_damaged" : "bool",
                   "is_target" : "bool"
                },
@@ -189,7 +193,7 @@
             "pieces_destroyed": {
                "type" : "List[Dict]",
                "details" : {
-                  "type" : "PieceType",
+                  "type" : "PieceShape",
                   "is_damaged" : "bool",
                   "is_target" : "bool"
                },
@@ -207,7 +211,7 @@
             "pieces": {
                "type" : "List[Dict]",
                "details" : {
-                  "type" : "PieceType",
+                  "type" : "PieceShape",
                   "is_damaged" : "bool",
                   "is_target" : "bool"
                },
@@ -227,7 +231,7 @@
          "description": "When a player packs a box in a 'SHIFTING' level, and the target for the next box is randomly changed.",
          "event_data": {
             "new_target_pieces" : {
-               "type" : "List[PieceType]",
+               "type" : "List[PieceShape]",
                "description" : "A list of the types of pieces accepted for the new target. If the game ever has 'shifting ordered set' levels, the order in the list indicates the order pieces must be placed."
             }
          }
@@ -522,11 +526,6 @@
                "type":"str",
                "description":"An identifier for the specific survey."
             }
-         }
-      },
-      "game_complete": {
-         "description": "When the player completes the game",
-         "event_data": {
          }
       }
    }

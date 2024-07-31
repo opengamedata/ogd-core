@@ -3,8 +3,12 @@ data/
 config/*.json
 config/config.py
 src/ogd/games/*/schemas/*.json
+tests/config/t_config.py
+
+# Random shit that sometimes shows up in branches that shouldn't go to git:
 fieldday-pyenv
 /games/
+players.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
