@@ -70,11 +70,8 @@ class Interface(StorageConnector):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_id:str, config:GameSourceSchema, fail_fast:bool):
+    def __init__(self, config:GameSourceSchema):
         super().__init__(config=config)
-        self._fail_fast = fail_fast
-        self._game_id : str  = game_id
-        self._table_schema : TableSchema = TableSchema(schema_name=self._config.TableSchema)
 
     def __del__(self):
         self.Close()
