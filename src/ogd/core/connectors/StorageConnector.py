@@ -16,10 +16,20 @@ class StorageConnector(abc.ABC):
 
     @abc.abstractmethod
     def _open(self) -> bool:
+        """Private implementation of the logic for opening a connection to a storage resource
+
+        :return: True if the connection was successful, otherwise False.
+        :rtype: bool
+        """
         pass
 
     @abc.abstractmethod
     def _close(self) -> bool:
+        """Private implementation of the logic for closing a connection to a storage resource
+
+        :return: True if the connection was closed successfully, otherwise False.
+        :rtype: bool
+        """
         pass
 
     # *** BUILT-INS & PROPERTIES ***
