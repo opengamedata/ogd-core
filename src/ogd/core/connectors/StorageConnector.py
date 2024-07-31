@@ -12,6 +12,8 @@ from ogd.core.utils.Logger import Logger
 class StorageConnector(abc.ABC):
     """Base class for all interfaces and outerfaces.
     Ensures each inter/outerface can be opened and closed, like most system resources.
+
+    All subclasses must implement the `_open` and `_close` functions.
     """
 
     # *** ABSTRACTS ***
