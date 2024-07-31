@@ -40,7 +40,7 @@ class StorageConnector(abc.ABC):
 
     def __del__(self):
         self.Close()
-    
+  
     @property
     def IsOpen(self) -> bool:
         """Property to indicate whether a connection with the storage resource is open or not.
