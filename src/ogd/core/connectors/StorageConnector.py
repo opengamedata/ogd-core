@@ -1,3 +1,5 @@
+"""StorageConnector Module
+"""
 ## import standard libraries
 import abc
 import logging
