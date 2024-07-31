@@ -55,8 +55,12 @@ class StorageConnector(abc.ABC):
         :return: True if the resource was successfully opened (or was already open), otherwise False.
         :rtype: bool
         """
-        if (not self._is_open) or force_reopen:
+        if (not self._is_open):
             self._is_open = self._open()
+        elif force_reopen:
+            self._close()
+            self._is_open = self._open()
+            Logger.Log(f"Successfully force-reopened {self.__class__}", logging.INFO)
         return self._is_open
 
     def Close(self, force_close:bool = False) -> bool:
