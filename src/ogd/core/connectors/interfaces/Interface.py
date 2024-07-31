@@ -15,6 +15,10 @@ from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.utils.Logger import Logger
 
 class Interface(StorageConnector):
+    """Base class for all connectors that serve as an interface to some IO resource.
+
+    All subclasses must implement the `_availableIDs`, `_availableDates`, `_IDsFromDates`, and `_datesFromIDs` functions.
+    """
 
     # *** ABSTRACTS ***
 
