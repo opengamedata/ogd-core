@@ -4,7 +4,6 @@
 # import standard libraries
 import abc
 import logging
-from typing import Any, Dict
 
 # import local files
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
