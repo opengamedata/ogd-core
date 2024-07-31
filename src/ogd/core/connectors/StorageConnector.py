@@ -58,7 +58,7 @@ class StorageConnector(abc.ABC):
         if (not self._is_open):
             self._is_open = self._open()
         elif force_reopen:
-            self._close()
+            self.Close()
             self._is_open = self._open()
             Logger.Log(f"Successfully force-reopened {self.__class__}", logging.INFO)
         return self._is_open
