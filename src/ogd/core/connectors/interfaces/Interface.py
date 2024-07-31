@@ -33,17 +33,35 @@ class Interface(StorageConnector):
     def _availableDates(self) -> Dict[str,datetime]:
         """Private implementation of the logic to retrieve the full range of dates/times from the connected storage.
 
-        :return: A dict mapping 'min' and 'max' to the minimum and maximum datetimes
+        :return: A dict mapping `min` and `max` to the minimum and maximum datetimes
         :rtype: Dict[str,datetime]
         """
         pass
 
     @abc.abstractmethod
-    def _IDsFromDates(self, min:datetime, max:datetime) -> List[str]:
+    def _IDsFromDates(self, min:datetime, max:datetime, mode:IDMode=IDMode.SESSION) -> List[str]:
+        """Private implementation of logic to list IDs of given mode that have data within a range of dates.
+
+        :param min: Earliest date in the range
+        :type min: datetime
+        :param max: Latest date in the range
+        :type max: datetime
+        :return: A list of IDs of given mode with data falling within the given date range.
+        :rtype: Optional[List[str]]
+        """
         pass
 
     @abc.abstractmethod
     def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION) -> Dict[str,datetime]:
+        """Private implementation of the logic to get a range of dates covering all data for given list of IDs (with given mode).
+
+        :param id_list: The list of IDs, for whose data we want a date range.
+        :type id_list: List[str]
+        :param id_mode: The kind of ID to use when interpreting the `id_list`, defaults to IDMode.SESSION
+        :type id_mode: IDMode, optional
+        :return: A dictionary mapping `min` and `max` to the range of dates covering all data for the given IDs
+        :rtype: Union[Dict[str,datetime], Dict[str,None]]
+        """
         pass
 
     # *** BUILT-INS & PROPERTIES ***
@@ -79,7 +97,7 @@ class Interface(StorageConnector):
     def AvailableDates(self) -> Union[Dict[str,datetime], Dict[str,None]]:
         """Retrieve the full range of dates/times covered by data in the connected storage.
 
-        :return: A dictionary mapping 'min' and 'max' to the min and max datetimes, or to None (if unavailable)
+        :return: A dictionary mapping `min` and `max` to the min and max datetimes, or to None (if unavailable)
         :rtype: Union[Dict[str,datetime], Dict[str,None]]
         """
         ret_val = {'min':None, 'max':None}
@@ -89,14 +107,14 @@ class Interface(StorageConnector):
             Logger.Log("Could not get full date range, the storage connection is not open!", logging.WARNING, depth=3)
         return ret_val
 
-    def IDsFromDates(self, min:datetime, max:datetime) -> Optional[List[str]]:
+    def IDsFromDates(self, min:datetime, max:datetime, mode:IDMode=IDMode.SESSION) -> Optional[List[str]]:
         """Get a list of IDs of given mode that have data within a range of dates.
 
-        :param min: _description_
+        :param min: Earliest date in the range
         :type min: datetime
-        :param max: _description_
+        :param max: Latest date in the range
         :type max: datetime
-        :return: _description_
+        :return: A list of IDs of given mode with data falling within the given date range.
         :rtype: Optional[List[str]]
         """
         ret_val = None
@@ -104,10 +122,19 @@ class Interface(StorageConnector):
             str_min, str_max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
             Logger.Log(f"Could not retrieve IDs for {str_min}-{str_max}, the source interface is not open!", logging.WARNING, depth=3)
         else:
-            ret_val = self._IDsFromDates(min=min, max=max)
+            ret_val = self._IDsFromDates(min=min, max=max, mode=mode)
         return ret_val
 
     def DatesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION) -> Union[Dict[str,datetime], Dict[str,None]]:
+        """Get a range of dates covering all data for given list of IDs (with given mode).
+
+        :param id_list: The list of IDs, for whose data we want a date range.
+        :type id_list: List[str]
+        :param id_mode: The kind of ID to use when interpreting the `id_list`, defaults to IDMode.SESSION
+        :type id_mode: IDMode, optional
+        :return: A dictionary mapping `min` and `max` to the range of dates covering all data for the given IDs
+        :rtype: Union[Dict[str,datetime], Dict[str,None]]
+        """
         ret_val = {'min':None, 'max':None}
         if not self.IsOpen:
             Logger.Log(f"Could not retrieve date range {len(id_list)} session IDs, the source interface is not open!", logging.WARNING, depth=3)
