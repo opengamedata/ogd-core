@@ -67,7 +67,7 @@ class EventInterface(Interface):
 
     def AllIDs(self) -> Optional[List[str]]:
         ret_val = None
-        if self.IsOpen():
+        if self.IsOpen:
             ret_val = self._allIDs()
         else:
             Logger.Log("Can't retrieve list of all session IDs, the source interface is not open!", logging.WARNING, depth=3)
@@ -75,7 +75,7 @@ class EventInterface(Interface):
 
     def FullDateRange(self) -> Union[Dict[str,datetime], Dict[str,None]]:
         ret_val = {'min':None, 'max':None}
-        if self.IsOpen():
+        if self.IsOpen:
             ret_val = self._fullDateRange()
         else:
             Logger.Log(f"Could not get full date range, the source interface is not open!", logging.WARNING, depth=3)
@@ -86,7 +86,7 @@ class EventInterface(Interface):
 
         _curr_sess : str      = ""
         _evt_sess_index : int = 1
-        if self.IsOpen():
+        if self.IsOpen:
             Logger.Log(f"Retrieving rows from IDs with {id_mode.name} ID mode.", logging.DEBUG, depth=3)
             _rows   = self._rowsFromIDs(id_list=id_list, id_mode=id_mode, versions=versions, exclude_rows=exclude_rows)
             _fallbacks = {"app_id":self._game_id}
@@ -114,7 +114,7 @@ class EventInterface(Interface):
 
     def IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]]=None) -> Optional[List[str]]:
         ret_val = None
-        if not self.IsOpen():
+        if not self.IsOpen:
             str_min, str_max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
             Logger.Log(f"Could not retrieve IDs for {str_min}-{str_max}, the source interface is not open!", logging.WARNING, depth=3)
         else:
@@ -123,7 +123,7 @@ class EventInterface(Interface):
 
     def DatesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> Union[Dict[str,datetime], Dict[str,None]]:
         ret_val = {'min':None, 'max':None}
-        if not self.IsOpen():
+        if not self.IsOpen:
             Logger.Log(f"Could not retrieve date range {len(id_list)} session IDs, the source interface is not open!", logging.WARNING, depth=3)
         else:
             Logger.Log(f"Retrieving date range from IDs with {id_mode.name} ID mode.", logging.DEBUG, depth=3)

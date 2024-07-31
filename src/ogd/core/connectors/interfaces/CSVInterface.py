@@ -56,7 +56,7 @@ class CSVInterface(EventInterface):
 
     def _rowsFromIDs(self, id_list: List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None, exclude_rows:Optional[List[str]]=None) -> List[Tuple]:
         ret_val : List[Tuple] = []
-        if self.IsOpen() and not self._data.empty:
+        if self.IsOpen and not self._data.empty:
             _data : pd.DataFrame
             if id_mode == IDMode.SESSION:
                 _data = self._data.loc[self._data['session_id'].isin(id_list)]
