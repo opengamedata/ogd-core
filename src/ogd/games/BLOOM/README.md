@@ -68,7 +68,7 @@ The individual fields encoded in the *game_state* and *user_data* Event element 
 | TileType | ['LAND', 'WATER', 'DEEP_WATER'] |
 | CardinalDirection | ['N', 'NE', 'SE', 'S', 'SW', 'NW'] |
 | PolicyCategory | ['ECONOMY', 'ECOLOGY'] |
-| PolicyType | ['SALES', 'IMPORT', 'RUNOFF', 'CLEANUP'] |
+| PolicyType | ['SalesTaxPolicy', 'ImportTaxPolicy', 'RunoffPolicy', 'SkimmingPolicy'] |
 | SalesPolicy | ['NOT_SET', 'NONE', 'LOW_TAX', 'HIGH_TAX', 'SUBSIDY'] |
 | ImportPolicy | ['NOT_SET', 'NONE', 'MILK', 'GRAIN', 'FERTILIZER'] |
 | RunoffPolicy | ['NOT_SET', 'NONE', 'LOW', 'HIGH', 'VERY_HIGH'] |
@@ -462,7 +462,7 @@ When the player clicks on a 'local' in-game alert pop-up, which will in turn tri
 | tile_index | int | The index, within the global map, of the tile containing the building with the alert. | |
 | node_id | str | The ID of the node displayed when the alert is clicked | |  
 
-### **bloom_alert_displayed**
+### **bloom_alert**
 
 When game displays a 'bloom' alert pop-up, which appears above a newly-formed bloom, and does not pause game time.
 
@@ -899,20 +899,70 @@ Active time of a player
 
 threshold : 30  
 
-**NumberOfSessionsPerPlayer** : *int*, *Aggregate feature*   
-Number of sessions per player  
+**AverageActiveTime** : *timedelta*, *Aggregate feature*   
+Average active time of a player  
+  
+
+**BloomAlertCount** : *int*, *Aggregate feature*   
+Count of bloom alerts  
+  
+
+**BuildCount** : *int*, *Aggregate feature*   
+Count of builds  
+*Other elements*:  
+
+target : click_execute_build  
+
+**BuildingUnlockCount** : *int*, *Aggregate feature*   
+Count of building unlocks  
   
 
 **CountyUnlockCount** : *int*, *Aggregate feature*   
-ANumber of Counties unlocked  
+Number of counties unlocked  
   
+
+**EconomyViewCount** : *int*, *Aggregate feature*   
+Count of times the player viewed the economy view  
+*Other elements*:  
+
+target : open_economy_view  
 
 **FailCount** : *int*, *Aggregate feature*   
 Number of failure count  
   
 
-**PersistedThroughFailure** : *int*, *Aggregate feature*   
-Number of times faied a but persisted through the task  
+**GameCompletionStatus** : *str*, *Aggregate feature*   
+Game completion status  
+  
+
+**NumberOfSessionsPerPlayer** : *int*, *Aggregate feature*  (disabled)  
+Number of sessions per player  
+  
+
+**PolicyAdjustments** : *int*, *Aggregate feature*   
+Count of policy changes  
+*Other elements*:  
+
+target : select_policy_card  
+
+**SucceededThroughFailure** : *int*, *Aggregate feature*   
+Number of times failed but persisted through the task  
+  
+
+**CountyBloomAlertCount** : *int*, *Per-count feature*   
+Count of bloom alerts per county  
+  
+
+**CountyBuildCount** : *int*, *Per-count feature*   
+Count of builds per county  
+  
+
+**CountyFinalPolicySettings** : *dict*, *Per-count feature*   
+Final policy settings per county  
+  
+
+**CountyLatestMoney** : *float*, *Per-count feature*   
+Latest money per county  
   
 
 ## Other Elements  
