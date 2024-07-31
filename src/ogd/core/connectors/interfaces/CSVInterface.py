@@ -46,10 +46,10 @@ class CSVInterface(EventInterface):
         self._data = pd.DataFrame() # make new dataframe, let old data get garbage collected I assume.
         return True
 
-    def _availableIDs(self) -> List[str]:
+    def _allIDs(self) -> List[str]:
         return [str(id) for id in self._data['session_id'].unique().tolist()]
 
-    def _availableDates(self) -> Dict[str,datetime]:
+    def _fullDateRange(self) -> Dict[str,datetime]:
         min_time = pd.to_datetime(self._data['timestamp'].min())
         max_time = pd.to_datetime(self._data['timestamp'].max())
         return {'min':min_time, 'max':max_time}
@@ -70,18 +70,16 @@ class CSVInterface(EventInterface):
             ret_val = list(_data.itertuples(index=False, name=None))
         return ret_val
 
-    def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]]=None) -> List[str]:
+    def _IDsFromDates(self, min:datetime, max:datetime) -> List[str]:
         if not self._data.empty:
             server_times = pd.to_datetime(self._data['server_time'])
             mask = (server_times >= pd.to_datetime(min)) & (server_times <= pd.to_datetime(max))
-            if versions is not None and versions is not []:
-                mask = mask & (self._data['app_version'].isin(versions))
             data_masked = self._data.loc[mask]
             return data_masked['session_id'].unique().tolist()
         else:
             return []
 
-    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> Dict[str, datetime]:
+    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION) -> Dict[str, datetime]:
         if id_mode == IDMode.SESSION:
             min_date = self._data[self._data['session_id'].isin(id_list)]['timestamp'].min()
             max_date = self._data[self._data['session_id'].isin(id_list)]['timestamp'].max()

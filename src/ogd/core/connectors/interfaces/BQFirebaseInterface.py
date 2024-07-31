@@ -73,7 +73,7 @@ class BQFirebaseInterface(BigQueryInterface):
                 events.append(tuple(event))
         return events if events != None else []
 
-    def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]] = None) -> List[str]:
+    def _IDsFromDates(self, min:datetime, max:datetime) -> List[str]:
         ret_val = []
         str_min, str_max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
         query = f"""
@@ -90,7 +90,7 @@ class BQFirebaseInterface(BigQueryInterface):
             ret_val = ids
         return ret_val
 
-    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> Dict[str, datetime]:
+    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION) -> Dict[str, datetime]:
         match id_mode:
             case IDMode.SESSION:
                 id_string = ','.join([f"{x}" for x in id_list])
