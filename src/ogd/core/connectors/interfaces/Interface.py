@@ -146,10 +146,6 @@ class Interface(StorageConnector):
 
     # *** PROPERTIES ***
 
-    @property
-    def _TableSchema(self) -> TableSchema:
-        return self._table_schema
-
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***

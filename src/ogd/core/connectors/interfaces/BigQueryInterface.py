@@ -182,7 +182,7 @@ class BigQueryInterface(EventInterface):
         :return: True if the interface is open, else False
         :rtype: bool
         """
-        return True if (super().IsOpen() and self._client is not None) else False
+        return True if (super().IsOpen and self._client is not None) else False
 
     def DBPath(self, min_date:Optional[date]=None, max_date:Optional[date]=None) -> str:
         """The path of form "[projectID].[datasetID].[tableName]" used to make queries
