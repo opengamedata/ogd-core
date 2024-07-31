@@ -6,35 +6,34 @@ from ogd.core.models.Event import Event
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.models.FeatureData import FeatureData
 
-class NumberOfSessionsPerPlayer(Feature):
+class BloomAlertCount(Feature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        self.session_count: Dict[str, int] = {}
+        self.bloom_alert_counts: Dict[str, int] = {}
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["session_start"]
+        return ["bloom_alert"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        player_id = event.user_id
-        if player_id not in self.session_count:
-            self.session_count[player_id] = 1
-        else:
-            self.session_count[player_id] += 1
+        current_county = event.GameState.get("current_county", None)
+        if current_county:
+            if current_county not in self.bloom_alert_counts:
+                self.bloom_alert_counts[current_county] = 1
+            else:
+                self.bloom_alert_counts[current_county] += 1
 
     def _updateFromFeatureData(self, feature: FeatureData):
-        return
+        pass
 
     def _getFeatureValues(self) -> List[Any]:
-        total_sessions = sum(self.session_count.values())
-        return [total_sessions]
+        total_bloom_alert_count = sum(self.bloom_alert_counts.values())
+        return [total_bloom_alert_count, self.bloom_alert_counts]
 
-    # *** Optionally override public functions. ***
-    @staticmethod
-    def MinVersion() -> Optional[str]:
-        return "1"
+    def Subfeatures(self) -> List[str]:
+        return ["Breakdown"]

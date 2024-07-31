@@ -6,35 +6,34 @@ from ogd.core.models.Event import Event
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.models.FeatureData import FeatureData
 
-class NumberOfSessionsPerPlayer(Feature):
+class BuildCount(Feature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        self.session_count: Dict[str, int] = {}
+        self.build_counts: Dict[str, int] = {}
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["session_start"]
+        return ["click_execute_build"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        player_id = event.user_id
-        if player_id not in self.session_count:
-            self.session_count[player_id] = 1
-        else:
-            self.session_count[player_id] += 1
+        county_name = event.GameState.get("current_county", None)
+        if county_name:
+            if county_name not in self.build_counts:
+                self.build_counts[county_name] = 1
+            else:
+                self.build_counts[county_name] += 1
 
     def _updateFromFeatureData(self, feature: FeatureData):
-        return
+        pass
 
     def _getFeatureValues(self) -> List[Any]:
-        total_sessions = sum(self.session_count.values())
-        return [total_sessions]
+        total_build_count = sum(self.build_counts.values())
+        return [total_build_count, self.build_counts]
 
-    # *** Optionally override public functions. ***
-    @staticmethod
-    def MinVersion() -> Optional[str]:
-        return "1"
+    def Subfeatures(self) -> List[str]:
+        return ["Breakdown"]

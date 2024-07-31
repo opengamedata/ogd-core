@@ -1,40 +1,38 @@
 # import libraries
 from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.models.Event import Event
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.models.FeatureData import FeatureData
 
-class NumberOfSessionsPerPlayer(Feature):
+# import PerCountyFeature
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
+from ogd.games.BLOOM.features.PerCountyFeature import PerCountyFeature
+
+class CountyLatestMoney(PerCountyFeature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        self.session_count: Dict[str, int] = {}
+        self.latest_money: Optional[int] = None
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["session_start"]
+        return ["all_events"]
+        # return ["switch_county"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        player_id = event.user_id
-        if player_id not in self.session_count:
-            self.session_count[player_id] = 1
-        else:
-            self.session_count[player_id] += 1
+        current_money = event.GameState.get("current_money", None)
+        self.latest_money = current_money
 
     def _updateFromFeatureData(self, feature: FeatureData):
-        return
+        pass
 
     def _getFeatureValues(self) -> List[Any]:
-        total_sessions = sum(self.session_count.values())
-        return [total_sessions]
+        return [self.latest_money]
 
-    # *** Optionally override public functions. ***
-    @staticmethod
-    def MinVersion() -> Optional[str]:
-        return "1"
+    def Subfeatures(self) -> List[str]:
+        return []

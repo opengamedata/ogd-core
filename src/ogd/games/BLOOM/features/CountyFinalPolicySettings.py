@@ -6,35 +6,35 @@ from ogd.core.models.Event import Event
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.models.FeatureData import FeatureData
 
-class NumberOfSessionsPerPlayer(Feature):
+class CountyFinalPolicySettings(Feature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        self.session_count: Dict[str, int] = {}
+        self.policy_settings: Dict[str, Optional[str]] = {"SalesTaxPolicy": None, "RunoffPolicy": None, "ImportTaxPolicy": None, "SkimmingPolicy": None}
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["session_start"]
+        return ["select_policy_card"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        player_id = event.user_id
-        if player_id not in self.session_count:
-            self.session_count[player_id] = 1
-        else:
-            self.session_count[player_id] += 1
+        policy_name = event.EventData.get("policy", None)
+        choice_name = event.EventData.get("choice_name", None)
+
+        if policy_name is not None and choice_name is not None:
+            if policy_name in self.policy_settings:
+                self.policy_settings[policy_name] = choice_name
+            else:
+                self.WarningMessage(f"Got a select_policy_card with unexpected policy type {policy_name}")
 
     def _updateFromFeatureData(self, feature: FeatureData):
-        return
+        pass
 
     def _getFeatureValues(self) -> List[Any]:
-        total_sessions = sum(self.session_count.values())
-        return [total_sessions]
+        return [self.policy_settings]
 
-    # *** Optionally override public functions. ***
-    @staticmethod
-    def MinVersion() -> Optional[str]:
-        return "1"
+    def Subfeatures(self) -> List[str]:
+        return []
