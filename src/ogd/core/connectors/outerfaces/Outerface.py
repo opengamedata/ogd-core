@@ -1,4 +1,4 @@
-"""DataOuterface Module
+"""Outerface Module
 """
 ## import standard libraries
 import abc
@@ -13,7 +13,7 @@ from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.utils.Logger import Logger
 from ogd.core.utils.utils import ExportRow
 
-class DataOuterface(StorageConnector):
+class Outerface(StorageConnector):
     """Base class for feature and event output.
 
     :param Interface: _description_

@@ -14,7 +14,7 @@ from typing import Any, List, Optional, Set, Tuple
 # from ogd.core.exec.Generators import OGDGenerators
 from ogd.core.connectors.interfaces.CSVInterface import CSVInterface
 from ogd.core.connectors.interfaces.EventInterface import EventInterface
-from ogd.core.connectors.outerfaces.DataOuterface import DataOuterface
+from ogd.core.connectors.outerfaces.Outerface import Outerface
 from ogd.core.connectors.outerfaces.DebugOuterface import DebugOuterface
 from ogd.core.connectors.outerfaces.TSVOuterface import TSVOuterface
 from ogd.core.managers.ExportManager import ExportManager
@@ -118,7 +118,7 @@ class OGDCommands:
         export_modes   : Set[ExportMode]
         interface      : EventInterface
         export_range   : ExporterRange
-        file_outerface : DataOuterface
+        file_outerface : Outerface
         dataset_id     : Optional[str] = None
 
     # 1. get exporter modes to run
@@ -168,7 +168,7 @@ class OGDCommands:
         _cfg = GameSourceSchema(name="FILE DEST", all_elements={"database":"FILE", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
         file_outerface = TSVOuterface(game_id=args.game, config=_cfg, export_modes=export_modes, date_range=export_range.DateRange,
                                     file_indexing=config.FileIndexConfig, dataset_id=dataset_id)
-        outerfaces : Set[DataOuterface] = {file_outerface}
+        outerfaces : Set[Outerface] = {file_outerface}
         # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
         if config.DebugLevel == "DEBUG":
             _cfg = GameSourceSchema(name="DEBUG", all_elements={"database":"DEBUG", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
