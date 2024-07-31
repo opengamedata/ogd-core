@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  OGD_BQ_GAMES: '["AQUALAB", "BACTERIA", "BALLOON", "CRYSTAL", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "JOWILDER", "PENGUINS", "LAKELAND", "MAGNET", "WAVES", "WIND"]'
+  STANDALONE_BQ_GAMES: '["SHIPWRECKS"]'
 
 jobs:
   export_data:
@@ -15,9 +15,26 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        # don't use the first one until we've got STEMPORTS and AQUALAB
-        # game: [AQUALAB, BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, JOWILDER, LAKELAND, MAGNET, STEMPORTS, WAVES, WIND]
-        game: [AQUALAB, BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, ICECUBE, JOURNALISM, JOWILDER, LAKELAND, MAGNET, PENGUINS, SHADOWSPECT, SHIPWRECKS, TRANSFORMATION_QUEST, WAVES, WIND]
+        game: [
+          AQUALAB,
+          BACTERIA,
+          BALLOON,
+          CRYSTAL,
+          CYCLE_CARBON,
+          CYCLE_NITROGEN,
+          CYCLE_WATER,
+          EARTHQUAKE,
+          ICECUBE,
+          JOURNALISM,
+          JOWILDER,
+          LAKELAND,
+          MAGNET,
+          PENGUINS,
+          SHADOWSPECT,
+          SHIPWRECKS,
+          TRANSFORMATION_QUEST,
+          WAVES,
+          WIND]
       fail-fast: false # we don't want to cancel just because one game fails.
       max-parallel: 20
 
@@ -36,19 +53,12 @@ jobs:
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
       # A bunch of copy-paste crap to set up google cloud for any given game.
-    - if: contains(fromJson(${{ env.OGD_BQ_GAMES }}), ${{ matrix.game }})
+    - if: ${{ !contains(fromJson( env.STANDALONE_BQ_GAMES ), matrix.game) }}
       name: Set up Cloud SDK for OGD BigQuery
       uses: google-github-actions/setup-gcloud@v0
       with:
         project_id: ${{ secrets.OGD_BQ_PROJECT_ID }}
         service_account_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
-        export_default_credentials: true
-    - if: ${{ matrix.game == 'SHADOWSPECT' }}
-      name: Set up Cloud SDK for Shadowspect
-      uses: google-github-actions/setup-gcloud@v0
-      with:
-        project_id: ${{ secrets.BQ_SHADOWSPECT_PROJECT_ID }}
-        service_account_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
         export_default_credentials: true
     - if: ${{ matrix.game == 'SHIPWRECKS' }}
       name: Set up Cloud SDK for Shipwrecks

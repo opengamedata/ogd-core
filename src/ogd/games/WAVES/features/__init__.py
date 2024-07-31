@@ -1,3 +1,5 @@
+"""Initializer for Wave Combinator features"""
+
 __all__ = [
     "TotalSliderMoves",
     "TotalArrowMoves",

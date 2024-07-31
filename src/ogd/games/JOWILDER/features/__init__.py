@@ -1,3 +1,5 @@
+"""Initializer for Jo Wilder features"""
+
 __all__ = [
     "QuestionAnswers",
     "SurveyItem",

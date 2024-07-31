@@ -266,7 +266,11 @@ class ExportManager:
         Logger.Log(f"Retrieving slice [{slice_num}/{slice_count}]...", logging.INFO, depth=2)
         start : datetime = datetime.now()
         # TODO : Add a way to configure what to exclude at higher level, here. So we can easily choose to leave out certain events.
-        ret_val = request.Interface.EventsFromIDs(id_list=next_slice_ids, id_mode=request.Range.IDMode, exclude_rows=None)
+        _exclude_rows = None
+        # HACK : setting to skip algae events here directly
+        if request.GameID == 'BLOOM':
+            _exclude_rows = ['algae_growth_end', 'algae_growth_begin']
+        ret_val = request.Interface.EventsFromIDs(id_list=next_slice_ids, id_mode=request.Range.IDMode, exclude_rows=_exclude_rows)
         time_delta = datetime.now() - start
         if ret_val is not None:
             Logger.Log(f"Retrieval time for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} events", logging.INFO, depth=2)

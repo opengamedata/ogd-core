@@ -83,7 +83,7 @@ settings = {
         "MAGNET":               { "source":"OPENGAMEDATA_BQ",    "database":"magnet",               "table":"magnet_daily",               "schema":"OPENGAMEDATA_BIGQUERY" },
         "MASHOPOLIS":           { "source":"OPENGAMEDATA_BQ",    "database":"mashopolis",           "table":"mashopolis_daily",           "schema":"OPENGAMEDATA_BIGQUERY" },
         "PENGUINS":             { "source":"OPENGAMEDATA_BQ",    "database":"penguins",             "table":"penguins_daily",             "schema":"OPENGAMEDATA_BIGQUERY" },
-        "SHADOWSPECT":          { "source":"SHADOWSPECT_BQ",     "database":"analytics_284091572",  "table":"events",                     "schema":"FIREBASE"              },
+        "SHADOWSPECT":          { "source":"OPENGAMEDATA_BQ",    "database":"shadowspect",          "table":"shadowspect_daily",          "schema":"OPENGAMEDATA_BIGQUERY" },
         "SHIPWRECKS":           { "source":"SHIPWRECKS_BQ",      "database":"analytics_269167605",  "table":"events",                     "schema":"FIREBASE"              },
         "THERMOVR":             { "source":"OPENGAMEDATA_BQ",    "database":"thermovr",             "table":"thermovr_daily",             "schema":"OPENGAMEDATA_BIGQUERY" },
         "TRANSFORMATION_QUEST": { "source":"OPENGAMEDATA_BQ",    "database":"transformation_quest", "table":"transformation_quest_daily", "schema":"OPENGAMEDATA_BIGQUERY" },

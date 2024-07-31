@@ -1,5 +1,7 @@
-# __all__ = [
-#     "JobTriesInArgument",
-# ]
+"""Initializer for ThermoVR detectors"""
+
+__all__ = [
+
+]
 
 # from . import JobTriesInArgument
