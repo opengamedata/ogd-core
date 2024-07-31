@@ -103,7 +103,7 @@
             }
         },
         "begin_dive": {
-            "description": "N/A",
+            "description": "When the player enters a dive site in their submarine",
             "event_data": {
                 "site_id": {
                     "type": "str",
@@ -783,7 +783,7 @@
             "ActiveTime": {
                 "enabled": false,
                 "type": "ActiveTime",
-                "description": "Total time spent actively playing",
+                "description": "Total time spent actively playing the game",
                 "return_type": "timedelta"
             },
             "EventList": {
@@ -797,18 +797,6 @@
                 "type": "JobsCompleted",
                 "description": "List of completed jobs for a player",
                 "return_type": "list[str]"
-            },
-            "PlayLocations": {
-                "enabled": true,
-                "type": "PlayLocations",
-                "description": "Where players had each session",
-                "return_type": "list[bool]",
-                "subfeatures": {
-                    "LocalTime": {
-                        "description": "The localized timestamp of the start of the session.",
-                        "return_type": "datetime"
-                    }
-                }
             },
             "PlayerSummary": {
                 "enabled": false,

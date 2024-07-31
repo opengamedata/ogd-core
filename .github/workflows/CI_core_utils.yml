@@ -1,0 +1,38 @@
+name: Core Utils CI Test
+run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
+
+on:
+  push:
+    paths:
+    - '.github/workflows/CI_core_utils.yml'
+    - 'src/ogd/core/utils/**'
+    - 'tests/t_utils/**'
+  workflow_dispatch:
+
+jobs:
+  run_testbed:
+    name: Run Utils Testbed
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
+      cancel-in-progress: true
+
+    steps:
+
+  # 1. Local checkout 
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Get Dependencies
+      uses: ./.github/actions/OGD_dependencies
+
+  # 2. Configure cloud & local environments
+
+  # 3. Perform export
+    - name: Run Utils testbed
+      run: python -m unittest discover -s ./tests/t_utils -p "t_*.py" 
+
+  # 4. Cleanup & complete
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: ./*.log

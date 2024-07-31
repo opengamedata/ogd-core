@@ -1,15 +1,15 @@
 import logging
 import json
 from datetime import datetime
-from ogd.core.schemas import Event
+from ogd.core.models import Event
 from typing import Any, List, Optional
 # import locals
 from ogd.core.utils.Logger import Logger
 from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.core.models.FeatureData import FeatureData
 
 class SnippetsSubmitted(PerLevelFeature):
     has_printed = False

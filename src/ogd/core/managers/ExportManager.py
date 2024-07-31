@@ -16,14 +16,16 @@ from ogd import games
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.managers.EventManager import EventManager
 from ogd.core.managers.FeatureManager import FeatureManager
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExportMode import ExportMode
-from ogd.core.schemas.IDMode import IDMode
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExportMode import ExportMode
+from ogd.core.models.enums.IDMode import IDMode
 from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.requests.Request import Request
 from ogd.core.requests.RequestResult import RequestResult
 from ogd.core.utils.Logger import Logger
+
+Slice = List[str]
 
 ## @class ExportManager
 #  A class to export features and raw data, given a Request object.
@@ -36,7 +38,7 @@ class ExportManager:
 
     def __init__(self, config:ConfigSchema):
         """Constructor for an ExportManager object.
-        Simply sets the settings for the manager. All other data comes from a request given to the manager.
+        Simply sets the config for the manager. All other data comes from a request given to the manager.
 
         :param settings: [description]
         :type settings: [type]
@@ -69,21 +71,21 @@ class ExportManager:
         Logger.Log(f"Executing request: {str(request)}", logging.INFO)
         start = datetime.now()
         try:
+        # 1. Pre-processing
             Logger.Log(f"Setting up file, event, and feature managers as pre-processing...", logging.INFO)
             self._preProcess(request=request)
             Logger.Log(f"Done", logging.INFO)
-
             Logger.Log(f"Executing...", logging.INFO)
-            _sess_ids        : List[str]       = request.RetrieveIDs() or []
+            _sess_ids : List[str] = request.RetrieveIDs() or []
             for outerface in request.Outerfaces:
                 outerface.SessionCount = len(_sess_ids)
 
-            # Process slices
+        # 2. Process slices
             Logger.Log(f"Preparing to process {len(_sess_ids)} sessions...", logging.INFO, depth=1)
             self._processSlices(request=request, ids=_sess_ids)
             Logger.Log(f"Done", logging.INFO, depth=1)
 
-            # Output population/player features as post-slicing data.
+        # 3. Output population/player features as post-slicing data.
             Logger.Log(f"Outputting post-process data...", logging.INFO, depth=2)
             self._postProcess(request=request)
             Logger.Log(f"Done", logging.INFO)
@@ -113,9 +115,20 @@ class ExportManager:
         self._processEvent(next_event=event)
 
     def _preProcess(self, request:Request) -> None:
+        """
+        Pre-processing of request, setting up required components before we retrieve session data.
+
+        In particular, this function:
+        1. Sets up loader class
+        2. Sets up event manager
+        3. Sets up feature manager
+        4. Opens request outerfaces
+        :param request: The export request being processed
+        :type request: Request
+        """
         _games_path  = Path(games.__file__) if Path(games.__file__).is_dir() else Path(games.__file__).parent
         _game_schema  : GameSchema  = GameSchema.FromFile(game_id=request.GameID, schema_path=_games_path / request.GameID / "schemas")
-        # 1. Get LoaderClass and set up Event and Feature managers.
+    # 1. Get LoaderClass
         load_class = ExportManager._loadLoaderClass(request.GameID)
         if load_class is None:
             # If game doesn't have an extractor, make sure we don't try to export it.
@@ -124,39 +137,38 @@ class ExportManager:
             request.RemoveExportMode(ExportMode.PLAYER)
             request.RemoveExportMode(ExportMode.POPULATION)
 
-        # 2. Set up EventManager, assuming it was requested.
+    # 2. Set up EventManager, assuming it was requested.
         if request.ExportRawEvents or request.ExportProcessedEvents:
             self._event_mgr = EventManager(game_schema=_game_schema, LoaderClass=load_class,
                                            trigger_callback=self._receiveEventTrigger, feature_overrides=request._feat_overrides)
         else:
             Logger.Log("Event data not requested, skipping event manager.", logging.INFO, depth=1)
-        # 3. Set up FeatureManager, assuming it was requested.
+    # 3. Set up FeatureManager, assuming it was requested.
         if request.ExportSessions or request.ExportPlayers or request.ExportPopulation:
             self._feat_mgr = FeatureManager(game_schema=_game_schema, LoaderClass=load_class, feature_overrides=request._feat_overrides)
         else:
             Logger.Log("Feature data not requested, or extractor loader unavailable, skipping feature manager.", logging.INFO, depth=1)
+    # 4. Open the outerfaces
         for outerface in request.Outerfaces:
             outerface.Open()
         self._outputHeaders(request=request)
 
     def _processSlices(self, request:Request, ids:List[str]) -> None:
         start  : datetime
-        slices : List[List[str]] = self._generateSlices(sess_ids=ids)
+        slices : List[Slice] = self._generateSlices(sess_ids=ids)
 
-        # 1) Get the IDs of sessions to process
-        # 2) Loop over and process the sessions, slice-by-slice (where each slice is a list of sessions).
         _next_slice_data : Optional[List[Event]] = None
         for i, next_slice_ids in enumerate(slices):
             _next_slice_data = self._loadSlice(request=request, next_slice_ids=next_slice_ids, slice_num=i+1, slice_count=len(slices))
             if _next_slice_data is not None:
-                # 2a) Process all rows for each slice.
+            # 1. Process the slice.
                 start = datetime.now()
                 Logger.Log(f"Processing slice [{i+1}/{len(slices)}]...", logging.INFO, depth=2)
                 self._processSlice(next_slice_data=_next_slice_data, request=request, ids=ids)
                 time_delta = datetime.now() - start
                 Logger.Log(f"Processing time for slice [{i+1}/{len(slices)}]: {time_delta} to handle {len(_next_slice_data)} events", logging.INFO, depth=2)
 
-                # 2b) After processing all rows for each slice, write out the session data and reset for next slice.
+            # 2. Write out the session data and reset for next slice.
                 start = datetime.now()
                 Logger.Log(f"Outputting slice [{i+1}/{len(slices)}]...", logging.INFO, depth=2)
                 self._outputSlice(request=request, slice_num=i+1, slice_count=len(slices))
@@ -165,7 +177,19 @@ class ExportManager:
 
     def _postProcess(self, request:Request):
         start = datetime.now()
-        self._outputPostSlice(request=request)
+        if self._feat_mgr is not None:
+            if request.ExportPopulation:
+                _pop_feats = self._feat_mgr.GetPopulationFeatures(as_str=True)
+                for outerface in request.Outerfaces:
+                    outerface.WriteLines(lines=_pop_feats, mode=ExportMode.POPULATION)
+                self._feat_mgr.ClearPopulationLines()
+            if request.ExportPlayers:
+                _player_feats = self._feat_mgr.GetPlayerFeatures(as_str=True)
+                for outerface in request.Outerfaces:
+                    outerface.WriteLines(lines=_player_feats, mode=ExportMode.PLAYER)
+                self._feat_mgr.ClearPlayerLines()
+        else:
+            Logger.Log(f"Skipping feature output for post-process, no FeatureManager exists!", logging.DEBUG, depth=3)
         time_delta = datetime.now() - start
         Logger.Log(f"Output time for population: {time_delta}", logging.INFO, depth=2)
 
@@ -209,6 +233,9 @@ class ExportManager:
             case "PENGUINS":
                 from ogd.games.PENGUINS.PenguinsLoader import PenguinsLoader
                 _loader_class = PenguinsLoader
+            case "BLOOM":
+                from ogd.games.BLOOM.BloomLoader import BloomLoader
+                _loader_class = BloomLoader
             case _:
                 if game_id in {"BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MASHOPOLIS", "WEATHER_STATION", "WIND"}:
                     # all games with data but no extractor.
@@ -217,7 +244,16 @@ class ExportManager:
                     raise ValueError(f"Got an unrecognized game ID ({game_id})!")
         return _loader_class
 
-    def _generateSlices(self, sess_ids:List[str]) -> List[List[str]]:
+    def _generateSlices(self, sess_ids:List[str]) -> List[Slice]:
+        """
+        Convert session ID list into slices of size `self._config.BatchSize.`
+
+        Each slice is just a list of session IDs.
+        :param sess_ids: The list of all session IDs in the request.
+        :type sess_ids: List[str]
+        :return: A list of ID blocks (slices).
+        :rtype: List[Slice]
+        """
         _num_sess = len(sess_ids)
         _slice_size = self._config.BatchSize
         Logger.Log(f"With slice size = {_slice_size}, there are {math.ceil(_num_sess / _slice_size)} slices", logging.INFO, depth=1)
@@ -229,7 +265,12 @@ class ExportManager:
 
         Logger.Log(f"Retrieving slice [{slice_num}/{slice_count}]...", logging.INFO, depth=2)
         start : datetime = datetime.now()
-        ret_val = request.Interface.EventsFromIDs(id_list=next_slice_ids, id_mode=request.Range.IDMode)
+        # TODO : Add a way to configure what to exclude at higher level, here. So we can easily choose to leave out certain events.
+        _exclude_rows = None
+        # HACK : setting to skip algae events here directly
+        if request.GameID == 'BLOOM':
+            _exclude_rows = ['algae_growth_end', 'algae_growth_begin']
+        ret_val = request.Interface.EventsFromIDs(id_list=next_slice_ids, id_mode=request.Range.IDMode, exclude_rows=_exclude_rows)
         time_delta = datetime.now() - start
         if ret_val is not None:
             Logger.Log(f"Retrieval time for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} events", logging.INFO, depth=2)
@@ -252,7 +293,7 @@ class ExportManager:
             elif event.SessionID is not None and event.SessionID.upper() != "NONE":
                 Logger.Log(f"Found a session ({event.SessionID}, type {type(event.SessionID)}) which was in the slice but not in the list of sessions for processing ({ids[:5]}..., type {type(ids[0])}).", logging.WARNING, depth=2)
             elif event.UserID is not None and event.UserID.upper() != "NONE":
-                Logger.Log(f"Found a user ({event.UserID}) which was in the slice but not in the list of sessions for processing.", logging.WARNING, depth=2)
+                Logger.Log(f"Found a user ({event.UserID}) which was in the slice but not in the list of players for processing.", logging.WARNING, depth=2)
             else:
                 _unsessioned_event_count += 1
                 if _unsessioned_event_count < 10:
@@ -308,12 +349,24 @@ class ExportManager:
                 Logger.Log("Population features not requested, skipping population_features file.", logging.INFO, depth=1)
 
     def _outputSlice(self, request:Request, slice_num:int, slice_count:int):
-        # TODO: um, so discarding session features after every slice will fuck up second-order features, I believe. Need to deal with that.
+        """
+        Output all genearted data for a slice's-worth of raw data
+
+        TODO : Find better solution that does not involve discarding session features, which likely messes up some second-order features.
+        :param request: _description_
+        :type request: Request
+        :param slice_num: _description_
+        :type slice_num: int
+        :param slice_count: _description_
+        :type slice_count: int
+        """
         if self._event_mgr is not None:
+        # 1. Output raw events, if requested
             if request.ExportRawEvents:
                 _events = self._event_mgr.GetRawLines(slice_num=slice_num, slice_count=slice_count)
                 for outerface in request.Outerfaces:
                     outerface.WriteLines(lines=_events, mode=ExportMode.EVENTS)
+        # 2. Output combined raw & detected events, if requested
             if request.ExportProcessedEvents:
                 _events = self._event_mgr.GetAllLines(slice_num=slice_num, slice_count=slice_count)
                 for outerface in request.Outerfaces:
@@ -322,6 +375,7 @@ class ExportManager:
         else:
             Logger.Log(f"Skipping event output for slice [{slice_num}/{slice_count}], no EventManager exists!", logging.DEBUG, depth=3)
         if self._feat_mgr is not None:
+        # 3. Output session features, if requested
             if request.ExportSessions:
                 _sess_feats = self._feat_mgr.GetSessionFeatures(slice_num=slice_num, slice_count=slice_count, as_str=True)
                 for outerface in request.Outerfaces:
@@ -329,18 +383,3 @@ class ExportManager:
                 self._feat_mgr.ClearSessionLines()
         else:
             Logger.Log(f"Skipping feature output for slice [{slice_num}/{slice_count}], no FeatureManager exists!", logging.DEBUG, depth=3)
-
-    def _outputPostSlice(self, request:Request):
-        if self._feat_mgr is not None:
-            if request.ExportPopulation:
-                _pop_feats = self._feat_mgr.GetPopulationFeatures(as_str=True)
-                for outerface in request.Outerfaces:
-                    outerface.WriteLines(lines=_pop_feats, mode=ExportMode.POPULATION)
-                self._feat_mgr.ClearPopulationLines()
-            if request.ExportPlayers:
-                _player_feats = self._feat_mgr.GetPlayerFeatures(as_str=True)
-                for outerface in request.Outerfaces:
-                    outerface.WriteLines(lines=_player_feats, mode=ExportMode.PLAYER)
-                self._feat_mgr.ClearPlayerLines()
-        else:
-            Logger.Log(f"Skipping feature output for post-process, no FeatureManager exists!", logging.DEBUG, depth=3)

@@ -1,10 +1,10 @@
 
 __all__ = [
-    "EventManager",
     "ExportManager",
+    "EventManager",
     "FeatureManager",
 ]
 
-from . import EventManager
 from . import ExportManager
+from . import EventManager
 from . import FeatureManager

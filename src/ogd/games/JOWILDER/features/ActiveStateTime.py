@@ -5,9 +5,9 @@ from datetime  import timedelta, datetime
 # import local files
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
-from ogd.core.schemas.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.core.models.FeatureData import FeatureData
+from ogd.core.models.Event import Event
 
 class ActiveStateTime(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.

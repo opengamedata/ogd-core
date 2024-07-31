@@ -11,11 +11,12 @@ from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.games.PENGUINS.detectors import *
 from ogd.games.PENGUINS.features import *
-from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.games.GameSchema import GameSchema
 # from ogd.games.PENGUINS.DBExport import scene_map
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.core.utils.Logger import Logger
 
 ## @class WaveExtractor
 #  Extractor subclass for extracting features from Waves game data.
@@ -23,8 +24,6 @@ from ogd.core.schemas.games.GameSchema import GameSchema
 EXPORT_PATH : Final[str] = "games/PENGUINS/DBExport.json"
 
 class PenguinsLoader(GeneratorLoader):
-
-
     # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the WaveLoader class.
@@ -54,60 +53,74 @@ class PenguinsLoader(GeneratorLoader):
     def _getFeaturesModule():
         return features
     
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
-        ret_val : Feature
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
+        ret_val : Optional[Feature] = None
         if extractor_params._count_index == None:
             match feature_type:
-                case "SessionDuration":
-                    ret_val = SessionDuration.SessionDuration(params=extractor_params, session_id=self._session_id)
-                case "RegionsEncountered":
-                    ret_val = RegionsEncountered.RegionsEncountered(params=extractor_params)
-                case "PlayerWaddleCount":
-                    ret_val = PlayerWaddleCount.PlayerWaddleCount(params=extractor_params)
-                case "GazeDuration":
-                    ret_val = GazeDuration.GazeDuration(params=extractor_params)
-                case "GazeCount":
-                    ret_val = GazeCount.GazeCount(params=extractor_params)
-                case "SnowBallDuration":
-                    ret_val = SnowBallDuration.SnowBallDuration(params=extractor_params)
-                # case "RingChimesCount":
-                    # ret_val = RingChimesCount.RingChimesCount(params=extractor_params)
-                case "WaddlePerRegion":
-                    ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params, region_map=self._region_map)
-                case "EatFishCount":
-                    ret_val = EatFishCount.EatFishCount(params=extractor_params)
-                case "PickupRockCount":
-                    ret_val = PickupRockCount.PickupRockCount(params=extractor_params)
-                case "EggLostCount":
-                    ret_val = EggLostCount.EggLostCount(params=extractor_params)
-                case "EggRecoverTime":
-                    ret_val = EggRecoverTime.EggRecoverTime(params=extractor_params)
-                # case "PlayerInactiveAvgDuration":
-                #     ret_val = PlayerInactiveAvgDuration.PlayerInactiveAvgDuration(params=extractor_params)
-                case "MirrorWaddleDuration":
-                    ret_val = MirrorWaddleDuration.MirrorWaddleDuration(params=extractor_params)
                 case "ActivityCompleted":
                     ret_val = ActivityCompleted.ActivityCompleted(params=extractor_params)
                 case "ActivityDuration":
                     ret_val = ActivityDuration.ActivityDuration(params=extractor_params)       
+                case "BuiltNestCount":
+                    ret_val = BuiltNestCount.BuiltNestCount(params=extractor_params)
+                case "BuiltWrongNestCount":
+                    ret_val = BuiltWrongNestCount.BuiltWrongNestCount(params=extractor_params)
+                case "EatFishCount":
+                    ret_val = EatFishCount.EatFishCount(params=extractor_params)
+                case "EggLostCount":
+                    ret_val = EggLostCount.EggLostCount(params=extractor_params)
+                case "EggRecoverTime":
+                    ret_val = EggRecoverTime.EggRecoverTime(params=extractor_params)
+                case "GazeCount":
+                    ret_val = GazeCount.GazeCount(params=extractor_params)
+                case "GazeDuration":
+                    ret_val = GazeDuration.GazeDuration(params=extractor_params)
+                case "LogVersion":
+                    ret_val = LogVersion.LogVersion(params=extractor_params)
+                case "MirrorWaddleDuration":
+                    ret_val = MirrorWaddleDuration.MirrorWaddleDuration(params=extractor_params)
+                case "PenguinInteractCount":
+                    ret_val = PenguinInteractCount.PenguinInteractCount(params=extractor_params)
+                # case "PlayerInactiveAvgDuration":
+                #     ret_val = PlayerInactiveAvgDuration.PlayerInactiveAvgDuration(params=extractor_params)
+                case "RegionsEncountered":
+                    ret_val = RegionsEncountered.RegionsEncountered(params=extractor_params)
+                case "RingChimesCount":
+                    ret_val = RingChimesCount.RingChimesCount(params=extractor_params)
+                case "RockBashCount":
+                    ret_val = RockBashCount.RockBashCount(params=extractor_params) 
+                case "RockPickupCount":
+                    ret_val = RockPickupCount.RockPickupCount(params=extractor_params)
+                case "RockMultiplePickupCount":
+                        ret_val = RockMultiplePickupCount.RockMultiplePickupCount(params=extractor_params)      
+                case "SessionDuration":
+                    ret_val = SessionDuration.SessionDuration(params=extractor_params, session_id=self._session_id)
+                case "SkuaBashCount":
+                        ret_val = SkuaBashCount.SkuaBashCount(params=extractor_params)
+                case "SkuaPeckCount":
+                        ret_val = SkuaPeckCount.SkuaPeckCount(params=extractor_params)
+                case "SnowBallDuration":
+                    ret_val = SnowBallDuration.SnowBallDuration(params=extractor_params)
+                case "WaddleCount":
+                    ret_val = WaddleCount.WaddleCount(params=extractor_params)
                 case _:
-                    raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature for Penguins.")
+                    Logger.Log(f"'{feature_type}' is not a valid aggregate feature for Penguins.")
         # Per-count features
         # level attempt features
         else:
             match feature_type:
-                case "RegionEnterCount":
-                        ret_val = RegionEnterCount.RegionEnterCount(params=extractor_params, region_map=self._region_map)
-                # case "WaddlePerRegion":
-                        #ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params)
                 case "RegionDuration":
                             ret_val = RegionDuration.RegionDuration(params=extractor_params, region_map=self._region_map)
+                case "RegionEnterCount":
+                        ret_val = RegionEnterCount.RegionEnterCount(params=extractor_params, region_map=self._region_map)
+                case "WaddlePerRegion":
+                    ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params, region_map=self._region_map)
                 case _:
-                    raise NotImplementedError(f"'{feature_type}' is not a valid per-count feature for Penguins.")
+                    Logger.Log(f"'{feature_type}' is not a valid per-count feature for Penguins.")
         return ret_val
 
-    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
-        ret_val : Detector
+    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Optional[Detector]:
+        ret_val : Optional[Detector] = None
 
         match detector_type:
             case "RegionEnter":
@@ -115,23 +128,5 @@ class PenguinsLoader(GeneratorLoader):
             case "RegionExit":
                 ret_val = RegionExit.RegionExit(params=extractor_params, trigger_callback=trigger_callback, region_map=self._region_map)
             case _:
-                raise NotImplementedError(f"'{detector_type}' is not a valid detector for Penguins.")
+                Logger.Log(f"'{detector_type}' is not a valid detector for Penguins.")
         return ret_val
-
-
-
-        # Load Aqualab scenes export and map scene names to integer values
-        # with open(EXPORT_PATH, "r") as file:
-        #     export = json.load(file)
-
-        #     task_num = 1
-        #     for i, scene in enumerate(export["scenes"], start=1):
-        #         self._scene_map[scene["id"]] = i
-        #         self._diff_map[i] = scene["difficulties"]
-        #         for task in scene["tasks"]:
-        #             task_by_scene = scene["id"] + "_" + task["id"]
-        #             self._task_map[task_by_scene] = task_num
-        #             task_num += 1
-
-        # Update level count
-        # self._game_schema._max_level = len(self._scene_map) - 1

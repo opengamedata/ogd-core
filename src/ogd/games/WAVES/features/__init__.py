@@ -1,3 +1,5 @@
+"""Initializer for Wave Combinator features"""
+
 __all__ = [
     "TotalSliderMoves",
     "TotalArrowMoves",
@@ -11,6 +13,7 @@ __all__ = [
     "MenuButtonCount",
     "BeginCount",
     "SucceedCount",
+    "SessionSucceedCount",
     "Completed",
     "PercentAmplitudeMoves",
     "PercentOffsetMoves",
@@ -57,6 +60,7 @@ from . import TotalSkips
 from . import MenuButtonCount
 from . import BeginCount
 from . import SucceedCount
+from . import SessionSucceedCount
 from . import Completed
 from . import PercentAmplitudeMoves
 from . import PercentOffsetMoves

@@ -4,7 +4,7 @@ from multiprocessing.sharedctypes import Value
 # import locals
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.schemas.Event import Event
+from ogd.core.models.Event import Event
 
 ## @class PerLevelFeature
 class PerCountFeature(Feature):

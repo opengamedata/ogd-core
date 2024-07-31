@@ -3,9 +3,9 @@ import abc
 from typing import Any, Dict, List, Optional
 # import locals
 from ogd.core.generators.Generator import Generator, GeneratorParameters
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.core.models.FeatureData import FeatureData
 
 class Extractor(Generator):
     """
