@@ -43,7 +43,7 @@ class StorageConnector(abc.ABC):
 
     def __del__(self):
         self.Close()
-  
+
     @property
     def IsOpen(self) -> bool:
         """Property to indicate whether a connection with the storage resource is open or not.
@@ -68,13 +68,13 @@ class StorageConnector(abc.ABC):
         :return: True if the resource was successfully opened (or was already open), otherwise False.
         :rtype: bool
         """
-        if (not self._is_open):
+        if not self.IsOpen:
             self._is_open = self._open()
         elif force_reopen:
             self.Close()
             self._is_open = self._open()
             Logger.Log(f"Successfully force-reopened {self.__class__}", logging.INFO)
-        return self._is_open
+        return self.IsOpen
 
     def Close(self, force_close:bool = False) -> bool:
         """Function to close the connection to a storage resource.
