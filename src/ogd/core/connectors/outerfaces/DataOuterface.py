@@ -6,14 +6,14 @@ import logging
 from typing import Any, Dict, List, Set
 
 # import local files
-from ogd.core.connectors.interfaces.Interface import Interface
+from ogd.core.connectors.StorageConnector import StorageConnector
 from ogd.core.models.enums.IDMode import IDMode
 from ogd.core.models.enums.ExportMode import ExportMode
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.utils.Logger import Logger
 from ogd.core.utils.utils import ExportRow
 
-class DataOuterface(Interface):
+class DataOuterface(StorageConnector):
     """Base class for feature and event output.
 
     :param Interface: _description_

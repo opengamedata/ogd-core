@@ -5,7 +5,10 @@ from typing import Any, Dict
 # import local files
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 
-class Interface(abc.ABC):
+class StorageConnector(abc.ABC):
+    """Base class for all interfaces and outerfaces.
+    Ensures each inter/outerface can be opened and closed, like most system resources.
+    """
 
     # *** ABSTRACTS ***
 
