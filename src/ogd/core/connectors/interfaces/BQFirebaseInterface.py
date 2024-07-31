@@ -23,7 +23,7 @@ class BQFirebaseInterface(BigQueryInterface):
 
     # *** RE-IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _allIDs(self) -> List[str]:
+    def _availableIDs(self) -> List[str]:
         query = f"""
             SELECT DISTINCT param.value.int_value AS session_id
             FROM `{self.DBPath()}`,
@@ -35,7 +35,7 @@ class BQFirebaseInterface(BigQueryInterface):
         ids = [str(row['session_id']) for row in data]
         return ids if ids != None else []
 
-    def _fullDateRange(self) -> Dict[str, datetime]:
+    def _availableDates(self) -> Dict[str, datetime]:
         query = f"""
             WITH datetable AS
             (

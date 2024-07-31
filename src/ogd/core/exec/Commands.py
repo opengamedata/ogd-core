@@ -130,7 +130,7 @@ class OGDCommands:
             _ext = str(args.file).rsplit('.', maxsplit=1)[-1]
             _cfg = GameSourceSchema(name="FILE SOURCE", all_elements={"schema":"OGD_EVENT_FILE"}, data_sources={})
             interface = CSVInterface(game_id=args.game, config=_cfg, fail_fast=config.FailFast, filepath=Path(args.file), delim="\t" if _ext == 'tsv' else ',')
-            export_range = ExporterRange.FromIDs(source=interface, ids=interface.AllIDs() or [])
+            export_range = ExporterRange.FromIDs(source=interface, ids=interface.AvailableIDs() or [])
         else:
             interface = OGDGenerators.GenDBInterface(config=config, game=args.game)
         # a. Case where specific player ID was given

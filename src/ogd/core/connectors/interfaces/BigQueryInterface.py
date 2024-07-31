@@ -52,7 +52,7 @@ class BigQueryInterface(EventInterface):
         Logger.Log("Closed connection to BigQuery.", logging.DEBUG)
         return True
 
-    def _allIDs(self) -> List[str]:
+    def _availableIDs(self) -> List[str]:
         ret_val = []
 
         query = f"""
@@ -64,12 +64,12 @@ class BigQueryInterface(EventInterface):
             data = self._client.query(query)
             session_ids = [str(row['session_id']) for row in data]
         except BadRequest as err:
-            Logger.Log(f"In _allIDs, got a BadRequest error when trying to retrieve data from BigQuery, defaulting to empty result!\n{err}")
+            Logger.Log(f"In _availableIDs, got a BadRequest error when trying to retrieve data from BigQuery, defaulting to empty result!\n{err}")
         else:
             ret_val = session_ids
         return ret_val
 
-    def _fullDateRange(self) -> Dict[str, datetime]:
+    def _availableDates(self) -> Dict[str, datetime]:
         ret_val : Dict[str, datetime] = {}
 
         query = f"""
@@ -81,7 +81,7 @@ class BigQueryInterface(EventInterface):
             data = list(self._client.query(query))
             date_range : Dict[str, datetime] = { 'min':data[0][0], 'max':data[0][1] }
         except BadRequest as err:
-            Logger.Log(f"In _fullDateRange, got a BadRequest error when trying to retrieve data from BigQuery, defaulting to empty result!\n{err}")
+            Logger.Log(f"In _availableDates, got a BadRequest error when trying to retrieve data from BigQuery, defaulting to empty result!\n{err}")
         else:
             ret_val = date_range
         return ret_val

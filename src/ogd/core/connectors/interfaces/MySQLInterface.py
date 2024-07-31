@@ -262,7 +262,7 @@ class MySQLInterface(EventInterface):
         self._is_open = False
         return True
 
-    def _allIDs(self) -> List[str]:
+    def _availableIDs(self) -> List[str]:
         if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
             _db_name     : str = self._config.DatabaseName
             _table_name  : str = self._config.TableName
@@ -284,7 +284,7 @@ class MySQLInterface(EventInterface):
             Logger.Log(f"Could not get list of all session ids, MySQL connection is not open.", logging.WARN)
             return []
 
-    def _fullDateRange(self) -> Dict[str,datetime]:
+    def _availableDates(self) -> Dict[str,datetime]:
         ret_val = {'min':datetime.now(), 'max':datetime.now()}
         if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
             _db_name     : str = self._config.DatabaseName

@@ -46,10 +46,10 @@ class CSVInterface(EventInterface):
         self._data = pd.DataFrame() # make new dataframe, let old data get garbage collected I assume.
         return True
 
-    def _allIDs(self) -> List[str]:
+    def _availableIDs(self) -> List[str]:
         return [str(id) for id in self._data['session_id'].unique().tolist()]
 
-    def _fullDateRange(self) -> Dict[str,datetime]:
+    def _availableDates(self) -> Dict[str,datetime]:
         min_time = pd.to_datetime(self._data['timestamp'].min())
         max_time = pd.to_datetime(self._data['timestamp'].max())
         return {'min':min_time, 'max':max_time}
