@@ -57,7 +57,22 @@ The elements (member variables) of each Event object, available to programmers w
 
 ## Logged Events  
 
-The individual fields encoded in the *event_data* Event element for each type of event logged by the game.  
+The individual fields encoded in the *game_state* and *user_data* Event element for all event types, and the fields in the *event_data* Event element for each individual event type logged by the game.  
+
+### Enums  
+
+| **Name** | **Values** |
+| ---      | ---        |  
+
+### Game State  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
+
+### User Data  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
 
 None  
 
@@ -71,7 +86,17 @@ None
 
 The features/metrics calculated from this game's event logs by OpenGameData when an 'export' is run.  
 
-None
+None  
+
+## Other Elements  
+
+Other (potentially non-standard) elements specified in the game's schema, which may be referenced by event/feature processors.  
+
+### Other Ranges  
+
+Extra ranges specified in the game's schema, which may be referenced by event/feature processors.  
+
+level_range : range(0, 0)
 
 No changelog prepared
 

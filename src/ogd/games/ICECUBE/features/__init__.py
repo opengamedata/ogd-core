@@ -1,3 +1,5 @@
+"""Initializer for Icecube features"""
+
 __all__ = [
     "ScenesEncountered",
     "Session_Language",
@@ -9,7 +11,8 @@ __all__ = [
     "ObjectSelectionsDuringVoiceover",
     "SceneFailureCount"
 ]
-# aggregated features
+
+# aggregate features
 from . import ScenesEncountered
 from . import Session_Language
 from . import SessionDuration

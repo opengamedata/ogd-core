@@ -4,7 +4,8 @@ __all__ = [
     "DetectorSchema",
     "FeatureSchema",
     "AggregateSchema",
-    "PerCountSchema"
+    "PerCountSchema",
+    "GameSchema"
 ]
 
 from . import EventSchema
@@ -13,3 +14,4 @@ from . import DetectorSchema
 from . import FeatureSchema
 from . import AggregateSchema
 from . import PerCountSchema
+from . import GameSchema

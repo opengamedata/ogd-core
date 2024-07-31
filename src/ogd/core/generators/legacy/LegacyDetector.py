@@ -4,9 +4,9 @@ from typing import Any, List, Optional
 # import local files
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.schemas.Event import EventSource
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.models.Event import EventSource
+from ogd.core.models.Event import Event
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
 
 class LegacyDetector(Detector):
     """Dummy version of a detector, so that LegacyLoader can return something that's not None.

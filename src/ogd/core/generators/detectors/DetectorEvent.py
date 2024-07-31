@@ -3,7 +3,7 @@ import abc
 from datetime import datetime, timedelta
 from typing import Any, Dict, Optional
 # import locals
-from ogd.core.schemas.Event import Event, EventSource
+from ogd.core.models.Event import Event, EventSource
 from ogd.core.utils.typing import Map
 from ogd.core.utils.SemanticVersion import SemanticVersion
 

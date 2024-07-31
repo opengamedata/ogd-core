@@ -1,0 +1,680 @@
+{
+   "enums": {
+      "OrderType": [ "LEGS", "HEAD1", "HEAD2", "BODY" ],
+      "OrderStatus": ["COMPLETED", "FAILED", "NOT_TRIED"],
+      "ToggleType": [ "ON", "OFF" ],
+      "DropPoint": [ "LEFT", "MIDDLE", "RIGHT" ],
+      "PowerType": [ "SPIN", "FLIP", "SWAP", "MOVE" ],
+      "TargetType": [ "SPIN", "FLIP", "SWAP_ORIGIN", "SWAP_DESTINATION", "MOVE_ORIGIN", "MOVE_DESTINATION" ],
+      "TileType": [ "GEAR", "NUT", "SCREW", "SPRING", "NONE" ],
+      "SlideType": [ "LEFT", "DOWN", "RIGHT" ],
+      "GoalType": [ "Self", "Other" ]
+   },
+   "game_state": {
+      "seconds_from_launch": {
+         "type": "float",
+         "description": "The number of seconds of game time elapsed since the game was launched."
+      },
+      "order": {
+         "type": "OrderType",
+         "description": "The current order the player is trying to fulfill."
+      },
+      "goal_value" : {
+         "type" : "int",
+         "description" : "The goal score the player selected for the current order. Always 0 if the player is in the menu, or in the first order (when a goal has not been set)."
+      },
+      "goal_type" : {
+         "type" : "GoalType",
+         "description" : "TODO : Whether the player selected 'Self' or 'Other' for the current order. `null` if the player is in the menu, or in the first order (when a goal has not been set)."
+      },
+      "tile_counts": {
+         "type" : "Dict[str, int]",
+         "details" : {
+            "gear" : "int",
+            "nut" : "int",
+            "screw" : "int",
+            "spring" : "int"
+         },
+         "description" : "A dict, containing elements to indicate the number of each tile type the player has collected on the current order."
+      },
+      "tile_targets": {
+         "type" : "Dict[str, int]",
+         "details" : {
+            "gear" : "int",
+            "nut" : "int",
+            "screw" : "int",
+            "spring" : "int"
+         },
+         "description" : "A dict, containing elements to indicate the number of each tile type the player needs to collect to complete the current order."
+      },
+      "drop_count": {
+         "type": "int",
+         "description": "The number drops the player has used on the current order."
+      },
+      "drop_limit": {
+         "type": "int",
+         "description": "The maximum number of drops the player can use on the current order."
+      },
+      "tile_overflow": {
+         "type": "int",
+         "description": "The number of excess tiles the player has collected."
+      }
+   },
+   "events": {
+      "session_start": {
+         "description": "When the app is started and the gameplay session is assigned a session ID",
+         "event_data": {}
+      },
+      "game_start": {
+         "description": "When the player presses the new game button, or resumes.",
+         "event_data": {}
+      },
+      "game_complete": {
+         "description": "When the player completes the last order of the game, thus completing the game itself.",
+         "event_data": {}
+      },
+      "order_menu_displayed": {
+         "description": "When the system displays the order selection menu.",
+         "event_data": {
+            "completed_orders" : {
+               "type":"List[OrderType]",
+               "description":"The orders that have been completed so far."
+            },
+            "failed_orders" : {
+               "type":"List[OrderType]",
+               "description":"The orders that have been attempted, but only failed, so far."
+            },
+            "initial_grid" : {
+               "type":"List[List[TileType]]",
+               "description":"A list of all rows containing tiles (starting from the bottom of the grid). Each row indicates the types of all tiles in the grid spaces of the row (or NONE for a grid space without a tile)."
+            }
+         }
+      },
+      "adjust_part_clutter": {
+         "description": "When the player selects a new setting for the part clutter on their next order.",
+         "event_data": {
+            "old_clutter" : {
+               "type":"float",
+               "description":"The prior level of clutter, on a 0-1 scale."
+            },
+            "old_score_adjustment" : {
+               "type":"float",
+               "description":"The adjustment contributed to the overall score multiplier, by the prior setting."
+            },
+            "new_clutter" : {
+               "type":"float",
+               "description":"The newly-selected level of clutter, on a 0-1 scale."
+            },
+            "new_score_adjustment" : {
+               "type":"float",
+               "description":"The adjustment contributed to the overall score multiplier, by the new setting."
+            }
+         }
+      },
+      "adjust_drop_limit": {
+         "description": "When the player selects a new setting for the drop limit on their next order.",
+         "event_data": {
+            "old_limit" : {
+               "type":"int",
+               "description":"The prior drop limit."
+            },
+            "old_score_adjustment" : {
+               "type":"float",
+               "description":"The adjustment contributed to the overall score multiplier, by the prior setting."
+            },
+            "new_limit" : {
+               "type":"int",
+               "description":"The newly-selected drop limit."
+            },
+            "new_score_adjustment" : {
+               "type":"float",
+               "description":"The adjustment contributed to the overall score multiplier, by the new setting."
+            }
+         }
+      },
+      "adjust_drop_speed": {
+         "description": "When the player selects a new setting for the drop speed on their next order.",
+         "event_data": {
+            "old_speed" : {
+               "type":"float",
+               "description":"The prior drop speed, on a 0-1 scale."
+            },
+            "old_score_adjustment" : {
+               "type":"float",
+               "description":"The adjustment contributed to the overall score multiplier, by the prior setting."
+            },
+            "new_speed" : {
+               "type":"float",
+               "description":"The newly-selected drop speed, on a 0-1 scale."
+            },
+            "new_score_adjustment" : {
+               "type":"float",
+               "description":"The adjustment contributed to the overall score multiplier, by the new setting."
+            }
+         }
+      },
+      "grid_updated": {
+         "description": "When the system updates the starting grid based on a change to one of the part clutter.",
+         "event_data": {
+            "new_grid" : {
+               "type":"List[List[TileType]]",
+               "description":"A list of all rows containing tiles (starting from the bottom of the grid). Each row indicates the types of all tiles in the grid spaces of the row (or NONE for a grid space without a tile)."
+            }
+         }
+      },
+      "click_select_order": {
+         "description": "When the player selects a new order from the menu list.",
+         "event_data": {
+            "new_order" : {
+               "type":"OrderType",
+               "description":"The new order the player selected."
+            },
+            "status" : {
+               "type":"OrderStatus",
+               "description":"The completion status of the selected order (completed, failed only, or not attempted)."
+            }
+         }
+      },
+      "click_toggle_order_target": {
+         "description": "When the player toggles the 'target' view for the current order on or off.",
+         "event_data": {
+            "toggle" : {
+               "type":"ToggleType",
+               "description":"Whether the view was toggled on or off."
+            }
+         }
+      },
+      "click_reveal_drop_count" : {
+         "description" : "When the player clicks to reveal the number of drops they have used so far.",
+         "event_data": {
+         }
+      },
+      "click_play_order": {
+         "description": "When the player clicks to start an order from the menu.",
+         "event_data": {
+         }
+      },
+      "click_play_order_invalid": {
+         "description": "When the player clicks to start an order from the menu, but has not yet selected a valid order.",
+         "event_data": {
+         }
+      },
+      "order_begin": {
+         "description": "When playing an order actually begins, whether due to the player clicking 'play' from a new level preview, or clicking 'replay' in a level summary.",
+         "event_data": {
+            "order_type" : {
+               "type":"OrderType",
+               "description":"The type of the order being attempted."
+            },
+            "order_status" : {
+               "type":"OrderStatus",
+               "description":"The previous completion status of the order (completed, failed only, or not attempted)."
+            },
+            "order_is_optimal" : {
+               "type":"bool",
+               "description":"True if the selected order matches the level’s most prevalent part."
+            },
+            "high_score" : {
+               "type":"int",
+               "description":"The previous high score on the order."
+            },
+            "part_clutter" : {
+               "type":"float",
+               "description":"The level of clutter, on a 0-1 scale."
+            },
+            "drop_limit" : {
+               "type":"int",
+               "description":"The number of drops allowed on the order."
+            },
+            "drop_speed" : {
+               "type":"float",
+               "description":"The speed of drops, on a 0-1 scale."
+            },
+            "score_multipliers" : {
+               "type":"float",
+               "description":"The overall score multiplier on the order, based on the settings."
+            },
+            "sandbox_enabled" : {
+               "type":"bool",
+               "description":"Whether the order began with the sandbox practice mode enabled or not."
+            },
+            "initial_grid" : {
+               "type":"List[List[TileType]]",
+               "description":"A list of all rows containing tiles (starting from the bottom of the grid). Each row indicates the types of all tiles in the grid spaces of the row (or NONE for a grid space without a tile)."
+            }
+         }
+      },
+      "toggle_sandbox": {
+         "description": "When the player turns the sandbox practice mode on or off.",
+         "event_data": {
+            "toggle" : {
+               "type":"ToggleType",
+               "description":"Whether the sandbox mode was toggled on or off."
+            }
+         }
+      },
+      "toggle_power_info": {
+         "description": "When the player toggles the 'help' view of the 'powers' box on or off.",
+         "event_data": {
+            "toggle" : {
+               "type":"ToggleType",
+               "description":"Whether the view was toggled on or off."
+            }
+         }
+      },
+      "click_toggle_help": {
+         "description": "TODO : remove.",
+         "event_data": {
+            "toggle" : {
+               "type":"ToggleType",
+               "description":"Whether the view was toggled on or off."
+            }
+         }
+      },
+      "select_power": {
+         "description": "When the player selects a power to use.",
+         "event_data": {
+            "power" : {
+               "type":"PowerType",
+               "description":"Which power the player selected."
+            }
+         }
+      },
+      "cancel_power": {
+         "description": "When the player cancels the use of a selected power.",
+         "event_data": {
+            "power" : {
+               "type":"PowerType",
+               "description":"Which power the player canceled."
+            }
+         }
+      },
+      "hover_power_target": {
+         "description": "When the player hovers over a new target tile for the selected power.",
+         "event_data": {
+            "power" : {
+               "type":"TargetType",
+               "description":"Which kind of power target is currently being set."
+            },
+            "target_point" : {
+               "type":"List[int]",
+               "description":"The x, y coordinates of the targeted point."
+            },
+            "target_tile" : {
+               "type":"TileType",
+               "description":"The type of tile on the hovered point."
+            }
+         }
+      },
+      "execute_power": {
+         "description": "When the player clicks to confirm and execute the selected power.",
+         "event_data": {
+            "power" : {
+               "type":"PowerType",
+               "description":"Which power the player canceled."
+            },
+            "cost" : {
+               "type":"Dict[str, Any]",
+               "details" : {
+                  "type" : "TileType",
+                  "count" : "int"
+               },
+               "description":"A dict, indicating which type of tile was spent on the power, and how many tiles were spent."
+            },
+            "tile_updates" : {
+               "type":"List[Dict[str, Any]]",
+               "details" : {
+                  "type" : "TileType",
+                  "old_point" : "List[int]",
+                  "new_point" : "List[int]"
+               },
+               "description":"A list of all changes to tile positions, each list element indicating the old and new points for a tile of given type."
+            }
+         }
+      },
+      "click_reveal_drops": {
+         "description": "When the player clicks the 'reveal' button on one of the drop points.",
+         "event_data": {
+            "drop_point" : {
+               "type":"DropPoint",
+               "description":"Which drop point the player clicked to reveal."
+            },
+            "tile_pairs" : {
+               "type":"List[List[TileType]]",
+               "description":"A list of tile pairs revealed in the drop. Empty if the click was not a valid reveal (e.g. if the drop point already had revealed pairs)."
+            }
+         }
+      },
+      "click_drop_pair": {
+         "description": "When the player clicks to drop a new tile pair onto the grid.",
+         "event_data": {
+            "drop_point" : {
+               "type":"DropPoint",
+               "description":"Which drop point the player clicked to reveal."
+            },
+            "tile_pair" : {
+               "type":"List[TileType]",
+               "description":"The types of the two tiles in the pair."
+            }
+         }
+      },
+      "drop_pair_landed": {
+         "description": "When the a dropping pair of tiles lands on the other tiles below.",
+         "event_data": {
+            "tile_pair" : {
+               "type":"List[Dict[str, Any]]",
+               "details" : {
+                  "type" : "TileType",
+                  "point" : "List[int]"
+               },
+               "description":"The types and landed positions of the two tiles in the pair."
+            }
+         }
+      },
+      "rotate_drop_pair": {
+         "description": "When the player rotates a dropping pair.",
+         "event_data": {
+            "tile_updates" : {
+               "type":"List[Dict[str, Any]]",
+               "details" : {
+                  "type" : "TileType",
+                  "old_point" : "List[int]",
+                  "new_point" : "List[int]"
+               },
+               "description":"A list of changes to tile positions of the two tiles, resulting from the rotation."
+            }
+         }
+      },
+      "slide_drop_pair": {
+         "description": "When the player slides a dropping pair left or right, or accelerates the pair down.",
+         "event_data": {
+            "tile_updates" : {
+               "type":"List[Dict[str, Any]]",
+               "details" : {
+                  "type" : "TileType",
+                  "old_point" : "List[int]",
+                  "new_point" : "List[int]"
+               },
+               "description":"A list of changes to tile positions of the two tiles, resulting from the slide."
+            }
+         }
+      },
+      "tile_fell": {
+         "description": "When the space below a tile is empty, and 'gravity' causes the tile to fall and 'land' on another tile (or ground).",
+         "event_data": {
+            "tile_update" : {
+               "type":"Dict[str, Any]",
+               "details" : {
+                  "type" : "TileType",
+                  "old_point" : "List[int]",
+                  "new_point" : "List[int]"
+               },
+               "description":"A dict indicating what type of tile fell, and which points it started and ended at."
+            }
+         }
+      },
+      "match_completed": {
+         "description": "When three or more tiles are in a row, and a match is completed.",
+         "event_data": {
+            "matches" : {
+               "type":"List[Dict[str, Any]]",
+               "details" : {
+                  "type" : "TileType",
+                  "tile_points" : "List[List[int]]"
+               },
+               "description":"A dict indicating what type of tile was matched, and the list of points where the matching tiles were located."
+            },
+            "combo_round" : {
+               "type":"int",
+               "description":"number of times matches have been made without player intervention (i.e. pieces falling into a match position)."
+            }
+         }
+      },
+      "order_completed": {
+         "description": "When the player has used all drops, completing the order.",
+         "event_data": {
+            "successful" : {
+               "type":"bool",
+               "description":"Whether the order was completed successfully or not."
+            },
+            "score" : {
+               "type":"int",
+               "description":"The score the player earned on the order."
+            },
+            "high_score" : {
+               "type":"int",
+               "description":"The highest score the player has earned on the given job."
+            },
+            "moves_left" : {
+               "type":"int",
+               "description":"The number of remaining moves (TODO : determine whether players who complete the order targets with leftover drops are forced to use the remaining drops or not)."
+            },
+            "sandbox_enabled" : {
+               "type":"bool",
+               "description":"Whether the order had the sandbox practice mode enabled or not."
+            }
+         }
+      },
+      "order_summary_displayed": {
+         "description": "When the system displays a summary of the order results to the player.",
+         "event_data": {
+            "base_score" : {
+               "type":"int",
+               "description":"The player score prior to applying the score mulitplier."
+            },
+            "score_multiplier" : {
+               "type":"float",
+               "description":"The score multiplier on the order."
+            },
+            "total_score" : {
+               "type":"int",
+               "description":"The final score the player earned on the order."
+            },
+            "goal_score" : {
+               "type":"int",
+               "description":"The goal score on the order."
+            },
+            "player_average" : {
+               "type":"int",
+               "description":"The average score the player has scored, across all attempts of the order."
+            }
+         }
+      },
+      "click_summary_help": {
+         "description": "When the player clicks to review the detailed summary of the order results.",
+         "event_data": {
+         }
+      },
+      "toggle_summary_help": {
+         "description": "When the player toggles the 'help' view of the 'order summary' on or off.",
+         "event_data": {
+            "toggle" : {
+               "type":"ToggleType",
+               "description":"Whether the view was toggled on or off."
+            }
+         }
+      },
+      "click_try_again": {
+         "description": "When the player clicks the button to replay the order",
+         "event_data": {
+         }
+      },
+      "click_new_order": {
+         "description": "When the player clicks the button to return to the main menu and choose a new order",
+         "event_data": {
+         }
+      },
+      "start_survey": {
+         "description": "When the player enters into a survey after a level",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            }
+         }
+      },
+      "multichoice_item_displayed": {
+         "description": "When the system displays a multi-choice (i.e. select one) survey item.",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            },
+            "item_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey item."
+            },
+            "prompt" : {
+               "type":"str",
+               "description":"The text content of the item prompt."
+            },
+            "choices" : {
+               "type":"List[str]",
+               "description":"The list of possible choices for the survey item."
+            }
+         }
+      },
+      "select_multichoice_response": {
+         "description": "When the player clicks on a choice in a multi-choice survey item, selecting the choice.",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            },
+            "item_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey item."
+            },
+            "choice_value" : {
+               "type":"int",
+               "description":"The index of the selected choice among the available choices, or the value (if the multi-choice item uses a Likert scale or similar)."
+            },
+            "choice_string" : {
+               "type":"str",
+               "description":"The text content of the selected choice."
+            }
+         }
+      },
+      "submit_multichoice_response": {
+         "description": "When the player clicks to submit their choice on a multi-choice survey item.",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            },
+            "item_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey item."
+            },
+            "choice_value" : {
+               "type":"int",
+               "description":"The index of the submitted choice among the available choices, or the value (if the multi-choice item uses a Likert scale or similar)."
+            },
+            "choice_string" : {
+               "type":"str",
+               "description":"The text content of the submitted choice."
+            }
+         }
+      },
+      "slider_item_displayed": {
+         "description": "When the system displays a slider survey item.",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            },
+            "item_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey item."
+            },
+            "prompt" : {
+               "type":"str",
+               "description":"The text content of the item prompt."
+            },
+            "min_value" : {
+               "type":"float | int",
+               "description":"The minimum value the player can select on the survey item."
+            },
+            "max_value" : {
+               "type":"float | int",
+               "description":"The maximum value the player can select on the survey item."
+            },
+            "reference_values" : {
+               "type":"List[Dict]",
+               "details" : {
+                  "label" : "str",
+                  "value" : "float | int"
+               },
+               "description":"A list of other labeled 'reference' values on the slider scale. Each item in the list gives the reference label as well as its value."
+            },
+            "current_value" : {
+               "type":"float | int",
+               "description":"The starting value of the slider."
+            }
+         }
+      },
+      "set_slider_position": {
+         "description": "When the player drags the slider to a new position.",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            },
+            "item_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey item."
+            },
+            "prompt" : {
+               "type":"str",
+               "description":"The text content of the item prompt."
+            },
+            "start_value" : {
+               "type":"float | int",
+               "description":"The value of the slider before it was moved."
+            },
+            "end_value" : {
+               "type":"float | int",
+               "description":"The value to which the player set the slider."
+            },
+            "reference" : {
+               "type":"str | null",
+               "description":"The label of the reference value, if the new slider value matches one of the slider reference value, otherwise null."
+            }
+         }
+      },
+      "submit_slider_response": {
+         "description": "When the player clicks to submit their choice on a slider survey item.",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            },
+            "item_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey item."
+            },
+            "prompt" : {
+               "type":"str",
+               "description":"The text content of the item prompt."
+            },
+            "value" : {
+               "type":"float | int",
+               "description":"The value of the slider when the item was submitted."
+            },
+            "reference" : {
+               "type":"str | null",
+               "description":"The label of the reference value, if the slider was set to one of the slider reference values, otherwise null."
+            }
+         }
+      },
+      "end_survey": {
+         "description": "When the player finishes a survey",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            }
+         }
+      }
+   }
+}

@@ -3,13 +3,13 @@ import json
 import logging
 import re
 from dateutil import parser
-from datetime import datetime, time, timedelta
+from datetime import datetime, time, timedelta, timezone
 from json.decoder import JSONDecodeError
 from pathlib import Path
 from typing import Any, Dict, Final, List, Tuple, Optional, Union
 ## import local files
 from ogd.core import schemas
-from ogd.core.schemas.Event import Event, EventSource
+from ogd.core.models.Event import Event, EventSource
 from ogd.core.schemas.tables.ColumnMapSchema import ColumnMapSchema
 from ogd.core.schemas.tables.ColumnSchema import ColumnSchema
 from ogd.core.utils import utils
@@ -240,7 +240,7 @@ class TableSchema:
         app_ver : str
         app_br  : str
         log_ver : str
-        offset  : Optional[timedelta]
+        offset  : Optional[timezone]
         uid     : Optional[str]
         udata   : Optional[Map]
         state   : Optional[Map]
@@ -311,6 +311,11 @@ class TableSchema:
             log_ver = str(log_ver)
 
         offset = self._getValueFromRow(row=row, indices=self._column_map.TimeOffset,  concatenator=concatenator, fallback=fallbacks.get('time_offset'))
+        if isinstance(offset, timedelta):
+            if "offset" not in TableSchema._conversion_warnings:
+                Logger.Log(f"{self._table_format_name} table schema set offset as {type(offset)}, but offset should be a timezone", logging.WARN)
+                TableSchema._conversion_warnings.append("offset")
+            offset = timezone(offset)
 
         uid     = self._getValueFromRow(row=row, indices=self._column_map.UserID,      concatenator=concatenator, fallback=fallbacks.get('user_id'))
         if uid is not None and not isinstance(uid, str):
@@ -366,6 +371,8 @@ class TableSchema:
             return input if isinstance(input, datetime) else TableSchema._convertDateTime(str(input))
         elif col_schema.ValueType == 'timedelta':
             return input if isinstance(input, timedelta) else TableSchema._convertTimedelta(str(input))
+        elif col_schema.ValueType == 'timezone':
+            return input if isinstance(input, timezone) else TableSchema._convertTimezone(str(input))
         elif col_schema.ValueType == 'json':
             try:
                 if isinstance(input, dict):
@@ -411,7 +418,7 @@ class TableSchema:
 
         if time_str == "None" or time_str == "none" or time_str == "null" or time_str == "nan":
             return None
-        elif re.fullmatch(pattern="\d+:\d+:\d+(\.\d+)?", string=time_str):
+        elif re.fullmatch(pattern=r"\d+:\d+:\d+(\.\d+)?", string=time_str):
             try:
                 pieces = time_str.split(':')
                 seconds_pieces = pieces[2].split('.')
@@ -425,14 +432,30 @@ class TableSchema:
                 pass
             else:
                 return ret_val
-        elif re.fullmatch(pattern="-?\d+", string=time_str):
+        elif re.fullmatch(pattern=r"-?\d+", string=time_str):
             try:
-                ret_val = timedelta(milliseconds=int(time_str))
+                ret_val = timedelta(seconds=int(time_str))
             except ValueError as err:
                 pass
             else:
                 return ret_val
         raise ValueError(f"Could not parse timedelta {time_str} of type {type(time_str)}, it did not match any expected formats.")
+
+    @staticmethod
+    def _convertTimezone(time_str:str) -> Optional[timezone]:
+        ret_val : Optional[timezone]
+
+        if time_str == "None" or time_str == "none" or time_str == "null" or time_str == "nan":
+            return None
+        elif re.fullmatch(pattern=r"UTC[+-]\d+:\d+", string=time_str):
+            try:
+                pieces = time_str.removeprefix("UTC").split(":")
+                ret_val = timezone(timedelta(hours=int(pieces[0]), minutes=int(pieces[1])))
+            except ValueError as err:
+                pass
+            else:
+                return ret_val
+        raise ValueError(f"Could not parse timezone {time_str} of type {type(time_str)}, it did not match any expected formats.")
 
     # *** PRIVATE METHODS ***
 
