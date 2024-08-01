@@ -25,7 +25,7 @@
       },
       "goal_type" : {
          "type" : "GoalType",
-         "description" : "TODO : Whether the player selected 'Self' or 'Other' for the current order. `null` if the player is in the menu, or in the first order (when a goal has not been set)."
+         "description" : "Whether the player selected 'Self' or 'Other' for the current order. `null` if the player is in the menu, or in the first order (when a goal has not been set)."
       },
       "tile_counts": {
          "type" : "Dict[str, int]",
