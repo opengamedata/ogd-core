@@ -254,7 +254,7 @@
          }
       },
       "toggle_power_info": {
-         "description": "When the player toggles the 'help' view of the 'powers' box on or off.",
+         "description": "When the player toggles the 'help' view (i.e. clicks the '?' button) of the 'powers' box on or off.",
          "event_data": {
             "toggle" : {
                "type":"ToggleType",
@@ -262,13 +262,9 @@
             }
          }
       },
-      "click_toggle_help": {
-         "description": "TODO : remove.",
+      "click_show_help_panel": {
+         "description": "When the player clicks the button to display the 'help' overlay at the beginning of a round.",
          "event_data": {
-            "toggle" : {
-               "type":"ToggleType",
-               "description":"Whether the view was toggled on or off."
-            }
          }
       },
       "select_power": {
@@ -480,13 +476,8 @@
             }
          }
       },
-      "click_summary_help": {
-         "description": "When the player clicks to review the detailed summary of the order results.",
-         "event_data": {
-         }
-      },
       "toggle_summary_help": {
-         "description": "When the player toggles the 'help' view of the 'order summary' on or off.",
+         "description": "When the player toggles the 'help' view (i.e. clicks the '?' button) of the 'order summary' on or off.",
          "event_data": {
             "toggle" : {
                "type":"ToggleType",
