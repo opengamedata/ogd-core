@@ -25,7 +25,7 @@ from ogd.core.requests.RequestResult import RequestResult, ResultStatus
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.schemas.tables.TableSchema import TableSchema
+from ogd.core.schemas.tables.EventTableSchema import EventTableSchema
 from ogd.core.utils.Logger import Logger
 from ogd.core.utils.Readme import Readme
 from .Generators import OGDGenerators
@@ -62,7 +62,7 @@ class OGDCommands:
         """
         try:
             game_schema = GameSchema.FromFile(game_id=game)
-            table_schema = TableSchema(schema_name=f"{config.GameSourceMap[game].TableSchema}.json")
+            table_schema = EventTableSchema(schema_name=f"{config.GameSourceMap[game].TableSchema}.json")
             readme = Readme(game_schema=game_schema, table_schema=table_schema)
             print(readme.CustomReadmeSource)
         except Exception as err:
@@ -86,7 +86,7 @@ class OGDCommands:
         path = destination / game
         try:
             game_schema = GameSchema.FromFile(game_id=game, schema_path=Path("src") / "ogd" / "games" / game / "schemas")
-            table_schema = TableSchema(schema_name=f"{config.GameSourceMap[game].TableSchema}.json")
+            table_schema = EventTableSchema(schema_name=f"{config.GameSourceMap[game].TableSchema}.json")
             readme = Readme(game_schema=game_schema, table_schema=table_schema)
             readme.GenerateReadme(path=path)
         except Exception as err:
@@ -176,7 +176,7 @@ class OGDCommands:
 
     # 4. Once we have the parameters parsed out, construct the request.
         req = Request(range=export_range, exporter_modes=export_modes, interface=interface, outerfaces=outerfaces)
-        if req.Interface.IsOpen():
+        if req.Interface.IsOpen:
             export_manager : ExportManager = ExportManager(config=config)
             result         : RequestResult = export_manager.ExecuteRequest(request=req)
             success = result.Status == ResultStatus.SUCCESS

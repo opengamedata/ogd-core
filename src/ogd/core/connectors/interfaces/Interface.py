@@ -4,13 +4,11 @@
 import abc
 import logging
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 # import local files
 from ogd.core.connectors.StorageConnector import StorageConnector
-from ogd.core.models.Event import Event
 from ogd.core.models.enums.IDMode import IDMode
-from ogd.core.schemas.tables.TableSchema import TableSchema
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.utils.Logger import Logger
 
