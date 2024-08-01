@@ -203,10 +203,9 @@ class EventTableSchema(TableSchema):
         :rtype: [type]
         """
         # define vars to be passed as params
-        MAX_WARNINGS : Final[int] = 10
         sess_id : str
         app_id  : str
-        time    : datetime
+        tstamp  : datetime
         ename   : str
         edata   : Map
         app_ver : str
@@ -235,12 +234,12 @@ class EventTableSchema(TableSchema):
                 EventTableSchema._conversion_warnings.append("app_id")
             app_id = str(app_id)
 
-        time   = self._getValueFromRow(row=row, indices=self._column_map.Timestamp,   concatenator=concatenator, fallback=fallbacks.get('timestamp'))
-        if not isinstance(time, datetime):
+        tstamp  = self._getValueFromRow(row=row, indices=self._column_map.Timestamp,   concatenator=concatenator, fallback=fallbacks.get('timestamp'))
+        if not isinstance(tstamp, datetime):
             if "timestamp" not in EventTableSchema._conversion_warnings:
-                Logger.Log(f"{self._table_format_name} table schema parsed timestamp as {type(time)}, but timestamp should be a datetime", logging.WARN)
+                Logger.Log(f"{self._table_format_name} table schema parsed timestamp as {type(tstamp)}, but timestamp should be a datetime", logging.WARN)
                 EventTableSchema._conversion_warnings.append("timestamp")
-            time = TableSchema._convertDateTime(time)
+            tstamp = TableSchema._convertDateTime(tstamp)
 
         ename   = self._getValueFromRow(row=row, indices=self._column_map.EventName,   concatenator=concatenator, fallback=fallbacks.get('event_name'))
         if not isinstance(ename, str):
@@ -307,7 +306,7 @@ class EventTableSchema(TableSchema):
                 EventTableSchema._conversion_warnings.append("index")
             index = int(index)
 
-        return Event(session_id=sess_id, app_id=app_id, timestamp=time,
+        return Event(session_id=sess_id, app_id=app_id, timestamp=tstamp,
                      event_name=ename, event_data=edata, event_source=esrc,
                      app_version=app_ver, app_branch=app_br, log_version=log_ver,
                      time_offset=offset, user_id=uid, user_data=udata,
