@@ -1,18 +1,19 @@
-## import standard libraries
-import json
+"""EventTableSchema Module"""
+# import standard libraries
 import logging
 import re
-from dateutil import parser
-from datetime import datetime, time, timedelta, timezone
+from datetime import datetime, timedelta, timezone
 from json.decoder import JSONDecodeError
 from pathlib import Path
-from typing import Any, Dict, Final, List, Tuple, Optional, Union
-## import local files
+from typing import Any, Dict, Tuple, Optional
+
+# import 3rd-party libraries
+from dateutil import parser
+
+# import local files
 from ogd.core import schemas
 from ogd.core.schemas.tables.TableSchema import TableSchema
 from ogd.core.models.Event import Event, EventSource
-from ogd.core.schemas.tables.ColumnMapSchema import ColumnMapSchema
-from ogd.core.schemas.tables.ColumnSchema import ColumnSchema
 from ogd.core.utils import utils
 from ogd.core.utils.Logger import Logger
 from ogd.core.utils.typing import Map
