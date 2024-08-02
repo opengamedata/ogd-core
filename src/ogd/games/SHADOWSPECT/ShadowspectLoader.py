@@ -38,6 +38,8 @@ class ShadowspectLoader(GeneratorLoader):
                 ret_val = SequenceBetweenPuzzles.SequenceBetweenPuzzles(params=extractor_params)
             case "SequenceWithinPuzzles":
                 ret_val = SequenceWithinPuzzles.SequenceWithinPuzzles(params=extractor_params)
+            case "PuzzleCompleteCount":
+                ret_val = PuzzleCompleteCount.PuzzleCompleteCount(params=extractos_params)
             case _:
                 Logger.Log(f"'{feature_type}' is not a valid feature for Shadowspect.")
         return ret_val
