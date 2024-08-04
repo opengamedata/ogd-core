@@ -189,7 +189,8 @@ When the player selects a new order from the menu list.
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | new_order | OrderType | The new order the player selected. | |
-| status | OrderStatus | The completion status of the selected order (completed, failed only, or not attempted). | |  
+| status | OrderStatus | The completion status of the selected order (completed, failed only, or not attempted). | |
+| order_is_optimal | bool | true if the selected order matches level generation bias/settings | |  
 
 ### **click_toggle_order_target**
 
@@ -318,7 +319,8 @@ When the player clicks to confirm and execute the selected power.
 | ---      | ---      | ---             | ---         |
 | power | PowerType | Which power the player canceled. | |
 | cost | Dict[str, Any] | A dict, indicating which type of tile was spent on the power, and how many tiles were spent. |**type** : TileType, **count** : int |
-| tile_updates | List[Dict[str, Any]] | A list of all changes to tile positions, each list element indicating the old and new points for a tile of given type. |**type** : TileType, **old_point** : List[int], **new_point** : List[int] |  
+| tile_updates | List[Dict[str, Any]] | A list of all changes to tile positions, each list element indicating the old and new points for a tile of given type. |**type** : TileType, **old_point** : List[int], **new_point** : List[int] |
+| had_tile_overflow | bool | Whether the power spent excess parts which otherwise would have incurred a penalty. TODO: rename to spent_tile_overflow | |  
 
 ### **click_reveal_drops**
 
