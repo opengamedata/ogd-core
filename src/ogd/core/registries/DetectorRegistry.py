@@ -6,10 +6,10 @@ from typing import Any, Callable, List, Optional, Set
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import Generator
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.core.generators.registries.GeneratorRegistry import GeneratorRegistry
+from ogd.core.registries.GeneratorRegistry import GeneratorRegistry
 from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.models.FeatureData import FeatureData
+from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.DetectorSchema import DetectorSchema
 from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.models.enums.IterationMode import IterationMode
@@ -87,7 +87,7 @@ class DetectorRegistry(GeneratorRegistry):
         else:
             raise TypeError("DetectorRegistry was given an Extractor which was not a Detector!")
 
-    def _getExtractorNames(self) -> List[str]:
+    def _getGeneratorNames(self) -> List[str]:
         """Implementation of abstract function to retrieve the names of all extractors currently registered.
 
         :return: A list of all currently-registered detectors.

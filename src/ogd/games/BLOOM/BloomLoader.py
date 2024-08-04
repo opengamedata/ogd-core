@@ -4,26 +4,26 @@ import json
 from pathlib import Path
 from typing import Any, Callable, Dict, Final, List, Optional
 
-from ogd.games.BLOOM.features import AverageActiveTime, CountyUnlockCount, FailCount, PersistedThroughFailure
 # import local files
-from . import features
 from ogd.games import BLOOM
+from ogd.games.BLOOM.detectors import * 
+from ogd.games.BLOOM.features import *
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.games.BLOOM.detectors import * 
-from ogd.games.BLOOM.features import *
 from ogd.core.models.Event import Event
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.utils.utils import loadJSONFile
+from . import features
 
 #EXPORT_PATH : Final[str] = "games/BLOOM/DBExport.json"
 
 ## @class BloomLoader
 #  Extractor subclass for extracting features from Bloomlab game data.
 class BloomLoader(GeneratorLoader):
+    """Class for loading Bloom generator instances."""
 
     # *** BUILT-INS & PROPERTIES ***
 
@@ -41,14 +41,11 @@ class BloomLoader(GeneratorLoader):
         :type feature_overrides: Optional[List[str]]
         """
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
-        data = None
 
-    """        # Load Bloomlab jobs export and map job names to integer values
-            _dbexport_path = Path(BLOOM.__file__) if Path(BLOOM.__file__).is_dir() else Path(BLOOM.__file__).parent
-            with open(_dbexport_path / "DBExport.json", "r") as file:
-                export = json.load(file)"""
-
-
+    # Load Bloomlab jobs export and map job names to integer values
+    # _dbexport_path = Path(BLOOM.__file__) if Path(BLOOM.__file__).is_dir() else Path(BLOOM.__file__).parent
+    # with open(_dbexport_path / "DBExport.json", "r") as file:
+    # export = json.load(file)
 
    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
@@ -56,30 +53,47 @@ class BloomLoader(GeneratorLoader):
     def _getFeaturesModule():
         return features
 
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
-        ret_val : Feature
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
+        ret_val : Optional[Feature]
         # First run through aggregate features
         if extractor_params._count_index == None:
             match feature_type:
                 case "ActiveTime":
                     ret_val = ActiveTime.ActiveTime(params=extractor_params, idle_threshold=schema_args.get("threshold", 30))
-                case "NumberOfSessionsPerPlayer":
-                    ret_val = NumberOfSessionsPerPlayer.NumberOfSessionsPerPlayer(params=extractor_params)
                 case "AverageActiveTime":
                     ret_val = AverageActiveTime.AverageActiveTime(params=extractor_params)
+                case "BloomAlertCount":
+                    ret_val = BloomAlertCount.BloomAlertCount(params=extractor_params)
+                case "BuildCount":
+                    ret_val = BuildCount.BuildCount(params=extractor_params)
+                case "BuildingUnlockCount":
+                    ret_val = BuildingUnlockCount.BuildingUnlockCount(params=extractor_params)
+                case "FailCount":
+                    ret_val = FailCount.FailCount(params=extractor_params)
+                case "GameCompletionStatus":
+                    ret_val = GameCompletionStatus.GameCompletionStatus(params=extractor_params)
+                case "NumberOfSessionsPerPlayer":
+                    ret_val = NumberOfSessionsPerPlayer.NumberOfSessionsPerPlayer(params=extractor_params)
+                case "SucceededThroughFailure":
+                    ret_val = SucceededThroughFailure.SucceededThroughFailure(params=extractor_params)
                 case "CountyUnlockCount":
                     ret_val = CountyUnlockCount.CountyUnlockCount(params=extractor_params)
-                case "FailCount":
-                    ret_val = FailCount.FailCount(params=extractor_params)       
-                case "PersistedThroughFailure":
-                    ret_val = PersistedThroughFailure.PersistedThroughFailure(params=extractor_params)
                 case _:
-                    raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature type for Bloom.")
+                    ret_val = None
         # then run through per-count features.
         else:
             match feature_type:
+                case "CountyBloomAlertCount":
+                    ret_val = CountyBloomAlertCount.CountyBloomAlertCount(params=extractor_params)
+                case "CountyBuildCount":
+                    ret_val = CountyBuildCount.CountyBuildCount(params=extractor_params)
+                case "CountyFinalPolicySettings":
+                    ret_val = CountyFinalPolicySettings.CountyFinalPolicySettings(params=extractor_params)
+                case "CountyLatestMoney":
+                    ret_val = CountyLatestMoney.CountyLatestMoney(params=extractor_params)
                 case _:
-                    raise NotImplementedError(f"'{feature_type}' is not a valid per-count feature type for Bloom.")
+                    ret_val = None
+                
         return ret_val
 
     def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:

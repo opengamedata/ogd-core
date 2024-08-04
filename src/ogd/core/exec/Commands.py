@@ -1,3 +1,4 @@
+"""Module containing all the commands available through the OGD CLI"""
 # import standard libraries
 import csv
 import logging
@@ -9,30 +10,43 @@ from typing import Any, List, Optional, Set, Tuple
 
 # import 3rd-party libraries
 
-# import local files
-from ogd.core.exec.Generators import OGDGenerators
-from ogd.core.interfaces.DataInterface import DataInterface
+# import OGD files
+# from ogd.core.exec.Generators import OGDGenerators
 from ogd.core.interfaces.CSVInterface import CSVInterface
+from ogd.core.interfaces.EventInterface import EventInterface
 from ogd.core.interfaces.outerfaces.DataOuterface import DataOuterface
-from ogd.core.interfaces.outerfaces.TSVOuterface import TSVOuterface
 from ogd.core.interfaces.outerfaces.DebugOuterface import DebugOuterface
+from ogd.core.interfaces.outerfaces.TSVOuterface import TSVOuterface
 from ogd.core.managers.ExportManager import ExportManager
+from ogd.core.models.enums.ExportMode import ExportMode
+from ogd.core.models.enums.IDMode import IDMode
+from ogd.core.requests.Request import ExporterRange, Request
 from ogd.core.requests.RequestResult import RequestResult, ResultStatus
-from ogd.core.requests.Request import Request, ExporterRange
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
-from ogd.core.models.enums.ExportMode import ExportMode
 from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.models.enums.IDMode import IDMode
 from ogd.core.schemas.tables.TableSchema import TableSchema
 from ogd.core.utils.Logger import Logger
 from ogd.core.utils.Readme import Readme
+from .Generators import OGDGenerators
+
 
 class OGDCommands:
-    """Utility class to collect functions for each of the commands that can be run when executing ogd-core as a module.
-    """
+    """Utility class to collect functions for each of the commands that can be run when executing ogd-core as a module."""
+
+    # *** BUILT-INS & PROPERTIES ***
+
+    # *** PUBLIC STATICS ***
+
     @staticmethod
     def ListGames(games_list:List[str]) -> bool:
+        """Command to list out the games available for export.
+
+        :param games_list: The list of available games, which the command should display.
+        :type games_list: List[str]
+        :return: True if the list was successfully displayed, else False.
+        :rtype: bool
+        """
         print(f"The games available for export are:\n{games_list}")
         return True
 
@@ -95,32 +109,33 @@ class OGDCommands:
         :type features: bool, optional
         :return: _description_
         :rtype: bool
+
+        .. todo:: Make use of destination parameter
+        .. todo:: Refactor "step 2" logic into smaller functions, probably a "get case", then pass in to a "get range" and "get dataset ID"
         """
         success : bool = False
 
         export_modes   : Set[ExportMode]
-        interface      : DataInterface
-        range          : ExporterRange
+        interface      : EventInterface
+        export_range   : ExporterRange
         file_outerface : DataOuterface
         dataset_id     : Optional[str] = None
 
     # 1. get exporter modes to run
-        export_modes = OGDGenerators.genModes(with_events=with_events, with_features=with_features,
+        export_modes = OGDGenerators.GenModes(with_events=with_events, with_features=with_features,
                                               no_session_file=args.no_session_file, no_player_file=args.no_player_file, no_pop_file=args.no_pop_file)
     # 2. figure out the interface and range; optionally set a different dataset_id
         if args.file is not None and args.file != "":
             # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
-            _ext = str(args.file).split('.')[-1]
+            _ext = str(args.file).rsplit('.', maxsplit=1)[-1]
             _cfg = GameSourceSchema(name="FILE SOURCE", all_elements={"schema":"OGD_EVENT_FILE"}, data_sources={})
             interface = CSVInterface(game_id=args.game, config=_cfg, fail_fast=config.FailFast, filepath=Path(args.file), delim="\t" if _ext == 'tsv' else ',')
-            # retrieve/calculate id range.
-            ids = interface.AllIDs()
-            range = ExporterRange.FromIDs(source=interface, ids=ids if ids is not None else [])
+            export_range = ExporterRange.FromIDs(source=interface, ids=interface.AllIDs() or [])
         else:
-            interface = OGDGenerators.genDBInterface(config=config, game=args.game)
+            interface = OGDGenerators.GenDBInterface(config=config, game=args.game)
         # a. Case where specific player ID was given
             if args.player is not None and args.player != "":
-                range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.USER)
+                export_range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.USER)
                 dataset_id = f"{args.game}_{args.player}"
         # b. Case where player ID file was given
             elif args.player_id_file is not None and args.player_id_file != "":
@@ -130,10 +145,11 @@ class OGDCommands:
                     file_contents = list(reader) # this gives list of lines, each line a list
                     names = list(chain.from_iterable(file_contents)) # so, convert to single list
                     print(f"list of names: {list(names)}")
-                    range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.USER)
+                    export_range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.USER)
+                dataset_id = f"{args.game}_from_{file_path.name}"
         # c. Case where specific session ID was given
             elif args.session is not None and args.session != "":
-                range = ExporterRange.FromIDs(source=interface, ids=[args.session], id_mode=IDMode.SESSION)
+                export_range = ExporterRange.FromIDs(source=interface, ids=[args.session], id_mode=IDMode.SESSION)
                 dataset_id = f"{args.game}_{args.session}"
         # d. Case where session ID file was given
             elif args.session_id_file is not None and args.session_id_file != "":
@@ -143,13 +159,14 @@ class OGDCommands:
                     file_contents = list(reader) # this gives list of lines, each line a list
                     names = list(chain.from_iterable(file_contents)) # so, convert to single list
                     print(f"list of sessions: {list(names)}")
-                    range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.SESSION)
+                    export_range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.SESSION)
+                dataset_id = f"{args.game}_from_{file_path.name}"
         # e. Default case where we use date range
             else:
-                range = OGDGenerators.genDateRange(game=args.game, interface=interface, monthly=args.monthly, start_date=args.start_date, end_date=args.end_date)
+                export_range = OGDGenerators.GenDateRange(game=args.game, interface=interface, monthly=args.monthly, start_date=args.start_date, end_date=args.end_date)
     # 3. set up the outerface, based on the range and dataset_id.
         _cfg = GameSourceSchema(name="FILE DEST", all_elements={"database":"FILE", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
-        file_outerface = TSVOuterface(game_id=args.game, config=_cfg, export_modes=export_modes, date_range=range.DateRange,
+        file_outerface = TSVOuterface(game_id=args.game, config=_cfg, export_modes=export_modes, date_range=export_range.DateRange,
                                     file_indexing=config.FileIndexConfig, dataset_id=dataset_id)
         outerfaces : Set[DataOuterface] = {file_outerface}
         # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
@@ -158,7 +175,7 @@ class OGDCommands:
             outerfaces.add(DebugOuterface(game_id=args.game, config=_cfg, export_modes=export_modes))
 
     # 4. Once we have the parameters parsed out, construct the request.
-        req = Request(range=range, exporter_modes=export_modes, interface=interface, outerfaces=outerfaces)
+        req = Request(range=export_range, exporter_modes=export_modes, interface=interface, outerfaces=outerfaces)
         if req.Interface.IsOpen():
             export_manager : ExportManager = ExportManager(config=config)
             result         : RequestResult = export_manager.ExecuteRequest(request=req)
@@ -169,3 +186,9 @@ class OGDCommands:
             # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
                             # {'req':req, 'feature_exporter':feature_exporter}, {})
         return success
+
+    # *** PUBLIC METHODS ***
+
+    # *** PRIVATE STATICS ***
+
+    # *** PRIVATE METHODS ***

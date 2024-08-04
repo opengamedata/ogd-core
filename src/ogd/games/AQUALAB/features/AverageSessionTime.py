@@ -1,6 +1,5 @@
 # import libraries
 from datetime import datetime, timedelta
-import logging, warnings
 from typing import Any, List, Optional
 # import locals
 from ogd.core.utils.Logger import Logger

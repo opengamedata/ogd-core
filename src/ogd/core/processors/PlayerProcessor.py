@@ -4,7 +4,7 @@ import traceback
 from typing import List, Dict, Type, Optional, Set
 # import local files
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.core.generators.registries.ExtractorRegistry import ExtractorRegistry
+from ogd.core.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.core.processors.SessionProcessor import SessionProcessor
 from ogd.core.models.Event import Event
@@ -63,9 +63,9 @@ class PlayerProcessor(ExtractorProcessor):
     def _sessionID(self) -> str:
         return "player"
 
-    def _getExtractorNames(self) -> List[str]:
+    def _getGeneratorNames(self) -> List[str]:
         if isinstance(self._registry, ExtractorRegistry):
-            return ["PlayerID", "SessionCount"] + self._registry.GetExtractorNames()
+            return ["PlayerID", "SessionCount"] + self._registry.GetGeneratorNames()
         else:
             raise TypeError()
 

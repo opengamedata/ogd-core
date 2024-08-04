@@ -16,6 +16,7 @@ from ogd.core.models.Event import Event
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.utils.utils import loadJSONFile
+from ogd.core.utils.Logger import Logger
 
 EXPORT_PATH = "games/THERMOVR/DBExport.json"
 
@@ -64,8 +65,8 @@ class ThermoVRLoader(GeneratorLoader):
     def _getFeaturesModule():
         return features
 
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
-        ret_val : Feature
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
+        ret_val : Optional[Feature] = None
         # First run through aggregate features
         if extractor_params._count_index == None:
             match feature_type:
@@ -86,19 +87,19 @@ class ThermoVRLoader(GeneratorLoader):
                 case "ToolSliderTime":
                     ret_val = ToolSliderTime.ToolSliderTime(params=extractor_params)
                 case _:
-                    raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature type for ThermoVR.")
+                    Logger.Log(f"'{feature_type}' is not a valid aggregate feature type for ThermoVR.")
         # then run through per-count features.
         else:
             match feature_type:
                 case _:
-                    raise NotImplementedError(f"'{feature_type}' is not a valid per-count feature type for ThermoVR.")
+                    Logger.Log(f"'{feature_type}' is not a valid per-count feature type for ThermoVR.")
         return ret_val
 
-    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
-        ret_val : Detector
+    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Optional[Detector]:
+        ret_val : Optional[Detector] = None
         match detector_type:
             case _:
-                raise NotImplementedError(f"'{detector_type}' is not a valid detector for ThermoVR.")
+                Logger.Log(f"'{detector_type}' is not a valid detector for ThermoVR.")
         return ret_val
 
     # @staticmethod

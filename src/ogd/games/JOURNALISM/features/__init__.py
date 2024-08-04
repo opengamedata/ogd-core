@@ -1,3 +1,5 @@
+"""Initializer for Journalism features"""
+
 __all__ = [
     "TextClickCount",
     "ChoiceClickCount",

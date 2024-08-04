@@ -70,7 +70,8 @@ The individual fields encoded in the *game_state* and *user_data* Event element 
 | PowerType | ['SPIN', 'FLIP', 'SWAP', 'MOVE'] |
 | TargetType | ['SPIN', 'FLIP', 'SWAP_ORIGIN', 'SWAP_DESTINATION', 'MOVE_ORIGIN', 'MOVE_DESTINATION'] |
 | TileType | ['GEAR', 'NUT', 'SCREW', 'SPRING', 'NONE'] |
-| SlideType | ['LEFT', 'DOWN', 'RIGHT'] |  
+| SlideType | ['LEFT', 'DOWN', 'RIGHT'] |
+| GoalType | ['Self', 'Other'] |  
 
 ### Game State  
 
@@ -78,6 +79,8 @@ The individual fields encoded in the *game_state* and *user_data* Event element 
 | ---      | ---      | ---             | ---         |
 | seconds_from_launch | float | The number of seconds of game time elapsed since the game was launched. | |
 | order | OrderType | The current order the player is trying to fulfill. | |
+| goal_value | int | The goal score the player selected for the current order. Always 0 if the player is in the menu, or in the first order (when a goal has not been set). | |
+| goal_type | GoalType | Whether the player selected 'Self' or 'Other' for the current order. `null` if the player is in the menu, or in the first order (when a goal has not been set). | |
 | tile_counts | Dict[str, int] | A dict, containing elements to indicate the number of each tile type the player has collected on the current order. |**gear** : int, **nut** : int, **screw** : int, **spring** : int |
 | tile_targets | Dict[str, int] | A dict, containing elements to indicate the number of each tile type the player needs to collect to complete the current order. |**gear** : int, **nut** : int, **screw** : int, **spring** : int |
 | drop_count | int | The number drops the player has used on the current order. | |
@@ -101,6 +104,15 @@ When the app is started and the gameplay session is assigned a session ID
 ### **game_start**
 
 When the player presses the new game button, or resumes.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
+
+### **game_complete**
+
+When the player completes the last order of the game, thus completing the game itself.
 
 #### Event Data
 
@@ -189,6 +201,15 @@ When the player toggles the 'target' view for the current order on or off.
 | ---      | ---      | ---             | ---         |
 | toggle | ToggleType | Whether the view was toggled on or off. | |  
 
+### **click_reveal_drop_count**
+
+When the player clicks to reveal the number of drops they have used so far.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
+
 ### **click_play_order**
 
 When the player clicks to start an order from the menu.
@@ -217,22 +238,43 @@ When playing an order actually begins, whether due to the player clicking 'play'
 | ---      | ---      | ---             | ---         |
 | order_type | OrderType | The type of the order being attempted. | |
 | order_status | OrderStatus | The previous completion status of the order (completed, failed only, or not attempted). | |
+| order_is_optimal | bool | True if the selected order matches the level’s most prevalent part. | |
 | high_score | int | The previous high score on the order. | |
 | part_clutter | float | The level of clutter, on a 0-1 scale. | |
 | drop_limit | int | The number of drops allowed on the order. | |
 | drop_speed | float | The speed of drops, on a 0-1 scale. | |
 | score_multipliers | float | The overall score multiplier on the order, based on the settings. | |
+| sandbox_enabled | bool | Whether the order began with the sandbox practice mode enabled or not. | |
 | initial_grid | List[List[TileType]] | A list of all rows containing tiles (starting from the bottom of the grid). Each row indicates the types of all tiles in the grid spaces of the row (or NONE for a grid space without a tile). | |  
 
-### **click_toggle_help**
+### **toggle_sandbox**
 
-When the player toggles the 'help' view of the 'powers' box on or off.
+When the player turns the sandbox practice mode on or off.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| toggle | ToggleType | Whether the sandbox mode was toggled on or off. | |  
+
+### **toggle_power_info**
+
+When the player toggles the 'help' view (i.e. clicks the '?' button) of the 'powers' box on or off.
 
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | toggle | ToggleType | Whether the view was toggled on or off. | |  
+
+### **click_show_help_panel**
+
+When the player clicks the button to display the 'help' overlay at the beginning of a round.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
 
 ### **select_power**
 
@@ -348,9 +390,10 @@ When three or more tiles are in a row, and a match is completed.
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| matches | List[Dict[str, Any]] | A dict indicating what type of tile was matched, and the list of points where the matching tiles were located. |**type** : TileType, **tile_points** : List[List[int]] |  
+| matches | List[Dict[str, Any]] | A dict indicating what type of tile was matched, and the list of points where the matching tiles were located. |**type** : TileType, **tile_points** : List[List[int]] |
+| combo_round | int | number of times matches have been made without player intervention (i.e. pieces falling into a match position). | |  
 
-### **order_complete**
+### **order_completed**
 
 When the player has used all drops, completing the order.
 
@@ -361,7 +404,8 @@ When the player has used all drops, completing the order.
 | successful | bool | Whether the order was completed successfully or not. | |
 | score | int | The score the player earned on the order. | |
 | high_score | int | The highest score the player has earned on the given job. | |
-| moves_left | int | The number of remaining moves (TODO : determine whether players who complete the order targets with leftover drops are forced to use the remaining drops or not). | |  
+| moves_left | int | The number of remaining moves (TODO : determine whether players who complete the order targets with leftover drops are forced to use the remaining drops or not). | |
+| sandbox_enabled | bool | Whether the order had the sandbox practice mode enabled or not. | |  
 
 ### **order_summary_displayed**
 
@@ -377,18 +421,9 @@ When the system displays a summary of the order results to the player.
 | goal_score | int | The goal score on the order. | |
 | player_average | int | The average score the player has scored, across all attempts of the order. | |  
 
-### **click_summary_help**
-
-When the player clicks to review the detailed summary of the order results.
-
-#### Event Data
-
-| **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |  
-
 ### **toggle_summary_help**
 
-When the player toggles the 'help' view of the 'order summary' on or off.
+When the player toggles the 'help' view (i.e. clicks the '?' button) of the 'order summary' on or off.
 
 #### Event Data
 

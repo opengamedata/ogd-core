@@ -4,7 +4,7 @@ from typing import List, Type, Optional, Set
 # import local files
 from ogd.core.models.FeatureData import FeatureData
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.core.generators.registries.ExtractorRegistry import ExtractorRegistry
+from ogd.core.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.core.models.Event import Event
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
@@ -55,9 +55,9 @@ class PopulationProcessor(ExtractorProcessor):
     def _sessionID(self) -> str:
         return "population"
 
-    def _getExtractorNames(self) -> List[str]:
+    def _getGeneratorNames(self) -> List[str]:
         if isinstance(self._registry, ExtractorRegistry):
-            return ["PlayerCount", "SessionCount"] + self._registry.GetExtractorNames()
+            return ["PlayerCount", "SessionCount"] + self._registry.GetGeneratorNames()
         else:
             raise TypeError("PopulationProcessor's registry is not a ExtractorRegistry!")
 

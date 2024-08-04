@@ -1,3 +1,5 @@
+"""Initializer for Aqualab detectors"""
+
 __all__ = [
     "CollectFactNoJob",
     "DiveSiteNoEvidence",

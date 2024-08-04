@@ -4,6 +4,7 @@ run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' &
 on:
   push:
     paths:
+    - 'src/ogd/core/generators/**'
     - 'src/ogd/games/BLOOM/**'
     - '.github/workflows/CI_bloom.yml'
     - '.github/actions/export_yesterday/**'
@@ -40,7 +41,7 @@ jobs:
         sql_host: ${{vars.FD_LOGGER_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
-        log_level: "INFO"
+        log_level: "DEBUG"
     - name: Set up Schema File
       uses: ./.github/actions/OGD_schema
       with:

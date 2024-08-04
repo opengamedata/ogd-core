@@ -4,6 +4,7 @@ run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' &
 on:
   push:
     paths:
+    - 'src/ogd/core/generators/**'
     - 'src/ogd/games/AQUALAB/**'
     - '.github/workflows/CI_aqualab.yml'
     - '.github/actions/export_yesterday/**'

@@ -2,26 +2,27 @@
 import itertools
 import json
 from pathlib import Path
+from types import ModuleType
 from typing import Any, Callable, Dict, Final, List, Optional
-# import local files
-from . import features
+# import OGD files
 from ogd.games import AQUALAB
+from ogd.games.AQUALAB.detectors import *
+from ogd.games.AQUALAB.features import *
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.games.AQUALAB.detectors import *
-from ogd.games.AQUALAB.features import *
 from ogd.core.models.Event import Event
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.utils.utils import loadJSONFile
+from ogd.core.utils import utils
+from ogd.core.utils.Logger import Logger
+from . import features
 
 EXPORT_PATH : Final[str] = "games/AQUALAB/DBExport.json"
 
-## @class AqualabLoader
-#  Extractor subclass for extracting features from Aqualab game data.
 class AqualabLoader(GeneratorLoader):
+    """Loader subclass for Aqualab generators"""
 
     # *** BUILT-INS & PROPERTIES ***
 
@@ -29,7 +30,7 @@ class AqualabLoader(GeneratorLoader):
     def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
         """Constructor for the AqualabLoader class.
 
-        :param player_id: _description_
+        :param player_id: The player ID associated with the feature extractors/event detectors being loaded.
         :type player_id: str
         :param session_id: The id number for the session whose data is being processed by this instance
         :type session_id: str
@@ -42,7 +43,6 @@ class AqualabLoader(GeneratorLoader):
         self._job_map = {"no-active-job": 0}
         self._diff_map = {0: {"experimentation": 0, "modeling": 0, "argumentation": 0} }
         self._task_map = {}
-        data = None
 
         # Load Aqualab jobs export and map job names to integer values
         _dbexport_path = Path(AQUALAB.__file__) if Path(AQUALAB.__file__).is_dir() else Path(AQUALAB.__file__).parent
@@ -61,16 +61,25 @@ class AqualabLoader(GeneratorLoader):
         # Update level count
         self._game_schema._max_level = len(self._job_map) - 1
 
+    @property
+    def JobMap(self) -> Dict:
+        """Property returning the "job map" that assigns each job in the DBExport an integer value/index.
+
+        :return: The "job map" from the current DBExport
+        :rtype: Dict
+        """
+        return self._job_map
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     @staticmethod
-    def _getFeaturesModule():
+    def _getFeaturesModule() -> ModuleType:
         return features
 
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
-        ret_val : Feature
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
+        ret_val : Optional[Feature] = None
         # First run through aggregate features
-        if extractor_params._count_index == None:
+        if extractor_params._count_index is None:
             match feature_type:
                 case "ActiveTime":
                     ret_val = ActiveTime.ActiveTime(params=extractor_params, job_map=self._job_map, active_threads=schema_args.get("Active_threshold"))
@@ -78,6 +87,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = ActiveJobs.ActiveJobs(params=extractor_params, job_map=self._job_map)
                 case "AppVersions":
                     ret_val = AppVersions.AppVersions(params=extractor_params)
+                case "AverageSessionTime":
+                    ret_val = AverageSessionTime.AverageSessionTime(params=extractor_params)
                 case "EchoSessionID":
                     ret_val = EchoSessionID.EchoSessionID(params=extractor_params)
                 case "EventList":
@@ -86,6 +97,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = JobsCompleted.JobsCompleted(params=extractor_params, player_id=self._player_id)
                 case "JobTriesInArgument":
                     ret_val = JobTriesInArgument.JobTriesInArgument(params=extractor_params, job_map=self._job_map)
+                case "JobPlayTime":
+                    ret_val = JobPlayTime.JobPlayTime(params=extractor_params, job_map=self._job_map)
                 case "ModelExportCount":
                     ret_val = ModelExportCount.ModelExportCount(params=extractor_params, job_map=self._job_map)
                 case "ModelInterveneCount":
@@ -118,8 +131,14 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = TopJobCompletionDestinations.TopJobCompletionDestinations(params=extractor_params, job_map=self._job_map)
                 case "TopJobSwitchDestinations":
                     ret_val = TopJobSwitchDestinations.TopJobSwitchDestinations(params=extractor_params, job_map=self._job_map)
+                case "TotalArcticTime":
+                    ret_val = TotalArcticTime.TotalArcticTime(params=extractor_params)
                 case "TotalArgumentationTime":
                     ret_val = TotalArgumentationTime.TotalArgumentationTime(params=extractor_params)
+                case "TotalBayouTime":
+                    ret_val = TotalBayouTime.TotalBayouTime(params=extractor_params)
+                case "TotalCoralTime":
+                    ret_val = TotalCoralTime.TotalCoralTime(params=extractor_params)
                 case "TotalDiveTime":
                     ret_val = TotalDiveTime.TotalDiveTime(params=extractor_params)
                 case "TotalExperimentationTime":
@@ -128,6 +147,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = TotalGuideCount.TotalGuideCount(params=extractor_params)
                 case "TotalHelpCount":
                     ret_val = TotalHelpCount.TotalHelpCount(params=extractor_params)
+                case "TotalKelpTime":
+                    ret_val = TotalKelpTime.TotalKelpTime(params=extractor_params)
                 case "TotalModelingTime":
                     ret_val = TotalModelingTime.TotalModelingTime(params=extractor_params)
                 case "TotalPlayTime":
@@ -139,7 +160,7 @@ class AqualabLoader(GeneratorLoader):
                 case "UserTotalSessionDuration":
                     ret_val = UserTotalSessionDuration.UserTotalSessionDuration(params=extractor_params, player_id=self._player_id)
                 case _:
-                    raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature type for Aqualab.")
+                    Logger.Log(f"'{feature_type}' is not a valid aggregate feature type for Aqualab.")
         # then run through per-count features.
         else:
             match feature_type:
@@ -180,11 +201,12 @@ class AqualabLoader(GeneratorLoader):
                 case "SyncCompletionTime":
                     ret_val = SyncCompletionTime.SyncCompletionTime(params=extractor_params)
                 case _:
-                    raise NotImplementedError(f"'{feature_type}' is not a valid per-count feature type for Aqualab.")
+                    Logger.Log(f"'{feature_type}' is not a valid per-count feature type for Aqualab.")
         return ret_val
 
-    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
-        ret_val : Detector
+    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Optional[Detector]:
+        ret_val : Optional[Detector] = None
+
         match detector_type:
             case "CollectFactNoJob":
                 ret_val = CollectFactNoJob.CollectFactNoJob(params=extractor_params, trigger_callback=trigger_callback)
@@ -201,23 +223,35 @@ class AqualabLoader(GeneratorLoader):
             case "TwoHints":
                 ret_val = TwoHints.TwoHints(params=extractor_params, trigger_callback=trigger_callback, time_threshold=schema_args.get("threshold"))
             case _:
-                raise NotImplementedError(f"'{detector_type}' is not a valid detector for Aqualab.")
+                Logger.Log(f"'{detector_type}' is not a valid detector for Aqualab.")
         return ret_val
 
-    @property
-    def JobMap(self) -> Dict:
-        return self._job_map
+# *** PUBLIC STATICS ***
 
     @staticmethod
-    def GetAqualabJobCount(db_export_path:Path=Path(".") / "ogd" / "games" / "AQUALAB"):
-        db_export = loadJSONFile(filename="DBExport.json", path=db_export_path)
-        return len(db_export.get("jobs", []))
+    def GetAqualabJobCount(db_export_path:Path=Path(".") / "ogd" / "games" / "AQUALAB") -> int:
+        """Function to retrieve the number of jobs in the DBExport file.
+
+        :param db_export_path: A path to the folder containing DBExport, defaults to Path(".")/"ogd"/"games"/"AQUALAB"
+        :type db_export_path: Path, optional
+        :return: The number of jobs in the current DBExport
+        :rtype: int
+        """
+        ret_val : int
+        db_export = utils.loadJSONFile(filename="DBExport.json", path=db_export_path)
+        ret_val = len(db_export.get("jobs", []))
+        return ret_val
 
     @staticmethod
-    def GetAqualabTaskCount(db_export_path:Path=Path(".") / "ogd" / "games" / "AQUALAB"):
-        db_export = loadJSONFile(filename="DBExport.json", path=db_export_path)
+    def GetAqualabTaskCount(db_export_path:Path=Path(".") / "ogd" / "games" / "AQUALAB") -> int:
+        """Function to retrieve the total number of tasks in the DBExport file.
+
+        :param db_export_path: A path to the folder containing DBExport, defaults to Path(".")/"ogd"/"games"/"AQUALAB"
+        :type db_export_path: Path, optional
+        :return: The total number of tasks in the current DBExport
+        :rtype: int
+        """
+        db_export = utils.loadJSONFile(filename="DBExport.json", path=db_export_path)
         list_o_lists = [job.get('tasks', []) for job in db_export.get('jobs', [])]
-        # jobs_to_task_cts = [f"{job.get('id')}: {len(job.get('tasks', []))}" for job in db_export.get('jobs', [])]
-        # Logger.Log(f"Task counts by job:\n{jobs_to_task_cts}", logging.DEBUG)
         all_tasks    = list(itertools.chain.from_iterable(list_o_lists))
         return len(all_tasks)

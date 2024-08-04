@@ -581,6 +581,13 @@
                 "enabled": true,
                 "return_type": "float",
                 "description": "Average standard deviation of slider moves over a whole sessioin"
+            },
+            "SessionSucceedCount": {
+                "type": "CountEvent",
+                "enabled": true,
+                "return_type":"int",
+                "description": "number of times a 'SUCCEED' event occurs, across the whole session. [count of 'SUCCEED' events]",
+                "target": "SUCCEED.0"
             }
         }
     },

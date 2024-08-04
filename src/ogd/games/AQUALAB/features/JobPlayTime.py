@@ -10,6 +10,7 @@ from ogd.core.models.Event import Event
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.models.FeatureData import FeatureData
 
+# TODO : Almost certainly want to rewrite or remove this, doesn't appear to do anything remotely close to what it should do.
 class JobPlayTime(Feature):
     IDLE_LEVEL : Final[int] = 30
 
