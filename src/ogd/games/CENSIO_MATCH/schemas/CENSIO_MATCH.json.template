@@ -159,6 +159,10 @@
             "status" : {
                "type":"OrderStatus",
                "description":"The completion status of the selected order (completed, failed only, or not attempted)."
+            },
+            "order_is_optimal": {
+               "type":"bool",
+               "description":"true if the selected order matches level generation bias/settings"
             }
          }
       },
@@ -224,12 +228,17 @@
          }
       },
       "click_toggle_help": {
-         "description": "When the player toggles the 'help' view of the 'powers' box on or off.",
+         "description": "When the player toggles the 'help' view of the 'powers' box on or off. TODO: rename to click_toggle_power_help",
          "event_data": {
             "toggle" : {
                "type":"ToggleType",
                "description":"Whether the view was toggled on or off."
             }
+         }
+      },
+      "click_show_help_panel": {
+         "description": "When the player toggles the 'help' view showing the game rules.",
+         "event_data": {
          }
       },
       "select_power": {
@@ -290,6 +299,10 @@
                   "new_point" : "List[int]"
                },
                "description":"A list of all changes to tile positions, each list element indicating the old and new points for a tile of given type."
+            },
+            "had_tile_overflow" : {
+               "type":"bool",
+               "description":"Whether the power spent excess parts which otherwise would have incurred a penalty. TODO: rename to spent_tile_overflow"
             }
          }
       },
