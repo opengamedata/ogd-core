@@ -172,6 +172,10 @@
             "status" : {
                "type":"OrderStatus",
                "description":"The completion status of the selected order (completed, failed only, or not attempted)."
+            },
+            "order_is_optimal": {
+               "type":"bool",
+               "description":"true if the selected order matches level generation bias/settings"
             }
          }
       },
@@ -325,6 +329,10 @@
                   "new_point" : "List[int]"
                },
                "description":"A list of all changes to tile positions, each list element indicating the old and new points for a tile of given type."
+            },
+            "had_tile_overflow" : {
+               "type":"bool",
+               "description":"Whether the power spent excess parts which otherwise would have incurred a penalty. TODO: rename to spent_tile_overflow"
             }
          }
       },

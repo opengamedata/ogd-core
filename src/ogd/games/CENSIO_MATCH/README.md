@@ -80,7 +80,7 @@ The individual fields encoded in the *game_state* and *user_data* Event element 
 | seconds_from_launch | float | The number of seconds of game time elapsed since the game was launched. | |
 | order | OrderType | The current order the player is trying to fulfill. | |
 | goal_value | int | The goal score the player selected for the current order. Always 0 if the player is in the menu, or in the first order (when a goal has not been set). | |
-| goal_type | GoalType | TODO : Whether the player selected 'Self' or 'Other' for the current order. `null` if the player is in the menu, or in the first order (when a goal has not been set). | |
+| goal_type | GoalType | Whether the player selected 'Self' or 'Other' for the current order. `null` if the player is in the menu, or in the first order (when a goal has not been set). | |
 | tile_counts | Dict[str, int] | A dict, containing elements to indicate the number of each tile type the player has collected on the current order. |**gear** : int, **nut** : int, **screw** : int, **spring** : int |
 | tile_targets | Dict[str, int] | A dict, containing elements to indicate the number of each tile type the player needs to collect to complete the current order. |**gear** : int, **nut** : int, **screw** : int, **spring** : int |
 | drop_count | int | The number drops the player has used on the current order. | |
@@ -189,7 +189,8 @@ When the player selects a new order from the menu list.
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | new_order | OrderType | The new order the player selected. | |
-| status | OrderStatus | The completion status of the selected order (completed, failed only, or not attempted). | |  
+| status | OrderStatus | The completion status of the selected order (completed, failed only, or not attempted). | |
+| order_is_optimal | bool | true if the selected order matches level generation bias/settings | |  
 
 ### **click_toggle_order_target**
 
@@ -259,7 +260,7 @@ When the player turns the sandbox practice mode on or off.
 
 ### **toggle_power_info**
 
-When the player toggles the 'help' view of the 'powers' box on or off.
+When the player toggles the 'help' view (i.e. clicks the '?' button) of the 'powers' box on or off.
 
 #### Event Data
 
@@ -267,15 +268,14 @@ When the player toggles the 'help' view of the 'powers' box on or off.
 | ---      | ---      | ---             | ---         |
 | toggle | ToggleType | Whether the view was toggled on or off. | |  
 
-### **click_toggle_help**
+### **click_show_help_panel**
 
-TODO : remove.
+When the player clicks the button to display the 'help' overlay at the beginning of a round.
 
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-| toggle | ToggleType | Whether the view was toggled on or off. | |  
+| ---      | ---      | ---             | ---         |  
 
 ### **select_power**
 
@@ -319,7 +319,8 @@ When the player clicks to confirm and execute the selected power.
 | ---      | ---      | ---             | ---         |
 | power | PowerType | Which power the player canceled. | |
 | cost | Dict[str, Any] | A dict, indicating which type of tile was spent on the power, and how many tiles were spent. |**type** : TileType, **count** : int |
-| tile_updates | List[Dict[str, Any]] | A list of all changes to tile positions, each list element indicating the old and new points for a tile of given type. |**type** : TileType, **old_point** : List[int], **new_point** : List[int] |  
+| tile_updates | List[Dict[str, Any]] | A list of all changes to tile positions, each list element indicating the old and new points for a tile of given type. |**type** : TileType, **old_point** : List[int], **new_point** : List[int] |
+| had_tile_overflow | bool | Whether the power spent excess parts which otherwise would have incurred a penalty. TODO: rename to spent_tile_overflow | |  
 
 ### **click_reveal_drops**
 
@@ -422,18 +423,9 @@ When the system displays a summary of the order results to the player.
 | goal_score | int | The goal score on the order. | |
 | player_average | int | The average score the player has scored, across all attempts of the order. | |  
 
-### **click_summary_help**
-
-When the player clicks to review the detailed summary of the order results.
-
-#### Event Data
-
-| **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |  
-
 ### **toggle_summary_help**
 
-When the player toggles the 'help' view of the 'order summary' on or off.
+When the player toggles the 'help' view (i.e. clicks the '?' button) of the 'order summary' on or off.
 
 #### Event Data
 
