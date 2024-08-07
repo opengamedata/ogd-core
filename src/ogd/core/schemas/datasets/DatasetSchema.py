@@ -85,7 +85,10 @@ class DatasetSchema(Schema):
         self._key = DatasetKey(key=name, game_id=_game_id)
     # 1. Parse dates
         if "date_modified" in all_elements.keys():
-            self._date_modified = DatasetSchema._parseDateModified(all_elements["date_modified"])
+            try:
+                self._date_modified = DatasetSchema._parseDateModified(all_elements["date_modified"])
+            except ValueError as err:
+                Logger.Log(f"Invalid date_modified for {name}, expected a date, but got {all_elements['date_modified']}, resulting in error: {err}")
         else:
             self._date_modified = "UNKNOWN"
         if "start_date" in all_elements.keys():
