@@ -1063,6 +1063,34 @@
             "target": "click_execute_build",
             "return_type": "int"
          },
+         "CityInspectionCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Count of city inspections",
+            "target": "city_inspector_displayed",
+            "return_type": "int"
+         },
+         "DairyInspectionCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Count of dairy inspections",
+            "target": "dairy_inspector_displayed",
+            "return_type": "int"
+         },
+         "GrainInspectionCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Count of grain inspections",
+            "target": "grain_inspector_displayed",
+            "return_type": "int"
+         },
+         "StorageInspectionCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Count of storage inspections",
+            "target": "storage_inspector_displayed",
+            "return_type": "int"
+         },
          "BuildingUnlockCount": {
             "enabled": true,
             "type": "BuildingUnlockCount",
