@@ -237,8 +237,8 @@ class MySQLInterface(EventInterface):
             self.Open(force_reopen=False)
         if not self._is_open:
             start = datetime.now()
-            if isinstance(self._config.Source, MySQLSchema):
-                self._tunnel, self._db = SQL.ConnectDB(schema=self._config)
+            if isinstance(self._source_schema.Source, MySQLSchema):
+                self._tunnel, self._db = SQL.ConnectDB(schema=self._source_schema)
                 if self._db is not None:
                     self._db_cursor = self._getCursor()
                     self._is_open = True
@@ -250,7 +250,7 @@ class MySQLInterface(EventInterface):
                     SQL.disconnectMySQL(tunnel=self._tunnel, db=self._db)
                     return False
             else:
-                Logger.Log(f"Unable to open MySQL interface, the schema has invalid type {type(self._config)}", logging.ERROR)
+                Logger.Log(f"Unable to open MySQL interface, the schema has invalid type {type(self._source_schema)}", logging.ERROR)
                 SQL.disconnectMySQL(tunnel=self._tunnel, db=self._db)
                 return False
         else:
@@ -263,9 +263,9 @@ class MySQLInterface(EventInterface):
         return True
 
     def _availableIDs(self) -> List[str]:
-        if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
-            _db_name     : str = self._config.DatabaseName
-            _table_name  : str = self._config.TableName
+        if self._db_cursor is not None and isinstance(self._source_schema.Source, MySQLSchema):
+            _db_name     : str = self._source_schema.DatabaseName
+            _table_name  : str = self._source_schema.TableName
 
             sess_id_col  : str = self._TableSchema.SessionIDColumn or "session_id"
 
@@ -286,9 +286,9 @@ class MySQLInterface(EventInterface):
 
     def _availableDates(self) -> Dict[str,datetime]:
         ret_val = {'min':datetime.now(), 'max':datetime.now()}
-        if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
-            _db_name     : str = self._config.DatabaseName
-            _table_name  : str = self._config.TableName
+        if self._db_cursor is not None and isinstance(self._source_schema.Source, MySQLSchema):
+            _db_name     : str = self._source_schema.DatabaseName
+            _table_name  : str = self._source_schema.TableName
 
             # prep filter strings
             filters = []
@@ -311,10 +311,10 @@ class MySQLInterface(EventInterface):
     def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None, exclude_rows:Optional[List[str]]=None) -> List[Tuple]:
         ret_val = []
         # grab data for the given session range. Sort by event time, so
-        if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
+        if self._db_cursor is not None and isinstance(self._source_schema.Source, MySQLSchema):
             # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
-            _db_name     : str = self._config.DatabaseName
-            _table_name  : str = self._config.TableName
+            _db_name     : str = self._source_schema.DatabaseName
+            _table_name  : str = self._source_schema.TableName
 
             sess_id_col = self._TableSchema.SessionIDColumn or 'session_id'
             play_id_col = self._TableSchema.UserIDColumn or 'player_id'
@@ -355,10 +355,10 @@ class MySQLInterface(EventInterface):
 
     def _IDsFromDates(self, min:datetime, max:datetime) -> List[str]:
         ret_val = []
-        if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
+        if self._db_cursor is not None and isinstance(self._source_schema.Source, MySQLSchema):
             # alias long setting names.
-            _db_name     : str = self._config.DatabaseName
-            _table_name  : str = self._config.TableName
+            _db_name     : str = self._source_schema.DatabaseName
+            _table_name  : str = self._source_schema.TableName
 
             # prep filter strings
             filters = []
@@ -385,10 +385,10 @@ class MySQLInterface(EventInterface):
 
     def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION) -> Dict[str, datetime]:
         ret_val = {'min':datetime.now(), 'max':datetime.now()}
-        if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
+        if self._db_cursor is not None and isinstance(self._source_schema.Source, MySQLSchema):
             # alias long setting names.
-            _db_name     : str = self._config.DatabaseName
-            _table_name  : str = self._config.TableName
+            _db_name     : str = self._source_schema.DatabaseName
+            _table_name  : str = self._source_schema.TableName
             
             # prep filter strings
             filters = []

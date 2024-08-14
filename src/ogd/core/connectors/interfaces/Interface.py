@@ -68,8 +68,8 @@ class Interface(StorageConnector):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, config:GameSourceSchema):
-        super().__init__(config=config)
+    def __init__(self, schema:GameSourceSchema):
+        super().__init__(schema=schema)
 
     def __del__(self):
         self.Close()

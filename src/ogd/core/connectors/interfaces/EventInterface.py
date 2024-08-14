@@ -37,10 +37,10 @@ class EventInterface(Interface):
     # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, game_id:str, config:GameSourceSchema, fail_fast:bool):
-        super().__init__(config=config)
+        super().__init__(schema=config)
         self._fail_fast = fail_fast
         self._game_id : str  = game_id
-        self._table_schema : TableSchema = TableSchema(schema_name=self._config.TableSchema)
+        self._table_schema : TableSchema = TableSchema(schema_name=self._source_schema.TableSchema)
 
     def __del__(self):
         self.Close()

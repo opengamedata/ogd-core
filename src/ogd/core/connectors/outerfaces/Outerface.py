@@ -75,7 +75,7 @@ class Outerface(StorageConnector):
     # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, game_id, config:GameSourceSchema, export_modes:Set[ExportMode]):
-        super().__init__(config=config)
+        super().__init__(schema=config)
         self._game_id : str  = game_id
         self._modes   : Set[ExportMode] = export_modes
         self._session_ct : int = 0

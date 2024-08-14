@@ -38,8 +38,8 @@ class StorageConnector(abc.ABC):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, config:GameSourceSchema):
-        self._config  : GameSourceSchema = config
+    def __init__(self, schema:GameSourceSchema):
+        self._source_schema  : GameSourceSchema = schema
         self._is_open : bool = False
 
     def __del__(self):
