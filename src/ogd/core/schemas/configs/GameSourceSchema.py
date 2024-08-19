@@ -34,14 +34,12 @@ class GameSourceSchema(Schema):
             Logger.Log(f"For {name} Game Source config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
         if "source" in all_elements.keys():
             self._source_name = GameSourceSchema._parseSource(all_elements["source"])
+            if self._source_name in data_sources.keys():
+                self._source_schema = data_sources[self._source_name]
         else:
             self._source_name = "UNKNOWN"
-            Logger.Log(f"{name} config does not have a 'source' element; defaulting to source_name={self._source_name}", logging.WARN)
-        if self._source_name in data_sources.keys():
-            self._source_schema = data_sources[self._source_name]
-        else:
             self._source_schema = None
-            Logger.Log(f"{name} config's 'source' name ({self._source_name}) was not found in available source schemas; defaulting to source_schema={self._source_schema}", logging.WARN)
+            Logger.Log(f"{name} config does not have a 'source' element; defaulting to source_name={self._source_name}, source_schema={self._source_schema}", logging.WARN)
         if "database" in all_elements.keys():
             self._db_name = GameSourceSchema._parseDBName(all_elements["database"])
         else:
