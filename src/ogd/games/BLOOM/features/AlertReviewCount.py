@@ -1,4 +1,3 @@
-# import necessary libraries
 from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
@@ -6,44 +5,44 @@ from ogd.core.models.Event import Event
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.models.FeatureData import FeatureData
 
-class FailCount(Feature):
+class AlertReviewCount(Feature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        self.fail_type_counts: Dict[str, int] = {
-            "CityFailed": 0,
-            "TooManyBlooms": 0,
-            "OutOfMoney": 0
+        self.alert_review_counts: Dict[str, int] = {
+            "DieOff": 0,
+            "DecliningPop": 0,
+            "SellingLoss": 0,
+            "CritImbalance": 0
         }
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["lose_game"]
+        return ["click_local_alert"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        fail_type = event.EventData.get("lose_condition", "")
-        if fail_type in self.fail_type_counts:
-            self.fail_type_counts[fail_type] += 1
-        else: 
-            print("No fail type matched")
+        alert_type = event.EventData.get("alert_type", "")
+        if alert_type in self.alert_review_counts:
+            self.alert_review_counts[alert_type] += 1
 
     def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
         return [
-            sum(self.fail_type_counts.values()),
-            self.fail_type_counts['CityFailed'],
-            self.fail_type_counts['TooManyBlooms'],
-            self.fail_type_counts['OutOfMoney']
+            sum(self.alert_review_counts.values()),
+            self.alert_review_counts["DieOff"],
+            self.alert_review_counts["DecliningPop"],
+            self.alert_review_counts["SellingLoss"],
+            self.alert_review_counts["CritImbalance"]
         ]
 
     def Subfeatures(self) -> List[str]:
-        return ["CityFailed", "TooManyBlooms", "OutOfMoney"]
+        return ["DieOff", "DecliningPop", "SellingLoss", "CritImbalance"]
 
     # *** Optionally override public functions. ***
     @staticmethod
