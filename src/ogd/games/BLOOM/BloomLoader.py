@@ -16,6 +16,7 @@ from ogd.core.models.Event import Event
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.utils.utils import loadJSONFile
+from ogd.games.BLOOM.features import PersistThroughFailure
 from . import features
 
 #EXPORT_PATH : Final[str] = "games/BLOOM/DBExport.json"
@@ -60,6 +61,10 @@ class BloomLoader(GeneratorLoader):
             match feature_type:
                 case "ActiveTime":
                     ret_val = ActiveTime.ActiveTime(params=extractor_params, idle_threshold=schema_args.get("threshold", 30))
+                case "AlertCount":
+                    ret_val = AlertCount.AlertCount(params=extractor_params)
+                case "AlertReviewCount":
+                    ret_val = AlertReviewCount.AlertReviewCount(params=extractor_params)
                 case "AverageActiveTime":
                     ret_val = AverageActiveTime.AverageActiveTime(params=extractor_params)
                 case "BloomAlertCount":
@@ -78,19 +83,28 @@ class BloomLoader(GeneratorLoader):
                     ret_val = SucceededThroughFailure.SucceededThroughFailure(params=extractor_params)
                 case "CountyUnlockCount":
                     ret_val = CountyUnlockCount.CountyUnlockCount(params=extractor_params)
+                case "PersistThroughFailure":
+                    ret_val = PersistThroughFailure.PersistThroughFailure(params=extractor_params)
+                case "PerCountyFeature":
+                    ret_val = PerCountyFeature.PerCountyFeature(params=extractor_params)
+                    
                 case _:
                     ret_val = None
-        # then run through per-count features.
+        # then run through per-county features.
         else:
             match feature_type:
                 case "CountyBloomAlertCount":
                     ret_val = CountyBloomAlertCount.CountyBloomAlertCount(params=extractor_params)
                 case "CountyBuildCount":
                     ret_val = CountyBuildCount.CountyBuildCount(params=extractor_params)
+                case "CountyFailCount":
+                    ret_val = CountyFailCount.CountyFailCount(params=extractor_params)
                 case "CountyFinalPolicySettings":
                     ret_val = CountyFinalPolicySettings.CountyFinalPolicySettings(params=extractor_params)
                 case "CountyLatestMoney":
                     ret_val = CountyLatestMoney.CountyLatestMoney(params=extractor_params)
+                case "CountyBloomAlertCount":
+                    ret_val = CountyBloomAlertCount.CountyBloomAlertCount(params=extractor_params)
                 case _:
                     ret_val = None
                 

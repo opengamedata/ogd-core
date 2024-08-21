@@ -1001,6 +1001,7 @@
       }
    },
    
+{
    "features": {
       "per_count": {
          "CountyBloomAlertCount": {
@@ -1044,6 +1045,18 @@
             "description": "Active time of a player",
             "return_type": "timedelta"
          },
+         "AlertCount": {
+            "enabled": true,
+            "type": "AlertCount",
+            "description": "Count of alerts",
+            "return_type": "int"
+         },
+         "AlertReviewCount": {
+            "enabled": true,
+            "type": "AlertReviewCount",
+            "description": "Count of alert reviews",
+            "return_type": "int"
+         },
          "AverageActiveTime": {
             "enabled": true,
             "type": "AverageActiveTime",
@@ -1063,6 +1076,12 @@
             "target": "click_execute_build",
             "return_type": "int"
          },
+         "BuildingUnlockCount": {
+            "enabled": true,
+            "type": "BuildingUnlockCount",
+            "description": "Count of building unlocks",
+            "return_type": "int"
+         },
          "CityInspectionCount": {
             "enabled": true,
             "type": "CountEvent",
@@ -1070,37 +1089,23 @@
             "target": "city_inspector_displayed",
             "return_type": "int"
          },
+         "CountyUnlockCount": {
+            "enabled": true,
+            "type": "CountyUnlockCount",
+            "description": "Number of counties unlocked",
+            "return_type": "int"
+         },
+         "CountyFailCount": {
+            "enabled": true,
+            "type": "CountyFailCount",
+            "description": "Number of failures per county",
+            "return_type": "int"
+         },
          "DairyInspectionCount": {
             "enabled": true,
             "type": "CountEvent",
             "description": "Count of dairy inspections",
             "target": "dairy_inspector_displayed",
-            "return_type": "int"
-         },
-         "GrainInspectionCount": {
-            "enabled": true,
-            "type": "CountEvent",
-            "description": "Count of grain inspections",
-            "target": "grain_inspector_displayed",
-            "return_type": "int"
-         },
-         "StorageInspectionCount": {
-            "enabled": true,
-            "type": "CountEvent",
-            "description": "Count of storage inspections",
-            "target": "storage_inspector_displayed",
-            "return_type": "int"
-         },
-         "BuildingUnlockCount": {
-            "enabled": true,
-            "type": "BuildingUnlockCount",
-            "description": "Count of building unlocks",
-            "return_type": "int"
-         },
-         "CountyUnlockCount": {
-            "enabled": true,
-            "type": "CountyUnlockCount",
-            "description": "Number of counties unlocked",
             "return_type": "int"
          },
          "EconomyViewCount": {
@@ -1122,10 +1127,23 @@
             "description": "Game completion status",
             "return_type": "str"
          },
+         "GrainInspectionCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Count of grain inspections",
+            "target": "grain_inspector_displayed",
+            "return_type": "int"
+         },
          "NumberOfSessionsPerPlayer": {
             "enabled": false,
             "type": "NumberOfSessionsPerPlayer",
             "description": "Number of sessions per player",
+            "return_type": "int"
+         },
+         "PersistThroughFailure": {
+            "enabled": true,
+            "type": "PersistThroughFailure",
+            "description": "Count of persistence after failure",
             "return_type": "int"
          },
          "PolicyAdjustments" : {
@@ -1135,6 +1153,13 @@
             "target": "select_policy_card",
             "return_type": "int"
          },
+         "StorageInspectionCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Count of storage inspections",
+            "target": "storage_inspector_displayed",
+            "return_type": "int"
+         },
          "SucceededThroughFailure": {
             "enabled": true,
             "type": "SucceededThroughFailure",
@@ -1142,8 +1167,9 @@
             "return_type": "int"
          }
       }
-   },
-   
+   }
+}
+
    "config": {
       "SUPPORTED_VERS": [1]
    }
