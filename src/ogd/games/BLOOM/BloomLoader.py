@@ -85,9 +85,6 @@ class BloomLoader(GeneratorLoader):
                     ret_val = CountyUnlockCount.CountyUnlockCount(params=extractor_params)
                 case "PersistThroughFailure":
                     ret_val = PersistThroughFailure.PersistThroughFailure(params=extractor_params)
-                case "PerCountyFeature":
-                    ret_val = PerCountyFeature.PerCountyFeature(params=extractor_params)
-                    
                 case _:
                     ret_val = None
         # then run through per-county features.
