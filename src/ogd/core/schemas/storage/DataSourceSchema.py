@@ -1,9 +1,11 @@
 # import standard libraries
 import abc
 import logging
-from typing import Any, Dict, overload
+from pathlib import Path
+from typing import Any, Dict # , overload
 # import local files
 from ogd.core.schemas.Schema import Schema
+from ogd.core.schemas.storage.CredentialSchema import CredentialSchema
 from ogd.core.utils.Logger import Logger
 
 
@@ -19,31 +21,27 @@ class DataSourceSchema(Schema):
     # def __init__(self, name:str, other_elements:Dict[str, Any]): ...
 
     def __init__(self, name:str, unparsed_elements:Dict[str, Any] | Any):
-        self._db_type : str
+        self._source_type : str
         # 1. Ensure we've actually got a dict to parse from
         if not isinstance(unparsed_elements, dict):
             unparsed_elements = {}
             Logger.Log(f"For {name} Data Source config, other_elements was not a dict, defaulting to empty dict", logging.WARN)
-        # Parse standard elements
-        if "database" in unparsed_elements.keys():
-            self._db_name = GameSourceSchema._parseDBName(unparsed_elements["database"])
+        # 2. Parse standard elements
+        if "SOURCE_TYPE" in unparsed_elements.keys():
+            self._source_type = DataSourceSchema._parseSourceType(unparsed_elements["SOURCE_TYPE"])
         else:
-            self._db_name = name
+            self._source_type = "UNKNOWN"
             Logger.Log(f"{name} config does not have a 'database' element; defaulting to db_name={self._db_name}", logging.WARN)
-        if "table" in unparsed_elements.keys():
-            self._table_name = GameSourceSchema._parseTableName(unparsed_elements["table"])
-        else:
-            self._table_name = "UNKNOWN"
-            Logger.Log(f"{name} config does not have a 'table' element; defaulting to table={self._table_name}", logging.WARN)
 
-        # Parse legacy naming of standard elements
-        if "DB_TYPE" in unparsed_elements.keys():
-            self._db_type = DataSourceSchema._parseDBType(unparsed_elements["DB_TYPE"])
+        # 3. Parse legacy naming of standard elements
+        #    * DB_TYPE -> SOURCE_TYPE
+        if "DB_TYPE" in unparsed_elements.keys() and "SOURCE_TYPE" not in unparsed_elements.keys():
+            self._source_type = DataSourceSchema._parseSourceType(unparsed_elements["DB_TYPE"])
         else:
             self._db_type = "UNKNOWN"
             Logger.Log(f"{name} config does not have a 'DB_TYPE' element; defaulting to db_host={self._db_type}", logging.WARN)
 
-        _used = {"DB_TYPE"}
+        _used = {"SOURCE_TYPE", "DB_TYPE"}
         _leftovers = { key : val for key,val in unparsed_elements.items() if key not in _used }
         super().__init__(name=name, other_elements=_leftovers)
 
@@ -60,15 +58,25 @@ class DataSourceSchema(Schema):
 
     @property
     @abc.abstractmethod
+    def Location(self) -> str | Path:
+        pass
+
+    @property
+    @abc.abstractmethod
+    def Credential(self) -> CredentialSchema:
+        pass
+
+    @property
+    @abc.abstractmethod
     def AsConnectionInfo(self) -> str:
         pass
 
     @staticmethod
-    def _parseDBType(db_type) -> str:
+    def _parseSourceType(source_type) -> str:
         ret_val : str
-        if isinstance(db_type, str):
-            ret_val = db_type
+        if isinstance(source_type, str):
+            ret_val = source_type
         else:
-            ret_val = str(db_type)
-            Logger.Log(f"Data Source DB type was unexpected type {type(db_type)}, defaulting to str(db_type)={ret_val}.", logging.WARN)
+            ret_val = str(source_type)
+            Logger.Log(f"Data Source typename was unexpected type {type(source_type)}, defaulting to str(source_type)={ret_val}.", logging.WARN)
         return ret_val
