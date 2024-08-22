@@ -25,18 +25,38 @@ class Schema(abc.ABC):
     @property
     @abc.abstractmethod
     def AsMarkdown(self) -> str:
+        """Gets a markdown-formatted representation of the schema.
+
+        :return: A markdown-formatted representation of the schema.
+        :rtype: str
+        """
         pass
 
     @property
     def Name(self) -> str:
+        """Gets the name of the specific schema represented by the class instance.
+
+        :return: The name of the specific schema represented by the class instance.
+        :rtype: str
+        """
         return self._name
 
     @property
     def NonStandardElements(self) -> Dict[str, Any]:
+        """Gets a sub-dictionary of any non-standard schema elements found in the source dictionary for the given schema instance.
+
+        :return: A dictionary of any non-standard schema elements found in the source dictionary for the given schema instance.
+        :rtype: Dict[str, Any]
+        """
         return self._other_elements
 
     @property
     def NonStandardElementNames(self) -> List[str]:
+        """Gets a list of names of non-standard schema elements found in the source dictionary for the given schema instance.
+
+        :return: A list of names of non-standard schema elements found in the source dictionary for the given schema instance.
+        :rtype: List[str]
+        """
         return list(self._other_elements.keys())
     
     @staticmethod
