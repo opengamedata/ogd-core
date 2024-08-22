@@ -1001,7 +1001,7 @@
       }
    },
    
-{
+// {
    "features": {
       "per_count": {
          "CountyBloomAlertCount": {
@@ -1168,7 +1168,7 @@
          }
       }
    }
-}
+// }
 
    "config": {
       "SUPPORTED_VERS": [1]
