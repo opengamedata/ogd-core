@@ -1,11 +1,11 @@
 from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.games.BLOOM.features.PerCountyFeature import PerCountyFeature
 from ogd.core.models.Event import Event
 from ogd.core.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.models.FeatureData import FeatureData
 
-class CountyFailCount(Feature):
+class CountyFailCount(PerCountyFeature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.county_fail_counts: Dict[str, Dict[str, int]] = {}
