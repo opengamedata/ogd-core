@@ -1035,6 +1035,12 @@
             "count": 5,
             "description": "Latest money per county",
             "return_type": "float"
+         },
+         "CountyFailCount": {
+            "enabled": true,
+            "type": "CountyFailCount",
+            "description": "Number of failures per county",
+            "return_type": "int"
          }
       },
       "aggregate":{
@@ -1093,12 +1099,6 @@
             "enabled": true,
             "type": "CountyUnlockCount",
             "description": "Number of counties unlocked",
-            "return_type": "int"
-         },
-         "CountyFailCount": {
-            "enabled": true,
-            "type": "CountyFailCount",
-            "description": "Number of failures per county",
             "return_type": "int"
          },
          "DairyInspectionCount": {
