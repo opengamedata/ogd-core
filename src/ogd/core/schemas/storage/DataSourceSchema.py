@@ -26,20 +26,15 @@ class DataSourceSchema(Schema):
         if not isinstance(unparsed_elements, dict):
             unparsed_elements = {}
             Logger.Log(f"For {name} Data Source config, other_elements was not a dict, defaulting to empty dict", logging.WARN)
-        # 2. Parse standard elements
+        # 2. Parse standard elements, with legacy elements nested under "else" case.
         if "SOURCE_TYPE" in unparsed_elements.keys():
             self._source_type = DataSourceSchema._parseSourceType(unparsed_elements["SOURCE_TYPE"])
         else:
-            self._source_type = "UNKNOWN"
-            Logger.Log(f"{name} config does not have a 'database' element; defaulting to db_name={self._db_name}", logging.WARN)
-
-        # 3. Parse legacy naming of standard elements
-        #    * DB_TYPE -> SOURCE_TYPE
-        if "DB_TYPE" in unparsed_elements.keys() and "SOURCE_TYPE" not in unparsed_elements.keys():
-            self._source_type = DataSourceSchema._parseSourceType(unparsed_elements["DB_TYPE"])
-        else:
-            self._db_type = "UNKNOWN"
-            Logger.Log(f"{name} config does not have a 'DB_TYPE' element; defaulting to db_host={self._db_type}", logging.WARN)
+            if "DB_TYPE" in unparsed_elements.keys():
+                self._source_type = DataSourceSchema._parseSourceType(unparsed_elements["DB_TYPE"])
+            else:
+                self._source_type = "UNKNOWN"
+                Logger.Log(f"{name} config does not have a 'SOURCE_TYPE' element; defaulting to db_name={self._source_type}", logging.WARN)
 
         _used = {"SOURCE_TYPE", "DB_TYPE"}
         _leftovers = { key : val for key,val in unparsed_elements.items() if key not in _used }
@@ -54,7 +49,7 @@ class DataSourceSchema(Schema):
         :return: A string describing the type of the data source
         :rtype: str
         """
-        return self._db_type
+        return self._source_type
 
     @property
     @abc.abstractmethod
