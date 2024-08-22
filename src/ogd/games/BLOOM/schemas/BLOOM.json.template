@@ -17,6 +17,7 @@
       "AttributeStatus"   : ["GOOD", "OK", "BAD"],
       "ViewType"          : ["PHOSPHORUS_VIEW", "ECONOMY_VIEW"]
    },
+
    "game_state" : {
       "seconds_from_launch" : {
          "type" : "float",
@@ -1001,7 +1002,6 @@
       }
    },
    
-// {
    "features": {
       "per_count": {
          "CountyBloomAlertCount": {
@@ -1167,8 +1167,7 @@
             "return_type": "int"
          }
       }
-   }
-// }
+   },
 
    "config": {
       "SUPPORTED_VERS": [1]
