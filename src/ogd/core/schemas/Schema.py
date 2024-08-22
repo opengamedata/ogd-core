@@ -58,6 +58,13 @@ class Schema(abc.ABC):
         :rtype: List[str]
         """
         return list(self._other_elements.keys())
+
+    @abc.abstractmethod
+    @classmethod
+    def Default(cls):
+        """Creates and returns a default instance of the given Schema class.
+        """
+        pass
     
     @staticmethod
     def _parseName(name):
