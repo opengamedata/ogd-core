@@ -69,7 +69,7 @@ jobs:
         # --chmod : For each directory (D) and file (F), give user (u) and group (g) rwx permissions.
         #           Give others (o) only read permissions, plus execute for directories.
         switches: -vrctO --exclude-from 'rsync-exclude' --chmod=Du=rwx,Dg=rwx,Do=rx,Fu=rwx,Fg=rwx,Fo=r
-        path: /src/ogd/core/*
+        path: ./*
         remote_path: ${{ env.DEPLOY_DIR }}
         remote_host: ${{ env.DEPLOY_HOST }}
         remote_user: ${{ secrets.VPN_USER }}
