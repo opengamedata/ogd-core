@@ -25,7 +25,7 @@
       },
       "goal_type" : {
          "type" : "GoalType",
-         "description" : "TODO : Whether the player selected 'Self' or 'Other' for the current order. `null` if the player is in the menu, or in the first order (when a goal has not been set)."
+         "description" : "Whether the player selected 'Self' or 'Other' for the current order. `null` if the player is in the menu, or in the first order (when a goal has not been set)."
       },
       "tile_counts": {
          "type" : "Dict[str, int]",
@@ -172,6 +172,10 @@
             "status" : {
                "type":"OrderStatus",
                "description":"The completion status of the selected order (completed, failed only, or not attempted)."
+            },
+            "order_is_optimal": {
+               "type":"bool",
+               "description":"true if the selected order matches level generation bias/settings"
             }
          }
       },
@@ -254,7 +258,7 @@
          }
       },
       "toggle_power_info": {
-         "description": "When the player toggles the 'help' view of the 'powers' box on or off.",
+         "description": "When the player toggles the 'help' view (i.e. clicks the '?' button) of the 'powers' box on or off.",
          "event_data": {
             "toggle" : {
                "type":"ToggleType",
@@ -262,13 +266,9 @@
             }
          }
       },
-      "click_toggle_help": {
-         "description": "TODO : remove.",
+      "click_show_help_panel": {
+         "description": "When the player clicks the button to display the 'help' overlay at the beginning of a round.",
          "event_data": {
-            "toggle" : {
-               "type":"ToggleType",
-               "description":"Whether the view was toggled on or off."
-            }
          }
       },
       "select_power": {
@@ -329,6 +329,10 @@
                   "new_point" : "List[int]"
                },
                "description":"A list of all changes to tile positions, each list element indicating the old and new points for a tile of given type."
+            },
+            "had_tile_overflow" : {
+               "type":"bool",
+               "description":"Whether the power spent excess parts which otherwise would have incurred a penalty. TODO: rename to spent_tile_overflow"
             }
          }
       },
@@ -480,13 +484,8 @@
             }
          }
       },
-      "click_summary_help": {
-         "description": "When the player clicks to review the detailed summary of the order results.",
-         "event_data": {
-         }
-      },
       "toggle_summary_help": {
-         "description": "When the player toggles the 'help' view of the 'order summary' on or off.",
+         "description": "When the player toggles the 'help' view (i.e. clicks the '?' button) of the 'order summary' on or off.",
          "event_data": {
             "toggle" : {
                "type":"ToggleType",

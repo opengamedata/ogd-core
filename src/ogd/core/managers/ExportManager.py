@@ -237,11 +237,11 @@ class ExportManager:
                 from ogd.games.BLOOM.BloomLoader import BloomLoader
                 _loader_class = BloomLoader
             case _:
-                if game_id in {"BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MASHOPOLIS", "WEATHER_STATION", "WIND"}:
+                if game_id in {"BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MASHOPOLIS", "TRANSFORMATION_QUEST", "WEATHER_STATION", "WIND"}:
                     # all games with data but no extractor.
                     pass
                 else:
-                    raise ValueError(f"Got an unrecognized game ID ({game_id})!")
+                    Logger.Log(f"ExportManager Got an unrecognized game ID ({game_id})! Attempting export anyway...", logging.WARNING)
         return _loader_class
 
     def _generateSlices(self, sess_ids:List[str]) -> List[Slice]:
