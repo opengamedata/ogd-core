@@ -1,10 +1,8 @@
 # import standard libraries
-import abc
 import logging
 from typing import Any, Dict, Optional, Type
 # import local files
-from ogd.core.schemas.Schema import Schema
-from ogd.core.schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
+from ogd.core.schemas.storage.DataSourceSchema import DataSourceSchema
 from ogd.core.utils.Logger import Logger
 
 class BigQuerySchema(DataSourceSchema):
