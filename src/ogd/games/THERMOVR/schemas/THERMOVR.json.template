@@ -4,6 +4,7 @@
         "TabletModes" : ["SANDBOX, LAB, GAME, SETTINGS"],
         "Platform" : ["VR, WEB"],
         "Settings" : ["AXIS_NUMBERS", "GRID_LINES", "REGION_LABELS", "AXIS_TRACKERS", "MUSIC"],
+        "TitleSettings" : ["FULLSCREEN", "MUSIC"],
         "ToolType" : ["INSULATION", "LOWER_STOP", "UPPER_STOP", "INCREASE_WEIGHT", "DECREASE_WEIGHT", "HEAT", "COOLING", "CHAMBER_TEMPERATURE", "CHAMBER_PRESSURE"]
     },
 
@@ -418,6 +419,8 @@
                 }
             }
         },
+        "click_clear_heat_meter"
+        "click_clear_work_meter"
         "click_tool_toggle": {
             "description": "When the player clicks the button to enable/disable a tool",
             "event_data": {
@@ -606,6 +609,8 @@
                 }
             }
         },
+        "nudge_hint_displayed"
+        "nudge_hint_hidden"
         "tool_locked": {
             "description": "When a lab task locks a specific tool, making it unvailable to the player",
             "event_data": {
@@ -627,10 +632,13 @@
         "title_screen_displayed"
         "title_screen_closed"
         "click_close_title_screen"
-        "click_display_credits"
+        "click_display_credits" : {
+            "location" : enum("TITLE_SCREEN", "TABLET")
+        }
         "click_close_credit"
-        "click_toggle_music"
-        "click_toggle_fullscreen"
+        "click_toggle_title_setting"
+        "click_config_tab"
+        "click_controls_tab"
         "click_game_mode": {
             "description": "When the player presses the tablet 'Game' button to enter play mode",
             "event_data": {
@@ -839,6 +847,7 @@
                 }
             }
         },
+        "click_next_task"
         "click_task_scroll_left": {
             "description": "When the player presses the button to scroll left in the list of available tasks in the current lab section",
             "event_data": {
@@ -934,13 +943,8 @@
             "event_data": {
             }
         },
-        "target_state_task_began": {
+        "task_assigned": {
             "description": "When the player has selected a target state task.",
-            "event_data": {
-            }
-        },
-        "target_state_task_ended": {
-            "description": "When the player ends the target state task, moving to another task.",
             "event_data": {
             }
         },
