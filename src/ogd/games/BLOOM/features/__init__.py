@@ -2,6 +2,7 @@
 
 __all__ = [
     "PerCountyFeature",
+    "PerPolicyFeature",           
     "ActiveTime",
     "AlertCount",
     "AlertReviewCount",
@@ -19,10 +20,16 @@ __all__ = [
     "GameCompletionStatus",
     "NumberOfSessionsPerPlayer",
     "PersistThroughFailure",
-    "SucceededThroughFailure"
+    "SucceededThroughFailure",
+    "CountyPolicyChangeCount",    
+    "TotalPolicyChangeCount",
+    "PersistenceTime",
+    "CountyUnlockTime",
 ]
 
+
 from . import PerCountyFeature
+from . import PerPolicyFeature
 from . import ActiveTime
 from . import AlertCount
 from . import AlertReviewCount
@@ -41,3 +48,8 @@ from . import GameCompletionStatus
 from . import NumberOfSessionsPerPlayer
 from . import PersistThroughFailure
 from . import SucceededThroughFailure
+from . import CountyPolicyChangeCount
+from . import TotalPolicyChangeCount
+from . import PersistenceTime
+from . import CountyUnlockTime
+
