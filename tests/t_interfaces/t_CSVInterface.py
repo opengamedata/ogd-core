@@ -6,7 +6,7 @@ from unittest import TestCase
 from zipfile import ZipFile
 # import locals
 from ogd.common.interfaces.CSVInterface import CSVInterface
-from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
+from ogd.common.schemas.configs.GameSourceSchema import GameSourceSchema
 
 class t_CSVInterface(TestCase):
     TEST_MIN_DATE     : Final[datetime]  = datetime(year=2021, month=2, day=1, hour= 0, minute=0, second=0)

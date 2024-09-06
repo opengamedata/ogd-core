@@ -8,8 +8,8 @@ from typing import Dict, Final, List, Tuple, Optional
 # import locals
 from ogd.common.interfaces.EventInterface import EventInterface
 from ogd.common.models.enums.IDMode import IDMode
-from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
-from ogd.core.schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
+from ogd.common.schemas.configs.GameSourceSchema import GameSourceSchema
+from ogd.common.schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
 from ogd.core.utils.Logger import Logger
 
 

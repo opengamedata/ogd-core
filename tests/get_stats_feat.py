@@ -6,7 +6,7 @@ from pathlib import Path
 from ogd.core.schemas.tables.TableSchema import TableSchema
 from ogd.games.LAKELAND.LakelandExtractor import LakelandExtractor
 from realtime.ModelManager import ModelManager
-from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.common.schemas.games.GameSchema import GameSchema
 
 dump = pd.read_csv(
     "tests/test_data/LAKELAND_20200828_to_20200828 2/LAKELAND_20200828_to_20200828_d45ae97_dump.tsv", sep='\t')

@@ -2,7 +2,7 @@
 import logging
 from typing import Any, Dict, List, Optional, Union
 # import local files
-from ogd.core.schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
+from ogd.common.schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
 from ogd.common.schemas.Schema import Schema
 from ogd.core.utils.Logger import Logger
 

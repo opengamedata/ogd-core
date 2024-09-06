@@ -1,7 +1,7 @@
 # import standard libraries
 from typing import Any, Dict
 # import local files
-from ogd.core.schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
+from ogd.common.schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
 
 class FileSourceSchema(DataSourceSchema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):

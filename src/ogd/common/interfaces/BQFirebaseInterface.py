@@ -6,7 +6,7 @@ from typing import Dict, Final, List, Tuple, Optional
 # import locals
 from ogd.common.interfaces.BigQueryInterface import BigQueryInterface
 from ogd.common.models.enums.IDMode import IDMode
-from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
+from ogd.common.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.utils.Logger import Logger
 
 AQUALAB_MIN_VERSION : Final[float] = 6.2

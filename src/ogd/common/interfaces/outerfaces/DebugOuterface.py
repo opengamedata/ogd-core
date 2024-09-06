@@ -7,7 +7,7 @@ from typing import List, Set
 # import OGD files
 from ogd.common.interfaces.outerfaces.DataOuterface import DataOuterface
 from ogd.common.models.enums.ExportMode import ExportMode
-from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
+from ogd.common.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.utils.Logger import Logger
 from ogd.core.utils.utils import ExportRow
 

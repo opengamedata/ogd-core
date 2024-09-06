@@ -3,7 +3,7 @@ import abc
 from typing import Any, Dict
 
 # import local files
-from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
+from ogd.common.schemas.configs.GameSourceSchema import GameSourceSchema
 
 class Interface(abc.ABC):
 
