@@ -6,7 +6,7 @@ import traceback
 from datetime import datetime
 from typing import Dict, Final, List, Tuple, Optional
 # import locals
-from ogd.core.interfaces.EventInterface import EventInterface
+from ogd.common.interfaces.EventInterface import EventInterface
 from ogd.core.models.enums.IDMode import IDMode
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema

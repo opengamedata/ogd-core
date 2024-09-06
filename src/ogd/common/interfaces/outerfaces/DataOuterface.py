@@ -6,7 +6,7 @@ import logging
 from typing import Any, Dict, List, Set
 
 # import local files
-from ogd.core.interfaces.Interface import Interface
+from ogd.common.interfaces.Interface import Interface
 from ogd.core.models.enums.IDMode import IDMode
 from ogd.core.models.enums.ExportMode import ExportMode
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema

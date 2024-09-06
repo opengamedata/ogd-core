@@ -6,7 +6,7 @@ from pprint import pformat
 from typing import Any, Dict, List, Tuple, Optional, Union
 
 # import local files
-from ogd.core.interfaces.Interface import Interface
+from ogd.common.interfaces.Interface import Interface
 from ogd.core.models.Event import Event
 from ogd.core.models.enums.IDMode import IDMode
 from ogd.core.schemas.tables.TableSchema import TableSchema

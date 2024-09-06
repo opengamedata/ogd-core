@@ -5,7 +5,7 @@ import logging
 from typing import List, Set
 
 # import OGD files
-from ogd.core.interfaces.outerfaces.DataOuterface import DataOuterface
+from ogd.common.interfaces.outerfaces.DataOuterface import DataOuterface
 from ogd.core.models.enums.ExportMode import ExportMode
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.utils.Logger import Logger
