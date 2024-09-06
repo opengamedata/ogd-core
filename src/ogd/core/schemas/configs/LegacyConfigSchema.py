@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 # import local files
 from ogd.core.schemas.configs.data_sources.MySQLSourceSchema import SSHSchema
-from ogd.core.schemas.Schema import Schema
+from ogd.common.schemas.Schema import Schema
 from ogd.core.utils.Logger import Logger
 
 class LegacyConfigSchema(Schema):

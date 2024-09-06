@@ -7,7 +7,7 @@ from ogd.common.models.FeatureData import FeatureData
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.processors.GeneratorProcessor import GeneratorProcessor
-from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.core.utils.utils import ExportRow
 

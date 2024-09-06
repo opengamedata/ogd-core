@@ -2,9 +2,9 @@
 import logging
 from typing import Any, Dict, List, Optional
 # import local files
-from ogd.core.schemas.games.AggregateSchema import AggregateSchema
-from ogd.core.schemas.games.PerCountSchema import PerCountSchema
-from ogd.core.schemas.Schema import Schema
+from ogd.common.schemas.games.AggregateSchema import AggregateSchema
+from ogd.common.schemas.games.PerCountSchema import PerCountSchema
+from ogd.common.schemas.Schema import Schema
 from ogd.core.utils.Logger import Logger
 
 class FeatureMapSchema(Schema):

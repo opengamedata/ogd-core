@@ -10,7 +10,7 @@ from ogd.core.schemas.configs.data_sources.BigQuerySourceSchema import BigQueryS
 from ogd.core.schemas.configs.data_sources.FileSourceSchema import FileSourceSchema
 from ogd.core.schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
 from ogd.core.schemas.configs.LegacyConfigSchema import LegacyConfigSchema
-from ogd.core.schemas.Schema import Schema
+from ogd.common.schemas.Schema import Schema
 from ogd.core.utils.Logger import Logger
 
 class ConfigSchema(Schema):

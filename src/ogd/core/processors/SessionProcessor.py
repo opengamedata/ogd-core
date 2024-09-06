@@ -10,7 +10,7 @@ from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.core.utils.Logger import Logger
 from ogd.core.utils.utils import ExportRow
 

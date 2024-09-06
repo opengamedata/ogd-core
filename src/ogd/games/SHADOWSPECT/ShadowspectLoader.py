@@ -10,7 +10,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.games.SHADOWSPECT.features import *
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.core.utils.Logger import Logger
 
 ## @class ShadowspectExtractor

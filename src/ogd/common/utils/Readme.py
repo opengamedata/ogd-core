@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any, Dict, IO, List, Optional, Set
 
 # import local files
-from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.core.schemas.tables.TableSchema import TableSchema
 from ogd.core.utils.Logger import Logger
 from ogd.core.utils.utils import ExportRow

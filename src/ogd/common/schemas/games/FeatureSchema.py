@@ -3,8 +3,8 @@ import abc
 import logging
 from typing import Any, Dict, List
 # import local files
-from ogd.core.schemas.games.ExtractorSchema import ExtractorSchema
-from ogd.core.schemas.Schema import Schema
+from ogd.common.schemas.games.ExtractorSchema import ExtractorSchema
+from ogd.common.schemas.Schema import Schema
 from ogd.core.utils.Logger import Logger
 
 class SubfeatureSchema(Schema):

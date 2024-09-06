@@ -5,11 +5,11 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 # ogd imports
-from ogd.core.schemas.Schema import Schema
+from ogd.common.schemas.Schema import Schema
 from ogd.core.utils.Logger import Logger
 
 # local imports
-from ogd.core.schemas.datasets.DatasetSchema import DatasetSchema
+from ogd.common.schemas.datasets.DatasetSchema import DatasetSchema
 
 class FileListConfigSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):

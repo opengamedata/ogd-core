@@ -2,8 +2,8 @@
 import logging
 from typing import Any, Dict, List, Optional
 # import local files
-from ogd.core.schemas.games.DetectorSchema import DetectorSchema
-from ogd.core.schemas.Schema import Schema
+from ogd.common.schemas.games.DetectorSchema import DetectorSchema
+from ogd.common.schemas.Schema import Schema
 from ogd.core.utils.Logger import Logger
 
 class DetectorMapSchema(Schema):

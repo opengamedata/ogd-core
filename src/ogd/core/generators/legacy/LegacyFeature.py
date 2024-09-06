@@ -12,7 +12,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
-from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.common.schemas.games.GameSchema import GameSchema
 
 LegacyFeatureType = Union[int,float,timedelta,Dict[int,Dict[str,Any]]]
 

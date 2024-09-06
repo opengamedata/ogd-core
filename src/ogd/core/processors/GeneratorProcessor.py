@@ -9,7 +9,7 @@ from ogd.common.models.FeatureData import FeatureData
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.processors.Processor import Processor
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.core.utils.Logger import Logger
 from ogd.core.utils.utils import ExportRow

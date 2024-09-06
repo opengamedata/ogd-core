@@ -9,7 +9,7 @@ from ogd.core.generators.Generator import Generator
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
-from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.models.enums.IterationMode import IterationMode
 
 ## @class Extractor

@@ -14,10 +14,10 @@ from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
-from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.models.enums.IterationMode import IterationMode
-from ogd.core.schemas.games.AggregateSchema import AggregateSchema
-from ogd.core.schemas.games.PerCountSchema import PerCountSchema
+from ogd.common.schemas.games.AggregateSchema import AggregateSchema
+from ogd.common.schemas.games.PerCountSchema import PerCountSchema
 from ogd.core.utils.Logger import Logger
 
 ## @class Extractor

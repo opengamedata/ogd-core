@@ -13,7 +13,7 @@ from typing import Any, Dict, Optional
 # import 3rd-party libraries
 
 # import OGD libraries
-from ogd.core.schemas.Schema import Schema
+from ogd.common.schemas.Schema import Schema
 
 # import local files
 

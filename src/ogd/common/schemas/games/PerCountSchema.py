@@ -2,7 +2,7 @@
 import logging
 from typing import Any, Dict, Union
 # import local files
-from ogd.core.schemas.games.FeatureSchema import FeatureSchema
+from ogd.common.schemas.games.FeatureSchema import FeatureSchema
 from ogd.core.utils.Logger import Logger
 
 class PerCountSchema(FeatureSchema):

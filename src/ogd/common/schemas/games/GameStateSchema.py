@@ -2,8 +2,8 @@
 import logging
 from typing import Dict
 # import local files
-from ogd.core.schemas.games.DataElementSchema import DataElementSchema
-from ogd.core.schemas.Schema import Schema
+from ogd.common.schemas.games.DataElementSchema import DataElementSchema
+from ogd.common.schemas.Schema import Schema
 from ogd.core.utils.Logger import Logger
 
 class GameStateSchema(Schema):

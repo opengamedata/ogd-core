@@ -19,7 +19,7 @@ from ogd.core.managers.FeatureManager import FeatureManager
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.common.models.enums.IDMode import IDMode
-from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.requests.Request import Request
 from ogd.core.requests.RequestResult import RequestResult

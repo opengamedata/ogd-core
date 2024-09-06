@@ -1,7 +1,7 @@
 # import standard libraries
 from typing import Any, Dict, List
 # import local files
-from ogd.core.schemas.games.FeatureSchema import FeatureSchema
+from ogd.common.schemas.games.FeatureSchema import FeatureSchema
 
 class AggregateSchema(FeatureSchema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):

@@ -3,7 +3,7 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, Optional
 # import local files
-from ogd.core.schemas.Schema import Schema
+from ogd.common.schemas.Schema import Schema
 from ogd.core.utils.Logger import Logger
 
 class FileIndexingSchema(Schema):

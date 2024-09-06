@@ -2,7 +2,7 @@
 from typing import Any, Dict
 # import local files
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.schemas.games.ExtractorSchema import ExtractorSchema
+from ogd.common.schemas.games.ExtractorSchema import ExtractorSchema
 
 class DetectorSchema(ExtractorSchema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):
