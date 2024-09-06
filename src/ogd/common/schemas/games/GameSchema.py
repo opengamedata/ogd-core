@@ -14,8 +14,8 @@ from ogd.core.schemas.games.EventSchema import EventSchema
 from ogd.core.schemas.games.PerCountSchema import PerCountSchema
 from ogd.core.schemas.games.FeatureSchema import FeatureSchema
 from ogd.core.schemas.games.FeatureMapSchema import FeatureMapSchema
-from ogd.core.models.enums.IterationMode import IterationMode
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.enums.IterationMode import IterationMode
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.utils import utils
 from ogd.core.utils.utils import loadJSONFile
 from ogd.core.utils.Logger import Logger

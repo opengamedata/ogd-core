@@ -5,9 +5,9 @@ from typing import Any, List, Optional
 from ogd.core.utils.Logger import Logger
 from ogd.core.generators.extractors.Extractor import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.FeatureData import FeatureData
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
 
 class AverageSessionTime(Feature):
     def __init__(self, params:GeneratorParameters):

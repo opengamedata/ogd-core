@@ -14,7 +14,7 @@ from ogd.common.interfaces.BigQueryInterface import BigQueryInterface
 from ogd.common.interfaces.BQFirebaseInterface import BQFirebaseInterface
 from ogd.core.requests.Request import ExporterRange
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
-from ogd.core.models.enums.ExportMode import ExportMode
+from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.core.utils.Logger import Logger
 
 class OGDGenerators:

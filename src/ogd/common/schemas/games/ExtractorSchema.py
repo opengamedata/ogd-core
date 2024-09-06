@@ -3,7 +3,7 @@ import abc
 import logging
 from typing import Any, Dict, List, Set
 # import local files
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.schemas.Schema import Schema
 from ogd.core.utils.Logger import Logger
 

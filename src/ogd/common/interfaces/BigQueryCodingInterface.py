@@ -8,7 +8,7 @@ from typing import Dict, List, Tuple, Optional
 from coding.Code import Code
 from coding.Coder import Coder
 from ogd.common.interfaces.CodingInterface import CodingInterface
-from ogd.core.models.enums.IDMode import IDMode
+from ogd.common.models.enums.IDMode import IDMode
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.utils.Logger import Logger
 

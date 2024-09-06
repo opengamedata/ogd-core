@@ -4,7 +4,7 @@ from typing import Dict, List, Set, Union
 
 # import local files
 from ogd.common.interfaces.outerfaces.DataOuterface import DataOuterface
-from ogd.core.models.enums.ExportMode import ExportMode
+from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.utils.Logger import Logger
 from ogd.core.utils.utils import ExportRow

@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Dict, IO, List, Tuple, Optional
 ## import local files
 from ogd.common.interfaces.EventInterface import EventInterface
-from ogd.core.models.enums.IDMode import IDMode
+from ogd.common.models.enums.IDMode import IDMode
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.schemas.tables.TableSchema import TableSchema
 from ogd.core.utils.Logger import Logger

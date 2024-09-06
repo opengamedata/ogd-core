@@ -18,8 +18,8 @@ from ogd.common.interfaces.outerfaces.DataOuterface import DataOuterface
 from ogd.common.interfaces.outerfaces.DebugOuterface import DebugOuterface
 from ogd.common.interfaces.outerfaces.TSVOuterface import TSVOuterface
 from ogd.core.managers.ExportManager import ExportManager
-from ogd.core.models.enums.ExportMode import ExportMode
-from ogd.core.models.enums.IDMode import IDMode
+from ogd.common.models.enums.ExportMode import ExportMode
+from ogd.common.models.enums.IDMode import IDMode
 from ogd.core.requests.Request import ExporterRange, Request
 from ogd.core.requests.RequestResult import RequestResult, ResultStatus
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema

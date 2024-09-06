@@ -2,9 +2,9 @@
 from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.FeatureData import FeatureData
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
 
 class CountyBuildCount(Feature):
     def __init__(self, params: GeneratorParameters):
@@ -41,9 +41,9 @@ class CountyBuildCount(Feature):
 """# import libraries
 from typing import Any, Dict, List
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.FeatureData import FeatureData
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
 
 # import PerCountyFeature
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
@@ -95,9 +95,9 @@ class CountyBuildCount(PerCountyFeature):
 # import libraries
 from typing import Any, Dict, List
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.FeatureData import FeatureData
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
 
 # import PerCountyFeature
 from ogd.core.generators.extractors.Feature import Feature

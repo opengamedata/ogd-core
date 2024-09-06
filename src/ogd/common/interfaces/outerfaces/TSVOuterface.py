@@ -16,8 +16,8 @@ from typing import Any, Dict, IO, List, Optional, Set
 # import local files
 from ogd import games
 from ogd.common.interfaces.outerfaces.DataOuterface import DataOuterface
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.enums.ExportMode import ExportMode
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.schemas.tables.TableSchema import TableSchema

@@ -5,7 +5,7 @@ from typing import Optional, List
 from ogd.core.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
-from ogd.core.models.Event import Event
+from ogd.common.models.Event import Event
 
 class PerCountyFeature(PerCountFeature):
     COUNTY_LIST = ["Hillside", "Forest", "Prairie", "Wetland", "Urban"]

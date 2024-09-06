@@ -1,7 +1,7 @@
 # import standard libraries
 from typing import Any, Dict
 # import local files
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.ExtractorSchema import ExtractorSchema
 
 class DetectorSchema(ExtractorSchema):
