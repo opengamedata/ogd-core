@@ -17,7 +17,6 @@
       "AttributeStatus"   : ["GOOD", "OK", "BAD"],
       "ViewType"          : ["PHOSPHORUS_VIEW", "ECONOMY_VIEW"]
    },
-
    "game_state" : {
       "seconds_from_launch" : {
          "type" : "float",
@@ -1001,174 +1000,182 @@
          }
       }
    },
-   
    "features": {
       "per_count": {
-         "CountyBloomAlertCount": {
-            "enabled": true,
-            "type": "CountyBloomAlertCount",
-            "prefix": "cty",
-            "count": 5,
-            "description": "Count of bloom alerts per county",
-            "return_type": "int"
-         },
-         "CountyBuildCount": {
-            "enabled": true,
-            "type": "CountyBuildCount",
-            "prefix": "cty",
-            "count": 5,
-            "description": "Count of builds per county",
-            "return_type": "int"
-         },
-         "CountyFinalPolicySettings": {
-            "enabled": true,
-            "type": "CountyFinalPolicySettings",
-            "prefix": "cty",
-            "count": 5,
-            "description": "Final policy settings per county",
-            "return_type": "dict"
-         },
-         "CountyLatestMoney": {
-            "enabled": true,
-            "type": "CountyLatestMoney",
-            "prefix": "cty",
-            "count": 5,
-            "description": "Latest money per county",
-            "return_type": "float"
-         },
-         "CountyFailCount": {
-            "enabled": true,
-            "type": "CountyFailCount",
-            "description": "Number of failures per county",
-            "return_type": "int"
-         }
+        "CountyBloomAlertCount": {
+          "enabled": true,
+          "type": "CountyBloomAlertCount",
+          "prefix": "cty",
+          "count": 5,
+          "description": "Count of bloom alerts per county",
+          "return_type": "int"
+        },
+        "CountyBuildCount": {
+          "enabled": true,
+          "type": "CountyBuildCount",
+          "prefix": "cty",
+          "count": 5,
+          "description": "Count of builds per county",
+          "return_type": "int"
+        },
+        "CountyFinalPolicySettings": {
+          "enabled": true,
+          "type": "CountyFinalPolicySettings",
+          "prefix": "cty",
+          "count": 5,
+          "description": "Final policy settings per county",
+          "return_type": "dict"
+        },
+        "CountyLatestMoney": {
+          "enabled": true,
+          "type": "CountyLatestMoney",
+          "prefix": "cty",
+          "count": 5,
+          "description": "Latest money per county",
+          "return_type": "float"
+        },
+        "CountyFailCount": {
+          "enabled": true,
+          "type": "CountyFailCount",
+          "prefix": "cty",
+          "count": 5,
+          "description": "Number of failures per county",
+          "return_type": "int"
+        }
       },
-      "aggregate":{
-         "ActiveTime": {
-            "threshold": 30,
-            "enabled": true,
-            "type": "ActiveTime",
-            "description": "Active time of a player",
-            "return_type": "timedelta"
-         },
-         "AlertCount": {
-            "enabled": true,
-            "type": "AlertCount",
-            "description": "Count of alerts",
-            "return_type": "int"
-         },
-         "AlertReviewCount": {
-            "enabled": true,
-            "type": "AlertReviewCount",
-            "description": "Count of alert reviews",
-            "return_type": "int"
-         },
-         "AverageActiveTime": {
-            "enabled": true,
-            "type": "AverageActiveTime",
-            "description": "Average active time of a player",
-            "return_type": "timedelta"
-         },
-         "BloomAlertCount": {
-            "enabled": true,
-            "type": "BloomAlertCount",
-            "description": "Count of bloom alerts",
-            "return_type": "int"
-         },
-         "BuildCount": {
-            "enabled": true,
-            "type": "CountEvent",
-            "description": "Count of builds",
-            "target": "click_execute_build",
-            "return_type": "int"
-         },
-         "BuildingUnlockCount": {
-            "enabled": true,
-            "type": "BuildingUnlockCount",
-            "description": "Count of building unlocks",
-            "return_type": "int"
-         },
-         "CityInspectionCount": {
-            "enabled": true,
-            "type": "CountEvent",
-            "description": "Count of city inspections",
-            "target": "city_inspector_displayed",
-            "return_type": "int"
-         },
-         "CountyUnlockCount": {
-            "enabled": true,
-            "type": "CountyUnlockCount",
-            "description": "Number of counties unlocked",
-            "return_type": "int"
-         },
-         "DairyInspectionCount": {
-            "enabled": true,
-            "type": "CountEvent",
-            "description": "Count of dairy inspections",
-            "target": "dairy_inspector_displayed",
-            "return_type": "int"
-         },
-         "EconomyViewCount": {
-            "enabled": true,
-            "type": "CountEvent",
-            "description": "Count of times the player viewed the economy view",
-            "target": "open_economy_view",
-            "return_type": "int"
-         },
-         "FailCount": {
-            "enabled": true,
-            "type": "FailCount",
-            "description": "Number of failure count",
-            "return_type": "int"
-         },
-         "GameCompletionStatus": {
-            "enabled": true,
-            "type": "GameCompletionStatus",
-            "description": "Game completion status",
-            "return_type": "str"
-         },
-         "GrainInspectionCount": {
-            "enabled": true,
-            "type": "CountEvent",
-            "description": "Count of grain inspections",
-            "target": "grain_inspector_displayed",
-            "return_type": "int"
-         },
-         "NumberOfSessionsPerPlayer": {
-            "enabled": false,
-            "type": "NumberOfSessionsPerPlayer",
-            "description": "Number of sessions per player",
-            "return_type": "int"
-         },
-         "PersistThroughFailure": {
-            "enabled": true,
-            "type": "PersistThroughFailure",
-            "description": "Count of persistence after failure",
-            "return_type": "int"
-         },
-         "PolicyAdjustments" : {
-            "enabled": true,
-            "type": "CountEvent",
-            "description": "Count of policy changes",
-            "target": "select_policy_card",
-            "return_type": "int"
-         },
-         "StorageInspectionCount": {
-            "enabled": true,
-            "type": "CountEvent",
-            "description": "Count of storage inspections",
-            "target": "storage_inspector_displayed",
-            "return_type": "int"
-         },
-         "SucceededThroughFailure": {
-            "enabled": true,
-            "type": "SucceededThroughFailure",
-            "description": "Number of times failed but persisted through the task",
-            "return_type": "int"
-         }
+      "aggregate": {
+        "ActiveTime": {
+          "threshold": 30,
+          "enabled": true,
+          "type": "ActiveTime",
+          "description": "Active time of a player",
+          "return_type": "timedelta"
+        },
+        "AlertCount": {
+          "enabled": true,
+          "type": "AlertCount",
+          "description": "Count of alerts",
+          "return_type": "int"
+        },
+        "AlertReviewCount": {
+          "enabled": true,
+          "type": "AlertReviewCount",
+          "description": "Count of alert reviews",
+          "return_type": "int"
+        },
+        "AverageActiveTime": {
+          "enabled": true,
+          "type": "AverageActiveTime",
+          "description": "Average active time of a player",
+          "return_type": "timedelta"
+        },
+        "BloomAlertCount": {
+          "enabled": true,
+          "type": "BloomAlertCount",
+          "description": "Count of bloom alerts",
+          "return_type": "int"
+        },
+        "BuildCount": {
+          "enabled": true,
+          "type": "CountEvent",
+          "description": "Count of builds",
+          "target": "click_execute_build",
+          "return_type": "int"
+        },
+        "BuildingUnlockCount": {
+          "enabled": true,
+          "type": "BuildingUnlockCount",
+          "description": "Count of building unlocks",
+          "return_type": "int"
+        },
+        "CityInspectionCount": {
+          "enabled": true,
+          "type": "CountEvent",
+          "description": "Count of city inspections",
+          "target": "city_inspector_displayed",
+          "return_type": "int"
+        },
+        "CountyUnlockCount": {
+          "enabled": true,
+          "type": "CountyUnlockCount",
+          "description": "Number of counties unlocked",
+          "return_type": "int"
+        },
+        "DairyInspectionCount": {
+          "enabled": true,
+          "type": "CountEvent",
+          "description": "Count of dairy inspections",
+          "target": "dairy_inspector_displayed",
+          "return_type": "int"
+        },
+        "TotalPolicyChangeCount": {
+          "enabled": true,
+          "type": "CountEvent",
+          "description": "Total count of policy changes",
+          "target": "select_policy_card",
+          "return_type": "int"
+        },
+        "EconomyViewCount": {
+          "enabled": true,
+          "type": "CountEvent",
+          "description": "Count of times the player viewed the economy view",
+          "target": "open_economy_view",
+          "return_type": "int"
+        },
+        "FailCount": {
+          "enabled": true,
+          "type": "FailCount",
+          "description": "Number of failure count",
+          "return_type": "int"
+        },
+        "GameCompletionStatus": {
+          "enabled": true,
+          "type": "GameCompletionStatus",
+          "description": "Game completion status",
+          "return_type": "str"
+        },
+        "GrainInspectionCount": {
+          "enabled": true,
+          "type": "CountEvent",
+          "description": "Count of grain inspections",
+          "target": "grain_inspector_displayed",
+          "return_type": "int"
+        },
+        "NumberOfSessionsPerPlayer": {
+          "enabled": false,
+          "type": "NumberOfSessionsPerPlayer",
+          "description": "Number of sessions per player",
+          "return_type": "int"
+        },
+        "PersistThroughFailure": {
+          "enabled": true,
+          "type": "PersistThroughFailure",
+          "description": "Count of persistence after failure",
+          "return_type": "int"
+        },
+        "PolicyAdjustments": {
+          "enabled": true,
+          "type": "CountEvent",
+          "description": "Count of policy changes",
+          "target": "select_policy_card",
+          "return_type": "int"
+        },
+        "StorageInspectionCount": {
+          "enabled": true,
+          "type": "CountEvent",
+          "description": "Count of storage inspections",
+          "target": "storage_inspector_displayed",
+          "return_type": "int"
+        },
+        "SucceededThroughFailure": {
+          "enabled": true,
+          "type": "SucceededThroughFailure",
+          "description": "Number of times failed but persisted through the task",
+          "return_type": "int"
+        }
       }
-   },
-
+    },
+    
    "config": {
       "SUPPORTED_VERS": [1]
    }
