@@ -21,8 +21,7 @@ __all__ = [
     "NumberOfSessionsPerPlayer",
     "PersistThroughFailure",
     "SucceededThroughFailure",
-    "CountyPolicyChangeCount",    
-    "TotalPolicyChangeCount",
+    "CountyPolicyChangeCount",
     "PersistenceTime",
     "CountyUnlockTime",
 ]
@@ -49,7 +48,6 @@ from . import NumberOfSessionsPerPlayer
 from . import PersistThroughFailure
 from . import SucceededThroughFailure
 from . import CountyPolicyChangeCount
-from . import TotalPolicyChangeCount
 from . import PersistenceTime
 from . import CountyUnlockTime
 
