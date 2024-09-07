@@ -3,7 +3,7 @@ from datetime import datetime as dt
 import math
 import pandas as pd
 from pathlib import Path
-from ogd.core.schemas.tables.TableSchema import TableSchema
+from ogd.common.schemas.tables.TableSchema import TableSchema
 from ogd.games.LAKELAND.LakelandExtractor import LakelandExtractor
 from realtime.ModelManager import ModelManager
 from ogd.common.schemas.games.GameSchema import GameSchema

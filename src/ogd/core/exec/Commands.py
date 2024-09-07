@@ -25,7 +25,7 @@ from ogd.core.requests.RequestResult import RequestResult, ResultStatus
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.common.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.schemas.tables.TableSchema import TableSchema
+from ogd.common.schemas.tables.TableSchema import TableSchema
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.Readme import Readme
 from .Generators import OGDGenerators
