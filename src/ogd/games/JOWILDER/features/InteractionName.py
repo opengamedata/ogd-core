@@ -10,8 +10,8 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 from ogd.common.models.Event import Event
 from ogd.games.JOWILDER import Jowilder_Enumerators as je
-from ogd.core.utils.utils import loadJSONFile
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.utils import loadJSONFile
+from ogd.common.utils.Logger import Logger
 
 interaction_path = Path('.') / "ogd" / "games" / "JOWILDER"
 METADATA_RAW : Dict[str, Dict[str, Any]] = loadJSONFile(filename="interaction_metadata.json", path=interaction_path, search_in_src=True)

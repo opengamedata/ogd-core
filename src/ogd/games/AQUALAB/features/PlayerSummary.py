@@ -9,7 +9,7 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 
 class PlayerSummary(SessionFeature):
 

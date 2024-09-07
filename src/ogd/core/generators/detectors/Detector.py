@@ -7,7 +7,7 @@ from ogd.core.generators.Generator import Generator, GeneratorParameters
 from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.utils.typing import Map
+from ogd.common.utils.typing import Map
 
 ## @class Model
 #  Abstract base class for session-level Wave Detectors.

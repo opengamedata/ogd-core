@@ -15,7 +15,7 @@ from ogd.common.interfaces.BQFirebaseInterface import BQFirebaseInterface
 from ogd.core.requests.Request import ExporterRange
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.common.models.enums.ExportMode import ExportMode
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 
 class OGDGenerators:
     """Utility class to collect functions for generating objects used to execute certain commands.

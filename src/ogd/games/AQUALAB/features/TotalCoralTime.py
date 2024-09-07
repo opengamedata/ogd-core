@@ -7,7 +7,7 @@ from ogd.core.generators.extractors.Feature import Feature
 from ogd.common.models.Event import Event, EventSource
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 

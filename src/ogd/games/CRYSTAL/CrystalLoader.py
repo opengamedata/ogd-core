@@ -10,7 +10,7 @@ from ogd.games.CRYSTAL.features.CrystalExtractor import CrystalExtractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.schemas.games.GameSchema import GameSchema
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 
 class CrystalLoader(LegacyLoader):
 

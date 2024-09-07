@@ -6,7 +6,7 @@ from typing import List, Type, Optional
 from ogd.core.processors.Processor import Processor
 from ogd.common.models.Event import Event
 from ogd.common.schemas.games.GameSchema import GameSchema
-from ogd.core.utils.utils import ExportRow
+from ogd.common.utils.utils import ExportRow
 
 class EventProcessor(Processor):
 

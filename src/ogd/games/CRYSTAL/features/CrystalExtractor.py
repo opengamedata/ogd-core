@@ -5,7 +5,7 @@ import typing
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 ## import local files
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.legacy.LegacyFeature import LegacyFeature
 from ogd.common.models.Event import Event

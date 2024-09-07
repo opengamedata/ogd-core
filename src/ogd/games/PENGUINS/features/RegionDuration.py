@@ -8,7 +8,7 @@ from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 # import libraries
 import logging
 from ogd.games.PENGUINS.features.bases.PerRegionFeature import PerRegionFeature

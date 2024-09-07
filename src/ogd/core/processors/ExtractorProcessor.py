@@ -9,7 +9,7 @@ from ogd.core.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.processors.GeneratorProcessor import GeneratorProcessor
 from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.models.enums.ExportMode import ExportMode
-from ogd.core.utils.utils import ExportRow
+from ogd.common.utils.utils import ExportRow
 
 ## @class Processor
 class ExtractorProcessor(GeneratorProcessor):

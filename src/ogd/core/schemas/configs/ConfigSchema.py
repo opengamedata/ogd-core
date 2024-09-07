@@ -11,7 +11,7 @@ from ogd.common.schemas.configs.data_sources.FileSourceSchema import FileSourceS
 from ogd.common.schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
 from ogd.core.schemas.configs.LegacyConfigSchema import LegacyConfigSchema
 from ogd.common.schemas.Schema import Schema
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 
 class ConfigSchema(Schema):
     """Dumb struct containing properties for each standard OGD-core config item.

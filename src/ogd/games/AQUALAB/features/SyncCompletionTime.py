@@ -3,7 +3,7 @@ import logging
 from datetime import datetime, timedelta
 from typing import Any, List, Optional
 # import locals
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.common.models.Event import Event

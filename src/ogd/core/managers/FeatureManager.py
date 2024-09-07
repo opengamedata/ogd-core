@@ -11,8 +11,8 @@ from ogd.core.processors.PlayerProcessor import PlayerProcessor
 from ogd.core.processors.SessionProcessor import SessionProcessor
 from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.models.Event import Event
-from ogd.core.utils.Logger import Logger
-from ogd.core.utils.utils import ExportRow
+from ogd.common.utils.Logger import Logger
+from ogd.common.utils.utils import ExportRow
 
 class FeatureManager:
     def __init__(self, game_schema:GameSchema, LoaderClass:Optional[Type[GeneratorLoader]], feature_overrides:Optional[List[str]]):

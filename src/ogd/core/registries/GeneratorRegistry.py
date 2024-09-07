@@ -4,7 +4,7 @@ import logging
 from typing import Any, Dict, List, Optional
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 ## import local files
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import Generator
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode

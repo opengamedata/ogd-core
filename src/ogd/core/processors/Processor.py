@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Type, Optional
 from ogd.common.models.FeatureData import FeatureData
 from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.models.Event import Event
-from ogd.core.utils.utils import ExportRow, Logger
+from ogd.common.utils.utils import ExportRow, Logger
 
 ## @class Processor
 class Processor(abc.ABC):

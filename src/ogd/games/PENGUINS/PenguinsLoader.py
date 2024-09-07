@@ -16,7 +16,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.schemas.games.GameSchema import GameSchema
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 
 ## @class WaveExtractor
 #  Extractor subclass for extracting features from Waves game data.

@@ -10,9 +10,9 @@ from ogd.core.processors.DetectorProcessor import DetectorProcessor
 from ogd.core.processors.EventProcessor import EventProcessor
 from ogd.common.models.Event import Event, EventSource
 from ogd.common.schemas.games.GameSchema import GameSchema
-from ogd.core.utils import utils
-from ogd.core.utils.Logger import Logger
-from ogd.core.utils.utils import ExportRow
+from ogd.common.utils import utils
+from ogd.common.utils.Logger import Logger
+from ogd.common.utils.utils import ExportRow
 
 ## @class EventProcessor
 #  Class to manage data for a csv events file.

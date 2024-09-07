@@ -12,9 +12,9 @@ from ogd.core import schemas
 from ogd.common.models.Event import Event, EventSource
 from ogd.core.schemas.tables.ColumnMapSchema import ColumnMapSchema
 from ogd.core.schemas.tables.ColumnSchema import ColumnSchema
-from ogd.core.utils import utils
-from ogd.core.utils.Logger import Logger
-from ogd.core.utils.typing import Map
+from ogd.common.utils import utils
+from ogd.common.utils.Logger import Logger
+from ogd.common.utils.typing import Map
 
 ## @class TableSchema
 #  Dumb struct to hold useful info about the structure of database data

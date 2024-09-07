@@ -2,7 +2,7 @@
 import logging
 from typing import Optional, List
 # import locals
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.common.models.Event import Event

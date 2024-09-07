@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 # import local files
 from ogd.common.schemas.configs.data_sources.MySQLSourceSchema import SSHSchema
 from ogd.common.schemas.Schema import Schema
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 
 class LegacyConfigSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):

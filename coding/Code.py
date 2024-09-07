@@ -3,7 +3,7 @@ import json
 from typing import List, Optional
 # local imports
 from coding.Coder import Coder
-from ogd.core.utils import map
+from ogd.common.utils import map
 
 class Code: 
     class EventID:

@@ -11,8 +11,8 @@ from ogd.core.processors.Processor import Processor
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.models.enums.ExportMode import ExportMode
-from ogd.core.utils.Logger import Logger
-from ogd.core.utils.utils import ExportRow
+from ogd.common.utils.Logger import Logger
+from ogd.common.utils.utils import ExportRow
 
 ## @class Processor
 class GeneratorProcessor(Processor):

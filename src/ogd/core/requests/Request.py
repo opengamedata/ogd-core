@@ -7,7 +7,7 @@ from ogd.common.interfaces.EventInterface import EventInterface
 from ogd.common.interfaces.outerfaces.DataOuterface import DataOuterface
 from ogd.common.models.enums.IDMode import IDMode
 from ogd.common.models.enums.ExportMode import ExportMode
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 
 class ExporterRange:
     """

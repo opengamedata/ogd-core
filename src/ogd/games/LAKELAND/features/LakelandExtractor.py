@@ -26,8 +26,8 @@ from ogd.core.generators.legacy.LegacyFeature import LegacyFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.schemas.games.GameSchema import GameSchema
-from ogd.core.utils import utils
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils import utils
+from ogd.common.utils.Logger import Logger
 
 # temp comment
 

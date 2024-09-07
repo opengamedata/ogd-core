@@ -18,7 +18,7 @@ from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.models.enums.IterationMode import IterationMode
 from ogd.common.schemas.games.AggregateSchema import AggregateSchema
 from ogd.common.schemas.games.PerCountSchema import PerCountSchema
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 
 ## @class Extractor
 #  Abstract base class for game feature extractors.

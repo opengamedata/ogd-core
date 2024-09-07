@@ -23,7 +23,7 @@ from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.requests.Request import Request
 from ogd.core.requests.RequestResult import RequestResult
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 
 Slice = List[str]
 

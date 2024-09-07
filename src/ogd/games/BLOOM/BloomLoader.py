@@ -15,7 +15,7 @@ from ogd.core.generators.extractors.Feature import Feature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.schemas.games.GameSchema import GameSchema
-from ogd.core.utils.utils import loadJSONFile
+from ogd.common.utils.utils import loadJSONFile
 from ogd.games.BLOOM.features import PersistThroughFailure
 from . import features
 

@@ -11,7 +11,7 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 
 
 

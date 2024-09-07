@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Set
 # import local files
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.schemas.Schema import Schema
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 
 class ColumnSchema(Schema):
     def __init__(self, all_elements:Dict[str, Any]):

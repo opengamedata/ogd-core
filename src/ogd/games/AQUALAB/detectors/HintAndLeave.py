@@ -7,7 +7,7 @@ from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.utils.typing import Map
+from ogd.common.utils.typing import Map
 
 
 class HintAndLeave(Detector):

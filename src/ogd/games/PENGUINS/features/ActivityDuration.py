@@ -8,7 +8,7 @@ from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 
 class ActivityDuration(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.

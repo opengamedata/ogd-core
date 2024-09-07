@@ -7,7 +7,7 @@ from collections import defaultdict
 from datetime import timedelta
 from typing import Any, Dict, List, Optional, Union
 ## import local files
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.common.models.enums.ExtractionMode import ExtractionMode

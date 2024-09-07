@@ -3,7 +3,7 @@ import logging
 import re
 from typing import Any, Dict, List, Optional
 # import locals
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
