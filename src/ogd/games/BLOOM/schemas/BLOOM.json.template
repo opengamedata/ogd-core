@@ -1101,6 +1101,12 @@
           "description": "Number of counties unlocked",
           "return_type": "int"
         },
+        "CountyUnlockTime": {
+         "enabled": true,
+         "type": "CountyUnlockTime",
+         "description": "Time to unlock county",
+         "return_type": "int"
+       },
         "DairyInspectionCount": {
           "enabled": true,
           "type": "CountEvent",
@@ -1175,7 +1181,7 @@
         }
       }
     },
-    
+
    "config": {
       "SUPPORTED_VERS": [1]
    }
