@@ -13,11 +13,11 @@ from pathlib import Path
 from config.config import settings
 import_path = Path(".") / "src"
 sys.path.insert(0, str(import_path))
+from ogd.common.utils.Logger import Logger
 from src.ogd import games
 from src.ogd.core.exec.Commands import OGDCommands
 from src.ogd.core.exec.Parsers import OGDParsers
 from src.ogd.core.schemas.configs.ConfigSchema import ConfigSchema
-from src.ogd.common.utils.Logger import Logger
 
 
 ## This section of code is what runs main itself. Just need something to get it
