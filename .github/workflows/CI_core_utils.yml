@@ -25,7 +25,7 @@ jobs:
     - name: Get Dependencies
       uses: opengamedata/setup-ogd-py-dependencies@v1.0
       with:
-        python_version: ${{ vars.OGD_PYTHON_VERSION }}endencies
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
 
   # 2. Configure cloud & local environments
 
