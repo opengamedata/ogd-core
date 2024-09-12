@@ -9,6 +9,10 @@ inputs:
    description: "The game with data to export."
    required: true
    default: 'Crystal'
+  python_version:
+    description: "Which version of Python to install on local GitHub Actions runner."
+    required: false
+    default: "3.12"
 runs:
   using: "composite"
   steps:
@@ -20,6 +24,6 @@ runs:
     # - name: Clone code
     #   uses: actions/checkout@v3
     - name: Execute data export
-      run: python3.10 main.py export ${{ inputs.game }} ${{env.YESTERDAY}} ${{env.YESTERDAY}}
+      run: python${{ inputs.python_version }} main.py export ${{ inputs.game }} ${{env.YESTERDAY}} ${{env.YESTERDAY}}
       shell: bash
-      # python3.10 main.py export ${{ inputs.game }} 1/1/2021 1/2/2021
+      # python${{ inputs.python_version }} main.py export ${{ inputs.game }} 1/1/2021 1/2/2021
