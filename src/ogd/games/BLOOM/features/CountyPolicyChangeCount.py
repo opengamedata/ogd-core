@@ -1,11 +1,11 @@
 from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.games.BLOOM.features.PerCountyFeature import PerCountyFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 
-class CountyPolicyChangeCount(Feature):
+class CountyPolicyChangeCount(PerCountyFeature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.policy_change_count: int = 0
