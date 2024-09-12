@@ -24,8 +24,8 @@ class PerCountyFeature(PerCountFeature):
                 if self.COUNTY_LIST.index(county_name) == self.CountIndex:
                     ret_val = True
             except ValueError:
-                self.WarningMessage(f"County name {county_name} not found in COUNTY_LIST in {type(self).__name__}, for event {event.EventName} with game state {event.GameState}")
+                self.WarningMessage(f"County name {county_name} not found in COUNTY_LIST in {type(self).__name__}, for event {event.EventName}")
         else:
-            self.WarningMessage(f"Got invalid current_county name {county_name} for event {event.EventName} in {type(self).__name__}")
+            self.WarningMessage(f"In {type(self).__name__}, for event {event.EventName} with game state {event.GameState}, no current_county found.")
 
         return ret_val
