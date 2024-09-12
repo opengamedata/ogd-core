@@ -13,10 +13,10 @@ from ogd.games.PENGUINS.detectors import *
 from ogd.games.PENGUINS.features import *
 # from ogd.games.PENGUINS.DBExport import scene_map
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.utils.Logger import Logger
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.utils.Logger import Logger
 
 ## @class WaveExtractor
 #  Extractor subclass for extracting features from Waves game data.

@@ -1,0 +1,84 @@
+name: OGD Core - Web Deploy Script
+run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.ref || 'Manual Run') }}
+
+on:
+  workflow_dispatch:
+
+env:
+  DEPLOY_HOST: ${{ vars.FD_WEB_HOST }}
+  DEPLOY_DIR: /var/www/wsgi-bin/opengamedata/
+  DEPLOY_URL:  ${{ vars.FD_WEB_HOST }}/wsgi-bin/opengamedata/
+  
+jobs:
+  production_deploy:
+    name: Web Deploy of OGD
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
+      cancel-in-progress: true
+    
+    steps:
+
+  # 1. Local checkout & config
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        lfs: true
+        submodules: true
+    - name: Set up Config File
+      uses: ./.github/actions/OGD_config
+      with:
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+        ssh_host: ${{vars.FD_STORE_HOST}}
+        ssh_user: ${{secrets.VPN_USER}}
+        ssh_pass: ${{secrets.VPN_PASS}}
+        slice_size: ${{ github.event.inputs.slice_size }}
+        log_level: ${{ github.event.inputs.log_level }}
+    
+  # 2. Build 
+
+  # 3. Remote config & deploy
+    - name: Install OpenConnect
+      run: sudo apt-get -q update && sudo apt-get -q install openconnect | 
+            sudo pip3 install https://github.com/dlenski/vpn-slice/archive/master.zip
+    - name: Connect to VPN
+      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER}} --passwd-on-stdin soe.vpn.wisc.edu &
+
+    - name: Setup Access Key
+      run: |
+        mkdir -p ~/.ssh
+        echo '${{secrets.VPN_KEY}}' >> ./key.txt
+        chmod 600 ./key.txt
+    - name: Ensure directory exists
+      run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.VPN_USER }}@${{ env.DEPLOY_HOST }} "mkdir -p ${{ env.DEPLOY_DIR }}"
+    # - name: Ensure directory exists
+    #   run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.SECONDARY_HOST }} "mkdir -p ${{ env.SECONDARY_PATH }}"
+    
+    - name: Upload to web server via rsync
+      uses: burnett01/rsync-deployments@5.2
+      with:
+        # switches:
+        # -v : verbose output
+        # -r : recurse into subdirectories
+        # -c : use checksum to determine what files to update/skip
+        # -t : preserve modification times
+        # -O : omit directory modification times
+        # --delete : delete extraneous files from destination directories
+        # --exclude-from : skip any files in rsync-exclude
+        # --chmod : For each directory (D) and file (F), give user (u) and group (g) rwx permissions.
+        #           Give others (o) only read permissions, plus execute for directories.
+        switches: -vrctO --delete --exclude-from 'rsync-exclude' --chmod=Du=rwx,Dg=rwx,Do=rx,Fu=rwx,Fg=rwx,Fo=r
+        path: ./*
+        remote_path: ${{ env.DEPLOY_DIR }}
+        remote_host: ${{ env.DEPLOY_HOST }}
+        remote_user: ${{ secrets.VPN_USER }}
+        remote_key:  ${{ secrets.VPN_KEY }}
+
+  # 4. Cleanup & complete
+    - name: Announce deploy
+      run: echo "Deployed to ${{ env.DEPLOY_URL }}"
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: ./*.log
