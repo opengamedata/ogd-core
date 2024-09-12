@@ -34,7 +34,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Get Dependencies
-      uses: opengamedata/setup-ogd-py-dependencies@v1.0
+      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.1
       with:
         python_version: ${{ vars.OGD_PYTHON_VERSION }}
 
