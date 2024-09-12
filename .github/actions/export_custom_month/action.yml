@@ -17,6 +17,10 @@ inputs:
     description: "If true, only export event data."
     required: false
     default: false
+  python_version:
+    description: "Which version of Python to install on local GitHub Actions runner."
+    required: false
+    default: "3.12"
 runs:
   using: "composite"
   steps:
@@ -30,10 +34,10 @@ runs:
     #   shell: bash
     - name: Execute data export
       if: ${{ inputs.events_only == 'false' }}
-      run: python3.10 main.py export ${{ inputs.game }} ${{ inputs.month_year }} --monthly
+      run: python${{ inputs.python_version }} main.py export ${{ inputs.game }} ${{ inputs.month_year }} --monthly
       shell: bash
     - name: Execute data export (events only)
       if: ${{ inputs.events_only == 'true' }}
-      run: python3.10 main.py export ${{ inputs.game }} ${{ inputs.month_year }} --monthly --no_session_file --no_player_file --no_pop_file
+      run: python${{ inputs.python_version }} main.py export ${{ inputs.game }} ${{ inputs.month_year }} --monthly --no_session_file --no_player_file --no_pop_file
       shell: bash
-      # python3.10 main.py export ${{ inputs.game }} 1/1/2021 1/2/2021
+      # python${{ inputs.python_version }} main.py export ${{ inputs.game }} 1/1/2021 1/2/2021
