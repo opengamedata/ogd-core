@@ -1,3 +1,5 @@
+# TODO : This is technically deprecated, the tests it's wanting to run no longer exist.
+# Should remove/recycle code to ogd-common at some point.
 name: Core Utils CI Test
 run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
 
