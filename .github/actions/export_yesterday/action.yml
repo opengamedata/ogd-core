@@ -20,6 +20,6 @@ runs:
     # - name: Clone code
     #   uses: actions/checkout@v3
     - name: Execute data export
-      run: python3.10 main.py export ${{ inputs.game }} ${{env.YESTERDAY}} ${{env.YESTERDAY}}
+      run: python${{ vars.OGD_PYTHON_VERSION }} main.py export ${{ inputs.game }} ${{env.YESTERDAY}} ${{env.YESTERDAY}}
       shell: bash
-      # python3.10 main.py export ${{ inputs.game }} 1/1/2021 1/2/2021
+      # python${{ vars.OGD_PYTHON_VERSION }} main.py export ${{ inputs.game }} 1/1/2021 1/2/2021
