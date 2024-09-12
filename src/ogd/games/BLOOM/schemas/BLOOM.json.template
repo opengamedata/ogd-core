@@ -1180,7 +1180,7 @@
           "return_type": "int"
         }
       }
-    },
+   },
 
    "config": {
       "SUPPORTED_VERS": [1]
