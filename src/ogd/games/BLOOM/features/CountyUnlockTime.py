@@ -1,12 +1,12 @@
 from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.games.BLOOM.features.PerCountyFeature import PerCountyFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 COUNTY_LIST = ["Hillside", "Forest", "Prairie", "Wetland", "Urban"]
 
-class CountyUnlockTime(Feature):
+class CountyUnlockTime(PerCountyFeature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.time_started: Optional[float] = None
