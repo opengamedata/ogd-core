@@ -14,22 +14,14 @@ class CountyPolicyChangeCount(PerCountyFeature):
     # Implement abstract functions
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["select_policy_card", "county_unlocked"]
+        return ["select_policy_card"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        event_type = event.EventName
-        county_name = event.EventData.get("county_name", None)
-        
-        if event_type == "county_unlocked" and county_name:
-            # If the county name matches the self.CountIndex, start tracking
-            if county_name == self.params.CountIndex:
-                self.county_name = county_name
-        
-        if event_type == "select_policy_card" and self.county_name:
+        if event.EventName == "select_policy_card":
             # Count the policy changes if the county is being tracked
             self.policy_change_count += 1
 
@@ -38,9 +30,6 @@ class CountyPolicyChangeCount(PerCountyFeature):
 
     def _getFeatureValues(self) -> List[Any]:
         return [self.policy_change_count]
-
-    def Subfeatures(self) -> List[str]:
-        return ["Count"]
 
     # Optionally override public functions
     @staticmethod
