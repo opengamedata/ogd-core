@@ -86,8 +86,6 @@ class BloomLoader(GeneratorLoader):
                     ret_val = CountyUnlockCount.CountyUnlockCount(params=extractor_params)
                 case "PersistThroughFailure":
                     ret_val = PersistThroughFailure.PersistThroughFailure(params=extractor_params)
-                case "TotalPolicyChangeCount":  # Added new feature
-                    ret_val = TotalPolicyChangeCount.TotalPolicyChangeCount(params=extractor_params)
                 case "PersistenceTime":  # Added new feature
                     ret_val = PersistenceTime.PersistenceTime(params=extractor_params)
                 case "CountyUnlockTime":  # Added new feature
