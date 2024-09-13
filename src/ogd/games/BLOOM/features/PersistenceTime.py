@@ -35,7 +35,7 @@ class PersistenceTime(Feature):
         # Otherwise, handle any events that came from the game itself.
         elif event.EventSource == EventSource.GAME:
             if self.last_time is not None:
-                event_duration = event.Timestamp - self.previous_time
+                event_duration = event.Timestamp - self.last_time
                 self.running_time += event_duration
             # If we got a win or a loss, reset timer
             if event.EventName in ["win_game", "lose_game"]:
