@@ -46,7 +46,7 @@ class CountyUnlockTime(PerCountFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self.total_time]
+        return [self.total_time.total_seconds() if self.total_time is not None else None]
 
     def _validateEventCountIndex(self, event: Event):
         ret_val: bool = False
