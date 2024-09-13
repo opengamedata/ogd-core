@@ -1,7 +1,8 @@
+from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.common.models.Event import Event
+from ogd.common.models.Event import Event, EventSource
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 import time
@@ -9,35 +10,38 @@ import time
 class PersistenceTime(Feature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        self.fail_times: List[int] = []
-        self.current_start_time: Optional[int] = None
-        self.total_seconds_list: List[int] = []
+        self.lost_once: bool = False
+        self.last_time: Optional[datetime] = None
+        self.running_time : timedelta = timedelta(0)
+        self.total_seconds_list: List[float] = []
 
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["lose_game", "win_game", "pause_game"]
+        return ["all_events"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        event_type = event.EventName
-
-        if event_type == "lose_game":
-            if self.current_start_time is not None:
-                elapsed_time = int(time.time()) - self.current_start_time
-                self.total_seconds_list.append(elapsed_time)
-            self.current_start_time = int(time.time())
-        elif event_type == "win_game" and self.current_start_time is not None:
-            elapsed_time = int(time.time()) - self.current_start_time
-            self.total_seconds_list.append(elapsed_time)
-            self.current_start_time = None
-        elif event_type == "pause_game":
-            if self.current_start_time is not None:
-                elapsed_time = int(time.time()) - self.current_start_time
-                self.total_seconds_list.append(elapsed_time)
-                self.current_start_time = None
+        # If player didn't lose yet, skip (unless this event is a loss)
+        if not self.lost_once:
+            if event.EventName == "lose_game":
+                self.lost_once = True
+        # Otherwise, if had new session/game start since last event, just skip without counting.
+        elif event.EventName in ["session_start", "game_start"]:
+            self.last_time = event.Timestamp
+            return
+        # Otherwise, handle any events that came from the game itself.
+        elif event.EventSource == EventSource.GAME:
+            if self.last_time is not None:
+                event_duration = event.Timestamp - self.previous_time
+                self.running_time += event_duration
+            # If we got a win or a loss, reset timer
+            if event.EventName in ["win_game", "lose_game"]:
+                self.total_seconds_list.append(self.running_time.total_seconds())
+                self.running_time = timedelta(0)
+            self.last_time = event.Timestamp
 
     def _updateFromFeatureData(self, feature: FeatureData):
         return
@@ -50,6 +54,10 @@ class PersistenceTime(Feature):
     def _getSubfeatureValues(self) -> Dict[str, Any]:
         breakdown = sum(self.total_seconds_list)
         return {"Breakdown": breakdown, "TotalTimeList": self.total_seconds_list}
+
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
+        return [ExtractionMode.PLAYER, ExtractionMode.SESSION]
 
     @staticmethod
     def MinVersion() -> Optional[str]:
