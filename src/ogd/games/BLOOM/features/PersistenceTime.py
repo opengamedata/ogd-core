@@ -10,7 +10,7 @@ import time
 class PersistenceTime(Feature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        self.lost_once: bool = False
+        self.has_lost: bool = False
         self.last_time: Optional[datetime] = None
         self.running_time : timedelta = timedelta(0)
         self.total_seconds_list: List[float] = []
@@ -25,9 +25,9 @@ class PersistenceTime(Feature):
 
     def _updateFromEvent(self, event: Event) -> None:
         # If player didn't lose yet, skip (unless this event is a loss)
-        if not self.lost_once:
+        if not self.has_lost:
             if event.EventName == "lose_game":
-                self.lost_once = True
+                self.has_lost = True
         # Otherwise, if had new session/game start since last event, just skip without counting.
         elif event.EventName in ["session_start", "game_start"]:
             self.last_time = event.Timestamp
@@ -47,13 +47,11 @@ class PersistenceTime(Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        total_time = sum(self.total_seconds_list)
-        return [total_time]
+        return [sum(self.total_seconds_list), self.total_seconds_list]
 
     # Subfeature breakdown
     def _getSubfeatureValues(self) -> Dict[str, Any]:
-        breakdown = sum(self.total_seconds_list)
-        return {"Breakdown": breakdown, "TotalTimeList": self.total_seconds_list}
+        return {"PersistenceTimeList": self.total_seconds_list}
 
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
