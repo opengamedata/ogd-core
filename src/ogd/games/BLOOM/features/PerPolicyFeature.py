@@ -5,41 +5,21 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 
 class PerPolicyFeature(PerCountFeature):
+    POLICY_LIST = ["SalesTaxPolicy", "ImportTaxPolicy", "RunoffPolicy", "SkimmingPolicy"]
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
 
-    @classmethod
-    def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return []
+    def _validateEventCountIndex(self, event: Event):
+        ret_val: bool = False
 
-    @classmethod
-    def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
-        return []
+        policy_name = event.EventData.get('policy', event.EventData.get('policy_name', "POLICY NOT FOUND"))
+        if policy_name != "POLICY NOT FOUND":
+            try:
+                if self.POLICY_LIST.index(policy_name) == self.CountIndex:
+                    ret_val = True
+            except ValueError:
+                self.WarningMessage(f"Policy with name {policy_name} not found in POLICY_LIST in {type(self).__name__}, for event of type {event.EventName}")
+        else:
+            raise NotImplementedError(f"PerPolicyFeature subclass {type(self).__name__} requested event of type {event.EventName}, but {event.EventName} does not contain a 'policy' in its EventData.")
 
-    def _updateFromEvent(self, event: Event) -> None:
-        if self._validateEventCountIndex(event):
-            self._incrementCount()
-
-    def _updateFromFeatureData(self, feature: Any):
-        pass
-
-    def _getFeatureValues(self) -> List[Any]:
-        return [self._getCount()]
-
-    def _validateEventCountIndex(self, event: Event) -> bool:
-        # Get the policy from the event data and check if it matches the count index
-        policy = event.EventData.get('policy')
-        return policy == self.CountIndex
-
-    def _incrementCount(self) -> None:
-        self._count += 1
-
-    def _getCount(self) -> int:
-        return getattr(self, '_count', 0)
-
-    def Subfeatures(self) -> List[str]:
-        return []
-
-    @staticmethod
-    def MinVersion() -> Optional[str]:
-        return "1"
+        return ret_val
