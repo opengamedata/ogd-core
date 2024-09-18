@@ -57,7 +57,22 @@ The elements (member variables) of each Event object, available to programmers w
 
 ## Logged Events  
 
-The individual fields encoded in the *event_data* Event element for each type of event logged by the game.  
+The individual fields encoded in the *game_state* and *user_data* Event element for all event types, and the fields in the *event_data* Event element for each individual event type logged by the game.  
+
+### Enums  
+
+| **Name** | **Values** |
+| ---      | ---        |  
+
+### Game State  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
+
+### User Data  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
 
 ### **COMPLETE**
 
@@ -76,11 +91,7 @@ N/A
 | numLevels | int | N/A | |
 | numTimesPolesMoved | int | N/A | |
 | magnetLocation | Dict | N/A |**xNorth** : float, **yNorth** : float, **xSouth** : float, **ySouth** : float |
-| event_custom | COMPLETE | N/A | |
-
-#### Other Elements
-
-- None  
+| event_custom | COMPLETE | N/A | |  
 
 ### **DRAG_TOOL**
 
@@ -94,11 +105,7 @@ N/A
 | toolType | string | N/A | |
 | dragTime | float | N/A | |
 | location | Dict | N/A |**x** : int, **y** : int |
-| toolNum | float | N/A | |
-
-#### Other Elements
-
-- None  
+| toolNum | float | N/A | |  
 
 ### **DRAG_POLE**
 
@@ -114,11 +121,7 @@ N/A
 | location | Dict | N/A |**x** : int, **y** : int |
 | numTimesMoved | int | N/A | |
 | distToPole | float | N/A | |
-| numToolsUsed | int | N/A | |
-
-#### Other Elements
-
-- None  
+| numToolsUsed | int | N/A | |  
 
 ### **PLAYGROUND_EXIT**
 
@@ -130,11 +133,7 @@ N/A
 | ---      | ---      | ---             | ---         |
 | event_custom | PLAYGROUND_EXIT | N/A | |
 | timeSpent | float | N/A | |
-| numThingsDragged | int | N/A | |
-
-#### Other Elements
-
-- None  
+| numThingsDragged | int | N/A | |  
 
 ### **TUTORIAL_EXIT**
 
@@ -145,11 +144,7 @@ N/A
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | event_custom | TUTORIAL_EXIT | N/A | |
-| timeSpent | float | N/A | |
-
-#### Other Elements
-
-- None  
+| timeSpent | float | N/A | |  
 
 ## Detected Events  
 
@@ -183,7 +178,17 @@ The number of times the player played the game
 
 **averageScore** : **, *Aggregate feature*  (disabled)  
 The average score across all complete plays  
+  
 
+## Other Elements  
+
+Other (potentially non-standard) elements specified in the game's schema, which may be referenced by event/feature processors.  
+
+### Other Ranges  
+
+Extra ranges specified in the game's schema, which may be referenced by event/feature processors.  
+
+level_range : range(0, 219)
 
 No changelog prepared
 
