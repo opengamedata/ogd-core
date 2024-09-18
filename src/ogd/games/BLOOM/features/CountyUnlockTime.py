@@ -13,13 +13,16 @@ from ogd.common.utils.Logger import Logger
 class CountyUnlockTime(PerCountFeature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        self.time_started: Optional[datetime] = None
-        self.total_time: Optional[timedelta] = None
+        self.time_started  : Optional[datetime]  = None
+        self.last_time     : Optional[datetime]  = None
+        self.total_time    : Optional[timedelta] = None
+        self._unlock_count : int                 = 0
+        self._skip_time    : timedelta           = timedelta(0)
 
     # Implement abstract functions
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["game_start", "county_unlocked"]
+        return ["all_events", "game_start", "county_unlocked"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
@@ -28,19 +31,28 @@ class CountyUnlockTime(PerCountFeature):
     def _updateFromEvent(self, event: Event) -> None:
         event_type = event.EventName
 
-        if event_type == "game_start":
-            if self.time_started is None:
-                self.time_started = event.Timestamp
-            else:
-                Logger.Log(f"Player {event.UserID} had more than one game_start event", logging.DEBUG)
-        if event_type == "county_unlocked":
-            county_name = event.EventData.get('county_name')
-            if self.time_started is not None and self.total_time is None:
-                self.total_time = event.Timestamp - self.time_started
-            elif self.time_started is None:
-                self.WarningMessage(f"Player {event.UserID} got a county_unlocked event for county {county_name} without a game_start event!")
-            elif self.total_time is not None:
-                Logger.Log(f"Player {event.UserID} unlocked {county_name} more than once!", logging.DEBUG)
+        match (event_type):
+            case "game_start":
+                if self.time_started is None:
+                    self.last_time = event.Timestamp
+                elif self.last_time:
+                    Logger.Log(f"Player {event.UserID} had more than one game_start event", logging.DEBUG)
+                    self._skip_time += event.Timestamp - self.last_time
+                else:
+                    Logger.Log(f"Player {event.UserID} had more than one game_start event, with no previous events, somehow.", logging.WARNING)
+            case "county_unlocked":
+                self._unlock_count += 1
+                county_name = event.EventData.get('county_name', "COUNTY NAME NOT FOUND")
+                if self.time_started is not None and self.total_time is None:
+                    self.total_time = (event.Timestamp - self.time_started) - self._skip_time
+                elif self.time_started is None:
+                    self.WarningMessage(f"Player {event.UserID} got a county_unlocked event for county {county_name} without a game_start event!")
+                elif self.total_time is not None:
+                    Logger.Log(f"Player {event.UserID} unlocked {county_name} more than once!", logging.DEBUG)
+            case _:
+                pass
+        # No matter what, update last timestamp
+        self.last_time = event.Timestamp
 
     def _updateFromFeatureData(self, feature: FeatureData):
         return
@@ -51,15 +63,18 @@ class CountyUnlockTime(PerCountFeature):
     def _validateEventCountIndex(self, event: Event):
         ret_val: bool = False
 
-        if event.EventName == "game_start":
-            ret_val = True
-        else:
-            county_name = event.EventData.get('county_name', "COUNTY NAME NOT FOUND")
-            if county_name != "COUNTY NAME NOT FOUND":
-                if self._getCountyIndex(county_name) == self.CountIndex:
-                    ret_val = True
-            else:
-                self.WarningMessage(f"In {type(self).__name__}, for event {event.EventName} with game state {event.EventData}, no county_name found.")
+        match event.EventName:
+            case "game_start":
+                ret_val = True
+            case "county_unlocked":
+                county_name = event.EventData.get('county_name')
+                if county_name is not None:
+                    if self._getCountyIndex(county_name) == self.CountIndex:
+                        ret_val = True
+                else:
+                    self.WarningMessage(f"In {type(self).__name__}, for event {event.EventName} with game state {event.EventData}, no county_name found.")
+            case _:
+                pass
 
         return ret_val
 
