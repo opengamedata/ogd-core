@@ -86,16 +86,16 @@ class BloomLoader(GeneratorLoader):
                     ret_val = CountyUnlockCount.CountyUnlockCount(params=extractor_params)
                 case "PersistThroughFailure":
                     ret_val = PersistThroughFailure.PersistThroughFailure(params=extractor_params)
-                case "PersistenceTime":  # Added new feature
+                case "PersistenceTime":
                     ret_val = PersistenceTime.PersistenceTime(params=extractor_params)
-                case "CountyUnlockTime":  # Added new feature
-                    ret_val = CountyUnlockTime.CountyUnlockTime(params=extractor_params)
                 case _:
                     ret_val = None
 
         # Then run through per-county features.
         else:
             match feature_type:
+                case "CountyUnlockTime":
+                    ret_val = CountyUnlockTime.CountyUnlockTime(params=extractor_params)
                 case "CountyBloomAlertCount":
                     ret_val = CountyBloomAlertCount.CountyBloomAlertCount(params=extractor_params)
                 case "CountyBuildCount":
@@ -106,7 +106,7 @@ class BloomLoader(GeneratorLoader):
                     ret_val = CountyFinalPolicySettings.CountyFinalPolicySettings(params=extractor_params)
                 case "CountyLatestMoney":
                     ret_val = CountyLatestMoney.CountyLatestMoney(params=extractor_params)
-                case "CountyPolicyChangeCount":  # Added new feature
+                case "CountyPolicyChangeCount":
                     ret_val = CountyPolicyChangeCount.CountyPolicyChangeCount(params=extractor_params)
                 case _:
                     ret_val = None
