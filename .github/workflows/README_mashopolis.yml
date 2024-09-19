@@ -11,9 +11,9 @@ on:
   #   - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
 
-concurrency:
-  group: Readme-Scripts-${{ github.ref }}
-  cancel-in-progress: false
+# concurrency:
+#   group: Readme-Scripts-${{ github.ref }}
+#   cancel-in-progress: false
 
 jobs:
   ci_export:
