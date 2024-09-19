@@ -50,8 +50,8 @@ class PersistenceTime(Feature):
         return [sum(self.total_seconds_list), self.total_seconds_list]
 
     # Subfeature breakdown
-    def _getSubfeatureValues(self) -> Dict[str, Any]:
-        return {"PersistenceTimeList": self.total_seconds_list}
+    def Subfeatures(self) -> List[str]:
+        return ["PersistenceTimeList"]
 
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
