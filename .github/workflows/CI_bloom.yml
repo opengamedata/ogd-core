@@ -51,7 +51,7 @@ jobs:
 
   # 3. Perform export
     - name: Do Export of last week's data
-      uses: ./.github/actions/export_last_week
+      uses: ./.github/actions/export_yesterday
       with:
         game: BLOOM
 
