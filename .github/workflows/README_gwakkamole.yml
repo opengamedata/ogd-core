@@ -60,6 +60,8 @@ jobs:
         git pull
         git add src/ogd/games/GWAKKAMOLE/README.md
         git diff --staged --quiet || git commit -m "Update Gwakkamole README"
+    - name: Wait to Avoid Concurrent Pushes
+      run: sleep $(shuf -i 1-60 -n 1)
     - name: Push Changes to GitHub
       run: git push
 
