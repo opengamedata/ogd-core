@@ -10,6 +10,7 @@ class PersistThroughFailure(Feature):
         super().__init__(params=params)
         self.failed: bool = False
         self.persisted: int = 0
+        self.ever_failed: bool = False
 
     # Implement abstract functions
     @classmethod
@@ -29,6 +30,7 @@ class PersistThroughFailure(Feature):
         event_type = event.EventName
         if event_type == "lose_game":
             self.failed = True
+            self.ever_failed = True
         elif self.failed and event_type in [
             "game_start", "select_policy_card", "click_build", 
             "click_destroy", "click_undo", "click_execute_build", 
@@ -41,6 +43,8 @@ class PersistThroughFailure(Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
+        if not self.ever_failed:
+            return [None]
         return [self.persisted > 0]
 
     # Subfeature "count"
