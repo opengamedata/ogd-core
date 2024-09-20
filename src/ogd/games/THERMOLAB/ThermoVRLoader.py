@@ -5,20 +5,20 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 # import local files
 from . import features
-from ogd.games import THERMOVR
+from ogd.games import THERMOLAB
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.games.THERMOVR.detectors import *
-from ogd.games.THERMOVR.features import *
+from ogd.games.THERMOLAB.detectors import *
+from ogd.games.THERMOLAB.features import *
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.utils.utils import loadJSONFile
 from ogd.common.utils.Logger import Logger
 
-EXPORT_PATH = "games/THERMOVR/DBExport.json"
+EXPORT_PATH = "games/THERMOLAB/DBExport.json"
 
 ## @class ThermoVRLoader
 #  Extractor subclass for extracting features from ThermoVR game data.
@@ -44,7 +44,7 @@ class ThermoVRLoader(GeneratorLoader):
         data = None
 
         # Load ThermoVR jobs export and map job names to integer values
-        _dbexport_path = Path(THERMOVR.__file__) if Path(THERMOVR.__file__).is_dir() else Path(THERMOVR.__file__).parent
+        _dbexport_path = Path(THERMOLAB.__file__) if Path(THERMOLAB.__file__).is_dir() else Path(THERMOLAB.__file__).parent
         with open(_dbexport_path / "DBExport.json", "r") as file:
             export = json.load(file)
 
@@ -103,12 +103,12 @@ class ThermoVRLoader(GeneratorLoader):
         return ret_val
 
     # @staticmethod
-    # def GetThermoVRLabCount(db_export_path:Path=Path(".") / "ogd" / "games" / "THERMOVR"):
+    # def GetThermoVRLabCount(db_export_path:Path=Path(".") / "ogd" / "games" / "THERMOLAB"):
     #     db_export = loadJSONFile(filename="DBExport.json", path=db_export_path)
     #     return len(db_export.get("jobs", []))
 
     # @staticmethod
-    # def GetThermoVRTaskCount(db_export_path:Path=Path(".") / "ogd" / "games" / "THERMOVR"):
+    # def GetThermoVRTaskCount(db_export_path:Path=Path(".") / "ogd" / "games" / "THERMOLAB"):
     #     db_export = loadJSONFile(filename="DBExport.json", path=db_export_path)
     #     list_o_lists = [job.get('tasks', []) for job in db_export.get('jobs', [])]
     #     # jobs_to_task_cts = [f"{job.get('id')}: {len(job.get('tasks', []))}" for job in db_export.get('jobs', [])]

@@ -1,4 +1,4 @@
-# Game: THERMOVR
+# Game: THERMOLAB
 
 No game-specific readme content prepared
 
