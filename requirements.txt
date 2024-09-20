@@ -6,4 +6,4 @@ numpy==2.1.*
 pandas==2.2.*
 scikit-learn>=1.5.0
 sshtunnel==0.4.0
-opengamedata-common==1.1.*
+opengamedata-common==1.2.*

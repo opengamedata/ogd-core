@@ -10,7 +10,7 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.utils.Logger import Logger
-from ogd.common.utils.utils import ExportRow
+from ogd.common.utils.typing import ExportRow
 
 ## @class PopulationProcessor
 #  Class to extract and manage features for a processed csv file.

@@ -12,7 +12,7 @@ from ogd.common.models.Event import Event, EventSource
 from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.utils import utils
 from ogd.common.utils.Logger import Logger
-from ogd.common.utils.utils import ExportRow
+from ogd.common.utils.typing import ExportRow
 
 ## @class EventProcessor
 #  Class to manage data for a csv events file.
