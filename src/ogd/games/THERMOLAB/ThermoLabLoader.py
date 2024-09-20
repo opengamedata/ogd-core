@@ -20,15 +20,15 @@ from ogd.common.utils.Logger import Logger
 
 EXPORT_PATH = "games/THERMOLAB/DBExport.json"
 
-## @class ThermoVRLoader
-#  Extractor subclass for extracting features from ThermoVR game data.
-class ThermoVRLoader(GeneratorLoader):
+## @class ThermoLabLoader
+#  Extractor subclass for extracting features from ThermoLab game data.
+class ThermoLabLoader(GeneratorLoader):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    ## Constructor for the ThermoVRLoader class.
+    ## Constructor for the ThermoLabLoader class.
     def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
-        """Constructor for the ThermoVRLoader class.
+        """Constructor for the ThermoLabLoader class.
 
         :param player_id: _description_
         :type player_id: str
@@ -43,7 +43,7 @@ class ThermoVRLoader(GeneratorLoader):
         self._lab_map = {}
         data = None
 
-        # Load ThermoVR jobs export and map job names to integer values
+        # Load ThermoLab jobs export and map job names to integer values
         _dbexport_path = Path(THERMOLAB.__file__) if Path(THERMOLAB.__file__).is_dir() else Path(THERMOLAB.__file__).parent
         with open(_dbexport_path / "DBExport.json", "r") as file:
             export = json.load(file)
@@ -87,28 +87,28 @@ class ThermoVRLoader(GeneratorLoader):
                 case "ToolSliderTime":
                     ret_val = ToolSliderTime.ToolSliderTime(params=extractor_params)
                 case _:
-                    Logger.Log(f"'{feature_type}' is not a valid aggregate feature type for ThermoVR.")
+                    Logger.Log(f"'{feature_type}' is not a valid aggregate feature type for ThermoLab.")
         # then run through per-count features.
         else:
             match feature_type:
                 case _:
-                    Logger.Log(f"'{feature_type}' is not a valid per-count feature type for ThermoVR.")
+                    Logger.Log(f"'{feature_type}' is not a valid per-count feature type for ThermoLab.")
         return ret_val
 
     def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Optional[Detector]:
         ret_val : Optional[Detector] = None
         match detector_type:
             case _:
-                Logger.Log(f"'{detector_type}' is not a valid detector for ThermoVR.")
+                Logger.Log(f"'{detector_type}' is not a valid detector for ThermoLab.")
         return ret_val
 
     # @staticmethod
-    # def GetThermoVRLabCount(db_export_path:Path=Path(".") / "ogd" / "games" / "THERMOLAB"):
+    # def GetThermoLabLabCount(db_export_path:Path=Path(".") / "ogd" / "games" / "THERMOLAB"):
     #     db_export = loadJSONFile(filename="DBExport.json", path=db_export_path)
     #     return len(db_export.get("jobs", []))
 
     # @staticmethod
-    # def GetThermoVRTaskCount(db_export_path:Path=Path(".") / "ogd" / "games" / "THERMOLAB"):
+    # def GetThermoLabTaskCount(db_export_path:Path=Path(".") / "ogd" / "games" / "THERMOLAB"):
     #     db_export = loadJSONFile(filename="DBExport.json", path=db_export_path)
     #     list_o_lists = [job.get('tasks', []) for job in db_export.get('jobs', [])]
     #     # jobs_to_task_cts = [f"{job.get('id')}: {len(job.get('tasks', []))}" for job in db_export.get('jobs', [])]

@@ -1,4 +1,4 @@
-"""Initializer for ThermoVR features"""
+"""Initializer for ThermoLab features"""
 
 __all__ = [
     "LabCompleteCount",
