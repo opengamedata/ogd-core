@@ -55,13 +55,13 @@ jobs:
   # 3. Generate README
     - name: Create README file
       run: python main.py readme PENGUINS --destination src/ogd/games
+    - name: Wait to Avoid Concurrent Pushes/Pulls
+      run: sleep $(shuf -i 1-60 -n 1)
     - name: Commit README file
       run: |
         git pull
         git add src/ogd/games/PENGUINS/README.md
         git diff --staged --quiet || git commit -m "Update Penguins README"
-    - name: Wait to Avoid Concurrent Pushes
-      run: sleep $(shuf -i 1-60 -n 1)
     - name: Push Changes to GitHub
       run: git push
 
