@@ -225,8 +225,8 @@ class ExportManager:
                 from ogd.games.SHIPWRECKS.ShipwrecksLoader import ShipwrecksLoader
                 _loader_class = ShipwrecksLoader
             case "THERMOLAB":
-                from ogd.games.THERMOLAB.ThermoVRLoader import ThermoVRLoader
-                _loader_class = ThermoVRLoader
+                from ogd.games.THERMOLAB.ThermoLabLoader import ThermoLabLoader
+                _loader_class = ThermoLabLoader
             case "WAVES":
                 from ogd.games.WAVES.WaveLoader import WaveLoader
                 _loader_class = WaveLoader

@@ -1,4 +1,4 @@
-name: ThermoVR Exporter CI Script
+name: ThermoLab Exporter CI Script
 run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
 
 on:
@@ -12,7 +12,7 @@ on:
 
 jobs:
   ci_export:
-    name: CI Export of ThermoVR Data
+    name: CI Export of ThermoLab Data
     runs-on: ubuntu-22.04
     concurrency:
       group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}

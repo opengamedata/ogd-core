@@ -1,4 +1,4 @@
-name: ThermoVR Readme Update Script
+name: ThermoLab Readme Update Script
 run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
 
 on:
@@ -17,7 +17,7 @@ on:
 
 jobs:
   ci_export:
-    name: Update ThermoVR README.md
+    name: Update ThermoLab README.md
     runs-on: ubuntu-22.04
     concurrency:
       group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
@@ -61,7 +61,7 @@ jobs:
       run: |
         git pull
         git add src/ogd/games/THERMOLAB/README.md
-        git diff --staged --quiet || git commit -m "Update ThermoVR README"
+        git diff --staged --quiet || git commit -m "Update ThermoLab README"
     - name: Push Changes to GitHub
       run: git push
 
