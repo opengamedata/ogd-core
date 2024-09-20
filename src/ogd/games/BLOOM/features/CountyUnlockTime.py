@@ -34,7 +34,7 @@ class CountyUnlockTime(PerCountFeature):
         match (event_type):
             case "game_start":
                 if self.time_started is None:
-                    self.last_time = event.Timestamp
+                    self.time_started = event.Timestamp
                 elif self.last_time:
                     Logger.Log(f"Player {event.UserID} had more than one game_start event", logging.DEBUG)
                     self._skip_time += event.Timestamp - self.last_time
