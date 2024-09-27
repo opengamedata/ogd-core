@@ -12,20 +12,20 @@ class PlayMode(SessionFeature):
         super().__init__(params=params)
 
     @classmethod
-    def _getEventDependencies(cls, mode: ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
         return ["game_start"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode: ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event: Event) -> None:
+    def _updateFromEvent(self, event: Event) -> None:
         if event.EventName == "game_start":
             mode = event.EventData.get("mode")
             if mode:
                 self.play_mode = mode
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

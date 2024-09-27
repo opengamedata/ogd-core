@@ -14,7 +14,7 @@ class RightHandMovesCount(SessionFeature):
         super().__init__(params=params)
 
     @classmethod
-    def _getEventDependencies(cls, mode: ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
         return ["grab_tool_slider", "release_tool_slider", "click_new_game", "click_reset_sim", 
                 "grab_tablet", "release_tablet", "grab_workstation_handle", "release_workstation_handle",
                 "click_rotate_graph_cw", "click_rotate_graph_ccw", "grab_graph_ball", "release_graph_ball",
@@ -23,10 +23,10 @@ class RightHandMovesCount(SessionFeature):
                 "click_sandbox_mode", "click_lab_mode", "click_lab_scroll_up", "click_lab_scroll_down"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode: ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event: Event) -> None:
+    def _updateFromEvent(self, event: Event) -> None:
         hand = event.EventData.get("hand")
         if hand == "RIGHT":
             action = event.EventName.split("_")[0]  # Extract action (grab, release, click, etc.)
@@ -34,7 +34,7 @@ class RightHandMovesCount(SessionFeature):
                 self._right_hand_move_count += 1
             self._last_hand_action = action
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
