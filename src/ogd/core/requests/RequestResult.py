@@ -3,7 +3,7 @@ from datetime import timedelta
 from enum import IntEnum
 from typing import Any, Dict, List, Union
 # import locals
-from ogd.core.utils.utils import ExportRow
+from ogd.common.utils.typing import ExportRow
 
 class ResultStatus(IntEnum):
     NONE = 1

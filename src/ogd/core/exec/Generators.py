@@ -8,14 +8,14 @@ from typing import Optional, Set
 # import 3rd-party libraries
 
 # import local files
-from ogd.core.interfaces.EventInterface import EventInterface
-from ogd.core.interfaces.MySQLInterface import MySQLInterface
-from ogd.core.interfaces.BigQueryInterface import BigQueryInterface
-from ogd.core.interfaces.BQFirebaseInterface import BQFirebaseInterface
+from ogd.common.interfaces.EventInterface import EventInterface
+from ogd.common.interfaces.MySQLInterface import MySQLInterface
+from ogd.common.interfaces.BigQueryInterface import BigQueryInterface
+from ogd.common.interfaces.BQFirebaseInterface import BQFirebaseInterface
 from ogd.core.requests.Request import ExporterRange
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
-from ogd.core.models.enums.ExportMode import ExportMode
-from ogd.core.utils.Logger import Logger
+from ogd.common.models.enums.ExportMode import ExportMode
+from ogd.common.utils.Logger import Logger
 
 class OGDGenerators:
     """Utility class to collect functions for generating objects used to execute certain commands.
@@ -53,7 +53,7 @@ class OGDGenerators:
                     raise Exception(f"{_game_cfg.Source.Type} is not a valid EventInterface type!")
             return ret_val
         else:
-            raise ValueError(f"Config for {game} was invalid or not found!")
+            raise ValueError(f"Config for {game} was invalid or not found in GameSourceMap!")
 
     @staticmethod
     def GenModes(with_events:bool, with_features:bool, no_session_file:bool, no_player_file:bool, no_pop_file:bool) -> Set[ExportMode]:

@@ -1,15 +1,16 @@
 from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.FeatureData import FeatureData
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
 
 class PersistThroughFailure(Feature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.failed: bool = False
         self.persisted: int = 0
+        self.ever_failed: bool = False
 
     # Implement abstract functions
     @classmethod
@@ -29,6 +30,7 @@ class PersistThroughFailure(Feature):
         event_type = event.EventName
         if event_type == "lose_game":
             self.failed = True
+            self.ever_failed = True
         elif self.failed and event_type in [
             "game_start", "select_policy_card", "click_build", 
             "click_destroy", "click_undo", "click_execute_build", 
@@ -41,6 +43,8 @@ class PersistThroughFailure(Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
+        if not self.ever_failed:
+            return [None]
         return [self.persisted > 0]
 
     # Subfeature "count"

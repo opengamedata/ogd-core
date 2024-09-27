@@ -5,10 +5,11 @@ import logging
 from datetime import datetime
 from typing import Any, Dict, List, Type, Optional
 # import locals
-from ogd.core.models.FeatureData import FeatureData
-from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.models.Event import Event
-from ogd.core.utils.utils import ExportRow, Logger
+from ogd.common.models.FeatureData import FeatureData
+from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.models.Event import Event
+from ogd.common.utils.typing import ExportRow
+from ogd.common.utils.utils import Logger
 
 ## @class Processor
 class Processor(abc.ABC):

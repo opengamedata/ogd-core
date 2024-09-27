@@ -22,7 +22,9 @@ jobs:
   # 1. Local checkout 
     - uses: actions/checkout@v3
     - name: Get Dependencies
-      uses: ./.github/actions/OGD_dependencies
+      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.1
+      with:
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
 
   # 2. Configure cloud & local environments
     - name: Set up Cloud SDK

@@ -4,9 +4,9 @@ from typing import Any, Dict, List, Optional, Type
 # import local files
 from ogd.core.generators.extractors.builtin.BuiltinExtractor import BuiltinExtractor
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.FeatureData import FeatureData
-from ogd.core.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Event import Event
 
 class CountEvent(BuiltinExtractor):
     """Template file to serve as a guide for creating custom Feature subclasses for games.

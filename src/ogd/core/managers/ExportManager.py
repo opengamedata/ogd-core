@@ -16,14 +16,14 @@ from ogd import games
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.managers.EventManager import EventManager
 from ogd.core.managers.FeatureManager import FeatureManager
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExportMode import ExportMode
-from ogd.core.models.enums.IDMode import IDMode
-from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExportMode import ExportMode
+from ogd.common.models.enums.IDMode import IDMode
+from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.requests.Request import Request
 from ogd.core.requests.RequestResult import RequestResult
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 
 Slice = List[str]
 
@@ -224,9 +224,9 @@ class ExportManager:
             case "SHIPWRECKS":
                 from ogd.games.SHIPWRECKS.ShipwrecksLoader import ShipwrecksLoader
                 _loader_class = ShipwrecksLoader
-            case "THERMOVR":
-                from ogd.games.THERMOVR.ThermoVRLoader import ThermoVRLoader
-                _loader_class = ThermoVRLoader
+            case "THERMOLAB":
+                from ogd.games.THERMOLAB.ThermoLabLoader import ThermoLabLoader
+                _loader_class = ThermoLabLoader
             case "WAVES":
                 from ogd.games.WAVES.WaveLoader import WaveLoader
                 _loader_class = WaveLoader

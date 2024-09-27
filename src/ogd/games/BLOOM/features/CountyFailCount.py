@@ -1,14 +1,19 @@
 from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.FeatureData import FeatureData
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
 from ogd.games.BLOOM.features.PerCountyFeature import PerCountyFeature
 
 class CountyFailCount(PerCountyFeature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        self.county_fail_counts: Dict[str, Dict[str, int]] = {}
+        self.county_fail_counts: Dict[str, int] = {
+            "Total": 0,
+            "CityFailed": 0,
+            "TooManyBlooms": 0,
+            "OutOfMoney": 0
+        }
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -24,31 +29,22 @@ class CountyFailCount(PerCountyFeature):
         fail_type = event.EventData.get("lose_condition", "")
 
         if county_name:
-            if county_name not in self.county_fail_counts:
-                self.county_fail_counts[county_name] = {
-                    "Total": 0,
-                    "CityFailed": 0,
-                    "TooManyBlooms": 0,
-                    "OutOfMoney": 0
-                }
+            self.county_fail_counts["Total"] += 1
 
-            self.county_fail_counts[county_name]["Total"] += 1
-
-            if fail_type in self.county_fail_counts[county_name]:
-                self.county_fail_counts[county_name][fail_type] += 1
+            if fail_type in self.county_fail_counts:
+                self.county_fail_counts[fail_type] += 1
 
     def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
         all_values = []
-        for county_name, fail_counts in self.county_fail_counts.items():
-            all_values.extend([
-                fail_counts["Total"],
-                fail_counts["CityFailed"],
-                fail_counts["TooManyBlooms"],
-                fail_counts["OutOfMoney"]
-            ])
+        all_values.extend([
+            self.county_fail_counts.get("Total", "NOT RECORDED"),
+            self.county_fail_counts.get("CityFailed", "NOT RECORDED"),
+            self.county_fail_counts.get("TooManyBlooms", "NOT RECORDED"),
+            self.county_fail_counts.get("OutOfMoney", "NOT RECORDED")
+        ])
         return all_values
 
     def Subfeatures(self) -> List[str]:

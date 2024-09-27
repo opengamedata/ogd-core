@@ -11,9 +11,9 @@ on:
   #   - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
 
-concurrency:
-  group: Readme-Scripts-${{ github.ref }}
-  cancel-in-progress: false
+# concurrency:
+#   group: Readme-Scripts-${{ github.ref }}
+#   cancel-in-progress: false
 
 jobs:
   ci_export:
@@ -29,7 +29,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Get Dependencies
-      uses: ./.github/actions/OGD_dependencies
+      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.1
+      with:
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
 
   # 2. Configure cloud & local environments
     - name: Set up Config File
@@ -53,6 +55,8 @@ jobs:
   # 3. Generate README
     - name: Create README file
       run: python main.py readme MASHOPOLIS --destination src/ogd/games
+    - name: Wait to Avoid Concurrent Pushes/Pulls
+      run: sleep $(shuf -i 1-60 -n 1)
     - name: Commit README file
       run: |
         git pull

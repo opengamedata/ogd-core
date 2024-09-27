@@ -12,10 +12,10 @@ from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.utils.utils import loadJSONFile
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.utils.utils import loadJSONFile
 from ogd.games.BLOOM.features import PersistThroughFailure
 from . import features
 
@@ -53,11 +53,12 @@ class BloomLoader(GeneratorLoader):
     @staticmethod
     def _getFeaturesModule():
         return features
+    
+    def _loadFeature(self, feature_type: str, extractor_params: GeneratorParameters, schema_args: Dict[str, Any]) -> Optional[Feature]:
+        ret_val: Optional[Feature] = None
 
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
-        ret_val : Optional[Feature]
         # First run through aggregate features
-        if extractor_params._count_index == None:
+        if extractor_params._count_index is None:
             match feature_type:
                 case "ActiveTime":
                     ret_val = ActiveTime.ActiveTime(params=extractor_params, idle_threshold=schema_args.get("threshold", 30))
@@ -85,11 +86,16 @@ class BloomLoader(GeneratorLoader):
                     ret_val = CountyUnlockCount.CountyUnlockCount(params=extractor_params)
                 case "PersistThroughFailure":
                     ret_val = PersistThroughFailure.PersistThroughFailure(params=extractor_params)
+                case "PersistenceTime":
+                    ret_val = PersistenceTime.PersistenceTime(params=extractor_params)
                 case _:
                     ret_val = None
-        # then run through per-county features.
+
+        # Then run through per-county features.
         else:
             match feature_type:
+                case "CountyUnlockTime":
+                    ret_val = CountyUnlockTime.CountyUnlockTime(params=extractor_params)
                 case "CountyBloomAlertCount":
                     ret_val = CountyBloomAlertCount.CountyBloomAlertCount(params=extractor_params)
                 case "CountyBuildCount":
@@ -100,11 +106,11 @@ class BloomLoader(GeneratorLoader):
                     ret_val = CountyFinalPolicySettings.CountyFinalPolicySettings(params=extractor_params)
                 case "CountyLatestMoney":
                     ret_val = CountyLatestMoney.CountyLatestMoney(params=extractor_params)
-                case "CountyBloomAlertCount":
-                    ret_val = CountyBloomAlertCount.CountyBloomAlertCount(params=extractor_params)
+                case "CountyPolicyChangeCount":
+                    ret_val = CountyPolicyChangeCount.CountyPolicyChangeCount(params=extractor_params)
                 case _:
                     ret_val = None
-                
+
         return ret_val
 
     def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
