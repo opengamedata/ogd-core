@@ -419,8 +419,24 @@
                 }
             }
         },
-        "click_clear_heat_meter"
-        "click_clear_work_meter"
+        "click_clear_heat_meter": {
+            "description": "When the player clears the meter on the overall heat change in the system, resetting the meter to zero.",
+            "event_data": {
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player clicked with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_clear_work_meter": {
+            "description": "When the player clears the meter on the overall work done in the system, resetting the meter to zero.",
+            "event_data": {
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player clicked with their right or left hand, or a mouse."
+                }
+            }
+        },
         "click_tool_toggle": {
             "description": "When the player clicks the button to enable/disable a tool",
             "event_data": {
@@ -609,8 +625,16 @@
                 }
             }
         },
-        "nudge_hint_displayed"
-        "nudge_hint_hidden"
+        "nudge_hint_displayed": {
+            "description": "When the player begins to move a slider, and a hint about nudge mode is displayed",
+            "event_data": {
+            }
+        },
+        "nudge_hint_hidden": {
+            "description": "When the nudge mode hint disappears",
+            "event_data": {
+            }
+        },
         "tool_locked": {
             "description": "When a lab task locks a specific tool, making it unvailable to the player",
             "event_data": {
@@ -847,7 +871,30 @@
                 }
             }
         },
-        "click_next_task"
+        "click_next_task": {
+            "description": "When the player presses the button to change to advance to the next task in the lab",
+            "event_data": {
+                "task" : {
+                    "type": "Dict[str, Any]",
+                    "details": {
+                        "category":"enum(PlainText, TARGET_STATE, CONSTANT_VARIABLE, MULTIPLE_CHOICE, MULTIPLE_SELECT, WORD_BANK)",
+                        "lab_name":"str",
+                        "section_number":"str",
+                        "task_number":"int",
+                        "is_active":"bool",
+                        "is_complete":"bool",
+                        "visual_aid":"bool",
+                        "available_tools":"List[enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)]",
+                        "prompts":"List[str]"
+                    },
+                    "description" : "Details of the task the player selected."
+                },
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
         "click_task_scroll_left": {
             "description": "When the player presses the button to scroll left in the list of available tasks in the current lab section",
             "event_data": {
