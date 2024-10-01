@@ -19,20 +19,20 @@ class FinalAttributes(PerLevelFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["all_events"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         #self._story_alignment = event.EventData["story_alignment"]
         _default = str([None]*len(self._ATTRIBUTE_ENUM))
         _stats = json.loads(event.GameState.get("current_stats", _default))
         self._last_attribs = dict(zip(self._ATTRIBUTE_ENUM, _stats))
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         #add logic to make sure that MODE is session, not player so we don't get duplicates
         return
 
