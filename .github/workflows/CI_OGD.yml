@@ -54,6 +54,7 @@ jobs:
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "INFO"
+        with_profiling": "True"
     - name: Set up Schema File for Crystal
       uses: ./.github/actions/OGD_schema
       with:
