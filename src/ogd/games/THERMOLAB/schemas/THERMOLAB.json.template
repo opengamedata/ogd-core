@@ -1,7 +1,10 @@
 {
     "enums" : {
         "HandType" : ["LEFT", "RIGHT", "MOUSE"],
+        "TabletModes" : ["SANDBOX, LAB, GAME, SETTINGS"],
         "Platform" : ["VR, WEB"],
+        "Settings" : ["AXIS_NUMBERS", "GRID_LINES", "REGION_LABELS", "AXIS_TRACKERS", "MUSIC"],
+        "TitleSettings" : ["FULLSCREEN", "MUSIC"],
         "ToolType" : ["INSULATION", "LOWER_STOP", "UPPER_STOP", "INCREASE_WEIGHT", "DECREASE_WEIGHT", "HEAT", "COOLING", "CHAMBER_TEMPERATURE", "CHAMBER_PRESSURE"]
     },
 
@@ -9,6 +12,17 @@
         "seconds_from_launch" : {
             "type" : "float",
             "description" : "The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*."
+        },
+        "platform": {
+            "type": "Platform",
+            "description": "The mode of the game being started, either on a VR headset or the web-based version."
+        },
+        "tablet_mode" : {
+            "type" : "TabletModes"
+        },
+        "play_score" : {
+            "type" : "int",
+            "description" : "The current score the player has in play/game mode."
         },
         "region" : {
             "type" : "enum(WATER, VAPOR, TWO_PHASE)",
@@ -179,26 +193,13 @@
 
     "events": {
         "session_start": {
-            "description": "When the app is started and the gameplay session is assigned a session ID",
+            "description": "When the app is started and the gameplay session is assigned a session/user ID",
             "event_data": {
             }
         },
         "game_start": {
             "description": "When a new game is started",
             "event_data": {
-                "mode": {
-                    "type": "Platform",
-                    "description": "The mode of the game being started, either on a VR headset or the web-based version."
-                }
-            }
-        },
-        "click_new_game": {
-            "description": "When the player clicks the button for a new game. This should trigger a new `game_start` event, with new session and player IDs",
-            "event_data": {
-                "hand": {
-                    "type": "HandType",
-                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
-                }
             }
         },
         "click_reset_sim": {
@@ -418,6 +419,24 @@
                 }
             }
         },
+        "click_clear_heat_meter": {
+            "description": "When the player clears the meter on the overall heat change in the system, resetting the meter to zero.",
+            "event_data": {
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player clicked with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_clear_work_meter": {
+            "description": "When the player clears the meter on the overall work done in the system, resetting the meter to zero.",
+            "event_data": {
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player clicked with their right or left hand, or a mouse."
+                }
+            }
+        },
         "click_tool_toggle": {
             "description": "When the player clicks the button to enable/disable a tool",
             "event_data": {
@@ -593,7 +612,7 @@
             "description": "When the player ticks/unticks a setting in the settings panel",
             "event_data": {
                 "setting": {
-                    "type": "enum(AXIS_NUMBERS, GRID_LINES, REGION_LABELS, AXIS_TRACKERS)",
+                    "type": "Settings",
                     "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
                 },
                 "enabled" : {
@@ -606,10 +625,20 @@
                 }
             }
         },
+        "nudge_hint_displayed": {
+            "description": "When the player begins to move a slider, and a hint about nudge mode is displayed",
+            "event_data": {
+            }
+        },
+        "nudge_hint_hidden": {
+            "description": "When the nudge mode hint disappears",
+            "event_data": {
+            }
+        },
         "tool_locked": {
             "description": "When a lab task locks a specific tool, making it unvailable to the player",
             "event_data": {
-                "hand": {
+                "tool": {
                     "type": "ToolType",
                     "description": "The specific tool that was locked."
                 }
@@ -618,9 +647,89 @@
         "tool_unlocked": {
             "description": "When a lab task unlocks a specific tool, making it ailable to the player. Also occurs when returning to Sandbox mode.",
             "event_data": {
-                "hand": {
+                "tool": {
                     "type": "ToolType",
                     "description": "The specific tool that was unlocked."
+                }
+            }
+        },
+        "title_screen_displayed": {
+            "description": "When the ThermoLab title screen is initially displayed to the user.",
+            "event_data": {
+            }
+        },
+        "title_screen_closed": {
+            "description": "When the ThermoLab title screen is closed.",
+            "event_data": {
+            }
+        },
+        "click_close_title_screen": {
+            "description": "When the player clicks the button to close the title screen.",
+            "event_data": {
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_display_credits": {
+            "description": "When the player clicks the button to close the title screen.",
+            "event_data": {
+                "location" : {
+                    "type": "enum('TITLE_SCREEN', 'TABLET')"
+                },
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_close_credit": {
+            "description": "When the player clicks the button to close the credits view.",
+            "event_data": {
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_toggle_title_setting": {
+            "description": "When the player toggles the 'title' setting TODO: better description of what this 'title' setting is",
+            "event_data": {
+                "enabled" : {
+                    "type" : "bool",
+                    "description" : "True if the click enabled the given setting, or false if it disabled the setting."
+                },
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_config_tab": {
+            "description": "When the player clicks to select the 'config' tab on their tablet.",
+            "event_data": {
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_controls_tab": {
+            "description": "When the player clicks to select the 'controls' tab on their tablet.",
+            "event_data": {
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_game_mode": {
+            "description": "When the player presses the tablet 'Game' button to enter play mode",
+            "event_data": {
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
                 }
             }
         },
@@ -651,6 +760,36 @@
                     "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
                 }
             }
+        },
+        "click_game_start" : {
+            "description": "TODO",
+            "event_data": {
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_game_stop" : {
+            "description": "When the player presses the button to return to the 'home' view of game  mode",
+            "event_data": {
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_game_score_reset" : {
+            "description": "TODO",
+            "event_data": {
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "new_game_target_assigned" : {
+            "description" : "TODO : includes the target state, which in this case is always P, V, T"
         },
         "click_lab_scroll_up": {
             "description": "When the player presses the button to scroll up in the list of available labs in the lab menu",
@@ -793,6 +932,30 @@
                 }
             }
         },
+        "click_next_task": {
+            "description": "When the player presses the button to change to advance to the next task in the lab",
+            "event_data": {
+                "task" : {
+                    "type": "Dict[str, Any]",
+                    "details": {
+                        "category":"enum(PlainText, TARGET_STATE, CONSTANT_VARIABLE, MULTIPLE_CHOICE, MULTIPLE_SELECT, WORD_BANK)",
+                        "lab_name":"str",
+                        "section_number":"str",
+                        "task_number":"int",
+                        "is_active":"bool",
+                        "is_complete":"bool",
+                        "visual_aid":"bool",
+                        "available_tools":"List[enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)]",
+                        "prompts":"List[str]"
+                    },
+                    "description" : "Details of the task the player selected."
+                },
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
         "click_task_scroll_left": {
             "description": "When the player presses the button to scroll left in the list of available tasks in the current lab section",
             "event_data": {
@@ -850,6 +1013,10 @@
                 "target_state": {
                     "type": "Dict[enum(TEMPERATURE, PRESSURE, VOLUME, INTERNAL_ENERGY, ENTROPY, ENTHALPY, VAPOR_PROPORTION) | Tool enum, float]",
                     "description": "The specific details of the target state, as a mapping from sim properties to the target values (note, not every property will be included, only the ones that had a target value specified)."
+                },
+                "score_value" : {
+                    "type" : "Optional[int]",
+                    "description" : "The number of points added to the player score, if in game mode, or null if in lab mode."
                 }
             }
         },
@@ -884,13 +1051,8 @@
             "event_data": {
             }
         },
-        "target_state_task_began": {
+        "task_assigned": {
             "description": "When the player has selected a target state task.",
-            "event_data": {
-            }
-        },
-        "target_state_task_ended": {
-            "description": "When the player ends the target state task, moving to another task.",
             "event_data": {
             }
         },
