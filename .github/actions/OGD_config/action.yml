@@ -62,7 +62,7 @@ runs:
       run: sed -i 's/INFO/${{inputs.log_level}}/g' config/config.py
       shell: bash
     - name: Set Profiling
-      run: sed -i 's/"WITH_PROFILING"\s*:\s*False/"WITH_PROFILING":${{inputs.with_profilng}}/g' config/config.py
+      run: sed -i 's/"WITH_PROFILING"\s*:\s*False/"WITH_PROFILING":${{inputs.with_profiling}}/g' config/config.py
       shell: bash
     - name: Set Slice Size
       run: sed -i 's/"BATCH_SIZE"\s*:\s*1000,/"BATCH_SIZE":${{inputs.slice_size}},/g' config/config.py
