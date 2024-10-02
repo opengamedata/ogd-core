@@ -638,7 +638,7 @@
         "tool_locked": {
             "description": "When a lab task locks a specific tool, making it unvailable to the player",
             "event_data": {
-                "hand": {
+                "tool": {
                     "type": "ToolType",
                     "description": "The specific tool that was locked."
                 }
@@ -647,22 +647,83 @@
         "tool_unlocked": {
             "description": "When a lab task unlocks a specific tool, making it ailable to the player. Also occurs when returning to Sandbox mode.",
             "event_data": {
-                "hand": {
+                "tool": {
                     "type": "ToolType",
                     "description": "The specific tool that was unlocked."
                 }
             }
         },
-        "title_screen_displayed"
-        "title_screen_closed"
-        "click_close_title_screen"
-        "click_display_credits" : {
-            "location" : enum("TITLE_SCREEN", "TABLET")
-        }
-        "click_close_credit"
-        "click_toggle_title_setting"
-        "click_config_tab"
-        "click_controls_tab"
+        "title_screen_displayed": {
+            "description": "When the ThermoLab title screen is initially displayed to the user.",
+            "event_data": {
+            }
+        },
+        "title_screen_closed": {
+            "description": "When the ThermoLab title screen is closed.",
+            "event_data": {
+            }
+        },
+        "click_close_title_screen": {
+            "description": "When the player clicks the button to close the title screen.",
+            "event_data": {
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_display_credits": {
+            "description": "When the player clicks the button to close the title screen.",
+            "event_data": {
+                "location" : {
+                    "type": "enum('TITLE_SCREEN', 'TABLET')"
+                },
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_close_credit": {
+            "description": "When the player clicks the button to close the credits view.",
+            "event_data": {
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_toggle_title_setting": {
+            "description": "When the player toggles the 'title' setting TODO: better description of what this 'title' setting is",
+            "event_data": {
+                "enabled" : {
+                    "type" : "bool",
+                    "description" : "True if the click enabled the given setting, or false if it disabled the setting."
+                },
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_config_tab": {
+            "description": "When the player clicks to select the 'config' tab on their tablet.",
+            "event_data": {
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_controls_tab": {
+            "description": "When the player clicks to select the 'controls' tab on their tablet.",
+            "event_data": {
+                "hand": {
+                    "type": "HandType",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
         "click_game_mode": {
             "description": "When the player presses the tablet 'Game' button to enter play mode",
             "event_data": {
