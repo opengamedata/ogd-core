@@ -120,6 +120,13 @@ class ConfigSchema(Schema):
         return self._fail_fast
 
     @property
+    def WithProfiling(self) -> bool:
+        """
+        Whether to track and include profiling data in the output or not.
+        """
+        return self._with_profiling
+
+    @property
     def FileIndexConfig(self) -> FileIndexingSchema:
         """
         A collection of settings for indexing output files.
