@@ -14,14 +14,14 @@ class ToolSliderTime(SessionFeature):
         super().__init__(params=params)
 
     @classmethod
-    def _getEventDependencies(cls, mode: ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
         return ["grab_tool_slider", "release_tool_slider"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode: ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event: Event) -> None:
+    def _updateFromEvent(self, event: Event) -> None:
         if event.EventName == "grab_tool_slider":
             tool_name = event.EventData["tool_name"]
             self._slider_start_time[tool_name] = event.Timestamp
@@ -36,7 +36,7 @@ class ToolSliderTime(SessionFeature):
                 else:
                     self._slider_times[tool_name] = [slider_time]
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

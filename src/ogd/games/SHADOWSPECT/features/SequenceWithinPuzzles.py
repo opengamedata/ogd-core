@@ -43,7 +43,7 @@ class SequenceWithinPuzzles(SessionFeature):
     def Subfeatures(self) -> List[str]:
         return listPuzzles
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         appendEvent = False
         ignoreEvent = False
         currentEvent = {}
