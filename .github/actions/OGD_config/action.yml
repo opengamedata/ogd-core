@@ -33,6 +33,10 @@ inputs:
     description: "Logging level to use for export process"
     required: true
     default: "INFO"
+  with_profiling:
+    description: "Whether to run the profiler during execution"
+    required: false
+    default: "False"
 runs:
   using: "composite"
   steps:
@@ -56,6 +60,9 @@ runs:
       shell: bash
     - name: Set Logger level
       run: sed -i 's/INFO/${{inputs.log_level}}/g' config/config.py
+      shell: bash
+    - name: Set Profiling
+      run: sed -i 's/"WITH_PROFILING"\s*:\s*False/"WITH_PROFILING":${{inputs.with_profiling}}/g' config/config.py
       shell: bash
     - name: Set Slice Size
       run: sed -i 's/"BATCH_SIZE"\s*:\s*1000,/"BATCH_SIZE":${{inputs.slice_size}},/g' config/config.py

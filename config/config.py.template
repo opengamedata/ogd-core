@@ -3,6 +3,7 @@ settings = {
     "LOG_FILE":False,
     "DEBUG_LEVEL":"INFO",
     "FAIL_FAST":False,
+    "WITH_PROFILING":False,
     "FILE_INDEXING" : 
     {
         "LOCAL_DIR"     : "./data/",
