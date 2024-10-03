@@ -65,7 +65,8 @@ else:
     success = False
 if config.WithProfiling:
     profiler.disable()
-    profile = pstats.Stats(profiler).sort_stats(pstats.SortKey.CUMULATIVE).print_stats('ogd', .1)
+    profile = pstats.Stats(profiler)
+    profile.sort_stats(pstats.SortKey.CUMULATIVE).print_stats('ogd', .1)
 
 if not success:
     sys.exit(1)
