@@ -5,6 +5,7 @@ import os
 import pstats
 import sys
 from argparse import Namespace
+from importlib.metadata import version
 from pathlib import Path
 
 # import 3rd-party libraries
@@ -22,7 +23,7 @@ from src.ogd.core.exec.Parsers import OGDParsers
 from src.ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 
 if __name__ == '__main__':
-    Logger.Log(f"Welcome to OpenGameData Core v{__version__}!", level=logging.INFO)
+    Logger.Log(f"Welcome to OpenGameData Core v{version('src.ogd.core')}!", level=logging.INFO)
     ## This section of code is what runs main itself. Just need something to get it
     #  started.
     config = ConfigSchema(name="config.py", all_elements=settings)
