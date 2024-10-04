@@ -35,6 +35,7 @@ class SessionDuration(SessionFeature):
         if event.EventSource == EventSource.GAME:
             if self.previous_time is not None:
                 self.total_session_time += (event.Timestamp - self.previous_time)
+                # TODO : this should be based on threshold, not hardcoded to 1 minute
                 if (event.Timestamp - self.previous_time) > timedelta(minutes=1):
                     self.idle_time += (event.Timestamp - self.previous_time)
                     if self.max_idle < (event.Timestamp - self.previous_time):
