@@ -5,8 +5,8 @@ from typing import Any, Dict, List, Optional, Type
 # import local files
 from ogd.core.generators.extractors.builtin.BuiltinExtractor import BuiltinExtractor
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.models.FeatureData import FeatureData
-from ogd.core.models.Event import Event
+from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Event import Event
 
 class Timespan(BuiltinExtractor):
     """Universal feature for finding the span of time between the first occurrence of a "start" event, and last occurrence of an "end" event."""

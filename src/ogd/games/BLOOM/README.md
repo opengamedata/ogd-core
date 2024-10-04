@@ -899,6 +899,14 @@ Active time of a player
 
 threshold : 30  
 
+**AlertCount** : *int*, *Aggregate feature*   
+Count of alerts  
+  
+
+**AlertReviewCount** : *int*, *Aggregate feature*   
+Count of alert reviews  
+  
+
 **AverageActiveTime** : *timedelta*, *Aggregate feature*   
 Average active time of a player  
   
@@ -917,9 +925,27 @@ target : click_execute_build
 Count of building unlocks  
   
 
+**CityInspectionCount** : *int*, *Aggregate feature*   
+Count of city inspections  
+*Other elements*:  
+
+target : city_inspector_displayed  
+
 **CountyUnlockCount** : *int*, *Aggregate feature*   
 Number of counties unlocked  
   
+
+**DairyInspectionCount** : *int*, *Aggregate feature*   
+Count of dairy inspections  
+*Other elements*:  
+
+target : dairy_inspector_displayed  
+
+**TotalPolicyChangeCount** : *int*, *Aggregate feature*   
+Total count of policy changes  
+*Other elements*:  
+
+target : select_policy_card  
 
 **EconomyViewCount** : *int*, *Aggregate feature*   
 Count of times the player viewed the economy view  
@@ -935,8 +961,18 @@ Number of failure count
 Game completion status  
   
 
+**GrainInspectionCount** : *int*, *Aggregate feature*   
+Count of grain inspections  
+*Other elements*:  
+
+target : grain_inspector_displayed  
+
 **NumberOfSessionsPerPlayer** : *int*, *Aggregate feature*  (disabled)  
 Number of sessions per player  
+  
+
+**PersistThroughFailure** : *int*, *Aggregate feature*   
+Count of persistence after failure  
   
 
 **PolicyAdjustments** : *int*, *Aggregate feature*   
@@ -944,6 +980,12 @@ Count of policy changes
 *Other elements*:  
 
 target : select_policy_card  
+
+**StorageInspectionCount** : *int*, *Aggregate feature*   
+Count of storage inspections  
+*Other elements*:  
+
+target : storage_inspector_displayed  
 
 **SucceededThroughFailure** : *int*, *Aggregate feature*   
 Number of times failed but persisted through the task  
@@ -963,6 +1005,14 @@ Final policy settings per county
 
 **CountyLatestMoney** : *float*, *Per-count feature*   
 Latest money per county  
+  
+
+**CountyFailCount** : *int*, *Per-count feature*   
+Number of failures per county  
+  
+
+**CountyUnlockTime** : *int*, *Per-count feature*   
+Time to unlock county  
   
 
 ## Other Elements  

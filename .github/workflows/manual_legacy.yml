@@ -113,7 +113,9 @@ jobs:
         echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     # Back to normal setup stuff.
     - name: Get Dependencies
-      uses: ./.github/actions/OGD_dependencies
+      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.1
+      with:
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
     - name: Set up Config File
       uses: ./.github/actions/OGD_config
       with:

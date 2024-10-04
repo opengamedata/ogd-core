@@ -1,9 +1,10 @@
 # standard libraries
 import json
 from typing import List, Optional
+# OGD imports
+from ogd.common.utils.typing import Map
 # local imports
 from coding.Coder import Coder
-from ogd.core.utils import map
 
 class Code: 
     class EventID:
@@ -12,7 +13,7 @@ class Code:
             self._index      = index
 
         @staticmethod
-        def FromJSON(json_obj:map):
+        def FromJSON(json_obj:Map):
             _session_id : Optional[str] = json_obj.get("session_id", None)
             _index      : Optional[int] = json_obj.get("index", None)
             if _index is None:
@@ -42,11 +43,11 @@ class Code:
     # *** PUBLIC STATICS ***
 
     @staticmethod
-    def FromJSON(json_obj:map):
+    def FromJSON(json_obj:Map):
         _code_word  : Optional[str]       = json_obj.get("code_word", None)
         _id         : Optional[str]       = json_obj.get("id", None)
-        _coder_obj  : Optional[map]       = json_obj.get("coder", None)
-        _events_obj : Optional[List[map]] = json_obj.get("events", None)
+        _coder_obj  : Optional[Map]       = json_obj.get("coder", None)
+        _events_obj : Optional[List[Map]] = json_obj.get("events", None)
         _notes      : Optional[str]       = json_obj.get("notes", None)
         if _code_word is None:
             raise ValueError("JSON object for Code has no 'code_word' element!")
