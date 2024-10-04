@@ -4,9 +4,9 @@ from typing import Any, List
 # import locals
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.models.Event import Event, EventSource
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.FeatureData import FeatureData
+from ogd.common.models.Event import Event, EventSource
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
 
 class TotalDiveTime(Feature):
     

@@ -3,13 +3,13 @@ import logging
 from typing import Any, Dict, List, Optional
 # import locals
 from datetime import datetime, timedelta
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.FeatureData import FeatureData
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
 scenes_map = {"ICE":0, "VOYAGER":0, "NOTHING":0, "EXTREME":0, "EARTH":0, "CREDITS":0}
 
 class TaskTimeToComplete(SessionFeature):

@@ -7,12 +7,12 @@ from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import Generator
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.registries.GeneratorRegistry import GeneratorRegistry
-from ogd.core.models.Event import Event
-from ogd.core.models.FeatureData import FeatureData
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.schemas.games.DetectorSchema import DetectorSchema
-from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.models.enums.IterationMode import IterationMode
+from ogd.common.models.Event import Event
+from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.schemas.games.DetectorSchema import DetectorSchema
+from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.models.enums.IterationMode import IterationMode
 
 ## @class Extractor
 #  Abstract base class for game feature extractors.

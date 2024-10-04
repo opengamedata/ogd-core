@@ -12,22 +12,22 @@ from typing import Any, List, Optional, Set, Tuple
 
 # import OGD files
 # from ogd.core.exec.Generators import OGDGenerators
-from ogd.core.interfaces.CSVInterface import CSVInterface
-from ogd.core.interfaces.EventInterface import EventInterface
-from ogd.core.interfaces.outerfaces.DataOuterface import DataOuterface
-from ogd.core.interfaces.outerfaces.DebugOuterface import DebugOuterface
-from ogd.core.interfaces.outerfaces.TSVOuterface import TSVOuterface
+from ogd.common.interfaces.CSVInterface import CSVInterface
+from ogd.common.interfaces.EventInterface import EventInterface
+from ogd.common.interfaces.outerfaces.DataOuterface import DataOuterface
+from ogd.common.interfaces.outerfaces.DebugOuterface import DebugOuterface
+from ogd.common.interfaces.outerfaces.TSVOuterface import TSVOuterface
 from ogd.core.managers.ExportManager import ExportManager
-from ogd.core.models.enums.ExportMode import ExportMode
-from ogd.core.models.enums.IDMode import IDMode
+from ogd.common.models.enums.ExportMode import ExportMode
+from ogd.common.models.enums.IDMode import IDMode
 from ogd.core.requests.Request import ExporterRange, Request
 from ogd.core.requests.RequestResult import RequestResult, ResultStatus
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
-from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
-from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.schemas.tables.TableSchema import TableSchema
-from ogd.core.utils.Logger import Logger
-from ogd.core.utils.Readme import Readme
+from ogd.common.schemas.configs.GameSourceSchema import GameSourceSchema
+from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.schemas.tables.TableSchema import TableSchema
+from ogd.common.utils.Logger import Logger
+from ogd.common.utils.Readme import Readme
 from .Generators import OGDGenerators
 
 
@@ -168,6 +168,8 @@ class OGDCommands:
         _cfg = GameSourceSchema(name="FILE DEST", all_elements={"database":"FILE", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
         file_outerface = TSVOuterface(game_id=args.game, config=_cfg, export_modes=export_modes, date_range=export_range.DateRange,
                                     file_indexing=config.FileIndexConfig, dataset_id=dataset_id)
+        # file_outerface = TSVOuterface(game_id=args.game, config=_cfg, export_modes=export_modes, date_range=export_range.DateRange,
+        #                             file_indexing=config.FileIndexConfig, dataset_id=dataset_id, with_zipping=not args.no_zips)
         outerfaces : Set[DataOuterface] = {file_outerface}
         # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
         if config.DebugLevel == "DEBUG":

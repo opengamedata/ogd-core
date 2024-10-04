@@ -7,10 +7,10 @@ from unittest import TestCase, main
 # import locals
 _path = Path(os.getcwd()) / "src"
 sys.path.insert(0, str(_path.absolute()))
-from ogd.core.utils.SemanticVersion import SemanticVersion
+from ogd.common.utils.SemanticVersion import SemanticVersion
 
 def setUpModule():
-    from ogd.core.utils.Logger import Logger
+    from ogd.common.utils.Logger import Logger
     Logger.InitializeLogger(level=logging.ERROR, use_logfile=False)
 
 # TODO : need to test cases where we're comparing directly to a string, and directly to an int.

@@ -6,10 +6,10 @@ from typing import Any, Dict, Final, List, Optional
 # import local files
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.FeatureData import FeatureData
-from ogd.core.models.Event import Event
-from ogd.core.utils.Logger import Logger
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Event import Event
+from ogd.common.utils.Logger import Logger
 
 # BUG: Question0 and quiz 0 don't have start time
 # NOTE: Assumptions are: Every quiz should have a quizstart.

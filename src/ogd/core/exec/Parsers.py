@@ -99,6 +99,8 @@ class OGDParsers:
                             help="Tell the program to skip outputting a per-player file.")
         export_parser.add_argument("--no_pop_file", default=False, action="store_true",
                             help="Tell the program to skip outputting a population file.")
+        export_parser.add_argument("--no_zips", default=False, action="store_true",
+                            help="Tell the program to skip zipping of tsv files.")
         return export_parser
 
     @staticmethod

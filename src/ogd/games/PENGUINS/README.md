@@ -90,11 +90,7 @@ When the app is started and the gameplay session is assigned a session ID. The p
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| random_seed | int | The random seed used for all random number/position/rotation generation in the game. | |
-
-#### Other Elements
-
-- None  
+| random_seed | int | The random seed used for all random number/position/rotation generation in the game. | |  
 
 ### **game_start**
 
@@ -104,11 +100,7 @@ When a new game is started
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| mode | GameMode | The game mode that the player launched | |
-
-#### Other Elements
-
-- None  
+| mode | GameMode | The game mode that the player launched | |  
 
 ### **device_identifier**
 
@@ -118,11 +110,7 @@ Event to record a hardware ID, for cross-referencing against survey data at game
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| hardware_uuid | str | The device UUID | |
-
-#### Other Elements
-
-- None  
+| hardware_uuid | str | The device UUID | |  
 
 ### **open_menu**
 
@@ -131,11 +119,7 @@ When the player opens the game menu
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **close_menu**
 
@@ -144,11 +128,7 @@ When the player closes the game menu
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **select_menu_item**
 
@@ -158,11 +138,7 @@ When the player clicks and item in the menu
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| item | str | The name of the menu item the player selected | |
-
-#### Other Elements
-
-- None  
+| item | str | The name of the menu item the player selected | |  
 
 ### **headset_on**
 
@@ -171,11 +147,7 @@ When the player puts the headset on, resuming the game
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **headset_off**
 
@@ -184,11 +156,7 @@ When the player removes the headset from their head, pausing the game
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **viewport_data**
 
@@ -198,11 +166,7 @@ An event sent approximately once per second, containing the in-game position and
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| gaze_data_package | List[Dict] | A list of dicts, where each dict is one frame of headset data, containing a position and rotation vector, e.g. {"pos":[1,2,3], "rot":[4,5,6,7]}. |**pos** : List[float], **rot** : List[float] |
-
-#### Other Elements
-
-- None  
+| gaze_data_package | List[Dict] | A list of dicts, where each dict is one frame of headset data, containing a position and rotation vector, e.g. {"pos":[1,2,3], "rot":[4,5,6,7]}. |**pos** : List[float], **rot** : List[float] |  
 
 ### **left_hand_data**
 
@@ -212,11 +176,7 @@ An event sent approximately once per second, containing the in-game position and
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| left_hand_data_package | List[Dict] | A list of dicts, where each dict is one frame of left-hand data, containing a position and rotation vector, e.g. {"pos":[1,2,3], "rot":[4,5,6,7]}. |**pos** : List[float], **rot** : List[float] |
-
-#### Other Elements
-
-- None  
+| left_hand_data_package | List[Dict] | A list of dicts, where each dict is one frame of left-hand data, containing a position and rotation vector, e.g. {"pos":[1,2,3], "rot":[4,5,6,7]}. |**pos** : List[float], **rot** : List[float] |  
 
 ### **right_hand_data**
 
@@ -226,11 +186,7 @@ An event sent approximately once per second, containing the in-game position and
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| right_hand_data_package | List[Dict] | A list of dicts, where each dict is one frame of right-hand data, containing a position and rotation vector, e.g. {"pos":[1,2,3], "rot":[4,5,6,7]}. |**pos** : List[float], **rot** : List[float] |
-
-#### Other Elements
-
-- None  
+| right_hand_data_package | List[Dict] | A list of dicts, where each dict is one frame of right-hand data, containing a position and rotation vector, e.g. {"pos":[1,2,3], "rot":[4,5,6,7]}. |**pos** : List[float], **rot** : List[float] |  
 
 ### **player_waddle**
 
@@ -243,11 +199,7 @@ When a player performs a waddle movement to move their penguin avatar forward
 | object_id | str | The name of... some object | |
 | pos_old | List[float] | The previous position of the player avatar's feet, in [x, y, z] form, i.e. where the waddle started. | |
 | pos_new | List[float] | The resulting position of the player avatar's feet, in [x, y, z] form, i.e. where the waddle ended. | |
-| source | MoveType | Indicator for whether the player waddled by pressing a button, or by making the 'waddle' gesture with their head. | |
-
-#### Other Elements
-
-- None  
+| source | MoveType | Indicator for whether the player waddled by pressing a button, or by making the 'waddle' gesture with their head. | |  
 
 ### **gaze_object_begin**
 
@@ -257,11 +209,7 @@ An event triggered when the player has gazed at an object for at least 0.25 seco
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| object_id | str | The name of the object the player is gazing at | |
-
-#### Other Elements
-
-- None  
+| object_id | str | The name of the object the player is gazing at | |  
 
 ### **gaze_object_end**
 
@@ -271,11 +219,7 @@ An event triggered when the player turns away from an object they'd gazed at, so
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| object_id | str | The name of the object the player had previously gazed at | |
-
-#### Other Elements
-
-- None  
+| object_id | str | The name of the object the player had previously gazed at | |  
 
 ### **bubble_pop**
 
@@ -286,11 +230,7 @@ An event triggered when the player pops a bubble in the bubble-popping mini-game
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | object_id | str | The name of the bubble object the player popped | |
-| timing_error | float | The timing difference between the pop event and the music 'beat.' This value is in the range [-0.5, 0.5], where a negative indicates the bubble was popped before the 'beat,' and positive indicates popping after the 'beat.' | |
-
-#### Other Elements
-
-- None  
+| timing_error | float | The timing difference between the pop event and the music 'beat.' This value is in the range [-0.5, 0.5], where a negative indicates the bubble was popped before the 'beat,' and positive indicates popping after the 'beat.' | |  
 
 ### **eat_fish**
 
@@ -300,11 +240,7 @@ An event triggered when the player eats a fish.
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| object_id | str | The name of the fish object the player ate | |
-
-#### Other Elements
-
-- None  
+| object_id | str | The name of the fish object the player ate | |  
 
 ### **stand_on_nest**
 
@@ -315,11 +251,7 @@ An event triggered when the player stands atop a nest.
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | nest_id | str | The name of the nest object the player stood on | |
-| nest_pos | List[float] | The position of the nest the player stood on | |
-
-#### Other Elements
-
-- None  
+| nest_pos | List[float] | The position of the nest the player stood on | |  
 
 ### **stand_on_rock**
 
@@ -330,11 +262,7 @@ An event triggered when the player stands atop a rock.
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | rock_id | str | The name of the rock object the player stood on | |
-| rock_pos | List[float] | The position of the rock when it got stood on | |
-
-#### Other Elements
-
-- None  
+| rock_pos | List[float] | The position of the rock when it got stood on | |  
 
 ### **flipper_bash_nest**
 
@@ -346,11 +274,7 @@ An event triggered when the player makes a flipper-bashing move and makes contac
 | ---      | ---      | ---             | ---         |
 | nest_id | str | The name of the nest object the player bashed | |
 | nest_pos | List[float] | The position of the nest the player bashed | |
-| hand | List[float] | The position of the nest the player bashed | |
-
-#### Other Elements
-
-- None  
+| hand | List[float] | The position of the nest the player bashed | |  
 
 ### **flipper_bash_penguin**
 
@@ -362,11 +286,7 @@ An event triggered when the player makes a flipper-bashing move and makes contac
 | ---      | ---      | ---             | ---         |
 | penguin_id | str | The name of the penguin object the player bashed | |
 | penguin_pos | List[float] | The position of the other penguin when it got bashed | |
-| hand | Hand | Whether the player performed the bash with their right or left hand. | |
-
-#### Other Elements
-
-- None  
+| hand | Hand | Whether the player performed the bash with their right or left hand. | |  
 
 ### **flipper_bash_rock**
 
@@ -378,11 +298,7 @@ An event triggered when the player makes a flipper-bashing move and makes contac
 | ---      | ---      | ---             | ---         |
 | rock_id | str | The name of the rock object the player bashed | |
 | rock_pos | List[float] | The position of the rock when it got bashed | |
-| hand | Hand | Whether the player performed the bash with their right or left hand. | |
-
-#### Other Elements
-
-- None  
+| hand | Hand | Whether the player performed the bash with their right or left hand. | |  
 
 ### **flipper_bash_skua**
 
@@ -395,11 +311,7 @@ An event triggered when the player makes a flipper-bashing move to shoo a skua a
 | skua_id | str | The name of the skua object the player bashed | |
 | skua_pos | List[float] | The position of the skua when it got bashed | |
 | penguin_pos | str | The position of the player when they slapped the skua. NOTE : This was added due to a mistake in specification, and is redundant with the position element in game_state. | |
-| hand | Hand | Whether the player performed the bash with their right or left hand. | |
-
-#### Other Elements
-
-- None  
+| hand | Hand | Whether the player performed the bash with their right or left hand. | |  
 
 ### **peck_nest**
 
@@ -410,11 +322,7 @@ An event triggered when the player's beak makes contact with a nest.
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | nest_id | str | The name of the nest object the player pecked | |
-| nest_pos | List[float] | The position of the nest the player pecked | |
-
-#### Other Elements
-
-- None  
+| nest_pos | List[float] | The position of the nest the player pecked | |  
 
 ### **peck_penguin**
 
@@ -425,11 +333,7 @@ An event triggered when the player's beak makes contact with another penguin.
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | penguin_id | str | The name of the penguin object the player pecked | |
-| penguin_pos | List[float] | The position of the other penguin when it got pecked | |
-
-#### Other Elements
-
-- None  
+| penguin_pos | List[float] | The position of the other penguin when it got pecked | |  
 
 ### **peck_rock**
 
@@ -440,11 +344,7 @@ An event triggered when the player's beak makes contact with a rock.
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | rock_id | str | The name of the rock object the player pecked | |
-| rock_pos | List[float] | The position of the rock when it got pecked | |
-
-#### Other Elements
-
-- None  
+| rock_pos | List[float] | The position of the rock when it got pecked | |  
 
 ### **peck_skua**
 
@@ -455,11 +355,7 @@ An event triggered when the player's beak makes contact with a skua.
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | skua_id | str | The name of the skua object the player pecked | |
-| skua_pos | List[float] | The position of the skua when it got pecked | |
-
-#### Other Elements
-
-- None  
+| skua_pos | List[float] | The position of the skua when it got pecked | |  
 
 ### **pickup_rock**
 
@@ -469,11 +365,7 @@ An event triggered when the player picks up a rock lying on the ground, which co
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| total_picked_up | int | The running total of rocks the player has picked up. | |
-
-#### Other Elements
-
-- None  
+| total_picked_up | int | The running total of rocks the player has picked up. | |  
 
 ### **place_rock**
 
@@ -484,11 +376,7 @@ An event triggered when the player places the rock into their nest.
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | percent_complete | float | The proportion indicating the player's progress towards completing the nest. So far, the game has always been set to require 4 rocks. | |
-| rock_count | int | The total number of rocks the player has placed in their nest. | |
-
-#### Other Elements
-
-- None  
+| rock_count | int | The total number of rocks the player has placed in their nest. | |  
 
 ### **push_snowball**
 
@@ -505,11 +393,7 @@ An event triggered when the player pushes a snowball down the hill.
 | qx | float | The x-component of the quaternion for the player's orientation when the event happened | |
 | qy | float | The y-component of the quaternion for the player's orientation when the event happened | |
 | qz | float | The z-component of the quaternion for the player's orientation when the event happened | |
-| qw | float | The w-component of the quaternion for the player's orientation when the event happened | |
-
-#### Other Elements
-
-- None  
+| qw | float | The w-component of the quaternion for the player's orientation when the event happened | |  
 
 ### **ring_chime**
 
@@ -519,11 +403,7 @@ An event when the player rings one of the chimes in the chime mini-game.
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| note_played | str | The name of the chime the player rang | |
-
-#### Other Elements
-
-- None  
+| note_played | str | The name of the chime the player rang | |  
 
 ### **bubble_appeared**
 
@@ -536,11 +416,7 @@ Event when a new bubble appears in the mating dance minigame.
 | object_id | str | The name of the bubble object that appeared | |
 | posX | float | The x-position of the bubble that appeared | |
 | posY | float | The y-position of the bubble that appeared | |
-| posZ | float | The z-position of the bubble that appeared | |
-
-#### Other Elements
-
-- None  
+| posZ | float | The z-position of the bubble that appeared | |  
 
 ### **bubble_expired**
 
@@ -550,11 +426,7 @@ Event when a bubble's pop-able time ends and the bubble disappears.
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| object_id | str | The name of the bubble object that disappeared | |
-
-#### Other Elements
-
-- None  
+| object_id | str | The name of the bubble object that disappeared | |  
 
 ### **egg_hatch_indicator_updated**
 
@@ -564,11 +436,7 @@ NOT YET DOCUMENTED
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| time_remaining | float | The time left until the egg will hatch | |
-
-#### Other Elements
-
-- None  
+| time_remaining | float | The time left until the egg will hatch | |  
 
 ### **egg_hatched**
 
@@ -577,11 +445,7 @@ Event when the egg hatches
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **egg_lost**
 
@@ -591,11 +455,7 @@ Event when the player's egg is stolen by a skua.
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| object_id | str | The name of the skua that stole the egg | |
-
-#### Other Elements
-
-- None  
+| object_id | str | The name of the skua that stole the egg | |  
 
 ### **egg_recovered**
 
@@ -604,11 +464,7 @@ Event when the player recovers the egg from the skuas.
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **mating_dance_indicator_updated**
 
@@ -618,11 +474,7 @@ Event when a bubble is popped and the indicator for progress to completion of th
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| percent_full | int | The new percent to which the dance completion indicator is filled | |
-
-#### Other Elements
-
-- None  
+| percent_full | int | The new percent to which the dance completion indicator is filled | |  
 
 ### **nest_complete**
 
@@ -631,11 +483,7 @@ Event when the player completes the building of their nest.
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **penguin_pin_fell**
 
@@ -644,11 +492,7 @@ When one of the pins fell in the bowling area.
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **skua_spawn**
 
@@ -661,11 +505,7 @@ Event when a new skua is added in the nest/egg defense mini-game.
 | object_id | str | The name of the skua object that appeared | |
 | posX | float | The x-position of the skua that appeared | |
 | posY | float | The y-position of the skua that appeared | |
-| posZ | float | The z-position of the skua that appeared | |
-
-#### Other Elements
-
-- None  
+| posZ | float | The z-position of the skua that appeared | |  
 
 ### **skua_move**
 
@@ -681,11 +521,7 @@ Event when a skua moves to a new location in the nest/egg defense mini-game.
 | from_position_z | float | The initial z-position of the skua that moved | |
 | to_position_x | float | The new x-position of the skua that moved | |
 | to_position_y | float | The new y-position of the skua that moved | |
-| to_position_z | float | The new z-position of the skua that moved | |
-
-#### Other Elements
-
-- None  
+| to_position_z | float | The new z-position of the skua that moved | |  
 
 ### **enter_region**
 
@@ -695,11 +531,7 @@ Event when the player moves into one of the regions containing a mini-game or ot
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| region_name | str | The name of the region the player entered | |
-
-#### Other Elements
-
-- None  
+| region_name | str | The name of the region the player entered | |  
 
 ### **exit_region**
 
@@ -709,11 +541,7 @@ Event when a moves out of one of the regions containing a mini-game or other fea
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| region_name | str | The name of the region the player left | |
-
-#### Other Elements
-
-- None  
+| region_name | str | The name of the region the player left | |  
 
 ### **activity_begin**
 
@@ -723,11 +551,7 @@ Event when the player begins to engage with a mini-game activity. Exact trigger 
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| activity_name | Activity | The name of the mini-game/activity with which the player began to engage | |
-
-#### Other Elements
-
-- None  
+| activity_name | Activity | The name of the mini-game/activity with which the player began to engage | |  
 
 ### **activity_end**
 
@@ -737,11 +561,7 @@ Event when the player completes a mini-game activity. Exact trigger varies by ac
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| activity_name | Activity | The name of the mini-game/activity the player completed. | |
-
-#### Other Elements
-
-- None  
+| activity_name | Activity | The name of the mini-game/activity the player completed. | |  
 
 ### **global_timer_begin**
 
@@ -751,11 +571,7 @@ NOT YET DOCUMENTED
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| time_remaining | int | The left on the global timer | |
-
-#### Other Elements
-
-- None  
+| time_remaining | int | The left on the global timer | |  
 
 ### **global_timer_pause**
 
@@ -765,11 +581,7 @@ NOT YET DOCUMENTED
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| data | Unknown | NOT YET DOCUMENTED | |
-
-#### Other Elements
-
-- None  
+| data | Unknown | NOT YET DOCUMENTED | |  
 
 ### **global_timer_expired**
 
@@ -779,11 +591,7 @@ NOT YET DOCUMENTED
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| data | Unknown | NOT YET DOCUMENTED | |
-
-#### Other Elements
-
-- None  
+| data | Unknown | NOT YET DOCUMENTED | |  
 
 ## Detected Events  
 
