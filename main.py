@@ -1,5 +1,6 @@
 # import standard libraries
 import cProfile
+import pstats
 #import datetime
 import argparse
 import os
@@ -33,7 +34,11 @@ parser = OGDParsers.CommandParser(games_list=games_list)
 
 args : Namespace = parser.parse_args()
 
+
 success : bool
+if config.WithProfiling:
+    profiler = cProfile.Profile()
+    profiler.enable()
 if args is not None:
     cmd = (args.command or "help").lower()
     dest = Path(args.destination if args.destination != "" else "./") if 'destination' in args else config.DataDirectory
@@ -58,5 +63,10 @@ if args is not None:
 else:
     print(f"Need to enter a command!")
     success = False
+if config.WithProfiling:
+    profiler.disable()
+    profile = pstats.Stats(profiler)
+    profile.sort_stats(pstats.SortKey.CUMULATIVE).print_stats('ogd', .1)
+
 if not success:
     sys.exit(1)
