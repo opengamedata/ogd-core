@@ -2,12 +2,12 @@
 import logging
 from typing import Any, Dict, List, Optional
 # import locals
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 from ogd.core.generators.extractors.Extractor import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.FeatureData import FeatureData
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
 
 class JobPriorAttempt(PerCountFeature):
 

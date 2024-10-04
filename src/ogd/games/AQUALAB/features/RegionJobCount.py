@@ -4,12 +4,12 @@ import logging
 from datetime import timedelta
 from typing import Any, List, Optional
 # import locals
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 from ogd.core.generators.extractors.Extractor import GeneratorParameters
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.FeatureData import FeatureData
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 
 class RegionJobCount(PerCountFeature):

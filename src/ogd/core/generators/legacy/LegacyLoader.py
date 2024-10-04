@@ -3,8 +3,8 @@ from typing import List, Optional, Type
 # import locals
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.schemas.games.GameSchema import GameSchema
 
 class LegacyLoader(GeneratorLoader):
     def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):

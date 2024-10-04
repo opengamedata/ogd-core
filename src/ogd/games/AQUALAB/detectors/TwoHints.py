@@ -6,9 +6,9 @@ from typing import Callable, Final, List, Optional, Union
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.utils.typing import Map
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.utils.typing import Map
 
 
 class TwoHints(Detector):
@@ -19,22 +19,23 @@ class TwoHints(Detector):
     """
     DEFAULT_THRESOLD : Final[int] = 5
 
-
     def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None], time_threshold:Optional[int]):
         super().__init__(params=params, trigger_callback=trigger_callback)
-        self._found = False
-        self._sess_id = "Unknown"
-        self._job_name = "Unknown"
-        self._last_hint = "Unknown"
-        self._this_hint = "Unknown"
-        self._last_hint_time:Optional[datetime] = None
-        self._time_spent: Optional[Union[timedelta, float]] = None
-        self._detector_event_data: Map = {"job_name": self._job_name}
+        # 1. Get custom params
         self._threshold : timedelta
         if time_threshold is not None:
             self._threshold = timedelta(seconds=time_threshold)
         else:
             self._threshold = timedelta(seconds=TwoHints.DEFAULT_THRESOLD)
+
+        # 2. Create state variables
+        self._found = False
+        self._sess_id            : Optional[str]       = None
+        self._job_name           : str                 = "Unknown"
+        self._first_hint         : Optional[str]       = None
+        self._second_hint        : Optional[str]       = None
+        self._first_hint_time    : Optional[datetime]  = None
+        self._time_between_hints : Optional[timedelta] = None
 
     # *** Implement abstract functions ***
     @classmethod
@@ -52,42 +53,27 @@ class TwoHints(Detector):
         :param event: _description_
         :type event: Event
         """
-        if self._sess_id == "Unknown":
+        # 1. If first event we ever saw, just keep track of the session ID.
+        if self._sess_id is None:
             self._sess_id = event.SessionID
+        # 2. Otherwise, if found new session ID, switch to it and reset.
         elif self._sess_id != event.SessionID:
             self._sess_id = event.SessionID
-            self._last_hint_time = None
-        
-        if not self._last_hint_time:
-            self._last_hint_time = event.Timestamp
-            self._last_hint = event.EventData.get("node_id")
-            return
-        
-        self._time_spent = event.Timestamp - self._last_hint_time
-
-        if self._time_spent <= self._threshold:
-            self._found = True
-            self._time_spent = self._time_spent / timedelta(seconds=1)
-            self._sess_id = event.SessionID
-
+            self._first_hint_time = None
+        # 3. If we don't have a previous hint marked, mark this as the first hint.
+        if not self._first_hint_time:
+            self._first_hint_time = event.Timestamp
+            self._first_hint = event.EventData.get("node_id", "HINT node_id NOT FOUND")
+        # 4. If we did have previous hint, mark this as the second hint and record relevant state variables.
+        else:
+            self._second_hint = event.EventData.get("node_id", "HINT node_id NOT FOUND")
+            self._time_between_hints = event.Timestamp - self._first_hint_time
             self._job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
-            self._this_hint = event.EventData.get("node_id")
-            self._detector_event_data = {
-                "time": self._time_spent,
-                "level": self._threshold / timedelta(seconds=1),
-                "job_name": self._job_name,
-                "last_hint_node": self._last_hint,
-                "this_hint_node": self._this_hint
-            }
-
-        self._last_hint_time = event.Timestamp
-        self._last_hint = self._this_hint
         return
 
     def _trigger_condition(self) -> bool:
-        if self._found:
-            self._found = False
-            return True
+        if self._second_hint is not None and self._time_between_hints is not None:
+            return self._time_between_hints.total_seconds() <= self._threshold.total_seconds()
         else:
             return False
 
@@ -97,6 +83,19 @@ class TwoHints(Detector):
         :return: _description_
         :rtype: List[Any]
         """
-        ret_val: DetectorEvent = self.GenerateEvent(session_id=self._sess_id, app_id="AQUALAB",
-                                                    event_name="TwoHints", event_data=self._detector_event_data)
+        # 1. Create Event
+        _detector_event_data = {
+            "time": self._time_between_hints,
+            "threshold": self._threshold.total_seconds(),
+            "job_name": self._job_name,
+            "last_hint_node": self._first_hint,
+            "this_hint_node": self._second_hint
+        }
+        ret_val: DetectorEvent = self.GenerateEvent(event_name="TwoHints", event_data=_detector_event_data)
+        # 2. Cleanup
+        self._first_hint = None
+        self._second_hint = None
+        self._first_hint_time = None
+        self._time_between_hints = None
+        self._job_name = "Unknown"
         return ret_val

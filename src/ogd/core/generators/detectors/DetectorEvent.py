@@ -3,8 +3,8 @@ import abc
 from datetime import datetime, timedelta
 from typing import Any, Dict, Optional
 # import locals
-from ogd.core.models.Event import Event, EventSource
-from ogd.core.utils.typing import Map
+from ogd.common.models.Event import Event, EventSource
+from ogd.common.utils.typing import Map
 
 class DetectorEvent(Event):
    def __init__(self, session_id:str,      app_id:str,

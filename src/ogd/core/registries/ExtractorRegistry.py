@@ -11,14 +11,14 @@ from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.registries.GeneratorRegistry import GeneratorRegistry
 from ogd.core.generators.extractors.Extractor import Extractor
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.FeatureData import FeatureData
-from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.models.enums.IterationMode import IterationMode
-from ogd.core.schemas.games.AggregateSchema import AggregateSchema
-from ogd.core.schemas.games.PerCountSchema import PerCountSchema
-from ogd.core.utils.Logger import Logger
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
+from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.models.enums.IterationMode import IterationMode
+from ogd.common.schemas.games.AggregateSchema import AggregateSchema
+from ogd.common.schemas.games.PerCountSchema import PerCountSchema
+from ogd.common.utils.Logger import Logger
 
 ## @class Extractor
 #  Abstract base class for game feature extractors.
