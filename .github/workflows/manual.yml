@@ -1,6 +1,4 @@
-
 # Workflow to run monthly exports of data.
-# All games, and months, for copy-paste:
 name: Manual Export
 run-name: ${{ format('{0} - {1}', github.workflow, inputs.game) }}
 on:
