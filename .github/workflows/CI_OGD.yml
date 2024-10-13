@@ -55,14 +55,6 @@ jobs:
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "INFO"
         with_profiling: "True"
-    - name: Set up Schema File for Crystal
-      uses: ./.github/actions/OGD_schema
-      with:
-        game: "CRYSTAL"
-    - name: Set up Schema File for Waves
-      uses: ./.github/actions/OGD_schema
-      with:
-        game: "WAVES"
 
   # 3. Perform export
     - name: Attempt Export of yesterday's data with LegacyFeature
