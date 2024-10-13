@@ -99,10 +99,12 @@ jobs:
       uses: google-github-actions/setup-gcloud@v2
       with:
         version: '>= 363.0.0'
-    - name: Get OpenConnect
-      run: sudo apt-get -q update && sudo apt-get -q install openconnect
-    - name: Connect VPN
-      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+    - name: Connect to VPN
+      uses: opengamedata/actions-openconnect-vpn@v1.1
+      with:
+        username: ${{ secrets.VPN_USER }}
+        password: ${{ secrets.VPN_PASS }}
+        endpoint: "soe.vpn.wisc.edu"
     - name: Get Dependencies
       uses: opengamedata/actions-setup-ogd-py-dependencies@v1.1
       with:
