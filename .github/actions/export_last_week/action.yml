@@ -23,8 +23,6 @@ runs:
         echo "LASTWEEK=" $LASTWEEK >> $GITHUB_ENV
         echo "YESTERDAY=" $YESTERDAY >> $GITHUB_ENV
       shell: bash
-    # - name: Clone code
-    #   uses: actions/checkout@v3
     - name: Execute data export
       run: python${{ inputs.python_version }} main.py export ${{ inputs.game }} ${{env.LASTWEEK}} ${{env.YESTERDAY}}
       shell: bash

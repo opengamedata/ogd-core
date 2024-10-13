@@ -28,12 +28,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    # Runs a single command using the runners shell
-    # - name: Ensure we have mysql client installed.
-    #   run: sudo apt-get install mysql-client
-      # shell: bash
-    # - name: Clone code
-    #   uses: actions/checkout@v3
     - name: Execute data export
       if: ${{ inputs.events_only == 'false' }}
       run: python${{ inputs.python_version }} main.py export ${{ inputs.game }} ${{ inputs.start_date }} ${{ inputs.end_date }}

@@ -24,14 +24,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    # - name: Clone code
-    #   uses: actions/checkout@v3
-    # - name: Set up config
-    #   run: cp config/config.py.template config/config.py 
-    #   shell: bash
-    # - name: Set table to the 2019-2020 one
-    #   run: sed -i 's/logger/logger2020/g' config.py
-    #   shell: bash
     - name: Execute data export
       if: ${{ inputs.events_only == 'false' }}
       run: python${{ inputs.python_version }} main.py export ${{ inputs.game }} ${{ inputs.month_year }} --monthly

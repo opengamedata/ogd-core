@@ -21,8 +21,6 @@ runs:
         YESTERDAY=$(date -d "$(date +%Y-%m-%d) -1 day" +'%m/%d/%Y')
         echo "YESTERDAY=" $YESTERDAY >> $GITHUB_ENV
       shell: bash
-    # - name: Clone code
-    #   uses: actions/checkout@v3
     - name: Execute data export
       run: python${{ inputs.python_version }} main.py export ${{ inputs.game }} ${{env.YESTERDAY}} ${{env.YESTERDAY}}
       shell: bash
