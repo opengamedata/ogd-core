@@ -45,10 +45,7 @@ jobs:
         sql_pass: ${{secrets.SQL_PASS}}
         # TODO: set log_level to DEBUG once we've made sure there aren't excess outputs from the extractor itself.
         log_level: "INFO"
-    - name: Set up Schema File
-      uses: ./.github/actions/OGD_schema
-      with:
-        game: "THERMOLAB"
+
 
   # 3. Perform export
     - name: Do Export of last week's data

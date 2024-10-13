@@ -42,10 +42,7 @@ jobs:
         ssh_host: ${{vars.FD_STORE_HOST}}
         ssh_user: ${{secrets.VPN_USER}}
         ssh_pass: ${{secrets.VPN_PASS}}
-    - name: Set up Schema File
-      uses: ./.github/actions/OGD_schema
-      with:
-        game: "LAKELAND"
+
     - name: Configure Git User
       run: |
         git config --global user.name 'fieldday-service'

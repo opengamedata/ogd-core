@@ -44,10 +44,6 @@ jobs:
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "INFO"
-    - name: Set up Schema File
-      uses: ./.github/actions/OGD_schema
-      with:
-        game: "CRYSTAL"
 
   # 3. Perform export
     - name: Do Export of yesterday's data
