@@ -26,7 +26,7 @@ jobs:
         # asset_content_type: application/zip
     - name: Cache Build for Publishing
       id: cache-build
-      uses: actions/cache/save@v3
+      uses: actions/cache/save@v4
       with:
         key: opengamedata-core-build-${{ github.run_id }}-${{ github.run_attempt }}
         path: ./dist/
@@ -46,7 +46,7 @@ jobs:
     steps:
     - name: Restore Cached Build
       id: cached-build
-      uses: actions/cache/restore@v3
+      uses: actions/cache/restore@v4
       with:
         key: opengamedata-core-build-${{ github.run_id }}-${{ github.run_attempt }}
         path: ./dist/
@@ -70,7 +70,7 @@ jobs:
     steps:
     - name: Restore Cached Build
       id: cached-build
-      uses: actions/cache/restore@v3
+      uses: actions/cache/restore@v4
       with:
         key: opengamedata-core-build-${{ github.run_id }}-${{ github.run_attempt }}
         path: ./dist/
