@@ -20,7 +20,7 @@ jobs:
     steps:
 
   # 1. Local checkout 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Get Dependencies
       uses: opengamedata/actions-setup-ogd-py-dependencies@v1.1
       with:

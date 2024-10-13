@@ -62,7 +62,7 @@ jobs:
     # Steps to set up for and execute an export
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       # A bunch of copy-paste crap to set up google cloud for any given game.
     - if: contains(fromJson(${{ env.OGD_BQ_GAMES }}), ${{ matrix.game }})
       name: Authenticate with Google Cloud

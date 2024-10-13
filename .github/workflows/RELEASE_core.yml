@@ -10,7 +10,7 @@ jobs:
     name: Build Package for Release
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Get Dependencies
       uses: opengamedata/actions-setup-ogd-py-dependencies@v1.1
       with:
