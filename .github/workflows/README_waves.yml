@@ -67,12 +67,12 @@ jobs:
 
   # 4. Cleanup & complete
     - name: Upload data as artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: WAVES_readme
         path: ./src/ogd/games/WAVES/README.md
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: log_data
         path: ./*.log

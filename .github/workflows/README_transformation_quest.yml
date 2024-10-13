@@ -67,12 +67,12 @@ jobs:
 
   # 4. Cleanup & complete
     - name: Upload data as artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: TRANSFORMATION_QUEST_readme
         path: ./src/ogd/games/TRANSFORMATION_QUEST/README.md
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: log_data
         path: ./*.log
