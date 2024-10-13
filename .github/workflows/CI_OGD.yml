@@ -22,7 +22,7 @@ on:
 
 jobs:
   test_export:
-    name: CI Export of Aqualab Data
+    name: CI Export of Crystal & Waves Data
     runs-on: ubuntu-22.04
     concurrency:
       group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
