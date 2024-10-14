@@ -1,0 +1,46 @@
+name: "Setup Google Cloud Access"
+author: Luke Swanson
+description: "Given a game and a date range, this action will export last week's data for that game."
+branding:
+  icon: 'arrow-left'
+  color: 'orange'
+inputs:
+  game:
+   description: "The game with data to export."
+   required: true
+   default: 'Crystal'
+runs:
+  using: "composite"
+  steps:
+    - name: Authenticate with Google Cloud
+      uses: google-github-actions/auth@v2
+      with:
+        project_id: ${{ secrets.OGD_BQ_PROJECT_ID }}
+        credentials_json: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
+        # export_default_credentials: true
+    - if: ${{ inputs.game == 'MASHOPOLIS' }}
+      name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: ${{ secrets.BQ_MASHOPOLIS_PROJECT_ID }}
+        service_account_key: ${{ secrets.BQ_MASHOPOLIS_JSON }}
+        export_default_credentials: true
+    - if: ${{ inputs.game == 'SHADOWSPECT' }}
+      name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: ${{ secrets.BQ_SHADOWSPECT_PROJECT_ID }}
+        service_account_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
+        export_default_credentials: true
+    - if: ${{ inputs.game == 'SHIPWRECKS' }}
+      name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: ${{ secrets.BQ_SHIPWRECKS_PROJECT_ID }}
+        service_account_key: ${{ secrets.BQ_SHIPWRECKS_JSON }}
+        export_default_credentials: true
+      # Back to normal setup stuff.
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        version: '>= 363.0.0'
