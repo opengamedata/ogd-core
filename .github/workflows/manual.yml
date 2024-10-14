@@ -45,12 +45,10 @@ on:
         - "WARNING"
         - "ERROR"
 
-env:
-  OGD_BQ_GAMES: '["AQUALAB", "BACTERIA", "BALLOON", "CRYSTAL", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "JOWILDER", "PENGUINS", "LAKELAND", "MAGNET", "WAVES", "WIND"]'
-
 jobs:
   export_data:
     name: Export Game
+    runs-on: ubuntu-22.04
     timeout-minutes: 1440
     strategy:
       matrix:
@@ -59,44 +57,14 @@ jobs:
       fail-fast: false # we don't want to cancel just because one game fails.
       max-parallel: 3
 
-    # Steps to set up for and execute an export
-    runs-on: ubuntu-22.04
     steps:
+
+    # 1. Local checkout & config
     - uses: actions/checkout@v4
-      # A bunch of copy-paste crap to set up google cloud for any given game.
-    - if: contains(fromJson(${{ env.OGD_BQ_GAMES }}), ${{ matrix.game }})
-      name: Authenticate with Google Cloud
-      uses: google-github-actions/auth@v2
+    - name: Set up Google Cloud
+      uses: ./.github/actions/gCloud_setup
       with:
-        project_id: ${{ secrets.OGD_BQ_PROJECT_ID }}
-        credentials_json: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
-        # export_default_credentials: true
-    - if: ${{ matrix.game == 'MASHOPOLIS' }}
-      name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v2
-      with:
-        project_id: ${{ secrets.BQ_MASHOPOLIS_PROJECT_ID }}
-        service_account_key: ${{ secrets.BQ_MASHOPOLIS_JSON }}
-        export_default_credentials: true
-    - if: ${{ matrix.game == 'SHADOWSPECT' }}
-      name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v2
-      with:
-        project_id: ${{ secrets.BQ_SHADOWSPECT_PROJECT_ID }}
-        service_account_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
-        export_default_credentials: true
-    - if: ${{ matrix.game == 'SHIPWRECKS' }}
-      name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v2
-      with:
-        project_id: ${{ secrets.BQ_SHIPWRECKS_PROJECT_ID }}
-        service_account_key: ${{ secrets.BQ_SHIPWRECKS_JSON }}
-        export_default_credentials: true
-      # Back to normal setup stuff.
-    - name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v2
-      with:
-        version: '>= 363.0.0'
+        game: ${{ matrix.game }}
     - name: Connect to VPN
       uses: opengamedata/actions-openconnect-vpn@v1.1
       with:
@@ -117,6 +85,8 @@ jobs:
         ssh_pass: ${{secrets.VPN_PASS}}
         slice_size: ${{ github.event.inputs.slice_size }}
         log_level: ${{ github.event.inputs.log_level }}
+
+    # 2. Execute process
     - name: Do Export of Month
       if: github.event.inputs.monthly == 'true'
       uses: ./.github/actions/export_custom_month
@@ -134,12 +104,15 @@ jobs:
         events_only: false
     - name: Upload files to opengamedata via scp
       if: github.event.inputs.export_to_web == 'true'
-      run: |
-        mkdir -p ~/.ssh
-        echo '${{secrets.VPN_KEY}}' >> ./key.txt
-        chmod 600 ./key.txt
-        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }} "cd /var/www/opengamedata/data; mkdir -p ${{matrix.game}}"
-        scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
+      uses: ./.github/actions/upload_export
+      with:
+        game: ${{ matrix.game }}
+        host: ${{ vars.FD_WEB_HOST }}
+        source_path: ./data/${{ matrix.game }}
+        remote_data_path: "/var/www/opengamedata/data"
+
+
+    # 3. Cleanup & complete
     - name: Upload data as artifact
       if: github.event.inputs.export_to_web == 'false'
       uses: actions/upload-artifact@v4
