@@ -1,0 +1,34 @@
+name: "Generate Game Readme"
+author: Luke Swanson
+description: "Given a game, this action will generate and commit an up-to-date version of the game's readme file."
+branding:
+  icon: 'file-plus'
+  color: 'green'
+inputs:
+  game:
+    description: "The game whose readme should be generated."
+    required: true
+    default: 'BACTERIA'
+  python_version:
+    description: "Which version of Python is installed on local GitHub Actions runner."
+    required: false
+    default: "3.12"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Create README file
+      run: python${{ inputs.python_version }} main.py readme ${{ inputs.game }} --destination src/ogd/games
+      shell: bash
+    - name: Wait to Avoid Concurrent Pushes/Pulls
+      run: sleep $(shuf -i 1-60 -n 1)
+      shell: bash
+    - name: Commit README file
+      run: |
+        git pull
+        git add src/ogd/games/${{ inputs.game }}/README.md
+        git diff --staged --quiet || git commit -m "Update ${{ inputs.game }} README"
+      shell: bash
+    - name: Push Changes to GitHub
+      run: git push
+      shell: bash

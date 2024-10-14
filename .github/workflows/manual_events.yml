@@ -64,7 +64,7 @@ jobs:
     # Steps to set up for and execute an export
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       # A bunch of copy-paste crap to set up google cloud for any given game.
     - if: contains(fromJson(${{ env.OGD_BQ_GAMES }}), ${{ matrix.game }})
       name: Set up Cloud SDK
@@ -113,10 +113,6 @@ jobs:
         ssh_pass: ${{secrets.VPN_PASS}}
         slice_size: ${{ github.event.inputs.slice_size }}
         log_level: ${{ github.event.inputs.log_level }}
-    - name: Set up Schema File
-      uses: ./.github/actions/OGD_schema
-      with:
-        game: ${{matrix.game}}
     - name: Do Export of Month (events only)
       if: github.event.inputs.monthly == 'true'
       uses: ./.github/actions/export_custom_month
@@ -142,12 +138,12 @@ jobs:
         scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
     - name: Upload data as artifact
       if: github.event.inputs.export_to_web == 'false'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{matrix.game}}_event_export_data
         path: ./data/${{matrix.game}}/*.zip
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: log_data
         path: ./*.log

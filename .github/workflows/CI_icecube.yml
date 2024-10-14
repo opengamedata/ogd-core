@@ -21,7 +21,7 @@ jobs:
 
   # 1. Local checkout 
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Get Dependencies
       uses: opengamedata/actions-setup-ogd-py-dependencies@v1.1
       with:
@@ -37,16 +37,12 @@ jobs:
     - name: Set up Config File
       uses: ./.github/actions/OGD_config
       with:
-        vpn_user: ${{secrets.VPN_USER}}
-        vpn_pass: ${{secrets.VPN_PASS}}
-        sql_host: ${{vars.FD_LOGGER_HOST}}
+        ssh_user: ${{secrets.VPN_USER}}
+        ssh_pass: ${{secrets.VPN_PASS}}
+        ssh_host: ${{vars.FD_LOGGER_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "INFO"
-    - name: Set up Schema File
-      uses: ./.github/actions/OGD_schema
-      with:
-        game: "ICECUBE"
 
   # 3. Perform export
     - name: Do Export of last week's data
@@ -56,10 +52,10 @@ jobs:
 
   # 4. Cleanup & complete
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: ./*.log
     - name: Upload zips as artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: ./data/ICECUBE/*.zip

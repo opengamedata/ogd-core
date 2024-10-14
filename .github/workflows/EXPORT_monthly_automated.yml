@@ -19,6 +19,7 @@ jobs:
           AQUALAB,
           BACTERIA,
           BALLOON,
+          BLOOM,
           CRYSTAL,
           CYCLE_CARBON,
           CYCLE_NITROGEN,
@@ -32,8 +33,10 @@ jobs:
           PENGUINS,
           SHADOWSPECT,
           SHIPWRECKS,
+          THERMOLAB,
           TRANSFORMATION_QUEST,
           WAVES,
+          WEATHER_STATION,
           WIND]
       fail-fast: false # we don't want to cancel just because one game fails.
       max-parallel: 20
@@ -42,7 +45,7 @@ jobs:
 
   # 1. Local checkout 
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     # Need to get VPN connection in this case so we can upload file to server
     - name: Get OpenConnect
       run: sudo apt-get -q update && sudo apt-get -q install openconnect
@@ -79,10 +82,6 @@ jobs:
         ssh_user: ${{secrets.VPN_USER}}
         ssh_pass: ${{secrets.VPN_PASS}}
         log_level: "INFO"
-    - name: Set up Schema File
-      uses: ./.github/actions/OGD_schema
-      with:
-        game: ${{matrix.game}}
 
   # 3. Perform export & upload
     - name: Do Export of last month
@@ -99,7 +98,7 @@ jobs:
 
   # 4. Cleanup & complete
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: ./*.log
   

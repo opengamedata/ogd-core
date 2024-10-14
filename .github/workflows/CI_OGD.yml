@@ -6,15 +6,7 @@ run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' &
 on:
   push:
     paths:
-    - 'src/ogd/core/generators/**'
-    - 'src/ogd/core/interfaces/**'
-    - 'src/ogd/core/managers/**'
-    - 'src/ogd/core/models/**'
-    - 'src/ogd/core/processors/**'
-    - 'src/ogd/core/registries/**'
-    - 'src/ogd/core/schemas/**'
-    - 'src/ogd/core/schemas/*_schemas/**'
-    - 'src/ogd/core/utils/*'
+    - 'src/ogd/core/**'
     - 'main.py'
     - '.github/workflows/CI_OGD.yml'
     - '.github/actions/**'
@@ -22,7 +14,7 @@ on:
 
 jobs:
   test_export:
-    name: CI Export of Aqualab Data
+    name: CI Export of Crystal & Waves Data
     runs-on: ubuntu-22.04
     concurrency:
       group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
@@ -32,7 +24,7 @@ jobs:
 
   # 1. Local checkout 
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Get Dependencies
       uses: opengamedata/actions-setup-ogd-py-dependencies@v1.1
       with:
@@ -55,14 +47,6 @@ jobs:
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "INFO"
         with_profiling: "True"
-    - name: Set up Schema File for Crystal
-      uses: ./.github/actions/OGD_schema
-      with:
-        game: "CRYSTAL"
-    - name: Set up Schema File for Waves
-      uses: ./.github/actions/OGD_schema
-      with:
-        game: "WAVES"
 
   # 3. Perform export
     - name: Attempt Export of yesterday's data with LegacyFeature
@@ -76,14 +60,14 @@ jobs:
 
   # 4. Cleanup & complete
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: ./*.log
     - name: Upload Crystal zips as artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: ./data/CRYSTAL/*.zip
     - name: Upload Wave zips as artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: ./data/WAVES/*.zip
