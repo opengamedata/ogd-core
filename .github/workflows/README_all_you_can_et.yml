@@ -11,10 +11,6 @@ on:
     - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
 
-# concurrency:
-#   group: Readme-Scripts-${{ github.ref }}
-#   cancel-in-progress: false
-
 env:
   GAME_ID: ALL_YOU_CAN_ET
 

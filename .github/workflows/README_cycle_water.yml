@@ -11,9 +11,8 @@ on:
     - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
 
-# concurrency:
-#   group: Readme-Scripts-${{ github.ref }}
-#   cancel-in-progress: false
+env:
+  GAME_ID: AQUALAB
 
 jobs:
   ci_export:
@@ -52,15 +51,15 @@ jobs:
     - name: Create README file
       uses: ./.github/actions/generate_readme
       with:
-        game: AQUALAB
+        game: ${{ env.GAME_ID }}
         python_version: ${{ vars.OGD_PYTHON_VERSION }}
 
   # 4. Cleanup & complete
     - name: Upload data as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: CYCLE_WATER_readme
-        path: ./src/ogd/games/CYCLE_WATER/README.md
+        name: ${{ env.GAME_ID }}_readme
+        path: ./src/ogd/games/${{ env.GAME_ID }}/README.md
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v4
       with:
