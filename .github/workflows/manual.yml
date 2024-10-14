@@ -12,7 +12,7 @@ on:
         type: boolean
         description: "Monthly: if true, use month/year. Else, use start and end dates"
         required: true
-        default: true
+        default: false
       month_year:
         description: "Month/Year: the month(s) and year(s) to export (comma-separated). Only used if 'monthly' is true."
         required: false
@@ -20,11 +20,11 @@ on:
       start_date:
         description: "Start Date: the start date for the export"
         required: false
-        default: "01/01/2021"
+        default: "07/01/2024"
       end_date:
         description: "End Date: the end date for the export"
         required: false
-        default: "01/01/2021"
+        default: "07/01/2024"
       export_to_web:
         type: boolean
         description: "Export to Web: if true, the exported files will be uploaded to the Open Game Data website, else they will only be uploaded as an artifact in the GitHub Actions results."
