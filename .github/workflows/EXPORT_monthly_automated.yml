@@ -34,6 +34,7 @@ jobs:
           SHIPWRECKS,
           TRANSFORMATION_QUEST,
           WAVES,
+          WEATHER_STATION,
           WIND]
       fail-fast: false # we don't want to cancel just because one game fails.
       max-parallel: 20
