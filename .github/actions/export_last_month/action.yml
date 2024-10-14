@@ -1,0 +1,32 @@
+name: "Export Previous Month of Data"
+author: Luke Swanson
+description: "Given a game, this action will export last month's data for that game."
+branding:
+  icon: 'calendar'
+  color: 'purple'
+inputs:
+  game:
+    description: "The game with data to export."
+    required: true
+    default: 'Crystal'
+  python_version:
+    description: "Which version of Python to install on local GitHub Actions runner."
+    required: false
+    default: "3.12"
+
+runs:
+  using: "composite"
+  steps:
+  - name: Get export month
+    run: |
+      MONTH=$(date -d "$(date +%Y-%m-01) -1 month" +'%m')
+      YEAR=$(date -d "$(date +%Y-%m-01) -1 month" +'%Y')
+      MONTH_YEAR=$MONTH/$YEAR
+      echo "MONTH_YEAR=" $MONTH_YEAR >> $GITHUB_ENV
+      echo exporting $MONTH_YEAR
+    shell: bash
+  - name: Execute data export
+    uses: ./.github/actions/export_custom_month
+    with:
+      game: ${{ inputs.game }}
+      month_year: ${{ env.MONTH_YEAR }}
