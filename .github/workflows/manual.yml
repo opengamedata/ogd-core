@@ -102,6 +102,9 @@ jobs:
         start_date: ${{github.event.inputs.start_date}}
         end_date: ${{github.event.inputs.end_date}}
         events_only: false
+
+
+    # 3. Cleanup & complete
     - name: Upload files to opengamedata via scp
       if: github.event.inputs.export_to_web == 'true'
       uses: ./.github/actions/upload_export
@@ -110,9 +113,6 @@ jobs:
         host: ${{ vars.FD_WEB_HOST }}
         source_path: ./data/${{ matrix.game }}
         remote_data_path: "/var/www/opengamedata/data"
-
-
-    # 3. Cleanup & complete
     - name: Upload data as artifact
       if: github.event.inputs.export_to_web == 'false'
       uses: actions/upload-artifact@v4
