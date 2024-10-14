@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 env:
-  GAME_ID: AQUALAB
+  GAME_ID: CENSIO_STACK
 
 jobs:
   ci_export:

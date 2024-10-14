@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 env:
-  GAME_ID: AQUALAB
+  GAME_ID: BACTERIA
 
 jobs:
   ci_export:

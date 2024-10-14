@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 env:
-  GAME_ID: AQUALAB
+  GAME_ID: WEATHER_STATION
 
 jobs:
   ci_export:
