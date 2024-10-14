@@ -1,0 +1,50 @@
+name: "Wrapper around Export Custom Data Range"
+author: Luke Swanson
+description: "Given a game, this action will attempt to execute the action for exporting a custom data range."
+branding:
+  icon: 'arrow-right'
+  color: 'purple'
+inputs:
+  events_only:
+    description: "If true, only export event data."
+    required: false
+    default: "false"
+  game:
+   description: "The game with data to export."
+   required: true
+   default: 'Crystal'
+  start_date:
+    description: "The start date for the export"
+    required: true
+    default: "01/01/2021"
+  end_date:
+    description: "The end date for the export"
+    required: true
+    default: "01/01/2021"
+  skip_sessions:
+    description: "If true, don't export session file"
+    required: false
+    default: "false"
+  skip_players:
+    description: "If true, don't export player file"
+    required: false
+    default: "false"
+  skip_populations:
+    description: "If true, don't export population file"
+    required: false
+    default: "false"
+  python_version:
+    description: "Which version of Python to install on local GitHub Actions runner."
+    required: false
+    default: "3.12"
+runs:
+  using: "composite"
+  steps:
+    - name: Execute wrapped export
+      uses: ./.github/actions/export_custom
+      with:
+        events_only: ${{ inputs.events_only }}
+        game: ${{ inputs.game }}
+        start_date: ${{ github.event.inputs.start_date }}
+        end_date: ${{ github.event.inputs.end_date }}
+        python_version: ${{ inputs.python_version }}
