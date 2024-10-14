@@ -59,6 +59,7 @@ jobs:
         git pull
         git add src/ogd/games/ICECUBE/README.md
         git diff --staged --quiet || git commit -m "Update Icecube README"    - name: Push Changes to GitHub
+    - name: Push Changes to GitHub
       run: git push
 
   # 4. Cleanup & complete
