@@ -28,7 +28,15 @@ jobs:
     - name: Set up Google Cloud
       uses: ./.github/actions/gCloud_setup
       with:
-        game: ${{ matrix.game }}
+        game: ${{ inputs.game }}
+        ogd_id:  ${{ secrets.OGD_BQ_PROJECT_ID }}
+        ogd_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
+        mashopolis_id:  ${{ secrets.BQ_MASHOPOLIS_PROJECT_ID }}
+        mashopolis_key: ${{ secrets.BQ_MASHOPOLIS_JSON }}
+        shadowspect_id:  ${{ secrets.BQ_SHADOWSPECT_PROJECT_ID }}
+        shadowspect_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
+        shipwrecks_id:  ${{ secrets.BQ_SHIPWRECKS_PROJECT_ID }}
+        shipwrecks_key: ${{ secrets.BQ_SHIPWRECKS_JSON }}
     - name: Connect to VPN
       uses: opengamedata/actions-openconnect-vpn@v1.1
       with:

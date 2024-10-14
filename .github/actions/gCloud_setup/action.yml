@@ -9,35 +9,59 @@ inputs:
    description: "The game with data to export."
    required: true
    default: 'Crystal'
+  ogd_id:
+   description: "The name of the OGD BQ project."
+   required: true
+  ogd_key:
+   description: "The access key of the OGD BQ project."
+   required: true
+  mashopolis_id:
+   description: "The name of the Mashopolis BQ project."
+   required: true
+  mashopolis_key:
+   description: "The access key of the Mashopolis BQ project."
+   required: true
+  shadowspect_id:
+   description: "The name of the Shadowspect BQ project."
+   required: true
+  shadowspect_key:
+   description: "The access key of the Shadowspect BQ project."
+   required: true
+  shipwrecks_id:
+   description: "The name of the Shipwrecks BQ project."
+   required: true
+  shipwrecks_key:
+   description: "The access key of the Shipwrecks BQ project."
+   required: true
 runs:
   using: "composite"
   steps:
     - name: Authenticate with Google Cloud
       uses: google-github-actions/auth@v2
       with:
-        project_id: ${{ secrets.OGD_BQ_PROJECT_ID }}
-        credentials_json: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
+        project_id: ${{ inputs.ogd_id }}
+        credentials_json: ${{ inputs.ogd_key }}
         # export_default_credentials: true
     - if: ${{ inputs.game == 'MASHOPOLIS' }}
       name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v2
       with:
-        project_id: ${{ secrets.BQ_MASHOPOLIS_PROJECT_ID }}
-        service_account_key: ${{ secrets.BQ_MASHOPOLIS_JSON }}
+        project_id: ${{ inputs.mashopolis_id }}
+        service_account_key: ${{ inputs.mashopolis_key }}
         export_default_credentials: true
     - if: ${{ inputs.game == 'SHADOWSPECT' }}
       name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v2
       with:
-        project_id: ${{ secrets.BQ_SHADOWSPECT_PROJECT_ID }}
-        service_account_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
+        project_id: ${{ inputs.shadowspect_id }}
+        service_account_key: ${{ inputs.shadowspect_key }}
         export_default_credentials: true
     - if: ${{ inputs.game == 'SHIPWRECKS' }}
       name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v2
       with:
-        project_id: ${{ secrets.BQ_SHIPWRECKS_PROJECT_ID }}
-        service_account_key: ${{ secrets.BQ_SHIPWRECKS_JSON }}
+        project_id: ${{ inputs.shipwrecks_id }}
+        service_account_key: ${{ inputs.shiprwrecks_key }}
         export_default_credentials: true
       # Back to normal setup stuff.
     - name: Set up Cloud SDK
