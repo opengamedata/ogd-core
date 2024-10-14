@@ -9,12 +9,16 @@ inputs:
     description: "The game whose readme should be generated."
     required: true
     default: 'BACTERIA'
+  python_version:
+    description: "Which version of Python is installed on local GitHub Actions runner."
+    required: false
+    default: "3.12"
 
 runs:
   using: "composite"
   steps:
     - name: Create README file
-      run: python main.py readme ${{ inputs.game }} --destination src/ogd/games
+      run: python${{ inputs.python_version }} main.py readme ${{ inputs.game }} --destination src/ogd/games
       shell: bash
     - name: Wait to Avoid Concurrent Pushes/Pulls
       run: sleep $(shuf -i 1-60 -n 1)
