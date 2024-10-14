@@ -42,7 +42,6 @@ jobs:
         ssh_host: ${{vars.FD_STORE_HOST}}
         ssh_user: ${{secrets.VPN_USER}}
         ssh_pass: ${{secrets.VPN_PASS}}
-
     - name: Configure Git User
       uses: opengamedata/actions-setup-fd-git@v1.0
       with:
