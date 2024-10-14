@@ -96,12 +96,18 @@ jobs:
         events_only: false
     - name: Do Export of Range
       if: github.event.inputs.monthly == 'false'
-      uses: ./.github/actions/export_custom
+      uses: ./.github/actions/test_wrapper
       with:
         game: ${{matrix.game}}
         start_date: ${{github.event.inputs.start_date}}
         end_date: ${{github.event.inputs.end_date}}
         events_only: false
+      # uses: ./.github/actions/export_custom
+      # with:
+      #   game: ${{matrix.game}}
+      #   start_date: ${{github.event.inputs.start_date}}
+      #   end_date: ${{github.event.inputs.end_date}}
+      #   events_only: false
 
 
     # 3. Cleanup & complete
