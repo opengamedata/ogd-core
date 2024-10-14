@@ -50,16 +50,10 @@ jobs:
 
   # 3. Generate README
     - name: Create README file
-      run: python main.py readme CENSIO_STACK --destination src/ogd/games
-    - name: Wait to Avoid Concurrent Pushes/Pulls
-      run: sleep $(shuf -i 1-60 -n 1)
-    - name: Commit README file
-      run: |
-        git pull
-        git add src/ogd/games/CENSIO_STACK/README.md
-        git diff --staged --quiet || git commit -m "Update Censio Stack README"
-    - name: Push Changes to GitHub
-      run: git push
+      uses: ./.github/actions/generate_readme
+      with:
+        game: AQUALAB
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
 
   # 4. Cleanup & complete
     - name: Upload data as artifact
