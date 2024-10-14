@@ -17,22 +17,28 @@ inputs:
    required: true
   mashopolis_id:
    description: "The name of the Mashopolis BQ project."
-   required: true
+   required: false
+   default: "UNKNOWN MASHOPOLIS BQ PROJECT"
   mashopolis_key:
    description: "The access key of the Mashopolis BQ project."
-   required: true
+   required: false
+   default: "UNKNOWN MASHOPOLIS BQ KEY"
   shadowspect_id:
    description: "The name of the Shadowspect BQ project."
-   required: true
+   required: false
+   default: "UNKNOWN SHADOWSPECT BQ PROJECT"
   shadowspect_key:
    description: "The access key of the Shadowspect BQ project."
-   required: true
+   required: false
+   default: "UNKNOWN SHADOWSPECT BQ KEY"
   shipwrecks_id:
    description: "The name of the Shipwrecks BQ project."
-   required: true
+   required: false
+   default: "UNKNOWN SHIPWRECKS BQ PROJECT"
   shipwrecks_key:
    description: "The access key of the Shipwrecks BQ project."
-   required: true
+   required: false
+   default: "UNKNOWN SHIPWRECKS BQ KEY"
 runs:
   using: "composite"
   steps:
