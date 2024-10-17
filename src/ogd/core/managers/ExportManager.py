@@ -265,11 +265,15 @@ class ExportManager:
 
         Logger.Log(f"Retrieving slice [{slice_num}/{slice_count}]...", logging.INFO, depth=2)
         start : datetime = datetime.now()
+        # HACK : setting to skip algae and nudge hint events here directly
         # TODO : Add a way to configure what to exclude at higher level, here. So we can easily choose to leave out certain events.
-        _exclude_rows = None
-        # HACK : setting to skip algae events here directly
-        if request.GameID == 'BLOOM':
-            _exclude_rows = ['algae_growth_end', 'algae_growth_begin']
+        match request.GameID:
+            case 'BLOOM':
+                _exclude_rows = ['algae_growth_end', 'algae_growth_begin']
+            case 'THERMOLAB' | 'THERMOVR':
+                _exclude_rows = ['nudge_hint_displayed', 'nudge_hint_hidden']
+            case _:
+                _exclude_rows = None
         ret_val = request.Interface.EventsFromIDs(id_list=next_slice_ids, id_mode=request.Range.IDMode, exclude_rows=_exclude_rows)
         time_delta = datetime.now() - start
         if ret_val is not None:

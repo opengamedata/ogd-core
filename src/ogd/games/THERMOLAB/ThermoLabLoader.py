@@ -3,8 +3,7 @@ import itertools
 import json
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
-# import local files
-from . import features
+# OGD imports
 from ogd.games import THERMOLAB
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import GeneratorParameters
@@ -17,6 +16,8 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.utils.utils import loadJSONFile
 from ogd.common.utils.Logger import Logger
+# import local files
+from . import features
 
 EXPORT_PATH = "games/THERMOLAB/DBExport.json"
 
