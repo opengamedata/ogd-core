@@ -88,8 +88,12 @@ class BloomLoader(GeneratorLoader):
                     ret_val = PersistThroughFailure.PersistThroughFailure(params=extractor_params)
                 case "PersistenceTime":
                     ret_val = PersistenceTime.PersistenceTime(params=extractor_params)
-                case "QuitOnBloomFail":  # Adding the QuitOnBloomFail feature
+                case "QuitOnBloomFail":
                     ret_val = QuitOnBloomFail.QuitOnBloomFail(params=extractor_params)
+                case "QuitOnCityFail":
+                    ret_val = QuitOnCityFail.QuitOnCityFail(params=extractor_params)
+                case "QuitOnBankruptcy":
+                    ret_val = QuitOnBankruptcy.QuitOnBankruptcy(params=extractor_params)
                 case _:
                     ret_val = None
 

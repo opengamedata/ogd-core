@@ -1180,7 +1180,39 @@
           "type": "SucceededThroughFailure",
           "description": "Number of times failed but persisted through the task",
           "return_type": "int"
-        }
+        },
+         "QuitOnBloomFail": {
+            "enabled": true,
+            "type": "QuitOnBloomFail",
+            "description": "Checks if the player quit due to TooManyBlooms failure",
+            "return_type": "list",
+            "subfeatures": [
+            "FailureCounty",
+            "BloomCount",
+            "SkimPolicy",
+            "RunoffPolicy"
+            ]
+         },
+         "QuitOnCityFail": {
+            "enabled": true,
+            "type": "QuitOnCityFail",
+            "description": "Checks if the player quit due to CityFailure",
+            "return_type": "list",
+            "subfeatures": [
+            "FailureCounty",
+            "CityFailureReason"
+            ]
+         },
+         "QuitOnBankruptcy": {
+            "enabled": true,
+            "type": "QuitOnBankruptcy",
+            "description": "Checks if the player quit due to Bankruptcy (OutOfMoney failure)",
+            "return_type": "list",
+            "subfeatures": [
+            "FailureCounty",
+            "BankruptcyReason"
+            ]
+         }
       }
    },
 
