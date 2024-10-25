@@ -501,7 +501,7 @@
   },
   "features": {
 		"legacy" : {
-			"enabled" : true,
+			"enabled" : false,
       "return_type" : "Any"
 		},
     "perlevel": {
@@ -1563,6 +1563,9 @@
 
     },
     "aggregate": {
+
+    },
+    "aggregate_legacy": {
       "sess_count_achievements": {
         "enabled": false,
         "description": "Player feature - Progress: count of achievements",
