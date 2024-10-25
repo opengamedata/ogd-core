@@ -80,7 +80,7 @@ jobs:
         password: ${{ secrets.VPN_PASS }}
         endpoint: "soe.vpn.wisc.edu"
     - name: Get Dependencies
-      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.1
+      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.2
       with:
         python_version: ${{ vars.OGD_PYTHON_VERSION }}
     - name: Set up Config File

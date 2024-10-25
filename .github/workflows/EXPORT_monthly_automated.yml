@@ -50,7 +50,7 @@ jobs:
     - name: Get OpenConnect
       run: sudo apt-get -q update && sudo apt-get -q install openconnect
     - name: Get Dependencies
-      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.1
+      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.2
       with:
         python_version: ${{ vars.OGD_PYTHON_VERSION }}
 
