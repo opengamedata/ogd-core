@@ -88,8 +88,16 @@ class BloomLoader(GeneratorLoader):
                     ret_val = PersistThroughFailure.PersistThroughFailure(params=extractor_params)
                 case "PersistenceTime":
                     ret_val = PersistenceTime.PersistenceTime(params=extractor_params)
+                case "QuitOnBloomFail":
+                    ret_val = QuitOnBloomFail.QuitOnBloomFail(params=extractor_params)
+                case "QuitOnCityFail":
+                    ret_val = QuitOnCityFail.QuitOnCityFail(params=extractor_params)
+                case "QuitOnBankruptcy":
+                    ret_val = QuitOnBankruptcy.QuitOnBankruptcy(params=extractor_params)
+                case "BuildingInspectorTabCount":  # Add BuildingInspectorTabCount feature here
+                ret_val = BuildingInspectorTabCount(params=extractor_params)
                 case _:
-                    ret_val = None
+                    ret_val = Nonmente
 
         # Then run through per-county features.
         else:
@@ -119,6 +127,7 @@ class BloomLoader(GeneratorLoader):
             case _:
                 raise NotImplementedError(f"'{detector_type}' is not a valid detector for Bloom.")
         return ret_val
+
 
     # @staticmethod
     # def GetBloomLabCount(db_export_path:Path=Path(".") / "ogd" / "games" / "BLOOM"):

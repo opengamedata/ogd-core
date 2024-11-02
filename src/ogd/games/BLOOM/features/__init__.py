@@ -24,6 +24,7 @@ __all__ = [
     "CountyPolicyChangeCount",
     "PersistenceTime",
     "CountyUnlockTime",
+    "BuildingInspectorTabCount"
 ]
 
 
@@ -50,4 +51,5 @@ from . import SucceededThroughFailure
 from . import CountyPolicyChangeCount
 from . import PersistenceTime
 from . import CountyUnlockTime
+from . import BuildingInspectorTabCount
 
