@@ -9,7 +9,12 @@ from ogd.common.models.FeatureData import FeatureData
 class CountyFinalPolicySettings(Feature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        self.policy_settings: Dict[str, Optional[str]] = {"SalesTaxPolicy": None, "RunoffPolicy": None, "ImportTaxPolicy": None, "SkimmingPolicy": None}
+        self.policy_settings: Dict[str, Optional[str]] = {
+            "SalesTaxPolicy": None,
+            "RunoffPolicy": None,
+            "ImportTaxPolicy": None,
+            "SkimmingPolicy": None
+        }
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -34,7 +39,20 @@ class CountyFinalPolicySettings(Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self.policy_settings]
+        # Return dictionary plus individual subfeatures
+        return [
+            self.policy_settings,
+            self.policy_settings["SalesTaxPolicy"],
+            self.policy_settings["RunoffPolicy"],
+            self.policy_settings["ImportTaxPolicy"],
+            self.policy_settings["SkimmingPolicy"]
+        ]
 
     def Subfeatures(self) -> List[str]:
-        return []
+        # List each individual policy setting as a subfeature
+        return [
+            "SalesTaxPolicy",
+            "RunoffPolicy",
+            "ImportTaxPolicy",
+            "SkimmingPolicy"
+        ]
