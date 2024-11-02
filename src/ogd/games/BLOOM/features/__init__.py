@@ -27,7 +27,7 @@ __all__ = [
     "QuitOnBloomFail", 
     "QuitOnCityFail",
     "QuitOnBankruptcy"
-
+    "BuildingInspectorTabCount"
 ]
 
 
@@ -57,4 +57,5 @@ from . import CountyUnlockTime
 from . import QuitOnBloomFail
 from . import QuitOnCityFail
 from . import QuitOnBankruptcy
+from . import BuildingInspectorTabCount
 

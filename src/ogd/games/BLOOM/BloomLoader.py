@@ -94,8 +94,10 @@ class BloomLoader(GeneratorLoader):
                     ret_val = QuitOnCityFail.QuitOnCityFail(params=extractor_params)
                 case "QuitOnBankruptcy":
                     ret_val = QuitOnBankruptcy.QuitOnBankruptcy(params=extractor_params)
+                case "BuildingInspectorTabCount":  # Add BuildingInspectorTabCount feature here
+                ret_val = BuildingInspectorTabCount(params=extractor_params)
                 case _:
-                    ret_val = None
+                    ret_val = Nonmente
 
         # Then run through per-county features.
         else:

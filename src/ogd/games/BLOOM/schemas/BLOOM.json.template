@@ -1212,7 +1212,20 @@
             "FailureCounty",
             "BankruptcyReason"
             ]
-         }
+         },
+         "BuildingInspectorTabCount": {
+            "enabled": true,
+            "type": "BuildingInspectorTabCount",
+            "description": "Count of tab clicks while inspecting buildings, broken down by building type",
+            "return_type": "list",
+            "subfeatures": [
+              "TotalTabCount",
+              "CityTabCount",
+              "DairyFarmTabCount",
+              "GrainFarmTabCount",
+              "StorageTabCount"
+            ]
+          }
       }
    },
 
