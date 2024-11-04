@@ -25,9 +25,9 @@ on:
         description: "End Date: the end date for the export"
         required: false
         default: "01/01/2021"
-      export_to_web:
+      upload_to_ogd:
         type: boolean
-        description: "Export to Web: if true, the exported files will be uploaded to the Open Game Data website, else they will only be uploaded as an artifact in the GitHub Actions results."
+        description: "Upload to OGD: if true, the exported files will be uploaded to the Open Game Data website, else they will only be uploaded as an artifact in the GitHub Actions results."
         required: true
         default: false
       slice_size:
@@ -120,7 +120,7 @@ jobs:
 
     # 3. Cleanup & complete
     - name: Upload files to opengamedata via scp
-      if: github.event.inputs.export_to_web == 'true'
+      if: github.event.inputs.upload_to_ogd == 'true'
       uses: ./.github/actions/upload_export
       with:
         game: ${{ matrix.game }}
@@ -128,7 +128,7 @@ jobs:
         source_path: ./data/${{ matrix.game }}
         remote_data_path: "/var/www/opengamedata/data"
     - name: Upload data as artifact
-      if: github.event.inputs.export_to_web == 'false'
+      if: github.event.inputs.upload_to_ogd == 'false'
       uses: actions/upload-artifact@v4
       with:
         name: ${{matrix.game}}_export_data
@@ -141,7 +141,7 @@ jobs:
   
   trigger_reindex:
     name: Trigger File Reindex
-    if: github.event.inputs.export_to_web == 'true'
+    if: github.event.inputs.upload_to_ogd == 'true'
     needs: export_data
     uses: ./.github/workflows/reindex_fileserver.yml
     with:
