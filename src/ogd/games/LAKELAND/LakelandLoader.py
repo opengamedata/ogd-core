@@ -11,6 +11,9 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.utils.Logger import Logger
+from ogd.games.LAKELAND.features import *
+
+
 
 class LakelandLoader(GeneratorLoader):
 
@@ -24,10 +27,20 @@ class LakelandLoader(GeneratorLoader):
             case "PersistenceTime":
                 # ret_val = PersistenceTime.PersistenceTime(params=extractor_params)
                 pass
+            case "HouseBuildCount":
+                ret_val = HouseBuildCount.HouseBuildCount(params=extractor_params)
+            case "DairyBuildCount":
+                ret_val = DairyBuildCount.DairyBuildCount(params=extractor_params)
+            case "CropBuildCount":
+                ret_val = CropBuildCount.CropBuildCount(params=extractor_params)
+            case "TotalBuildCount":
+                ret_val = TotalBuildCount.TotalBuildCount(params=extractor_params)
+            case "HoversBeforeCropPlacement":
+                ret_val = HoversBeforeCropPlacement.HoversBeforeCropPlacement(params=extractor_params)
             case _:
                 ret_val = None
 
-        return LakelandExtractor(params=extractor_params, game_schema=self._game_schema, session_id=self._session_id)
+        return ret_val
 
     def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Optional[Detector]:
         Logger.Log(f"'{detector_type}' is not a valid feature for Lakeland.")
