@@ -26,6 +26,8 @@ runs:
     uses: ./.github/actions/export_custom
     with:
       game: ${{ inputs.game }}
+      with_events: true
+      with_features: true
       start_date: ${{ env.YESTERDAY }}
       end_date: ${{ env.YESTERDAY }}
       python_version: ${{ inputs.python_version }}

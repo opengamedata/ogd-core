@@ -29,5 +29,7 @@ runs:
     uses: ./.github/actions/export_custom_month
     with:
       game: ${{ inputs.game }}
+      with_events: true
+      with_features: true
       month_year: ${{ env.MONTH_YEAR }}
       python_version: ${{ inputs.python_version }}
