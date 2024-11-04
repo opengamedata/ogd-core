@@ -8,7 +8,7 @@ inputs:
   game:
    description: "The game with data to export."
    required: true
-   default: 'Crystal'
+   default: 'AQUALAB'
   ogd_id:
    description: "The name of the OGD BQ project."
    required: true

@@ -12,7 +12,7 @@ inputs:
   game:
    description: "The game with data to export."
    required: true
-   default: 'Crystal'
+   default: 'AQUALAB'
   with_events:
     description: "If true, include event data."
     required: true

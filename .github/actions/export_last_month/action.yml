@@ -8,7 +8,7 @@ inputs:
   game:
     description: "The game with data to export."
     required: true
-    default: 'Crystal'
+    default: 'AQUALAB'
   python_version:
     description: "Which version of Python to install on local GitHub Actions runner."
     required: false
