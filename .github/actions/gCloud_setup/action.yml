@@ -42,35 +42,41 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Authenticate with Google Cloud
+    - name: Set up Google Cloud SDK for OGD
       uses: google-github-actions/auth@v2
       with:
         project_id: ${{ inputs.ogd_id }}
         credentials_json: ${{ inputs.ogd_key }}
         # export_default_credentials: true
+    # - if: ${{ inputs.source_id == 'AQUALAB_BQ' }}
+    #   name: Set up Cloud SDK for Aqualab
+    #   uses: google-github-actions/setup-gcloud@v0
+    #   with:
+    #     project_id: ${{ secrets.BQ_AQUALAB_PROJECT_ID }}
+    #     service_account_key: ${{ secrets.BQ_AQUALAB_JSON }}
+    #     export_default_credentials: true
     - if: ${{ inputs.game == 'MASHOPOLIS' }}
-      name: Set up Cloud SDK
+      name: Set up Google Cloud SDK for Mashopolis
       uses: google-github-actions/setup-gcloud@v2
       with:
         project_id: ${{ inputs.mashopolis_id }}
         service_account_key: ${{ inputs.mashopolis_key }}
         export_default_credentials: true
     - if: ${{ inputs.game == 'SHADOWSPECT' }}
-      name: Set up Cloud SDK
+      name: Set up Google Cloud SDK for Shadowspect
       uses: google-github-actions/setup-gcloud@v2
       with:
         project_id: ${{ inputs.shadowspect_id }}
         service_account_key: ${{ inputs.shadowspect_key }}
         export_default_credentials: true
     - if: ${{ inputs.game == 'SHIPWRECKS' }}
-      name: Set up Cloud SDK
+      name: Set up Google Cloud SDK for Shipwrecks
       uses: google-github-actions/setup-gcloud@v2
       with:
         project_id: ${{ inputs.shipwrecks_id }}
         service_account_key: ${{ inputs.shiprwrecks_key }}
         export_default_credentials: true
-      # Back to normal setup stuff.
-    - name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v2
-      with:
-        version: '>= 363.0.0'
+    # - name: Set up Cloud SDK
+    #   uses: google-github-actions/setup-gcloud@v2
+    #   with:
+    #     version: '>= 363.0.0'
