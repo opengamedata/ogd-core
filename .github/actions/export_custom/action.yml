@@ -5,14 +5,18 @@ branding:
   icon: 'arrow-right'
   color: 'purple'
 inputs:
-  events_only:
-    description: "If true, only export event data."
-    required: false
-    default: "false"
   game:
    description: "The game with data to export."
    required: true
    default: 'Crystal'
+  with_events:
+    description: "If true, include event data."
+    required: true
+    default: "true"
+  with_features:
+    description: "If true, include feature data."
+    required: true
+    default: "true"
   start_date:
     description: "The start date for the export"
     required: true
@@ -41,10 +45,18 @@ runs:
   using: "composite"
   steps:
     - name: Execute data export
-      if: ${{ inputs.events_only == 'false' }}
+      if: ${{ inputs.with_events == 'true' && inputs.with_features == 'true' }}
       run: python${{ inputs.python_version }} main.py export ${{ inputs.game }} ${{ inputs.start_date }} ${{ inputs.end_date }} ${{ inputs.skip_sessions && '--no_session_file' }} ${{ inputs.skip_players && '--no_player_file' }} ${{ inputs.skip_population && '--no_pop_file' }}
       shell: bash
     - name: Execute data export (events only)
-      if: ${{ inputs.events_only == 'true' }}
+      if: ${{ inputs.with_events == 'true' && inputs.with_features == 'false' }}
       run: python${{ inputs.python_version }} main.py export-events ${{ inputs.game }} ${{ inputs.start_date }} ${{ inputs.end_date }}
+      shell: bash
+    - name: Execute data export (features only)
+      if: ${{ inputs.with_events == 'false' && inputs.with_features == 'true' }}
+      run: python${{ inputs.python_version }} main.py export-features ${{ inputs.game }} ${{ inputs.start_date }} ${{ inputs.end_date }} ${{ inputs.skip_sessions && '--no_session_file' }} ${{ inputs.skip_players && '--no_player_file' }} ${{ inputs.skip_population && '--no_pop_file' }}
+      shell: bash
+    - name: Execute data export (empty)
+      if: ${{ inputs.with_events == 'false' && inputs.with_features == 'false' }}
+      run: echo 'No data requested'
       shell: bash
