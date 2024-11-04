@@ -30,3 +30,4 @@ runs:
     with:
       game: ${{ inputs.game }}
       month_year: ${{ env.MONTH_YEAR }}
+      python_version: ${{ inputs.python_version }}

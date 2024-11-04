@@ -28,3 +28,4 @@ runs:
       game: ${{ inputs.game }}
       start_date: ${{ env.YESTERDAY }}
       end_date: ${{ env.YESTERDAY }}
+      python_version: ${{ inputs.python_version }}
