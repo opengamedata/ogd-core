@@ -51,6 +51,7 @@ jobs:
       uses: ./.github/actions/export_last_week
       with:
         game: SHIPWRECKS
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
 
   # 4. Cleanup & complete
     - name: Upload logs as artifacts

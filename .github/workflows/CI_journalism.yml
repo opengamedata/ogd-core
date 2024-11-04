@@ -59,6 +59,7 @@ jobs:
       uses: ./.github/actions/export_yesterday
       with:
         game: JOURNALISM
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
 
   # 4. Cleanup & complete
     - name: Upload logs as artifacts
