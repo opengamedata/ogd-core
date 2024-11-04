@@ -43,6 +43,10 @@ jobs:
         shadowspect_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
         shipwrecks_id:  ${{ secrets.BQ_SHIPWRECKS_PROJECT_ID }}
         shipwrecks_key: ${{ secrets.BQ_SHIPWRECKS_JSON }}
+    - name: Get Dependencies
+      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.2
+      with:
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
     - name: Set up Config File
       uses: ./.github/actions/OGD_config
       with:
