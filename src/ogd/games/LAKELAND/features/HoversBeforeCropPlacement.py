@@ -28,7 +28,7 @@ class HoversBeforeCropPlacement(Feature):
         print(buy_hovers)
         if buy_value == 3:
             if buy_hovers is not None:
-                self.hover_count += sum(buy_hovers[0])
+                self.hover_count += len(buy_hovers)
                 
     def _updateFromFeatureData(self, feature: FeatureData):
         pass
