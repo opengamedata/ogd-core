@@ -25,7 +25,6 @@ class HoversBeforeCropPlacement(Feature):
     def _updateFromEvent(self, event:Event) -> None:
         buy_value = event.event_data.get("buy", None)
         buy_hovers = event.event_data.get("buy_hovers", None)
-        print(buy_hovers)
         if buy_value == 3:
             if buy_hovers is not None:
                 self.hover_count += len(buy_hovers)

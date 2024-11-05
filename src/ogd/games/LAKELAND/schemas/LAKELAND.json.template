@@ -1563,7 +1563,31 @@
 
     },
     "aggregate": {
-
+       "HouseBuildCount": {
+        "enabled": true,
+        "description": "Count of House build",
+        "return_type": "int"
+      },
+      "DairyBuildCount": {
+        "enabled": true,
+        "description": "Count of Dairy build",
+        "return_type": "int"
+      },
+      "CropBuildCount": {
+        "enabled": true,
+        "description": "Count of Crop build",
+        "return_type": "int"
+      },
+      "TotalBuildCount": {
+        "enabled": true,
+        "description": "Total Count of builds",
+        "return_type": "int"
+      },
+      "HoversBeforeCropPlacement": {
+        "enabled": true,
+        "description": "Number of hovers before crop placement",
+        "return_type": "int"
+      }
     },
     "aggregate_legacy": {
       "sess_count_achievements": {
