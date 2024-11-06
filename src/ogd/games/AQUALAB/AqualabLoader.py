@@ -186,7 +186,7 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = JobHelpCount.JobHelpCount(params=extractor_params, job_map=self._job_map)
                 case "JobLocationChanges":
                     ret_val = JobLocationChanges.JobLocationChanges(params=extractor_params, job_map=self._job_map)
-                case "JobLocationChangeNoKelp":
+                case "JobLocationChangesNoKelp":
                     ret_val = JobLocationChangesNoKelp.JobLocationChangesNoKelp(params=extractor_params, job_map=self._job_map)
                 case "JobModeling":
                     ret_val = JobModeling.JobModeling(params=extractor_params, job_map=self._job_map)
