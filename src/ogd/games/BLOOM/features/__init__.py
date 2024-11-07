@@ -26,7 +26,7 @@ __all__ = [
     "CountyUnlockTime",
     "QuitOnBloomFail", 
     "QuitOnCityFail",
-    "QuitOnBankruptcy"
+    "QuitOnBankruptcy",
     "BuildingInspectorTabCount"
 ]
 
