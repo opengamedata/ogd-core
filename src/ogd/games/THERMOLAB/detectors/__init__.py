@@ -1,4 +1,4 @@
-"""Initializer for ThermoVR detectors"""
+"""Initializer for ThermoLab detectors"""
 
 __all__ = [
     "player_move"

@@ -1,4 +1,4 @@
-name: ThermoVR Readme Update Script
+name: ThermoLab Readme Update Script
 run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
 
 on:
@@ -6,8 +6,8 @@ on:
     branches:
     - master
     paths:
-    - 'src/ogd/games/THERMOVR/schemas/THERMOVR.json.template'
-    - '.github/workflows/README_thermovr.yml'
+    - 'src/ogd/games/THERMOLAB/schemas/THERMOLAB.json.template'
+    - '.github/workflows/README_thermolab.yml'
     - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
 
@@ -17,7 +17,7 @@ on:
 
 jobs:
   ci_export:
-    name: Update ThermoVR README.md
+    name: Update ThermoLab README.md
     runs-on: ubuntu-22.04
     concurrency:
       group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
@@ -45,7 +45,7 @@ jobs:
     - name: Set up Schema File
       uses: ./.github/actions/OGD_schema
       with:
-        game: "THERMOVR"
+        game: "THERMOLAB"
     - name: Configure Git User
       run: |
         git config --global user.name 'fieldday-service'
@@ -54,14 +54,14 @@ jobs:
 
   # 3. Generate README
     - name: Create README file
-      run: python main.py readme THERMOVR --destination src/ogd/games
+      run: python main.py readme THERMOLAB --destination src/ogd/games
     - name: Wait to Avoid Concurrent Pushes/Pulls
       run: sleep $(shuf -i 1-60 -n 1)
     - name: Commit README file
       run: |
         git pull
-        git add src/ogd/games/THERMOVR/README.md
-        git diff --staged --quiet || git commit -m "Update ThermoVR README"
+        git add src/ogd/games/THERMOLAB/README.md
+        git diff --staged --quiet || git commit -m "Update ThermoLab README"
     - name: Push Changes to GitHub
       run: git push
 
@@ -69,8 +69,8 @@ jobs:
     - name: Upload data as artifact
       uses: actions/upload-artifact@v3
       with:
-        name: THERMOVR_readme
-        path: ./src/ogd/games/THERMOVR/README.md
+        name: THERMOLAB_readme
+        path: ./src/ogd/games/THERMOLAB/README.md
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v3
       with:

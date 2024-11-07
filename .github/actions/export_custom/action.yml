@@ -39,7 +39,7 @@ runs:
       run: python${{ inputs.python_version }} main.py export ${{ inputs.game }} ${{ inputs.start_date }} ${{ inputs.end_date }}
       shell: bash
     - name: Execute data export (events only)
-      if: ${{ inputs.events_only == 'false' }}
+      if: ${{ inputs.events_only == 'true' }}
       run: python${{ inputs.python_version }} main.py export ${{ inputs.game }} ${{ inputs.start_date }} ${{ inputs.end_date }} --no_session_file --no_player_file --no_pop_file
       shell: bash
       # python${{ inputs.python_version }} main.py export ${{ inputs.game }} 1/1/2021 1/2/2021

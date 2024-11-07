@@ -1,4 +1,4 @@
-# Game: THERMOVR
+# Game: THERMOLAB
 
 No game-specific readme content prepared
 
@@ -64,7 +64,10 @@ The individual fields encoded in the *game_state* and *user_data* Event element 
 | **Name** | **Values** |
 | ---      | ---        |
 | HandType | ['LEFT', 'RIGHT', 'MOUSE'] |
+| TabletModes | ['SANDBOX, LAB, GAME, SETTINGS'] |
 | Platform | ['VR, WEB'] |
+| Settings | ['AXIS_NUMBERS', 'GRID_LINES', 'REGION_LABELS', 'AXIS_TRACKERS', 'MUSIC'] |
+| TitleSettings | ['FULLSCREEN', 'MUSIC'] |
 | ToolType | ['INSULATION', 'LOWER_STOP', 'UPPER_STOP', 'INCREASE_WEIGHT', 'DECREASE_WEIGHT', 'HEAT', 'COOLING', 'CHAMBER_TEMPERATURE', 'CHAMBER_PRESSURE'] |  
 
 ### Game State  
@@ -72,6 +75,9 @@ The individual fields encoded in the *game_state* and *user_data* Event element 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | seconds_from_launch | float | The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*. | |
+| platform | Platform | The mode of the game being started, either on a VR headset or the web-based version. | |
+| tablet_mode | TabletModes | Unknown | |
+| play_score | int | The current score the player has in play/game mode. | |
 | region | enum(WATER, VAPOR, TWO_PHASE) | The current graph region of the water in the piston | |
 | pressure | float | The current pressure (P) in the piston in kPa | |
 | temperature | float | The current temperature (T) of the water in the piston in K | |
@@ -108,7 +114,7 @@ The individual fields encoded in the *game_state* and *user_data* Event element 
 
 ### **session_start**
 
-When the app is started and the gameplay session is assigned a session ID
+When the app is started and the gameplay session is assigned a session/user ID
 
 #### Event Data
 
@@ -122,18 +128,7 @@ When a new game is started
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-| mode | Platform | The mode of the game being started, either on a VR headset or the web-based version. | |  
-
-### **click_new_game**
-
-When the player clicks the button for a new game. This should trigger a new `game_start` event, with new session and player IDs
-
-#### Event Data
-
-| **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-| hand | HandType | Indicator of whether the player pressed the button with their right or left hand, or a mouse. | |  
+| ---      | ---      | ---             | ---         |  
 
 ### **click_reset_sim**
 
@@ -295,6 +290,26 @@ When the player releases the phase graph's state 'ball' at a new position on the
 | ---      | ---      | ---             | ---         |
 | hand | HandType | Indicator of whether the player moved the ball with their right or left hand, or a mouse. | |  
 
+### **click_clear_heat_meter**
+
+When the player clears the meter on the overall heat change in the system, resetting the meter to zero.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| hand | HandType | Indicator of whether the player clicked with their right or left hand, or a mouse. | |  
+
+### **click_clear_work_meter**
+
+When the player clears the meter on the overall work done in the system, resetting the meter to zero.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| hand | HandType | Indicator of whether the player clicked with their right or left hand, or a mouse. | |  
+
 ### **click_tool_toggle**
 
 When the player clicks the button to enable/disable a tool
@@ -455,9 +470,27 @@ When the player ticks/unticks a setting in the settings panel
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| setting | enum(AXIS_NUMBERS, GRID_LINES, REGION_LABELS, AXIS_TRACKERS) | Indicator of whether the player pressed the button with their right or left hand, or a mouse. | |
+| setting | Settings | Indicator of whether the player pressed the button with their right or left hand, or a mouse. | |
 | enabled | bool | True if the click enabled the given setting, or false if it disabled the setting. | |
 | hand | HandType | Indicator of whether the player pressed the button with their right or left hand, or a mouse. | |  
+
+### **nudge_hint_displayed**
+
+When the player begins to move a slider, and a hint about nudge mode is displayed
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
+
+### **nudge_hint_hidden**
+
+When the nudge mode hint disappears
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
 
 ### **tool_locked**
 
@@ -467,7 +500,7 @@ When a lab task locks a specific tool, making it unvailable to the player
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| hand | ToolType | The specific tool that was locked. | |  
+| tool | ToolType | The specific tool that was locked. | |  
 
 ### **tool_unlocked**
 
@@ -477,7 +510,97 @@ When a lab task unlocks a specific tool, making it ailable to the player. Also o
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| hand | ToolType | The specific tool that was unlocked. | |  
+| tool | ToolType | The specific tool that was unlocked. | |  
+
+### **title_screen_displayed**
+
+When the ThermoLab title screen is initially displayed to the user.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
+
+### **title_screen_closed**
+
+When the ThermoLab title screen is closed.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
+
+### **click_close_title_screen**
+
+When the player clicks the button to close the title screen.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| hand | HandType | Indicator of whether the player pressed the button with their right or left hand, or a mouse. | |  
+
+### **click_display_credits**
+
+When the player clicks the button to close the title screen.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| location | enum('TITLE_SCREEN', 'TABLET') | Unknown | |
+| hand | HandType | Indicator of whether the player pressed the button with their right or left hand, or a mouse. | |  
+
+### **click_close_credit**
+
+When the player clicks the button to close the credits view.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| hand | HandType | Indicator of whether the player pressed the button with their right or left hand, or a mouse. | |  
+
+### **click_toggle_title_setting**
+
+When the player toggles the 'title' setting TODO: better description of what this 'title' setting is
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| enabled | bool | True if the click enabled the given setting, or false if it disabled the setting. | |
+| hand | HandType | Indicator of whether the player pressed the button with their right or left hand, or a mouse. | |  
+
+### **click_config_tab**
+
+When the player clicks to select the 'config' tab on their tablet.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| hand | HandType | Indicator of whether the player pressed the button with their right or left hand, or a mouse. | |  
+
+### **click_controls_tab**
+
+When the player clicks to select the 'controls' tab on their tablet.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| hand | HandType | Indicator of whether the player pressed the button with their right or left hand, or a mouse. | |  
+
+### **click_game_mode**
+
+When the player presses the tablet 'Game' button to enter play mode
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| hand | HandType | Indicator of whether the player pressed the button with their right or left hand, or a mouse. | |  
 
 ### **click_sandbox_mode**
 
@@ -499,6 +622,45 @@ When the player presses the tablet button to enter lab mode
 | ---      | ---      | ---             | ---         |
 | initial_lab | Dict[str, int] | null | A description of the lab that was started/resumed upon entering lab mode, or null if no lab was start and the player was shown the lab menu instead. |**lab_name** : str, **author** : str, **percent_complete** : float, **sections** : Dict[str, Any] |
 | hand | HandType | Indicator of whether the player pressed the button with their right or left hand, or a mouse. | |  
+
+### **click_game_start**
+
+TODO
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| hand | HandType | Indicator of whether the player pressed the button with their right or left hand, or a mouse. | |  
+
+### **click_game_stop**
+
+When the player presses the button to return to the 'home' view of game  mode
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| hand | HandType | Indicator of whether the player pressed the button with their right or left hand, or a mouse. | |  
+
+### **click_game_score_reset**
+
+TODO
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| hand | HandType | Indicator of whether the player pressed the button with their right or left hand, or a mouse. | |  
+
+### **new_game_target_assigned**
+
+TODO : includes the target state, which in this case is always P, V, T
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
 
 ### **click_lab_scroll_up**
 
@@ -603,6 +765,17 @@ When the player presses the button to change to a new task in the lab
 | task | Dict[str, Any] | Details of the task the player selected. |**category** : enum(PlainText, TARGET_STATE, CONSTANT_VARIABLE, MULTIPLE_CHOICE, MULTIPLE_SELECT, WORD_BANK), **lab_name** : str, **section_number** : str, **task_number** : int, **is_active** : bool, **is_complete** : bool, **visual_aid** : bool, **available_tools** : List[enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)], **prompts** : List[str] |
 | hand | HandType | Indicator of whether the player pressed the button with their right or left hand, or a mouse. | |  
 
+### **click_next_task**
+
+When the player presses the button to change to advance to the next task in the lab
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| task | Dict[str, Any] | Details of the task the player selected. |**category** : enum(PlainText, TARGET_STATE, CONSTANT_VARIABLE, MULTIPLE_CHOICE, MULTIPLE_SELECT, WORD_BANK), **lab_name** : str, **section_number** : str, **task_number** : int, **is_active** : bool, **is_complete** : bool, **visual_aid** : bool, **available_tools** : List[enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)], **prompts** : List[str] |
+| hand | HandType | Indicator of whether the player pressed the button with their right or left hand, or a mouse. | |  
+
 ### **click_task_scroll_left**
 
 When the player presses the button to scroll left in the list of available tasks in the current lab section
@@ -652,7 +825,8 @@ TODO
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| target_state | Dict[enum(TEMPERATURE, PRESSURE, VOLUME, INTERNAL_ENERGY, ENTROPY, ENTHALPY, VAPOR_PROPORTION) | Tool enum, float] | The specific details of the target state, as a mapping from sim properties to the target values (note, not every property will be included, only the ones that had a target value specified). | |  
+| target_state | Dict[enum(TEMPERATURE, PRESSURE, VOLUME, INTERNAL_ENERGY, ENTROPY, ENTHALPY, VAPOR_PROPORTION) | Tool enum, float] | The specific details of the target state, as a mapping from sim properties to the target values (note, not every property will be included, only the ones that had a target value specified). | |
+| score_value | Optional[int] | The number of points added to the player score, if in game mode, or null if in lab mode. | |  
 
 ### **target_state_lost**
 
@@ -685,18 +859,9 @@ NOT YET IMPLEMENTED
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |  
 
-### **target_state_task_began**
+### **task_assigned**
 
 When the player has selected a target state task.
-
-#### Event Data
-
-| **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |  
-
-### **target_state_task_ended**
-
-When the player ends the target state task, moving to another task.
 
 #### Event Data
 

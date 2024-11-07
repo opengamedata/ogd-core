@@ -1,18 +1,18 @@
-name: ThermoVR Exporter CI Script
+name: ThermoLab Exporter CI Script
 run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
 
 on:
   push:
     paths:
     - 'src/ogd/core/generators/**'
-    - 'src/ogd/games/THERMOVR/**'
-    - '.github/workflows/CI_thermovr.yml'
+    - 'src/ogd/games/THERMOLAB/**'
+    - '.github/workflows/CI_thermolab.yml'
     - '.github/actions/export_last_week/**'
   workflow_dispatch:
 
 jobs:
   ci_export:
-    name: CI Export of ThermoVR Data
+    name: CI Export of ThermoLab Data
     runs-on: ubuntu-22.04
     concurrency:
       group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
@@ -48,13 +48,13 @@ jobs:
     - name: Set up Schema File
       uses: ./.github/actions/OGD_schema
       with:
-        game: "THERMOVR"
+        game: "THERMOLAB"
 
   # 3. Perform export
     - name: Do Export of last week's data
       uses: ./.github/actions/export_last_week
       with:
-        game: THERMOVR
+        game: THERMOLAB
 
   # 4. Cleanup & complete
     - name: Upload logs as artifacts
@@ -64,4 +64,4 @@ jobs:
     - name: Upload zips as artifacts
       uses: actions/upload-artifact@v3
       with:
-        path: ./data/THERMOVR/*.zip
+        path: ./data/THERMOLAB/*.zip

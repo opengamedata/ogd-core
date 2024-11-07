@@ -49,7 +49,7 @@ on:
         - "ERROR"
 
 env:
-  OGD_BQ_GAMES: '["AQUALAB", "BACTERIA", "BALLOON", "CRYSTAL", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "JOWILDER", "PENGUINS", "LAKELAND", "MAGNET", "TRANSFORMATION_QUEST", "THERMOVR", "WAVES", "WIND"]'
+  OGD_BQ_GAMES: '["AQUALAB", "BACTERIA", "BALLOON", "CRYSTAL", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "JOWILDER", "PENGUINS", "LAKELAND", "MAGNET", "SHADOWSPECT", "TRANSFORMATION_QUEST", "THERMOLAB", "WAVES", "WIND"]'
 
 jobs:
   export_data:
@@ -80,13 +80,13 @@ jobs:
         project_id: ${{ secrets.BQ_MASHOPOLIS_PROJECT_ID }}
         service_account_key: ${{ secrets.BQ_MASHOPOLIS_JSON }}
         export_default_credentials: true
-    - if: ${{ matrix.game == 'SHADOWSPECT' }}
-      name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v0
-      with:
-        project_id: ${{ secrets.BQ_SHADOWSPECT_PROJECT_ID }}
-        service_account_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
-        export_default_credentials: true
+    # - if: ${{ matrix.game == 'SHADOWSPECT' }}
+    #   name: Set up Cloud SDK
+    #   uses: google-github-actions/setup-gcloud@v0
+    #   with:
+    #     project_id: ${{ secrets.BQ_SHADOWSPECT_PROJECT_ID }}
+    #     service_account_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
+    #     export_default_credentials: true
     - if: ${{ matrix.game == 'SHIPWRECKS' }}
       name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0

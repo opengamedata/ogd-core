@@ -53,7 +53,7 @@ class OGDGenerators:
                     raise Exception(f"{_game_cfg.Source.Type} is not a valid EventInterface type!")
             return ret_val
         else:
-            raise ValueError(f"Config for {game} was invalid or not found!")
+            raise ValueError(f"Config for {game} was invalid or not found in GameSourceMap!")
 
     @staticmethod
     def GenModes(with_events:bool, with_features:bool, no_session_file:bool, no_player_file:bool, no_pop_file:bool) -> Set[ExportMode]:
