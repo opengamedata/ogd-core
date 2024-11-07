@@ -9,7 +9,7 @@ from ogd.common.models.FeatureData import FeatureData
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.games.BLOOM.features.PerCountyFeature import PerCountyFeature
 
-class FailureTrackingFeature(PerCountyFeature):
+class QuitOnBloomFail(PerCountyFeature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.last_fail_type: Optional[str] = None
