@@ -1,6 +1,4 @@
 # import standard libraries
-import itertools
-import json
 from pathlib import Path
 from typing import Any, Callable, Dict, Final, List, Optional
 
@@ -95,9 +93,9 @@ class BloomLoader(GeneratorLoader):
                 case "QuitOnBankruptcy":
                     ret_val = QuitOnBankruptcy.QuitOnBankruptcy(params=extractor_params)
                 case "BuildingInspectorTabCount":  # Add BuildingInspectorTabCount feature here
-                ret_val = BuildingInspectorTabCount(params=extractor_params)
+                    ret_val = BuildingInspectorTabCount.BuildingInspectorTabCount(params=extractor_params)
                 case _:
-                    ret_val = Nonmente
+                    ret_val = None
 
         # Then run through per-county features.
         else:
