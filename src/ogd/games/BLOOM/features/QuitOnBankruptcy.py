@@ -20,24 +20,25 @@ class QuitOnBankruptcy(PerCountyFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["failure_event", "win_event", "bankruptcy_alert", "policy_change"]
+        # Using actual event names based on BLOOM.json.template
+        return ["lose_game", "win_game", "local_alert_displayed", "select_policy_card"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        # Update failure type, county, bankruptcy reason if a failure event is triggered
-        if event.EventName == "failure_event":
-            self.last_fail_type = event.GameState.get("fail_type", None)
-            self.last_fail_county = event.GameState.get("fail_county", None)
+        # Update failure type, county, and reason if a lose event is triggered
+        if event.EventName == "lose_game":
+            self.last_fail_type = event.EventData.get("lose_condition", None)
+            self.last_fail_county = event.GameState.get("current_county", None)
 
-            # If the failure was due to bankruptcy (out of money), capture bankruptcy reason
+            
             if self.last_fail_type == "OutOfMoney":
-                self.bankruptcy_reason = event.GameState.get("bankruptcy_reason", None)
+                self.bankruptcy_reason = "Insufficient Funds"  # Assuming reason details
 
         # Update win status if a win event is triggered
-        if event.EventName == "win_event":
+        elif event.EventName == "win_game":
             self.won = True
         else:
             self.won = False

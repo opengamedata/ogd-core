@@ -19,30 +19,30 @@ class QuitOnBloomFail(PerCountyFeature):
         self.skim_policy: Optional[str] = None
         self.runoff_policy: Optional[str] = None
 
-
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["failure_event", "win_event", "bloom_alert", "policy_change"]
+        # Using actual event names based on BLOOM.json.template
+        return ["lose_game", "win_game", "bloom_alert", "select_policy_card"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        # Update failure type, county, bloom count, policies if a failure event is triggered
-        if event.EventName == "failure_event":
-            self.last_fail_type = event.GameState.get("fail_type", None)
-            self.last_fail_county = event.GameState.get("fail_county", None)
+        # Update failure type, county, bloom count, and policies if a lose event is triggered
+        if event.EventName == "lose_game":
+            self.last_fail_type = event.EventData.get("lose_condition", None)
+            self.last_fail_county = event.GameState.get("current_county", None)
 
-            # If the failure was a bloom failure, capture bloom count and policies
+            # If the failure was due to bloom (too many blooms), capture bloom count and policies
             if self.last_fail_type == "TooManyBlooms":
-                self.bloom_count = event.GameState.get("bloom_count", None)
-                self.skim_policy = event.GameState.get("skim_policy", None)
-                self.runoff_policy = event.GameState.get("runoff_policy", None)
+                self.bloom_count = event.EventData.get("phosphorus_value", None)  # Assuming this tracks bloom count
+                self.skim_policy = event.GameState.get("county_policies", {}).get("cleanup", {}).get("policy_choice", None)
+                self.runoff_policy = event.GameState.get("county_policies", {}).get("runoff", {}).get("policy_choice", None)
 
         # Update win status if a win event is triggered
-        if event.EventName == "win_event":
+        elif event.EventName == "win_game":
             self.won = True
         else:
             self.won = False
