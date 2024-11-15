@@ -8,12 +8,12 @@ on:
         description: "Game: the game(s) to be exported, comma-separated"
         required: true
         default: "['BACTERIA']"
-      include_events:
+      with_events:
         type: boolean
         description: "Include Events: if true, export includes event data. Else, event data is skipped"
         required: true
         default: true
-      include_features:
+      with_features:
         type: boolean
         description: "Include Features: if true, export includes feature data. Else, feature data is skipped"
         required: true
