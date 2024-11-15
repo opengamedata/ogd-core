@@ -905,7 +905,7 @@
                 "enabled": true,
                 "description":"Total number of shape moves in a given session",
                 "return_type": "int"
-            },
+            }
         },
         "aggregate":{
             "SessionID": {
