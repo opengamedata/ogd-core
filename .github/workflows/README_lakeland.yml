@@ -26,6 +26,8 @@ jobs:
   # 1. Local checkout 
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GH_SERVICE_TOKEN }}
     - name: Get Dependencies
       uses: opengamedata/actions-setup-ogd-py-dependencies@v1.2
       with:
