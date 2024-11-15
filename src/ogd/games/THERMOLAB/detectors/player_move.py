@@ -5,13 +5,14 @@ from typing import Any, Callable, List, Optional
 # import local files
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 
 class SliderMoveDetector(Detector):
 
-    def __init__(self, name: str, description: str, count_index: int, trigger_callback: Callable[[Event], None]):
-        super().__init__(name=name, description=description, count_index=count_index, trigger_callback=trigger_callback)
+    def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None]):
+        super().__init__(params=params, trigger_callback=trigger_callback)
         self._start_val: Optional[float] = None
         self._end_val: Optional[float] = None
         self._slider_grabbed: bool = False
