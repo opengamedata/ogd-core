@@ -87,6 +87,7 @@ jobs:
       with:
         game: ${{matrix.game}}
         python_version: ${{ vars.OGD_PYTHON_VERSION }}
+    - name: Upload Exported Data to Server
       uses: ./.github/actions/upload_export
       with:
         game: ${{ matrix.game }}
