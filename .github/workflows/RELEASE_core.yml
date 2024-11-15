@@ -10,9 +10,9 @@ jobs:
     name: Build Package for Release
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Get Dependencies
-      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.1
+      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.2
       with:
         python_version: ${{ vars.OGD_PYTHON_VERSION }}
     - name: Build Package
@@ -26,7 +26,7 @@ jobs:
         # asset_content_type: application/zip
     - name: Cache Build for Publishing
       id: cache-build
-      uses: actions/cache/save@v3
+      uses: actions/cache/save@v4
       with:
         key: opengamedata-core-build-${{ github.run_id }}-${{ github.run_attempt }}
         path: ./dist/
@@ -46,7 +46,7 @@ jobs:
     steps:
     - name: Restore Cached Build
       id: cached-build
-      uses: actions/cache/restore@v3
+      uses: actions/cache/restore@v4
       with:
         key: opengamedata-core-build-${{ github.run_id }}-${{ github.run_attempt }}
         path: ./dist/
@@ -70,7 +70,7 @@ jobs:
     steps:
     - name: Restore Cached Build
       id: cached-build
-      uses: actions/cache/restore@v3
+      uses: actions/cache/restore@v4
       with:
         key: opengamedata-core-build-${{ github.run_id }}-${{ github.run_attempt }}
         path: ./dist/
