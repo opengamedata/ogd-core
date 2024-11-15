@@ -80,9 +80,9 @@ class ThermoLabLoader(GeneratorLoader):
                 case "LabCompleteCount":
                     ret_val = LabCompleteCount.LabCompleteCount(params=extractor_params)
                 case "LeftHandMoves":
-                    ret_val = LeftHandMoves.LeftHandMoves(params=extractor_params)
+                    ret_val = LeftHandMoves.LeftHandMovesCount(params=extractor_params)
                 case "RightHandMoves":
-                    ret_val = RightHandMoves.RightHandMoves(params=extractor_params)
+                    ret_val = RightHandMoves.RightHandMovesCount(params=extractor_params)
                 case "ToolNudgeCount":
                     ret_val = ToolNudgeCount.ToolNudgeCount(params=extractor_params)
                 case "ToolSliderTime":
