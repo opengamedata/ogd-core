@@ -8,12 +8,10 @@ on:
     paths:
     - 'src/ogd/games/CENSIO_SLIDE/schemas/CENSIO_SLIDE.json.template'
     - '.github/workflows/README_censio_slide.yml'
-    - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
 
-# concurrency:
-#   group: Readme-Scripts-${{ github.ref }}
-#   cancel-in-progress: false
+env:
+  GAME_ID: CENSIO_SLIDE
 
 jobs:
   ci_export:
@@ -27,9 +25,9 @@ jobs:
 
   # 1. Local checkout 
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Get Dependencies
-      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.1
+      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.2
       with:
         python_version: ${{ vars.OGD_PYTHON_VERSION }}
 
@@ -42,37 +40,27 @@ jobs:
         ssh_host: ${{vars.FD_STORE_HOST}}
         ssh_user: ${{secrets.VPN_USER}}
         ssh_pass: ${{secrets.VPN_PASS}}
-    - name: Set up Schema File
-      uses: ./.github/actions/OGD_schema
-      with:
-        game: "CRUSH_STATION"
     - name: Configure Git User
-      run: |
-        git config --global user.name 'fieldday-service'
-        git config --global user.email 'fieldday@office365.wisc.edu'
-        git config --global pull.rebase false
+      uses: opengamedata/actions-setup-fd-git@v1.0
+      with:
+        username: "fieldday-service"
+        email: "fieldday@office365.wisc.edu"
 
   # 3. Generate README
     - name: Create README file
-      run: python main.py readme CENSIO_SLIDE --destination src/ogd/games
-    - name: Wait to Avoid Concurrent Pushes/Pulls
-      run: sleep $(shuf -i 1-60 -n 1)
-    - name: Commit README file
-      run: |
-        git pull
-        git add src/ogd/games/CENSIO_SLIDE/README.md
-        git diff --staged --quiet || git commit -m "Update Censio Slide README"
-    - name: Push Changes to GitHub
-      run: git push
+      uses: ./.github/actions/generate_readme
+      with:
+        game: ${{ env.GAME_ID }}
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
 
   # 4. Cleanup & complete
     - name: Upload data as artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: CRUSH_STATION_readme
-        path: ./src/ogd/games/CENSIO_SLIDE/README.md
+        name: ${{ env.GAME_ID }}_readme
+        path: ./src/ogd/games/${{ env.GAME_ID }}/README.md
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: log_data
         path: ./*.log

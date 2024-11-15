@@ -1,0 +1,112 @@
+# Workflow to run monthly exports of data.
+name: Monthly Automated Exports
+
+on:
+  schedule:
+    - cron: '1 0 2 * *'
+  workflow_dispatch:
+
+env:
+  STANDALONE_BQ_GAMES: '["SHIPWRECKS"]'
+
+jobs:
+  export_data:
+    name: Export All Games
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        game: [
+          AQUALAB,
+          BACTERIA,
+          BALLOON,
+          BLOOM,
+          CRYSTAL,
+          CYCLE_CARBON,
+          CYCLE_NITROGEN,
+          CYCLE_WATER,
+          EARTHQUAKE,
+          ICECUBE,
+          JOURNALISM,
+          JOWILDER,
+          LAKELAND,
+          MAGNET,
+          PENGUINS,
+          SHADOWSPECT,
+          SHIPWRECKS,
+          THERMOLAB,
+          TRANSFORMATION_QUEST,
+          WAVES,
+          WEATHER_STATION,
+          WIND]
+      fail-fast: false # we don't want to cancel just because one game fails.
+      max-parallel: 20
+
+    steps:
+
+  # 1. Local checkout 
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    # Need to get VPN connection in this case so we can upload file to server
+    - name: Get Dependencies
+      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.2
+      with:
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
+
+  # 2. Configure cloud & local environments
+    - name: Connect to VPN
+      uses: opengamedata/actions-openconnect-vpn@v1.1
+      with:
+        username: ${{ secrets.VPN_USER }}
+        password: ${{ secrets.VPN_PASS }}
+        endpoint: "soe.vpn.wisc.edu"
+    - name: Set up Google Cloud
+      uses: ./.github/actions/gCloud_setup
+      with:
+        game: ${{ matrix.game }}
+        ogd_id:  ${{ secrets.OGD_BQ_PROJECT_ID }}
+        ogd_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
+        mashopolis_id:  ${{ secrets.BQ_MASHOPOLIS_PROJECT_ID }}
+        mashopolis_key: ${{ secrets.BQ_MASHOPOLIS_JSON }}
+        shadowspect_id:  ${{ secrets.BQ_SHADOWSPECT_PROJECT_ID }}
+        shadowspect_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
+        shipwrecks_id:  ${{ secrets.BQ_SHIPWRECKS_PROJECT_ID }}
+        shipwrecks_key: ${{ secrets.BQ_SHIPWRECKS_JSON }}
+    - name: Set up Config File
+      uses: ./.github/actions/OGD_config
+      with:
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+        ssh_host: ${{vars.FD_STORE_HOST}}
+        ssh_user: ${{secrets.VPN_USER}}
+        ssh_pass: ${{secrets.VPN_PASS}}
+        log_level: "INFO"
+
+  # 3. Perform export & upload
+    - name: Do Export of last month
+      uses: ./.github/actions/export_last_month
+      with:
+        game: ${{matrix.game}}
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
+    - name: Upload Exported Data to Server
+      uses: ./.github/actions/upload_export
+      with:
+        game: ${{ matrix.game }}
+        host: ${{ vars.FD_WEB_HOST }}
+        source_path: ./data/${{ matrix.game }}
+        remote_data_path: "/var/www/opengamedata/data"
+
+  # 4. Cleanup & complete
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: export-logs
+        path: ./*.log
+  
+  trigger_reindex:
+    name: Trigger File Reindex
+    if: always()
+    needs: export_data
+    uses: ./.github/workflows/reindex_fileserver.yml
+    with:
+      FILE_SERVER: ${{ vars.FD_WEB_HOST }}
+      data_path: "/var/www/opengamedata/data"
