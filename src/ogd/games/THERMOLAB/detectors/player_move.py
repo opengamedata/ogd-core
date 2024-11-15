@@ -6,6 +6,7 @@ from typing import Any, Callable, List, Optional
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
 from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
 
 class SliderMoveDetector(Detector):
 
