@@ -5,7 +5,7 @@
       "TileType"          : ["LAND", "WATER", "DEEP_WATER"],
       "CardinalDirection" : ["N", "NE", "SE", "S", "SW", "NW"],
       "PolicyCategory"    : ["ECONOMY", "ECOLOGY"],
-      "PolicyType"        : ["SALES", "IMPORT", "RUNOFF", "CLEANUP"],
+      "PolicyType"        : ["SalesTaxPolicy", "ImportTaxPolicy", "RunoffPolicy", "SkimmingPolicy"],
       "SalesPolicy"       : ["NOT_SET", "NONE", "LOW_TAX", "HIGH_TAX", "SUBSIDY"],
       "ImportPolicy"      : ["NOT_SET", "NONE", "MILK", "GRAIN", "FERTILIZER"],
       "RunoffPolicy"      : ["NOT_SET", "NONE", "LOW", "HIGH", "VERY_HIGH"],
@@ -96,8 +96,20 @@
       "lose_game": {
          "description": "When the player enters the game lose state, and is taken back to a checkpoint to try again.",
          "event_data": {
+            "county_id" : {
+               "type" : "int",
+               "description" : "The index of the county in the order counties unlock."
+            },
+            "county_name" : {
+               "type" : "str",
+               "description" : "The name of the county in which the loss occurred."
+            },
             "lose_condition" : {
                "type" : "LossType",
+               "description" : "The state of the build map when the player entered the win state."
+            },
+            "map_state" : {
+               "type" : "TODO : BuildMap",
                "description" : "The state of the build map when the player entered the win state."
             }
          }
@@ -306,6 +318,24 @@
             }
          }
       },
+      "leave_county": {
+         "description": "When player leaves from one county to another.",
+         "event_data": {
+            "to_county" : {
+               "type" : "str",
+               "description" : "The new county the player is entering as they leave the current county."
+            }
+         }
+      },
+      "enter_county": {
+         "description": "When player has crossed into a county from another, and the interface updates to show the new county's money, policies, etc.",
+         "event_data": {
+            "from_county" : {
+               "type" : "str",
+               "description" : "The county the player left to enter the current one."
+            }
+         }
+      },
       "open_economy_view": {
          "description": "When the player clicks to open the economy breakdown view",
          "event_data": {
@@ -400,7 +430,7 @@
             }
          }
       },
-      "bloom_alert_displayed": {
+      "bloom_alert": {
          "description": "When game displays a 'bloom' alert pop-up, which appears above a newly-formed bloom, and does not pause game time.",
          "event_data": {
             "tile_index" : {
@@ -814,10 +844,10 @@
             }
          }
       },
-      "execute_build_queue": {
+      "click_execute_build": {
          "description": "When the player clicks to complete the building of all buildings in the build queue.",
          "event_data": {
-            "buildings" : {
+            "built_items" : {
                "type" : "List[BuildingType]",
                "description" : "The specific buildings in the build queue."
             },
@@ -982,47 +1012,235 @@
          }
       }
    },
-   
    "features": {
       "per_count": {
+        "CountyBloomAlertCount": {
+          "enabled": true,
+          "type": "CountyBloomAlertCount",
+          "prefix": "cty",
+          "count": 5,
+          "description": "Count of bloom alerts per county",
+          "return_type": "int"
+        },
+        "CountyBuildCount": {
+          "enabled": true,
+          "type": "CountyBuildCount",
+          "prefix": "cty",
+          "count": 5,
+          "description": "Count of builds per county",
+          "return_type": "int"
+        },
+        "CountyFinalPolicySettings": {
+          "enabled": true,
+          "type": "CountyFinalPolicySettings",
+          "prefix": "cty",
+          "count": 5,
+          "description": "Final policy settings per county",
+          "return_type": "dict"
+        },
+        "CountyLatestMoney": {
+          "enabled": true,
+          "type": "CountyLatestMoney",
+          "prefix": "cty",
+          "count": 5,
+          "description": "Latest money per county",
+          "return_type": "float"
+        },
+        "CountyFailCount": {
+          "enabled": true,
+          "type": "CountyFailCount",
+          "prefix": "cty",
+          "count": 5,
+          "description": "Number of failures per county",
+          "return_type": "int"
+        },
+        "CountyUnlockTime": {
+         "enabled": true,
+         "type": "CountyUnlockTime",
+         "prefix": "cty",
+         "count": 5,
+         "description": "Time to unlock county",
+         "return_type": "int"
+       }
       },
-      "aggregate":{
-         "ActiveTime": {
-             "threshold": 30,
-             "enabled": true,
-             "type": "ActiveTime",
-             "description": "Active time of a player",
-             "return_type": "timedelta"
-         },
-         "NumberOfSessionsPerPlayer": {
-            "enabled": true,
-            "type": "NumberOfSessionsPerPlayer",
-            "description": "Number of sessions per player",
-            "return_type": "int"
+      "aggregate": {
+        "ActiveTime": {
+          "threshold": 30,
+          "enabled": true,
+          "type": "ActiveTime",
+          "description": "Active time of a player",
+          "return_type": "timedelta"
+        },
+        "AlertCount": {
+          "enabled": true,
+          "type": "AlertCount",
+          "description": "Count of alerts",
+          "return_type": "int"
+        },
+        "AlertReviewCount": {
+          "enabled": true,
+          "type": "AlertReviewCount",
+          "description": "Count of alert reviews",
+          "return_type": "int"
+        },
+        "AverageActiveTime": {
+          "enabled": true,
+          "type": "AverageActiveTime",
+          "description": "Average active time of a player",
+          "return_type": "timedelta"
+        },
+        "BloomAlertCount": {
+          "enabled": true,
+          "type": "BloomAlertCount",
+          "description": "Count of bloom alerts",
+          "return_type": "int"
+        },
+        "BuildCount": {
+          "enabled": true,
+          "type": "CountEvent",
+          "description": "Count of builds",
+          "target": "click_execute_build",
+          "return_type": "int"
+        },
+        "BuildingUnlockCount": {
+          "enabled": true,
+          "type": "BuildingUnlockCount",
+          "description": "Count of building unlocks",
+          "return_type": "int"
+        },
+        "CityInspectionCount": {
+          "enabled": true,
+          "type": "CountEvent",
+          "description": "Count of city inspections",
+          "target": "city_inspector_displayed",
+          "return_type": "int"
         },
         "CountyUnlockCount": {
-         "enabled": true,
-         "type": "CountyUnlockCount",
-         "description": "ANumber of Counties unlocked",
-         "return_type": "int"
+          "enabled": true,
+          "type": "CountyUnlockCount",
+          "description": "Number of counties unlocked",
+          "return_type": "int"
+        },
+        "DairyInspectionCount": {
+          "enabled": true,
+          "type": "CountEvent",
+          "description": "Count of dairy inspections",
+          "target": "dairy_inspector_displayed",
+          "return_type": "int"
+        },
+        "TotalPolicyChangeCount": {
+          "enabled": true,
+          "type": "CountEvent",
+          "description": "Total count of policy changes",
+          "target": "select_policy_card",
+          "return_type": "int"
+        },
+        "EconomyViewCount": {
+          "enabled": true,
+          "type": "CountEvent",
+          "description": "Count of times the player viewed the economy view",
+          "target": "open_economy_view",
+          "return_type": "int"
         },
         "FailCount": {
-         "enabled": true,
-         "type": "FailCount",
-         "description": "Number of failure count",
-         "return_type": "int"
+          "enabled": true,
+          "type": "FailCount",
+          "description": "Number of failure count",
+          "return_type": "int"
         },
-        "PersistedThroughFailure": {
-         "enabled": true,
-         "type": "PersistedThroughFailure",
-         "description": "Number of times faied a but persisted through the task",
-         "return_type": "int"
-        }
-     
-   
+        "GameCompletionStatus": {
+          "enabled": true,
+          "type": "GameCompletionStatus",
+          "description": "Game completion status",
+          "return_type": "str"
+        },
+        "GrainInspectionCount": {
+          "enabled": true,
+          "type": "CountEvent",
+          "description": "Count of grain inspections",
+          "target": "grain_inspector_displayed",
+          "return_type": "int"
+        },
+        "NumberOfSessionsPerPlayer": {
+          "enabled": false,
+          "type": "NumberOfSessionsPerPlayer",
+          "description": "Number of sessions per player",
+          "return_type": "int"
+        },
+        "PersistThroughFailure": {
+          "enabled": true,
+          "type": "PersistThroughFailure",
+          "description": "Count of persistence after failure",
+          "return_type": "int"
+        },
+        "PolicyAdjustments": {
+          "enabled": true,
+          "type": "CountEvent",
+          "description": "Count of policy changes",
+          "target": "select_policy_card",
+          "return_type": "int"
+        },
+        "StorageInspectionCount": {
+          "enabled": true,
+          "type": "CountEvent",
+          "description": "Count of storage inspections",
+          "target": "storage_inspector_displayed",
+          "return_type": "int"
+        },
+        "SucceededThroughFailure": {
+          "enabled": true,
+          "type": "SucceededThroughFailure",
+          "description": "Number of times failed but persisted through the task",
+          "return_type": "int"
+        },
+         "QuitOnBloomFail": {
+            "enabled": true,
+            "type": "QuitOnBloomFail",
+            "description": "Checks if the player quit due to TooManyBlooms failure",
+            "return_type": "list",
+            "subfeatures": [
+            "FailureCounty",
+            "BloomCount",
+            "SkimPolicy",
+            "RunoffPolicy"
+            ]
+         },
+         "QuitOnCityFail": {
+            "enabled": true,
+            "type": "QuitOnCityFail",
+            "description": "Checks if the player quit due to CityFailure",
+            "return_type": "list",
+            "subfeatures": [
+            "FailureCounty",
+            "CityFailureReason"
+            ]
+         },
+         "QuitOnBankruptcy": {
+            "enabled": true,
+            "type": "QuitOnBankruptcy",
+            "description": "Checks if the player quit due to Bankruptcy (OutOfMoney failure)",
+            "return_type": "list",
+            "subfeatures": [
+            "FailureCounty",
+            "BankruptcyReason"
+            ]
+         },
+         "BuildingInspectorTabCount": {
+            "enabled": true,
+            "type": "BuildingInspectorTabCount",
+            "description": "Count of tab clicks while inspecting buildings, broken down by building type",
+            "return_type": "list",
+            "subfeatures": [
+              "TotalTabCount",
+              "CityTabCount",
+              "DairyFarmTabCount",
+              "GrainFarmTabCount",
+              "StorageTabCount"
+            ]
+          }
       }
    },
-   
+
    "config": {
       "SUPPORTED_VERS": [1]
    }

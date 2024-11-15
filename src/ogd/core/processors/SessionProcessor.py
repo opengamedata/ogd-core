@@ -3,16 +3,16 @@ import logging
 import traceback
 from typing import List, Dict, Type, Optional, Set
 # import local files
-from ogd.core.models.FeatureData import FeatureData
+from ogd.common.models.FeatureData import FeatureData
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.core.generators.registries.ExtractorRegistry import ExtractorRegistry
+from ogd.core.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExportMode import ExportMode
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.utils.Logger import Logger
-from ogd.core.utils.utils import ExportRow
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExportMode import ExportMode
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.utils.Logger import Logger
+from ogd.common.utils.typing import ExportRow
 
 ## @class SessionProcessor
 #  Class to extract and manage features for a processed csv file.
@@ -67,8 +67,8 @@ class SessionProcessor(ExtractorProcessor):
     def _sessionID(self) -> str:
         return self._session_id
 
-    def _getExtractorNames(self) -> List[str]:
-        return ["PlayerID", "SessionID"] + self._registry.GetExtractorNames()
+    def _getGeneratorNames(self) -> List[str]:
+        return ["PlayerID", "SessionID"] + self._registry.GetGeneratorNames()
 
     ## Function to handle processing of a single row of data.
     def _processEvent(self, event: Event):

@@ -4,6 +4,7 @@ run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' &
 on:
   push:
     paths:
+    - 'src/ogd/core/generators/**'
     - 'src/ogd/games/AQUALAB/**'
     - '.github/workflows/CI_aqualab.yml'
     - '.github/actions/export_yesterday/**'
@@ -21,43 +22,54 @@ jobs:
 
   # 1. Local checkout 
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Get Dependencies
-      uses: ./.github/actions/OGD_dependencies
+      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.2
+      with:
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
 
   # 2. Configure cloud & local environments
-    - name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v0
+    - name: Set up Google Cloud
+      uses: ./.github/actions/gCloud_setup
       with:
-        project_id: ${{ secrets.OGD_BQ_PROJECT_ID }}
-        service_account_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
-        export_default_credentials: true
+        game: ${{ matrix.game }}
+        ogd_id:  ${{ secrets.OGD_BQ_PROJECT_ID }}
+        ogd_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
+        mashopolis_id:  ${{ secrets.BQ_MASHOPOLIS_PROJECT_ID }}
+        mashopolis_key: ${{ secrets.BQ_MASHOPOLIS_JSON }}
+        shadowspect_id:  ${{ secrets.BQ_SHADOWSPECT_PROJECT_ID }}
+        shadowspect_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
+        shipwrecks_id:  ${{ secrets.BQ_SHIPWRECKS_PROJECT_ID }}
+        shipwrecks_key: ${{ secrets.BQ_SHIPWRECKS_JSON }}
+    - name: Get Dependencies
+      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.2
+      with:
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
     - name: Set up Config File
       uses: ./.github/actions/OGD_config
       with:
-        vpn_user: ${{secrets.VPN_USER}}
-        vpn_pass: ${{secrets.VPN_PASS}}
-        sql_host: ${{vars.FD_LOGGER_HOST}}
+        ssh_user: ${{secrets.VPN_USER}}
+        ssh_pass: ${{secrets.VPN_PASS}}
+        ssh_host: ${{vars.FD_LOGGER_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "INFO"
-    - name: Set up Schema File
-      uses: ./.github/actions/OGD_schema
-      with:
-        game: "AQUALAB"
 
   # 3. Perform export
     - name: Do Export of yesterday's data
       uses: ./.github/actions/export_yesterday
       with:
         game: AQUALAB
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
 
   # 4. Cleanup & complete
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
+        name: export-logs
         path: ./*.log
     - name: Upload zips as artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
+        name: aqualab-data
         path: ./data/AQUALAB/*.zip

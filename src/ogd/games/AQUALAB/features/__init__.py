@@ -1,3 +1,5 @@
+"""Initializer for Aqualab features"""
+
 __all__ = [
     "ActiveJobs",
     "ActiveTime",
@@ -57,7 +59,6 @@ __all__ = [
     "UserAvgActiveTime",
     "UserAvgSessionDuration",
     "UserTotalSessionDuration",
-    "AppVersions"
 ]
 
 from . import ActiveJobs
@@ -117,4 +118,3 @@ from . import TotalPlayTime
 from . import UserAvgActiveTime
 from . import UserAvgSessionDuration
 from . import UserTotalSessionDuration
-from . import AppVersions

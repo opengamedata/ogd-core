@@ -1,5 +1,6 @@
 # import standard libraries
 import cProfile
+import pstats
 #import datetime
 import argparse
 import os
@@ -13,11 +14,11 @@ from pathlib import Path
 from config.config import settings
 import_path = Path(".") / "src"
 sys.path.insert(0, str(import_path))
+from ogd.common.utils.Logger import Logger
 from src.ogd import games
 from src.ogd.core.exec.Commands import OGDCommands
 from src.ogd.core.exec.Parsers import OGDParsers
 from src.ogd.core.schemas.configs.ConfigSchema import ConfigSchema
-from src.ogd.core.utils.Logger import Logger
 
 
 ## This section of code is what runs main itself. Just need something to get it
@@ -33,7 +34,11 @@ parser = OGDParsers.CommandParser(games_list=games_list)
 
 args : Namespace = parser.parse_args()
 
+
 success : bool
+if config.WithProfiling:
+    profiler = cProfile.Profile()
+    profiler.enable()
 if args is not None:
     cmd = (args.command or "help").lower()
     dest = Path(args.destination if args.destination != "" else "./") if 'destination' in args else config.DataDirectory
@@ -58,5 +63,10 @@ if args is not None:
 else:
     print(f"Need to enter a command!")
     success = False
+if config.WithProfiling:
+    profiler.disable()
+    profile = pstats.Stats(profiler)
+    profile.sort_stats(pstats.SortKey.CUMULATIVE).print_stats('ogd', .1)
+
 if not success:
     sys.exit(1)

@@ -68,7 +68,7 @@ The individual fields encoded in the *game_state* and *user_data* Event element 
 | TileType | ['LAND', 'WATER', 'DEEP_WATER'] |
 | CardinalDirection | ['N', 'NE', 'SE', 'S', 'SW', 'NW'] |
 | PolicyCategory | ['ECONOMY', 'ECOLOGY'] |
-| PolicyType | ['SALES', 'IMPORT', 'RUNOFF', 'CLEANUP'] |
+| PolicyType | ['SalesTaxPolicy', 'ImportTaxPolicy', 'RunoffPolicy', 'SkimmingPolicy'] |
 | SalesPolicy | ['NOT_SET', 'NONE', 'LOW_TAX', 'HIGH_TAX', 'SUBSIDY'] |
 | ImportPolicy | ['NOT_SET', 'NONE', 'MILK', 'GRAIN', 'FERTILIZER'] |
 | RunoffPolicy | ['NOT_SET', 'NONE', 'LOW', 'HIGH', 'VERY_HIGH'] |
@@ -342,6 +342,26 @@ When the player finishes reading the current line of dialog, and clicks to advan
 | character_type | CharacterType | The kind of character who is 'speaking,' such as an advisor or farmer. | |
 | line_text | str | The actual content of the line of dialog that was just completed (not the line that will be shown next). | |  
 
+### **leave_county**
+
+When player leaves from one county to another.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| to_county | str | The new county the player is entering as they leave the current county. | |  
+
+### **enter_county**
+
+When player has crossed into a county from another, and the interface updates to show the new county's money, policies, etc.
+
+#### Event Data
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| from_county | str | The county the player left to enter the current one. | |  
+
 ### **open_economy_view**
 
 When the player clicks to open the economy breakdown view
@@ -442,7 +462,7 @@ When the player clicks on a 'local' in-game alert pop-up, which will in turn tri
 | tile_index | int | The index, within the global map, of the tile containing the building with the alert. | |
 | node_id | str | The ID of the node displayed when the alert is clicked | |  
 
-### **bloom_alert_displayed**
+### **bloom_alert**
 
 When game displays a 'bloom' alert pop-up, which appears above a newly-formed bloom, and does not pause game time.
 
@@ -705,7 +725,7 @@ When the player clicks a map point, attempting to destroy a building on the tile
 | tile_index | int | The index, within the global map, of the tile where the player tried to destroy a building. | |
 | building_type | BuildingType | The specific type of building, if any, on the tile. | |  
 
-### **execute_build_queue**
+### **click_execute_build**
 
 When the player clicks to complete the building of all buildings in the build queue.
 
@@ -713,7 +733,7 @@ When the player clicks to complete the building of all buildings in the build qu
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| buildings | List[BuildingType] | The specific buildings in the build queue. | |
+| built_items | List[BuildingType] | The specific buildings in the build queue. | |
 | total_cost | int | The total cost of the buildings in the build queue. | |
 | funds_remaining | int | The remaining county funds, after building all buildings in the queue. | |  
 
@@ -879,20 +899,120 @@ Active time of a player
 
 threshold : 30  
 
-**NumberOfSessionsPerPlayer** : *int*, *Aggregate feature*   
-Number of sessions per player  
+**AlertCount** : *int*, *Aggregate feature*   
+Count of alerts  
   
 
-**CountyUnlockCount** : *int*, *Aggregate feature*   
-ANumber of Counties unlocked  
+**AlertReviewCount** : *int*, *Aggregate feature*   
+Count of alert reviews  
   
+
+**AverageActiveTime** : *timedelta*, *Aggregate feature*   
+Average active time of a player  
+  
+
+**BloomAlertCount** : *int*, *Aggregate feature*   
+Count of bloom alerts  
+  
+
+**BuildCount** : *int*, *Aggregate feature*   
+Count of builds  
+*Other elements*:  
+
+target : click_execute_build  
+
+**BuildingUnlockCount** : *int*, *Aggregate feature*   
+Count of building unlocks  
+  
+
+**CityInspectionCount** : *int*, *Aggregate feature*   
+Count of city inspections  
+*Other elements*:  
+
+target : city_inspector_displayed  
+
+**CountyUnlockCount** : *int*, *Aggregate feature*   
+Number of counties unlocked  
+  
+
+**DairyInspectionCount** : *int*, *Aggregate feature*   
+Count of dairy inspections  
+*Other elements*:  
+
+target : dairy_inspector_displayed  
+
+**TotalPolicyChangeCount** : *int*, *Aggregate feature*   
+Total count of policy changes  
+*Other elements*:  
+
+target : select_policy_card  
+
+**EconomyViewCount** : *int*, *Aggregate feature*   
+Count of times the player viewed the economy view  
+*Other elements*:  
+
+target : open_economy_view  
 
 **FailCount** : *int*, *Aggregate feature*   
 Number of failure count  
   
 
-**PersistedThroughFailure** : *int*, *Aggregate feature*   
-Number of times faied a but persisted through the task  
+**GameCompletionStatus** : *str*, *Aggregate feature*   
+Game completion status  
+  
+
+**GrainInspectionCount** : *int*, *Aggregate feature*   
+Count of grain inspections  
+*Other elements*:  
+
+target : grain_inspector_displayed  
+
+**NumberOfSessionsPerPlayer** : *int*, *Aggregate feature*  (disabled)  
+Number of sessions per player  
+  
+
+**PersistThroughFailure** : *int*, *Aggregate feature*   
+Count of persistence after failure  
+  
+
+**PolicyAdjustments** : *int*, *Aggregate feature*   
+Count of policy changes  
+*Other elements*:  
+
+target : select_policy_card  
+
+**StorageInspectionCount** : *int*, *Aggregate feature*   
+Count of storage inspections  
+*Other elements*:  
+
+target : storage_inspector_displayed  
+
+**SucceededThroughFailure** : *int*, *Aggregate feature*   
+Number of times failed but persisted through the task  
+  
+
+**CountyBloomAlertCount** : *int*, *Per-count feature*   
+Count of bloom alerts per county  
+  
+
+**CountyBuildCount** : *int*, *Per-count feature*   
+Count of builds per county  
+  
+
+**CountyFinalPolicySettings** : *dict*, *Per-count feature*   
+Final policy settings per county  
+  
+
+**CountyLatestMoney** : *float*, *Per-count feature*   
+Latest money per county  
+  
+
+**CountyFailCount** : *int*, *Per-count feature*   
+Number of failures per county  
+  
+
+**CountyUnlockTime** : *int*, *Per-count feature*   
+Time to unlock county  
   
 
 ## Other Elements  

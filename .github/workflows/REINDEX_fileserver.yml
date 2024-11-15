@@ -1,0 +1,50 @@
+name: Reindex File Server
+run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'workflow_call' && 'Workflow Call' || 'Manual Run') }}
+on:
+  workflow_dispatch:
+   inputs:
+      FILE_SERVER:
+        type: string
+        description: "The server to connect to."
+        required: true
+        default: "file.server"
+      data_path:
+        type: string
+        description: "The path, on the server, to the data folder containing the reindexer."
+        required: true
+        default: "/var/www/opengamedata/data"
+  workflow_call:
+   inputs:
+      FILE_SERVER:
+        type: string
+        description: "The server to connect to."
+        required: true
+        default: ${{ vars.FD_WEB_HOST }}
+      data_path:
+        type: string
+        description: "The path, on the server, to the data folder containing the reindexer."
+        required: true
+        default: "/var/www/opengamedata/data"
+
+jobs:
+
+  reindex_server:
+    name: Reindex OpenGameData Files
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
+      cancel-in-progress: true
+
+    steps:
+    - name: Connect to VPN
+      uses: opengamedata/actions-openconnect-vpn@v1.1
+      with:
+        username: ${{ secrets.VPN_USER }}
+        password: ${{ secrets.VPN_PASS }}
+        endpoint: "soe.vpn.wisc.edu"
+    - name: Trigger reindex via ssh
+      run: |
+        mkdir -p ~/.ssh
+        echo '${{secrets.VPN_KEY}}' >> ./key.txt
+        chmod 600 ./key.txt
+        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ inputs.FILE_SERVER }} "cd ${{ inputs.data_path }}; pwd; ls; python3 reindexer.py;"

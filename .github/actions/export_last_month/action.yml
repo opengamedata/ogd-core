@@ -1,32 +1,35 @@
-name: "Export Monthly Data"
+name: "Export Previous Month of Data"
 author: Luke Swanson
 description: "Given a game, this action will export last month's data for that game."
 branding:
   icon: 'calendar'
-  color: 'orange'
+  color: 'purple'
 inputs:
   game:
-   description: "The game with data to export."
-   required: true
-   default: 'Crystal'
+    description: "The game with data to export."
+    required: true
+    default: 'AQUALAB'
+  python_version:
+    description: "Which version of Python to install on local GitHub Actions runner."
+    required: false
+    default: "3.12"
+
 runs:
   using: "composite"
   steps:
-    - name: Get export month
-      run: |
-        MONTH=$(date -d "$(date +%Y-%m-01) -1 month" +'%m')
-        YEAR=$(date -d "$(date +%Y-%m-01) -1 month" +'%Y')
-        MONTH_YEAR=$MONTH/$YEAR
-        echo "MONTH_YEAR=" $MONTH_YEAR >> $GITHUB_ENV
-        echo exporting $MONTH_YEAR
-      shell: bash
-    # Runs a single command using the runners shell
-    # - name: Ensure we have mysql client installed.
-    #   run: sudo apt-get install mysql-client
-      # shell: bash
-    # - name: Clone code
-    #   uses: actions/checkout@v3
-    - name: Execute data export
-      run: python3.10 main.py export ${{ inputs.game }} ${{env.MONTH_YEAR}} --monthly
-      shell: bash
-      # python3.10 main.py export ${{ inputs.game }} 1/1/2021 1/2/2021
+  - name: Get export month
+    run: |
+      MONTH=$(date -d "$(date +%Y-%m-01) -1 month" +'%m')
+      YEAR=$(date -d "$(date +%Y-%m-01) -1 month" +'%Y')
+      MONTH_YEAR=$MONTH/$YEAR
+      echo "MONTH_YEAR=" $MONTH_YEAR >> $GITHUB_ENV
+      echo exporting $MONTH_YEAR
+    shell: bash
+  - name: Execute data export
+    uses: ./.github/actions/export_custom_month
+    with:
+      game: ${{ inputs.game }}
+      with_events: true
+      with_features: true
+      month_year: ${{ env.MONTH_YEAR }}
+      python_version: ${{ inputs.python_version }}

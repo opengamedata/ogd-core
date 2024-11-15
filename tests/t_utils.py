@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 from unittest import TestCase
 # local import(s)
-from ogd.core.utils import utils
+from ogd.common.utils import utils
 
 class t_utils(TestCase):
     def RunAll(self):
