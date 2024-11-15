@@ -900,14 +900,14 @@
 
     "features": {
         "per_count": {
-        },
-        "aggregate":{
             "MoveShapeCount": {
                 "type": "MoveShapeCount",
                 "enabled": true,
                 "description":"Total number of shape moves in a given session",
                 "return_type": "int"
             },
+        },
+        "aggregate":{
             "SessionID": {
                 "type": "SessionID",
                 "enabled": true,
