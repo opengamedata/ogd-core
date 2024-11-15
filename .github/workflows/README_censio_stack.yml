@@ -8,7 +8,6 @@ on:
     paths:
     - 'src/ogd/games/CENSIO_STACK/schemas/CENSIO_STACK.json.template'
     - '.github/workflows/README_censio_stack.yml'
-    - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
 
 env:

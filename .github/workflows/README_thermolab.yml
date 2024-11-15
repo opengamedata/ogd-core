@@ -8,7 +8,6 @@ on:
     paths:
     - 'src/ogd/games/THERMOLAB/schemas/THERMOLAB.json.template'
     - '.github/workflows/README_thermolab.yml'
-    - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
 
 env:

@@ -8,7 +8,6 @@ on:
     paths:
     - 'src/ogd/games/MAGNET/schemas/MAGNET.json.template'
     - '.github/workflows/README_magnet.yml'
-    - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
 
 env:

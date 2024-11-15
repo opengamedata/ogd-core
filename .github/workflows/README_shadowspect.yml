@@ -8,7 +8,6 @@ on:
     paths:
     - 'src/ogd/games/SHADOWSPECT/schemas/SHADOWSPECT.json.template'
     - '.github/workflows/README_shadowspect.yml'
-    - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
 
 env:
