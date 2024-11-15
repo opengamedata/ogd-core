@@ -96,8 +96,20 @@
       "lose_game": {
          "description": "When the player enters the game lose state, and is taken back to a checkpoint to try again.",
          "event_data": {
+            "county_id" : {
+               "type" : "int",
+               "description" : "The index of the county in the order counties unlock."
+            },
+            "county_name" : {
+               "type" : "str",
+               "description" : "The name of the county in which the loss occurred."
+            },
             "lose_condition" : {
                "type" : "LossType",
+               "description" : "The state of the build map when the player entered the win state."
+            },
+            "map_state" : {
+               "type" : "TODO : BuildMap",
                "description" : "The state of the build map when the player entered the win state."
             }
          }

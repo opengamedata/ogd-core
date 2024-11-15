@@ -1,6 +1,4 @@
 # import standard libraries
-import itertools
-import json
 from pathlib import Path
 from typing import Any, Callable, Dict, Final, List, Optional
 
@@ -19,7 +17,7 @@ from ogd.common.utils.utils import loadJSONFile
 from ogd.games.BLOOM.features import PersistThroughFailure
 from . import features
 
-#EXPORT_PATH : Final[str] = "games/BLOOM/DBExport.json"
+# EXPORT_PATH : Final[str] = "games/BLOOM/DBExport.json"
 
 ## @class BloomLoader
 #  Extractor subclass for extracting features from Bloomlab game data.
@@ -95,9 +93,9 @@ class BloomLoader(GeneratorLoader):
                 case "QuitOnBankruptcy":
                     ret_val = QuitOnBankruptcy.QuitOnBankruptcy(params=extractor_params)
                 case "BuildingInspectorTabCount":  # Add BuildingInspectorTabCount feature here
-                ret_val = BuildingInspectorTabCount(params=extractor_params)
+                    ret_val = BuildingInspectorTabCount.BuildingInspectorTabCount(params=extractor_params)
                 case _:
-                    ret_val = Nonmente
+                    ret_val = None
 
         # Then run through per-county features.
         else:
