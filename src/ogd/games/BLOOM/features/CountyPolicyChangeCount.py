@@ -9,6 +9,12 @@ class CountyPolicyChangeCount(PerCountyFeature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.policy_change_count: int = 0
+        self.policy_counts: Dict[str, int] = {
+            "SalesTaxPolicy": 0,
+            "RunoffPolicy": 0,
+            "ImportTaxPolicy": 0,
+            "SkimmingPolicy": 0
+        }
         self.county_name: Optional[str] = None
 
     # Implement abstract functions
@@ -22,14 +28,35 @@ class CountyPolicyChangeCount(PerCountyFeature):
 
     def _updateFromEvent(self, event: Event) -> None:
         if event.EventName == "select_policy_card":
-            # Count the policy changes if the county is being tracked
-            self.policy_change_count += 1
+            policy_name = event.EventData.get("policy", None)
+            if policy_name in self.policy_counts:
+                # Increment the specific policy count and the total count
+                self.policy_counts[policy_name] += 1
+                self.policy_change_count += 1
+            else:
+                self.WarningMessage(f"Got a select_policy_card with unexpected policy type {policy_name}")
 
     def _updateFromFeatureData(self, feature: FeatureData):
-        return
+        pass
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self.policy_change_count]
+        # Return total count and individual policy counts
+        return [
+            self.policy_change_count,
+            self.policy_counts["SalesTaxPolicy"],
+            self.policy_counts["RunoffPolicy"],
+            self.policy_counts["ImportTaxPolicy"],
+            self.policy_counts["SkimmingPolicy"]
+        ]
+
+    def Subfeatures(self) -> List[str]:
+        # List each individual policy count as a subfeature
+        return [
+            "SalesTaxPolicyCount",
+            "RunoffPolicyCount",
+            "ImportTaxPolicyCount",
+            "SkimmingPolicyCount"
+        ]
 
     # Optionally override public functions
     @staticmethod
