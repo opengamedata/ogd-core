@@ -54,46 +54,46 @@ on:
         - "INFO"
         - "WARNING"
         - "ERROR"
-      use_alternate_data_source:
-        type: boolean
-        description: "Use Alternate Data Source: if true, the data will be exported from the database configured with the items below."
-        required: true
-        default: false
-      source_id:
-        type: choice
-        description: "Data Source ID: which available data source to use"
-        required: false
-        default: "OPENGAMEDATA_BQ"
-        options:
-        - "AQUALAB_BQ"
-        - "MASHOPOLIST_BQ"
-        - "SHADOWSPECT_BQ"
-        - "SHIPWRECKS_BQ"
-        - "OPENGAMEDATA_BQ"
-        - "OPENGAMEDATA_MYSQL"
-        - "LOGGER"
-      database_name:
-        description: "Database Name: the name of the database within the data source, containing your game's data."
-        required: false
-        default: "aqualab_database"
-      table_name:
-        description: "Table Name: the name of the table within the database, containing your game's data."
-        required: false
-        default: "daily"
-      schema_id:
-        type: choice
-        description: "Table Schema ID: which available table schema your data source uses."
-        required: false
-        default: "OPENGAMEDATA_BIGQUERY"
-        options:
-        - "OPENGAMEDATA_BIGQUERY"
-        - "BIGQUERY"
-        - "FILEDDAY_MYSQL"
-        - "FIREBASE"
-        - "MASHOPOLIS_MYSQL"
-        - "OGD_EVENT_FILE"
-        - "OPENGAMEDATA_MYSQL"
-        - "SHIPWRECKS"
+      # use_alternate_data_source:
+      #   type: boolean
+      #   description: "Use Alternate Data Source: if true, the data will be exported from the database configured with the items below."
+      #   required: true
+      #   default: false
+      # source_id:
+      #   type: choice
+      #   description: "Data Source ID: which available data source to use"
+      #   required: false
+      #   default: "OPENGAMEDATA_BQ"
+      #   options:
+      #   - "AQUALAB_BQ"
+      #   - "MASHOPOLIST_BQ"
+      #   - "SHADOWSPECT_BQ"
+      #   - "SHIPWRECKS_BQ"
+      #   - "OPENGAMEDATA_BQ"
+      #   - "OPENGAMEDATA_MYSQL"
+      #   - "LOGGER"
+      # database_name:
+      #   description: "Database Name: the name of the database within the data source, containing your game's data."
+      #   required: false
+      #   default: "aqualab_database"
+      # table_name:
+      #   description: "Table Name: the name of the table within the database, containing your game's data."
+      #   required: false
+      #   default: "daily"
+      # schema_id:
+      #   type: choice
+      #   description: "Table Schema ID: which available table schema your data source uses."
+      #   required: false
+      #   default: "OPENGAMEDATA_BIGQUERY"
+      #   options:
+      #   - "OPENGAMEDATA_BIGQUERY"
+      #   - "BIGQUERY"
+      #   - "FILEDDAY_MYSQL"
+      #   - "FIREBASE"
+      #   - "MASHOPOLIS_MYSQL"
+      #   - "OGD_EVENT_FILE"
+      #   - "OPENGAMEDATA_MYSQL"
+      #   - "SHIPWRECKS"
 
 jobs:
   export_data:
