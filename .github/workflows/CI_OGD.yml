@@ -6,15 +6,7 @@ run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' &
 on:
   push:
     paths:
-    - 'src/ogd/core/generators/**'
-    - 'src/ogd/core/interfaces/**'
-    - 'src/ogd/core/managers/**'
-    - 'src/ogd/core/models/**'
-    - 'src/ogd/core/processors/**'
-    - 'src/ogd/core/registries/**'
-    - 'src/ogd/core/schemas/**'
-    - 'src/ogd/core/schemas/*_schemas/**'
-    - 'src/ogd/core/utils/*'
+    - 'src/ogd/core/**'
     - 'main.py'
     - '.github/workflows/CI_OGD.yml'
     - '.github/actions/**'
@@ -22,7 +14,7 @@ on:
 
 jobs:
   test_export:
-    name: CI Export of Aqualab Data
+    name: CI Export of Crystal & Waves Data
     runs-on: ubuntu-22.04
     concurrency:
       group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
@@ -32,19 +24,29 @@ jobs:
 
   # 1. Local checkout 
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Get Dependencies
-      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.1
+      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.2
       with:
         python_version: ${{ vars.OGD_PYTHON_VERSION }}
 
   # 2. Configure cloud & local environments
-    - name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v0
+    - name: Set up Google Cloud
+      uses: ./.github/actions/gCloud_setup
       with:
-        project_id: ${{ secrets.OGD_BQ_PROJECT_ID }}
-        service_account_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
-        export_default_credentials: true
+        game: ${{ matrix.game }}
+        ogd_id:  ${{ secrets.OGD_BQ_PROJECT_ID }}
+        ogd_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
+        mashopolis_id:  ${{ secrets.BQ_MASHOPOLIS_PROJECT_ID }}
+        mashopolis_key: ${{ secrets.BQ_MASHOPOLIS_JSON }}
+        shadowspect_id:  ${{ secrets.BQ_SHADOWSPECT_PROJECT_ID }}
+        shadowspect_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
+        shipwrecks_id:  ${{ secrets.BQ_SHIPWRECKS_PROJECT_ID }}
+        shipwrecks_key: ${{ secrets.BQ_SHIPWRECKS_JSON }}
+    - name: Get Dependencies
+      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.2
+      with:
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
     - name: Set up Config File
       uses: ./.github/actions/OGD_config
       with:
@@ -55,14 +57,6 @@ jobs:
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "INFO"
         with_profiling: "True"
-    - name: Set up Schema File for Crystal
-      uses: ./.github/actions/OGD_schema
-      with:
-        game: "CRYSTAL"
-    - name: Set up Schema File for Waves
-      uses: ./.github/actions/OGD_schema
-      with:
-        game: "WAVES"
 
   # 3. Perform export
     - name: Attempt Export of yesterday's data with LegacyFeature
@@ -73,17 +67,21 @@ jobs:
       uses: ./.github/actions/export_yesterday
       with:
         game: WAVES
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
 
   # 4. Cleanup & complete
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
+        name: export-logs
         path: ./*.log
     - name: Upload Crystal zips as artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
+        name: crystal-data
         path: ./data/CRYSTAL/*.zip
     - name: Upload Wave zips as artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
+        name: waves-data
         path: ./data/WAVES/*.zip
