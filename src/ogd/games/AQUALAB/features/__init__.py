@@ -77,6 +77,7 @@ from . import JobExperimentation
 from . import JobGuideCount
 from . import JobHelpCount
 from . import JobLocationChanges
+from . import JobLocationChangesNoKelp
 from . import JobModeling
 from . import JobPlayTime
 from . import JobPriorAttempt
@@ -95,6 +96,7 @@ from . import RegionJobCount
 from . import RegionName
 from . import SessionDiveSitesCount
 from . import SessionDuration
+from . import SessionDurationPerJob
 from . import SessionGuideCount
 from . import SessionHelpCount
 from . import SessionID
@@ -115,6 +117,7 @@ from . import TotalHelpCount
 from . import TotalKelpTime
 from . import TotalModelingTime
 from . import TotalPlayTime
+from . import TimeInJournal
 from . import UserAvgActiveTime
 from . import UserAvgSessionDuration
 from . import UserTotalSessionDuration
