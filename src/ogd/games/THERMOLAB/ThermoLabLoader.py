@@ -79,9 +79,9 @@ class ThermoLabLoader(GeneratorLoader):
                 case "LabCompleteCount":
                     ret_val = LabCompleteCount.LabCompleteCount(params=extractor_params)
                 case "LeftHandMoves":
-                    ret_val = LeftHandMoves.LeftHandMoves(params=extractor_params)
+                    ret_val = LeftHandMoves.LeftHandMovesCount(params=extractor_params)
                 case "RightHandMoves":
-                    ret_val = RightHandMoves.RightHandMoves(params=extractor_params)
+                    ret_val = RightHandMoves.RightHandMovesCount(params=extractor_params)
                 case "ToolNudgeCount":
                     ret_val = ToolNudgeCount.ToolNudgeCount(params=extractor_params)
                 case "ToolSliderTime":
@@ -98,6 +98,8 @@ class ThermoLabLoader(GeneratorLoader):
     def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Optional[Detector]:
         ret_val : Optional[Detector] = None
         match detector_type:
+            case "player_move":
+                ret_val = player_move.player_move(params=extractor_params, trigger_callback=trigger_callback)
             case _:
                 Logger.Log(f"'{detector_type}' is not a valid detector for ThermoLab.")
         return ret_val
