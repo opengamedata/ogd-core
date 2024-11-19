@@ -667,6 +667,57 @@
                     }
                 }
             },
+            "JobLocationChangesNoKelp": {
+                "enabled": true,
+                "type": "JobLocationChangesNoKelp",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "N/A",
+                "return_type": "int",
+                "subfeatures": {
+                    "ByTask": {
+                        "description": "N/A",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "SessionDurationPerJob": {
+                "enabled": true,
+                "type": "SessionDuration",
+                "description": "N/A",
+                "threshold": 60,
+                "return_type": "timedelta",
+                "subfeatures": {
+                    "Total": {
+                        "description": "The total play time per job",
+                        "return_type": "timedelta"
+                    },
+                    "Seconds": {
+                        "description": "The total play time per job, whether active or idle, in seconds",
+                        "return_type": "float"
+                    },
+                    "Active": {
+                        "description": "The active play time per job, i.e. play without any gaps above the threshold, as a timedelta",
+                        "return_type": "timedelta"
+                    },
+                    "ActiveSeconds": {
+                        "description": "The active play time per job, i.e. play without any gaps above the threshold, in seconds",
+                        "return_type": "float"
+                    },
+                    "Idle": {
+                        "description": "The idle time per job i.e. player does not play or is afk",
+                        "return_type": "timedelta"
+                    },
+                    "IdleSeconds": {
+                        "description": "The idle time per job i.e. player does not play or is afk, in seconds",
+                        "return_type": "float"
+                    },
+                    "MaxIdle": {
+                        "description": "The maximum idle time per job",
+                        "return_type": "timedelta"
+                    }
+                }
+            },
             "JobModeling": {
                 "enabled": true,
                 "type": "JobModeling",
@@ -900,6 +951,34 @@
                 "type": "TotalPlayTime",
                 "description": "Total time the player had the game open, based on sum total of SessionDurations.",
                 "return_type": "timedelta"
+            },
+            "TimeInJournal": {
+                "enabled": true,
+                "type": "TimeInJournal",
+                "description": "Tracks total, active, and idle time spent in the journal.",
+                "return_type": "timedelta",
+                "subfeatures": {
+                    "Seconds": {
+                        "description": "Total time spent in the journal, in seconds.",
+                        "return_type": "float"
+                    },
+                    "Active": {
+                        "description": "Total active time in the journal.",
+                        "return_type": "timedelta"
+                    },
+                    "ActiveSeconds": {
+                        "description": "Active time in the journal, in seconds.",
+                        "return_type": "float"
+                    },
+                    "Idle": {
+                        "description": "Total idle time in the journal.",
+                        "return_type": "timedelta"
+                    },
+                    "IdleSeconds": {
+                        "description": "Idle time in the journal, in seconds.",
+                        "return_type": "float"
+                    }
+                }
             },
             "UserAvgSessionDuration": {
                 "enabled": true,

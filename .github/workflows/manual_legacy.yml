@@ -1,14 +1,10 @@
-
 # Workflow to run monthly exports of data.
-# All games, and months, for copy-paste:
-# game: ['AQUALAB', 'BACTERIA', 'BALLOON', 'CRYSTAL', 'CYCLE_CARBON', 'CYCLE_NITROGEN', 'CYCLE_WATER', 'EARTHQUAKE', 'JOWILDER', 'LAKELAND', 'MAGNET', 'STEMPORTS', 'WAVES', 'WIND']
-# month-year: ['03/2019', '04/2019', '05/2019', '06/2019', '07/2019', '08/2019', '09/2019', '10/2019', '11/2019', '12/2019', '01/2020', '02/2020', '03/2020', '04/2020', '05/2020', '06/2020', '07/2020', '08/2020', '09/2020']
 name: Manual Export w/Legacy Data Source (events only)
 on:
-  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
+  workflow_dispatch:
     inputs:
       game:
-        description: "The game to be exported (only one, not allowed to do multiple games)"
+        description: "Game: the game to be exported (only one, not allowed to do multiple games)"
         required: true
         default: "BACTERIA"
       month_year:
@@ -67,7 +63,7 @@ jobs:
     # Steps to set up for and execute an export
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     # A bunch of copy-paste crap to set up google cloud for any given game.
     # Since we don't know which game source is gonna be used, check for all possibilities
@@ -113,7 +109,7 @@ jobs:
         echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     # Back to normal setup stuff.
     - name: Get Dependencies
-      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.1
+      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.2
       with:
         python_version: ${{ vars.OGD_PYTHON_VERSION }}
     - name: Set up Config File
@@ -126,10 +122,6 @@ jobs:
         ssh_pass: ${{secrets.VPN_PASS}}
         slice_size: ${{ github.event.inputs.slice_size }}
         log_level: ${{ github.event.inputs.log_level }}
-    - name: Set up Schema File
-      uses: ./.github/actions/OGD_schema
-      with:
-        game: ${{matrix.game}}
     - name: Do Export of Month (events only)
       uses: ./.github/actions/export_custom_month
       with:
@@ -146,12 +138,12 @@ jobs:
         scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
     - name: Upload data as artifact
       if: github.event.inputs.export_to_web == false
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{matrix.game}}_event_export_data
         path: ./data/${{matrix.game}}/*.zip
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: log_data
         path: ./*.log

@@ -1,6 +1,4 @@
 # import standard libraries
-import itertools
-import json
 from pathlib import Path
 from typing import Any, Callable, Dict, Final, List, Optional
 
@@ -19,7 +17,7 @@ from ogd.common.utils.utils import loadJSONFile
 from ogd.games.BLOOM.features import PersistThroughFailure
 from . import features
 
-#EXPORT_PATH : Final[str] = "games/BLOOM/DBExport.json"
+# EXPORT_PATH : Final[str] = "games/BLOOM/DBExport.json"
 
 ## @class BloomLoader
 #  Extractor subclass for extracting features from Bloomlab game data.
@@ -88,6 +86,14 @@ class BloomLoader(GeneratorLoader):
                     ret_val = PersistThroughFailure.PersistThroughFailure(params=extractor_params)
                 case "PersistenceTime":
                     ret_val = PersistenceTime.PersistenceTime(params=extractor_params)
+                case "QuitOnBloomFail":
+                    ret_val = QuitOnBloomFail.QuitOnBloomFail(params=extractor_params)
+                case "QuitOnCityFail":
+                    ret_val = QuitOnCityFail.QuitOnCityFail(params=extractor_params)
+                case "QuitOnBankruptcy":
+                    ret_val = QuitOnBankruptcy.QuitOnBankruptcy(params=extractor_params)
+                case "BuildingInspectorTabCount":  # Add BuildingInspectorTabCount feature here
+                    ret_val = BuildingInspectorTabCount.BuildingInspectorTabCount(params=extractor_params)
                 case _:
                     ret_val = None
 
@@ -119,6 +125,7 @@ class BloomLoader(GeneratorLoader):
             case _:
                 raise NotImplementedError(f"'{detector_type}' is not a valid detector for Bloom.")
         return ret_val
+
 
     # @staticmethod
     # def GetBloomLabCount(db_export_path:Path=Path(".") / "ogd" / "games" / "BLOOM"):
