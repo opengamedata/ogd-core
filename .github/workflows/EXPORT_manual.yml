@@ -208,7 +208,7 @@ jobs:
     name: Trigger File Reindex
     if: github.event.inputs.upload_to_ogd == 'true'
     needs: export_data
-    uses: ./.github/workflows/reindex_fileserver.yml
+    uses: ./.github/workflows/REINDEX_fileserver.yml
     with:
       FILE_SERVER: ${{ vars.FD_WEB_HOST }}
       data_path: "/var/www/opengamedata/data"
