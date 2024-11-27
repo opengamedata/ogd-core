@@ -856,9 +856,9 @@
                 "return_type": "dict"
             },
             "PlayLocations": {
-                "enabled": false,
+                "enabled": true,
                 "type": "PlayLocations",
-                "description": "An indicator of whether play happened during normal school hours or not",
+                "description": "Play Locations",
                 "return_type": "List[bool]",
                 "subfeatures": {
                     "LocalTime": {
@@ -950,6 +950,27 @@
                 "enabled": true,
                 "type": "TotalPlayTime",
                 "description": "Total time the player had the game open, based on sum total of SessionDurations.",
+                "return_type": "timedelta"
+            },
+            "TotalSessionTime": {
+                "enabled": true,
+                "type": "TotalSessionTime",
+                "description": "Total time spent playing in a given session",
+                "threshold": 30,
+                "return_type": "timedelta"
+            },
+            "TotalPopulationTime": {
+                "enabled": true,
+                "type": "TotalPopulationTime",
+                "description": "Total population playing in a given session",
+                "threshold": 30,
+                "return_type": "timedelta"
+            },
+            "TotalPlayerTime": {
+                "enabled": true,
+                "type": "TotalPlayerTime",
+                "description": "Total players playing in a given session",
+                "threshold": 30,
                 "return_type": "timedelta"
             },
             "TimeInJournal": {

@@ -30,6 +30,7 @@ __all__ = [
     "ModelInterveneCount",
     "ModelPredictCount",
     "PlayerSummary",
+    "PlayLocations",
     "PopulationSummary",
     "RegionJobCount",
     "RegionName",
@@ -56,6 +57,9 @@ __all__ = [
     "TotalKelpTime",
     "TotalModelingTime",
     "TotalPlayTime",
+    "TotalSessionTime",
+    "TotalPopulationTime",
+    "TotalPlayerTime",
     "TimeInJournal",
     "UserAvgActiveTime",
     "UserAvgSessionDuration",
@@ -91,6 +95,7 @@ from . import ModelExportCount
 from . import ModelInterveneCount
 from . import ModelPredictCount
 from . import PlayerSummary
+from . import PlayLocations
 from . import PopulationSummary
 from . import RegionJobCount
 from . import RegionName
@@ -117,6 +122,9 @@ from . import TotalHelpCount
 from . import TotalKelpTime
 from . import TotalModelingTime
 from . import TotalPlayTime
+from . import TotalSessionTime
+from . import TotalPopulationTime
+from . import TotalPlayerTime
 from . import TimeInJournal
 from . import UserAvgActiveTime
 from . import UserAvgSessionDuration
