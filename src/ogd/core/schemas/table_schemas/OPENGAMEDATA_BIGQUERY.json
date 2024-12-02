@@ -1,4 +1,5 @@
 {
+    "table_type": "EVENT",
     "column_map": {
         "session_id"           : "session_id",
         "app_id"               : null,
