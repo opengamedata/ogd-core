@@ -32,7 +32,7 @@ jobs:
     - name: Set up Google Cloud
       uses: ./.github/actions/gCloud_setup
       with:
-        game: ${{ matrix.game }}
+        game: AQUALAB
         ogd_id:  ${{ secrets.OGD_BQ_PROJECT_ID }}
         ogd_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
         mashopolis_id:  ${{ secrets.BQ_MASHOPOLIS_PROJECT_ID }}
