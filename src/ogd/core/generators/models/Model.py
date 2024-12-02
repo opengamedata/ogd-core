@@ -14,6 +14,18 @@ class Model(Generator):
     def _apply(self, apply_to:List[FeatureData | Event]) -> FeatureData | Event:
         pass
 
+    ## Abstract declaration of a function to perform update of a feature from a row.
+    @abc.abstractmethod
+    def _updateFromFeatureData(self, feature:FeatureData):
+        """Abstract declaration of a function to perform update of a feature from a row.
+
+        TODO : this will get removed once patch is in that puts _updateFromFeatureData in Generator base class.
+
+        :param event: An event, used to update the feature's data.
+        :type event: Event
+        """
+        pass
+
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
 
