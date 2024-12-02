@@ -6,6 +6,7 @@ from typing import Any, Callable, Dict, List, Optional
 from ogd.core.generators.Generator import Generator, GeneratorParameters
 from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
 from ogd.common.models.Event import Event
+from ogd.common.models.FeatureData import FeatureData
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.utils.typing import Map
 
@@ -50,6 +51,18 @@ class Detector(Generator):
         """
         return []
 
+    @classmethod
+    def _updateFromFeatureData(self, feature:FeatureData):
+        """Base function for extracting any information from features of this detector's session, player, or population.
+
+        By default, no dependencies will be listed in `_featureFilter`, and so nothing will be done in this function.
+        In fact, there's really no processing step here at all, so this should always just be a do-nothing function.
+
+        :return: _description_
+        :rtype: List[str]
+        """
+        return
+
     # *** PUBLIC STATICS ***
 
     @staticmethod
@@ -71,6 +84,9 @@ class Detector(Generator):
                 self._triggering_event = event
                 _new_event = self._trigger_event()
                 self._callback(_new_event)
+
+    def UpdateFromFeatureData(self, feature:FeatureData):
+        self._updateFromFeatureData(feature=feature)
 
     def GenerateEvent(self, event_name:str,              event_data:Map,
                       session_id:Optional[str]=None,     app_id:Optional[str]=None,

@@ -4,6 +4,7 @@ import logging
 from typing import List, Optional
 # import locals
 from ogd.common.models.Event import Event
+from ogd.common.models.FeatureData import FeatureData
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.utils.Logger import Logger
 
@@ -55,6 +56,16 @@ class Generator(abc.ABC):
     ## Abstract declaration of a function to perform update of a feature from a row.
     @abc.abstractmethod
     def _updateFromEvent(self, event:Event):
+        """Abstract declaration of a function to perform update of a feature from a row.
+
+        :param event: An event, used to update the feature's data.
+        :type event: Event
+        """
+        pass
+
+    ## Abstract declaration of a function to perform update of a feature from a row.
+    @abc.abstractmethod
+    def _updateFromFeatureData(self, feature:FeatureData):
         """Abstract declaration of a function to perform update of a feature from a row.
 
         :param event: An event, used to update the feature's data.

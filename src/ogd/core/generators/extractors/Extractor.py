@@ -19,16 +19,6 @@ class Extractor(Generator):
 
     # *** ABSTRACTS ***
 
-    ## Abstract declaration of a function to perform update of a feature from a row.
-    @abc.abstractmethod
-    def _updateFromFeatureData(self, feature:FeatureData):
-        """Abstract declaration of a function to perform update of a feature from a row.
-
-        :param event: An event, used to update the feature's data.
-        :type event: Event
-        """
-        pass
-
     ## Abstract declaration of a function to get the calculated value of the feature, given data seen so far.
     @abc.abstractmethod
     def _getFeatureValues(self) -> List[Any]:
