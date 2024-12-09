@@ -10,11 +10,11 @@ from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.utils.utils import loadJSONFile
 from ogd.common.utils.Logger import Logger
 # import local files
-from ogd.games import THERMOLAB
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Feature import Feature
+from ogd.games import THERMOLAB
 from ogd.games.THERMOLAB.detectors import *
 from ogd.games.THERMOLAB.features import *
 
