@@ -1,4 +1,5 @@
 # import libraries
+import json
 from typing import Any, Final, List
 # import local files
 from ogd.common.models.Event import Event
@@ -55,8 +56,9 @@ class TopAttribute(SessionFeature):
 
         self._top_names = []
         
-        skill_vals = event.GameState.get("current_stats")
-        if skill_vals:
+        skill_str = event.GameState.get("current_stats", None)
+        if skill_str:
+            skill_vals = json.loads(skill_str)
             self._top_value = max(skill_vals.values())
             #get lowest val in list 
             self._top_names = [skill for skill,val in skill_vals if val == self._top_value]
