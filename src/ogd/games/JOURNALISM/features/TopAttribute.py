@@ -55,7 +55,7 @@ class TopAttribute(SessionFeature):
 
         self._top_names = []
         
-        skill_vals = eval(event.GameState["current_stats"])
+        skill_vals = event.GameState.get("current_stats", {}).values()
         self._top_value = max(skill_vals)
         #get lowest val in list 
         res_list = [i for i in range(len(skill_vals)) if skill_vals[i] == self._top_value]
