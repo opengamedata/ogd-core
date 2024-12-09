@@ -55,13 +55,11 @@ class TopAttribute(SessionFeature):
 
         self._top_names = []
         
-        skill_vals = event.GameState.get("current_stats", {}).values()
-        self._top_value = max(skill_vals)
-        #get lowest val in list 
-        res_list = [i for i in range(len(skill_vals)) if skill_vals[i] == self._top_value]
-
-        for val in res_list:
-            self._top_names.append(self._ATTRIBUTE_ENUM[val])
+        skill_vals = event.GameState.get("current_stats")
+        if skill_vals:
+            self._top_value = max(skill_vals.values())
+            #get lowest val in list 
+            self._top_names = [skill for skill,val in skill_vals if val == self._top_value]
         return
 
     def _updateFromFeatureData(self, feature: FeatureData):
