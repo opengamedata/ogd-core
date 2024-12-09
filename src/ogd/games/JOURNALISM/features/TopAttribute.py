@@ -1,8 +1,6 @@
 # import libraries
-import json
 from typing import Any, Final, List
 # import local files
-from ogd.core.generators.extractors.Feature import Feature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
@@ -37,7 +35,7 @@ class TopAttribute(SessionFeature):
         :return: _description_
         :rtype: List[str]
         """
-        return ["stat_update"] # >>> fill in names of events this Feature should use for extraction. <<<
+        return ["stat_update"]
 
     @classmethod
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
@@ -46,7 +44,7 @@ class TopAttribute(SessionFeature):
         :return: _description_
         :rtype: List[str]
         """
-        return [] # >>> fill in names of first-order features this Feature should use for extraction. <<<
+        return []
 
     def _updateFromEvent(self, event:Event) -> None:
         """_summary_
@@ -64,9 +62,6 @@ class TopAttribute(SessionFeature):
 
         for val in res_list:
             self._top_names.append(self._ATTRIBUTE_ENUM[val])
-
-
-
         return
 
     def _updateFromFeatureData(self, feature: FeatureData):
@@ -75,9 +70,6 @@ class TopAttribute(SessionFeature):
         :param feature: _description_
         :type feature: FeatureData
         """
-        # >>> use data in the FeatureData object to update state variables as needed. <<<
-        # Note: This function runs on data from each Feature whose name matches one of the strings returned by _featureFilter().
-        #       The number of instances of each Feature may vary, depending on the configuration and the unit of analysis at which this CustomFeature is run.
         return
 
     def _getFeatureValues(self) -> List[Any]:
@@ -86,20 +78,6 @@ class TopAttribute(SessionFeature):
         :return: _description_
         :rtype: List[Any]
         """
-        
-        # >>> use state variables to calculate the return value(s) of the base Feature and any Subfeatures. <<<
-        # >>> put the calculated value(s) into a list as the function return value. <<<
-        # >>> definitely don't return ["template"], unless you really find that useful... <<<
-        #
-        # e.g. use the self._found_click, which was created/initialized in __init__(...), and updated in _updateFromEvent(...):
-        # if self._found_click:
-        #     ret_val = [True]
-        # else:
-        #     ret_val = [False]
-        # return ret_val
-        #
-        # note the code above is redundant, we could just return [self._found_click] to get the same result;
-        # the more-verbose code is here for illustrative purposes.
         return [self._top_value,self._top_names]
 
 
