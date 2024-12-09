@@ -1179,6 +1179,18 @@
                 "type":"QuitNode",
                 "description": "Most popular 5 quit nodes at population level",
                 "return_type": "str"
+            },
+            "CompletedSurvey":{
+                "enabled": true,
+                "type": "CompletedSurvey",
+                "description": "indicates whether the player completed the survey at the end of the game.",
+                "return_type": "bool",
+                "subfeatures":{
+                    "Names":{
+                        "description": "A list of all names of top attributes",
+                        "return_type": "List[str]"
+                    }
+                }
             }
         }
     },
