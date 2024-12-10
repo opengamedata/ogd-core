@@ -11,12 +11,12 @@
         "current_stats": {
             "type": "Dict",
             "details": {
-                "endurance": "int",
+                "research": "int",
                 "resourceful": "int",
+                "endurance": "int",
                 "tech": "int",
                 "social": "int",
-                "trust": "int",
-                "research": "int"
+                "trust": "int"
             },
             "description": "The player's current stats for each attribute"
         },
