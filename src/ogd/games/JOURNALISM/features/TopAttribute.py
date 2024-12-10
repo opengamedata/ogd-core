@@ -17,16 +17,12 @@ class TopAttribute(SessionFeature):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
+    _ATTRIBUTE_ENUM : Final[List[str]] = ["research", "resourceful", "endurance", "tech", "social", "trust"]
+
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._top_value : int = 0
         self._top_names : List[str] = []
-        self._ATTRIBUTE_ENUM : Final[List[str]] = ["endurance", "resourceful", "tech","social","trust","research"]
-        #self._text_click_count : int = 0;
-        # >>> create/initialize any variables to track feature extractor state <<<
-        #
-        # e.g. To track whether extractor found a click event yet:
-        # self._found_click : bool = False
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -58,10 +54,10 @@ class TopAttribute(SessionFeature):
         
         skill_str = event.GameState.get("current_stats", None)
         if skill_str:
-            skill_vals = json.loads(skill_str)
-            self._top_value = max(skill_vals.values())
+            skill_vals : List[int] = json.loads(skill_str)
+            self._top_value = max(skill_vals)
             #get lowest val in list 
-            self._top_names = [skill for skill,val in skill_vals if val == self._top_value]
+            self._top_names = [self._ATTRIBUTE_ENUM[i] for i,val in enumerate(skill_vals) if val == self._top_value]
         return
 
     def _updateFromFeatureData(self, feature: FeatureData):
