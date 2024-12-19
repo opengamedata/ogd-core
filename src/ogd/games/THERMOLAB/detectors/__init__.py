@@ -1,9 +1,9 @@
 """Initializer for ThermoLab detectors"""
 
 __all__ = [
-    # "player_move"
+    "player_move"
 
 ]
 
 # from . import JobTriesInArgument
-# from . import player_move
+from . import player_move
