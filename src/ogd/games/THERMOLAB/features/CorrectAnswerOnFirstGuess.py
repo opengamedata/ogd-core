@@ -79,7 +79,7 @@ class CorrectAnswerOnFirstGuess(PerCountFeature):
             prompt = quiz_task.get("prompts", [""])[0] 
             self.quiz_prompts[quiz_id] = prompt
 
-    def _getCountValues(self) -> List[Any]:
+    def _getFeatureValues(self) -> List[Any]:
         """
         Return the correctness of the first guess for the current quiz (indexed by CountIndex).
         """
