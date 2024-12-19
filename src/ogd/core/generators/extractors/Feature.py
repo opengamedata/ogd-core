@@ -4,4 +4,3 @@ from typing import TypeAlias
 from ogd.core.generators.extractors.Extractor import Extractor
 
 Feature : TypeAlias = Extractor
-
