@@ -1132,7 +1132,7 @@
                         "prompts":"List[str]",
                         "options":"List[str | float]",
                         "selected_options":"List[str | float]",
-                        "correct_answer":"float | str | List[float] | List[str]"
+                        "is_correct_answer":"float | str | List[float] | List[str]"
                     },
                     "description": "A list of the tasks for the current lab section shown to the player (not including any tasks that are available but undisplayed)."
                 },
