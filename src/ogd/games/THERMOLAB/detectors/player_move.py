@@ -45,9 +45,7 @@ class SliderMoveDetector(Detector):
             }
             # Create the event and reset state
             ret_val: DetectorEvent = self.GenerateEvent(
-                session_id="Unknown", app_id="THERMOLAB",
-                timestamp=datetime.now(), event_name="SliderMoveDetected", 
-                event_data=event_data
+                event_name="SliderMoveDetected", event_data=event_data
             )
             # Reset start and end values for the next detection
             self._start_val = None
