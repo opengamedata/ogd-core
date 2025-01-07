@@ -1186,10 +1186,23 @@
                 "description": "indicates whether the player completed the survey at the end of the game.",
                 "return_type": "bool",
                 "subfeatures":{
-                    "Names":{
-                        "description": "A list of all names of top attributes",
-                        "return_type": "List[str]"
+                    "FavoredSkill":{
+                        "description": "The response given to the survey question on the player's preferred skill",
+                        "return_type": "str"
+                    },
+                    "CharacterPersona":{
+                        "description": "The response given to the survey question on the player's character persona",
+                        "return_type": "str"
+                    },
+                    "PersonaSimilarity":{
+                        "description": "The response given to the survey question on the player's perceived self-similarity to their character persona",
+                        "return_type": "str"
+                    },
+                    "SelfEfficacy":{
+                        "description": "The response given to the survey question on the player's self-efficacy",
+                        "return_type": "str"
                     }
+                    
                 }
             }
         }
