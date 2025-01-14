@@ -5,26 +5,13 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 
 
-
-
-
-"""
-
-NEED EDIT AS CURRENTLY USING HARD-CODED QUIZ LIST
-
-"""
-
-
-
-
-
 class CorrectAnswerOnFirstGuess(PerCountFeature):
 
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.quiz_results: Dict[str, Optional[bool]] = {}
         self.quiz_prompts: Dict[str, str] = {}
-        self._quiz_list: List[str] = self._initialize_quiz_list()
+        self._quiz_list: List[str] = []  # We'll initialize this dynamically
 
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
@@ -34,18 +21,27 @@ class CorrectAnswerOnFirstGuess(PerCountFeature):
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
-    def _initialize_quiz_list(self) -> List[str]:
+    def _initialize_quiz_list(self, event: Event) -> List[str]:
+        quizzes = set()
 
-        # Example of hard-coded quiz list
-        return [
-            "1.3.4",  # Lab 1, Section 3, Task 4
-            "1.4.2",  # Lab 1, Section 4, Task 2
-            "2.1.1",  # Lab 2, Section 1, Task 1
-            
-        ]
+        for e in event:
+            if e.EventType == "click_submit_answer":
+                quiz_task = e.EventData.get("quiz_task")
+                if quiz_task:
+                    lab_name = quiz_task.get("lab_name", "")
+                    section_number = quiz_task.get("section_number", "")
+                    task_number = quiz_task.get("task_number", "")
+                    prompt = quiz_task.get("prompts", [])
+
+  
+                    quiz_id = f"{lab_name}.{section_number}.{task_number}"
+                    if prompt:
+                        quiz_id += f"_{prompt[0]}" 
+                    quizzes.add(quiz_id)
+
+        return list(quizzes)
 
     def _validateEventCountIndex(self, event: Event) -> bool:
-
         quiz_task = event.EventData.get("quiz_task", {})
         if not quiz_task:
             return False
@@ -53,8 +49,10 @@ class CorrectAnswerOnFirstGuess(PerCountFeature):
         lab_name = quiz_task.get("lab_name", "")
         section_number = quiz_task.get("section_number", "")
         task_number = quiz_task.get("task_number", "")
+        prompt = quiz_task.get("prompts", [""])[0]
 
-        quiz_id = f"{lab_name}.{section_number}.{task_number}"
+        quiz_id = f"{lab_name}.{section_number}.{task_number}_{prompt}"
+
         return quiz_id == self._quiz_list[self.CountIndex]
 
     def _updateFromEvent(self, event: Event) -> None:
@@ -65,23 +63,21 @@ class CorrectAnswerOnFirstGuess(PerCountFeature):
         if not quiz_task:
             return
 
-
         lab_name = quiz_task.get("lab_name", "")
         section_number = quiz_task.get("section_number", "")
         task_number = quiz_task.get("task_number", "")
-        quiz_id = f"{lab_name}.{section_number}.{task_number}"
+        prompt = quiz_task.get("prompts", [""])[0]
 
+        quiz_id = f"{lab_name}.{section_number}.{task_number}_{prompt}"
 
+        # Add the quiz ID dynamically if it's a new one
         if quiz_id not in self.quiz_results:
             is_correct = event.EventData.get("is_correct_answer", None)
             self.quiz_results[quiz_id] = is_correct
 
-            prompt = quiz_task.get("prompts", [""])[0] 
+
             self.quiz_prompts[quiz_id] = prompt
 
     def _getFeatureValues(self) -> List[Any]:
-        """
-        Return the correctness of the first guess for the current quiz (indexed by CountIndex).
-        """
         quiz_id = self._quiz_list[self.CountIndex]
         return [self.quiz_results.get(quiz_id, None)]
