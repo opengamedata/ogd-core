@@ -15,6 +15,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.games import THERMOLAB
+from ogd.games.THERMOLAB import features
 from ogd.games.THERMOLAB.detectors import *
 from ogd.games.THERMOLAB.features import *
 
