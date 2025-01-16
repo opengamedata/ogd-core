@@ -3,6 +3,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
 
 class AnswerAttemptsCount(SessionFeature):
 
@@ -29,3 +30,11 @@ class AnswerAttemptsCount(SessionFeature):
 
     def _getFeatureValues(self) -> List[Any]:
         return [{"attempts": self.quiz_attempts, "correct_answers": self.correct_answers}]
+
+
+    @classmethod
+    def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
+        return []
+
+    def _updateFromFeatureData(self, feature: FeatureData):
+        return
