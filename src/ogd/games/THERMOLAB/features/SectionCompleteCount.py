@@ -3,6 +3,8 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
+
 
 class SectionCompleteCount(SessionFeature):
 
@@ -23,3 +25,10 @@ class SectionCompleteCount(SessionFeature):
 
     def _getFeatureValues(self) -> List[Any]:
         return [len(self.completed_sections)]
+
+    @classmethod
+    def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
+        return []
+
+    def _updateFromFeatureData(self, feature: FeatureData):
+        return
