@@ -1132,7 +1132,7 @@
                         "prompts":"List[str]",
                         "options":"List[str | float]",
                         "selected_options":"List[str | float]",
-                        "correct_answer":"float | str | List[float] | List[str]"
+                        "is_correct_answer":"float | str | List[float] | List[str]"
                     },
                     "description": "A list of the tasks for the current lab section shown to the player (not including any tasks that are available but undisplayed)."
                 },
@@ -1277,10 +1277,22 @@
         }
     },
 
-   "features": {
+    "features": {
         "per_count": {
+            "CorrectAnswerOnFirstGuess": {
+                "enabled": true,
+                "type": "CorrectAnswerOnFirstGuess",
+                "description": "Counts the number of correct answers given on the first attempt",
+                "return_type": "int"
+            },
+            "AnswerAttemptsCount": {
+                "enabled": true,
+                "type": "AnswerAttemptsCount",
+                "description": "Counts the total number of answer attempts",
+                "return_type": "int"
+            }
         },
-        "aggregate":{
+        "aggregate": {
             "LabCompleteCount": {
                 "enabled": false,
                 "type": "LabCompleteCount",
@@ -1289,20 +1301,20 @@
             },
             "LeftHandMoves": {
                 "enabled": false,
-                "type": "LabCompleteCount",
-                "description": "Count of number of Left hand moves",
+                "type": "LeftHandMoves",
+                "description": "Count of number of left hand moves",
                 "return_type": "int"
             },
-            "RighHandMoves": {
+            "RightHandMoves": {
                 "enabled": false,
-                "type": "RighHandMoves",
+                "type": "RightHandMoves",
                 "description": "Count of number of right hand moves",
                 "return_type": "int"
             },
             "PhasesReached": {
                 "enabled": false,
                 "type": "PhasesReached",
-                "description": "Phases Reached during a certain task",
+                "description": "Phases reached during a certain task",
                 "return_type": "dict"
             },
             "PlayMode": {
@@ -1317,9 +1329,9 @@
                 "description": "Count of number of tasks completed",
                 "return_type": "int"
             },
-            "ToolNudegCount": {
+            "ToolNudgeCount": {
                 "enabled": false,
-                "type": "ToolNudegCount",
+                "type": "ToolNudgeCount",
                 "description": "Count of number of times a tool has been nudged",
                 "return_type": "dict"
             },
@@ -1327,6 +1339,18 @@
                 "enabled": false,
                 "type": "ToolSliderTime",
                 "description": "Counts the total time the slider has been moved",
+                "return_type": "timedelta"
+            },
+            "SectionCompleteCount": {
+                "enabled": true,
+                "type": "SectionCompleteCount",
+                "description": "Count of sections completed within a lab or task",
+                "return_type": "int"
+            },
+            "TotalPlayTime": {
+                "enabled": true,
+                "type": "TotalPlayTime",
+                "description": "Total time spent playing the current session",
                 "return_type": "timedelta"
             }
         }
