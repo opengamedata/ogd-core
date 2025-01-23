@@ -20,7 +20,6 @@ class ModelManager:
         self._overrides      : Optional[List[str]]        = feature_overrides
         # local tracking of whether we're up-to-date on getting feature values.
         self._up_to_date     : bool                       = True
-        self._latest_values  : Dict[str,List[ExportRow]]  = {}
         self._models         : ModelProcessor
         if self._LoaderClass is not None:
             self._models = ModelProcessor(LoaderClass=self._LoaderClass, game_schema=game_schema,
@@ -47,60 +46,17 @@ class ModelManager:
         else:
             Logger.Log(f"Skipped model processing of FeatureData, no model Processors available!", logging.INFO, depth=3)
 
+    def GetModelNames(self) -> List[str]:
+        return self._models.GeneratorNames if self._models is not None else []
     def GetModels(self, as_str:bool = False) -> Dict[str, Model]:
         start = datetime.now()
         self._try_update(as_str=as_str)
-        Logger.Log(f"Time to retrieve all feature values: {datetime.now() - start}", logging.INFO, depth=2)
+        Logger.Log(f"Time to retrieve all models: {datetime.now() - start}", logging.INFO, depth=2)
         return self._latest_values
-
-    def GetPopulationFeatureNames(self) -> List[str]:
-        return self._population.GeneratorNames if self._population is not None else []
-    def GetPopulationFeatures(self, as_str:bool = False) -> List[ExportRow]:
-        start = datetime.now()
-        self._try_update(as_str=as_str)
-        ret_val = self._latest_values.get('population', [])
-        Logger.Log(f"Time to retrieve Population lines: {datetime.now() - start} to get {len(ret_val)} lines", logging.INFO, depth=2)
-        return ret_val
-
-    def GetPlayerFeatureNames(self) -> List[str]:
-        return self._players["null"].GeneratorNames if self._players is not None else []
-    def GetPlayerFeatures(self, as_str:bool = False) -> List[ExportRow]:
-        start   : datetime = datetime.now()
-        self._try_update(as_str=as_str)
-        ret_val = self._latest_values.get('players', [])
-        Logger.Log(f"Time to retrieve Player lines: {datetime.now() - start} to get {len(ret_val)} lines", logging.INFO, depth=2)
-        return ret_val
-
-    def GetSessionFeatureNames(self) -> List[str]:
-        return self._sessions["null"]["null"].GeneratorNames if self._sessions is not None else []
-    def GetSessionFeatures(self, slice_num:int, slice_count:int, as_str:bool = False) -> List[ExportRow]:
-        start   : datetime = datetime.now()
-        self._try_update(as_str=as_str)
-        ret_val = self._latest_values.get('sessions', [])
-        time_delta = datetime.now() - start
-        Logger.Log(f"Time to retrieve Session lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
-        return ret_val
 
     def ClearPopulationLines(self) -> None:
         if self._population is not None:
             self._population.ClearLines()
-    def ClearPlayerLines(self) -> None:
-        if self._players is not None and self._LoaderClass is not None:
-            for player in self._players.values():
-                player.ClearLines()
-            self._players = {}
-            self._players["null"] = PlayerProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
-                                                    player_id="null", feature_overrides=self._overrides)
-    def ClearSessionLines(self) -> None:
-        if self._sessions is not None and self._LoaderClass is not None:
-            for sess_list in self._sessions.values():
-                for sess in sess_list.values():
-                    sess.ClearLines()
-            self._sessions = {}
-            self._sessions["null"] = {
-                "null" : SessionProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
-                                        player_id="null", session_id="null", feature_overrides=self._overrides)
-            }
 
     def _flatHierarchy(self) -> List[ExtractorProcessor]:
         ret_val : List[ExtractorProcessor] = []
