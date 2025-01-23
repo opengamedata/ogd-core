@@ -46,4 +46,4 @@ class BuildingInspectorTabCount(Feature):
 
     def Subfeatures(self) -> List[str]:
         # Subfeatures for specific building types
-        return ["TotalTabCount", "CityTabCount", "DairyFarmTabCount", "GrainFarmTabCount", "StorageTabCount"]
+        return ["CityTabCount", "DairyFarmTabCount", "GrainFarmTabCount", "StorageTabCount"]

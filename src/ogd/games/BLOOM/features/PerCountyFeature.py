@@ -23,6 +23,6 @@ class PerCountyFeature(PerCountFeature):
             except ValueError:
                 self.WarningMessage(f"County name {county_name} not found in COUNTY_LIST ({self.COUNTY_LIST}) in {type(self).__name__}, for event {event.EventName}")
         else:
-            self.WarningMessage(f"In {type(self).__name__}, for event {event.EventName} with game state {event.GameState}, no current_county found.")
+            self.WarningMessage(f"In {type(self).__name__}, for event {event.EventName}, log_version={event.LogVersion}, with game state={event.GameState} no current_county found.")
 
         return ret_val

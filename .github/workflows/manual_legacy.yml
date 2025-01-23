@@ -63,7 +63,12 @@ jobs:
     # Steps to set up for and execute an export
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Get Dependencies
+      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.2
+      with:
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
 
     # A bunch of copy-paste crap to set up google cloud for any given game.
     # Since we don't know which game source is gonna be used, check for all possibilities
@@ -108,10 +113,6 @@ jobs:
         sudo apt-get -q update && sudo apt-get -q install openconnect
         echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     # Back to normal setup stuff.
-    - name: Get Dependencies
-      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.2
-      with:
-        python_version: ${{ vars.OGD_PYTHON_VERSION }}
     - name: Set up Config File
       uses: ./.github/actions/OGD_config
       with:
