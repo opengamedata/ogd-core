@@ -18,7 +18,7 @@ class TotalSessionTime(Feature):
         self.previous_timestamp = None
 
     def Subfeatures(self) -> List[str]:
-        return ["TotalTime", "TotalSeconds", "IdleTime", "IdleSeconds", "ActiveTime", "ActiveSeconds"]
+        return ["TotalSeconds", "IdleTime", "IdleSeconds", "ActiveTime", "ActiveSeconds"]
 
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
@@ -39,7 +39,6 @@ class TotalSessionTime(Feature):
                 self.idle_time += delta
             else:
                 self.active_time += delta
-
         self.previous_timestamp = current_timestamp
 
 
@@ -47,7 +46,7 @@ class TotalSessionTime(Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self.total_time,
+        return [
             str(self.total_time), 
             self.total_time.total_seconds(),  
             str(self.idle_time), 

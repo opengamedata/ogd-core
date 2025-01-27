@@ -40,7 +40,8 @@ class LakelandLoader(GeneratorLoader):
             case "TotalEventsPerSession":
                 ret_val = TotalEventsPerSession.TotalEventsPerSession(params=extractor_params)
             case "TotalSessionTime":
-                ret_val = TotalSessionTime.TotalSessionTime(params=extractor_params, threshold=50)
+                threshold = schema_args.get("threshold", 50)
+                ret_val = TotalSessionTime.TotalSessionTime(params=extractor_params, threshold=threshold)
             case _:
                 ret_val = None
 
