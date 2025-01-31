@@ -17,12 +17,18 @@ class PerJobFeature(PerCountFeature):
     def _validateEventCountIndex(self, event:Event):
         ret_val : bool = False
 
+        # If event occurred in the instance's target job, accept it.
         job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
         if job_name is not None:
             if job_name in self._job_map and self._job_map[job_name] == self.CountIndex:
                 ret_val = True
         else:
             self.WarningMessage(f"Got invalid job_name data in {type(self).__name__}")
+        # Special hack, if the event was a switch out of the instance's target job, accept it.
+        if event.EventName == "switch_job":
+            pre_job_name = event.EventData.get("prev_job_name", "PREVIOUS JOB NOT FOUND")
+            if pre_job_name in self._job_map and self._job_map[pre_job_name] == self.CountIndex:
+                ret_val = True
 
         return ret_val
 
