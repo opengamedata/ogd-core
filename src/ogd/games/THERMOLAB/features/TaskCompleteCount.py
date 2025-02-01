@@ -43,7 +43,7 @@ class TaskCompleteCount(SessionFeature):
     def _getFeatureValues(self) -> List[Any]:
         return [len(self.completed_tasks)]
 
-    def _convert_keys_to_snake_case(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def _convert_keys_to_snake_case(self, data: dict[str, Any]) -> dict[str, Any]:
         
         #Convert all keys in a dictionary from PascalCase to snake_case.
         
