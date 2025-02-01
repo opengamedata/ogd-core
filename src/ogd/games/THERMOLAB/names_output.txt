@@ -52,7 +52,7 @@ AnyVisit
 CloseClaw
 EvasiveCustom
 MagicalStable
-FlumingGohst
+FumingGhost
 SuddenAtm
 AcidicRepair
 FoolishHug
@@ -62,12 +62,13 @@ TrainingWinter
 FearlessExit
 AlikePepper
 FocusedPlayer
+FocusedFriend
 CenteredElite
 GrittyWork
 LucidQuart
 HurtGoodie
 TactfulSheath
-TactfulSheath
+TacticalFlight
 HurtGoodie
 EthicalGutter
 ProofSuv
@@ -102,14 +103,13 @@ MetallicHello
 ArtfulLegend
 EnviableAdverb
 RebelNeon
-TaticalFlight
 FocusedFriend
 AbnormalThanks
 ActualHound
 FriedTassel
 ElevatedLark
 BiggestJug 
-numericPig
+NumericPig
 FederalTemper
 FutureCrib
 HurtGoodie
@@ -117,4 +117,4 @@ SpokenSalt
 EndemicSummer
 TrainingWinter
 TrickSummit
-BiggestJug
+SupposedImage

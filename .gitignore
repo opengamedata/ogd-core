@@ -135,3 +135,4 @@ venv.bak/
 OGD_venv/
 john_temp/
 games/JOWILDER/convert.py
+src/ogd/games/THERMOLAB/names_output.txt
