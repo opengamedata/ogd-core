@@ -105,8 +105,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = ModelInterveneCount.ModelInterveneCount(params=extractor_params, job_map=self._job_map)
                 case "ModelPredictCount":
                     ret_val = ModelPredictCount.ModelPredictCount(params=extractor_params, job_map=self._job_map)
-                # case "PlayLocations":
-                #     ret_val = PlayLocations.PlayLocations(params=extractor_params)
+                case "PlayLocations":
+                     ret_val = PlayLocations.PlayLocations(params=extractor_params)
                 case "PlayerSummary":
                     ret_val = PlayerSummary.PlayerSummary(params=extractor_params)
                 case "PopulationSummary":
@@ -157,6 +157,12 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = TotalModelingTime.TotalModelingTime(params=extractor_params)
                 case "TotalPlayTime":
                     ret_val = TotalPlayTime.TotalPlayTime(params=extractor_params)
+                case "TotalSessionTime":
+                    ret_val = TotalSessionTime.TotalSessionTime(params=extractor_params, threshold=int(schema_args.get("threshold", 30)))
+                case "TotalPopulationTime":
+                    ret_val = TotalPopulationTime.TotalPopulationTime(params=extractor_params, threshold=int(schema_args.get("threshold", 30)))
+                case "TotalPlayerTime":
+                    ret_val = TotalPlayerTime.TotalPlayerTime(params=extractor_params, threshold=int(schema_args.get("threshold", 30)))
                 case "UserAvgActiveTime":
                     ret_val = UserAvgActiveTime.UserAvgActiveTime(params=extractor_params, player_id=self._player_id)
                 case "UserAvgSessionDuration":
