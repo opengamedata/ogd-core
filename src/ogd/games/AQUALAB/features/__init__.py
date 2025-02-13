@@ -23,9 +23,11 @@ __all__ = [
     "JobPriorComplete",
     "JobsAttempted",
     "JobsCompleted",
+    "JobRecommendationReceived",
     "JobStartCount",
     "JobTasksCompleted",
     "JobTriesInArgument",
+    "LeftJob",
     "ModelExportCount",
     "ModelInterveneCount",
     "ModelPredictCount",
@@ -72,6 +74,8 @@ from . import AppVersions
 from . import AverageSessionTime
 from . import EchoSessionID
 from . import EventList
+from . import ExperimentalCondition
+from . import FollowedAdvice
 from . import JobActiveTime
 from . import JobArgumentation
 from . import JobCompletionTime
@@ -88,9 +92,11 @@ from . import JobPriorAttempt
 from . import JobPriorComplete
 from . import JobsAttempted
 from . import JobsCompleted
+from . import JobRecommendationReceived
 from . import JobStartCount
 from . import JobTasksCompleted
 from . import JobTriesInArgument
+from . import LeftJob
 from . import ModelExportCount
 from . import ModelInterveneCount
 from . import ModelPredictCount
@@ -106,6 +112,8 @@ from . import SessionGuideCount
 from . import SessionHelpCount
 from . import SessionID
 from . import SessionJobsCompleted
+from . import SuccessfulAdvice
+from . import SurveyCompleted
 from . import SwitchJobsCount
 from . import SyncCompletionTime
 from . import TankRulesCount
