@@ -36,5 +36,5 @@ runs:
   - name: "Do upload"
     run: |
       ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ inputs.remote_user }}@${{ inputs.host }} "cd ${{ inputs.remote_data_path }}; mkdir -p ${{ inputs.game }}"
-      scp -o StrictHostKeyChecking=no -i ./key.txt ${{ inputs.source_path }}/* ${{ inputs.remote_user }}@${{ inputs.remote_data_path }}:${{ inputs.remote_data_path }}/${{ inputs.game }}/
+      scp -o StrictHostKeyChecking=no -i ./key.txt ${{ inputs.source_path }}/* ${{ inputs.remote_user }}@${{ inputs.host }}:${{ inputs.remote_data_path }}/${{ inputs.game }}/
     shell: bash
