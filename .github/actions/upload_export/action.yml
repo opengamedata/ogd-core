@@ -11,6 +11,12 @@ inputs:
   host:
    description: "The web host to which files should be uploaded."
    required: true
+  remote_user:
+   description: "The user that should access the host for upload."
+   required: true
+  remote_key:
+   description: "The key for SSH access to the host."
+   required: true
   source_path:
    description: "The local path to the file for upload."
    required: true
@@ -24,11 +30,11 @@ runs:
   - name: "Set up key"
     run: |
       mkdir -p ~/.ssh
-      echo '${{secrets.VPN_KEY}}' >> ./key.txt
+      echo '${{ inputs.remote_key }}' >> ./key.txt
       chmod 600 ./key.txt
     shell: bash
   - name: "Do upload"
     run: |
-      ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ inputs.host }} "cd ${{ inputs.remote_data_path }}; mkdir -p ${{ inputs.game }}"
-      scp -o StrictHostKeyChecking=no -i ./key.txt ${{ inputs.source_path }}/* ${{ secrets.VPN_USER }}@${{ inputs.remote_data_path }}:${{ inputs.remote_data_path }}/${{ inputs.game }}/
+      ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ inputs.remote_user }}@${{ inputs.host }} "cd ${{ inputs.remote_data_path }}; mkdir -p ${{ inputs.game }}"
+      scp -o StrictHostKeyChecking=no -i ./key.txt ${{ inputs.source_path }}/* ${{ inputs.remote_user }}@${{ inputs.remote_data_path }}:${{ inputs.remote_data_path }}/${{ inputs.game }}/
     shell: bash
