@@ -42,9 +42,12 @@ jobs:
         username: ${{ secrets.VPN_USER }}
         password: ${{ secrets.VPN_PASS }}
         endpoint: "soe.vpn.wisc.edu"
-    - name: Trigger reindex via ssh
+    - name: "Set up key"
       run: |
         mkdir -p ~/.ssh
         echo '${{secrets.VPN_KEY}}' >> ./key.txt
         chmod 600 ./key.txt
-        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ inputs.FILE_SERVER }} "cd ${{ inputs.data_path }}; pwd; ls; python3 reindexer.py;"
+    - name: Pre-test navigating to appropriate directory
+      run: ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ inputs.FILE_SERVER }} "cd ${{ inputs.data_path }}; pwd; ls;"
+    - name: Trigger reindex via ssh
+      run: ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ inputs.FILE_SERVER }} "cd ${{ inputs.data_path }}; python3 reindexer.py;"
