@@ -42,11 +42,13 @@ jobs:
         username: ${{ secrets.VPN_USER }}
         password: ${{ secrets.VPN_PASS }}
         endpoint: "soe.vpn.wisc.edu"
-    - name: "Set up key"
+    - name: Set up key
       run: |
         mkdir -p ~/.ssh
         echo '${{secrets.VPN_KEY}}' >> ./key.txt
         chmod 600 ./key.txt
+    - name: Pre-test running anything at all on ssh
+      run: ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ inputs.FILE_SERVER }} "echo Hello"
     - name: Pre-test navigating to appropriate directory
       run: ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ inputs.FILE_SERVER }} "cd ${{ inputs.data_path }}; pwd; ls;"
     - name: Trigger reindex via ssh
