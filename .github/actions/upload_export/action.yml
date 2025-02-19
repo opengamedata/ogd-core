@@ -10,12 +10,10 @@ inputs:
    required: true
   host:
    description: "The web host to which files should be uploaded."
-   required: false
-   default: ${{ vars.FD_WEB_HOST }}
+   required: true
   source_path:
    description: "The local path to the file for upload."
    required: true
-   default: "./data/${{inputs.game}}"
   remote_data_path:
    description: "The remote path of the data folder."
    required: false
