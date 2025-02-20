@@ -8,6 +8,7 @@ from typing import Any, Callable, Dict, Final, List, Optional
 from ogd.games import AQUALAB
 from ogd.games.AQUALAB.detectors import *
 from ogd.games.AQUALAB.features import *
+from ogd.games.AQUALAB.features import FollowedAdvice, SuccessfulAdvice, ExperimentalCondition, SurveyCompleted
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
@@ -105,8 +106,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = ModelInterveneCount.ModelInterveneCount(params=extractor_params, job_map=self._job_map)
                 case "ModelPredictCount":
                     ret_val = ModelPredictCount.ModelPredictCount(params=extractor_params, job_map=self._job_map)
-                # case "PlayLocations":
-                #     ret_val = PlayLocations.PlayLocations(params=extractor_params)
+                case "PlayLocations":
+                     ret_val = PlayLocations.PlayLocations(params=extractor_params)
                 case "PlayerSummary":
                     ret_val = PlayerSummary.PlayerSummary(params=extractor_params)
                 case "PopulationSummary":
@@ -157,6 +158,12 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = TotalModelingTime.TotalModelingTime(params=extractor_params)
                 case "TotalPlayTime":
                     ret_val = TotalPlayTime.TotalPlayTime(params=extractor_params)
+                case "TotalSessionTime":
+                    ret_val = TotalSessionTime.TotalSessionTime(params=extractor_params, threshold=int(schema_args.get("threshold", 30)))
+                case "TotalPopulationTime":
+                    ret_val = TotalPopulationTime.TotalPopulationTime(params=extractor_params, threshold=int(schema_args.get("threshold", 30)))
+                case "TotalPlayerTime":
+                    ret_val = TotalPlayerTime.TotalPlayerTime(params=extractor_params, threshold=int(schema_args.get("threshold", 30)))
                 case "UserAvgActiveTime":
                     ret_val = UserAvgActiveTime.UserAvgActiveTime(params=extractor_params, player_id=self._player_id)
                 case "UserAvgSessionDuration":
@@ -206,6 +213,18 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = RegionJobCount.RegionJobCount(params=extractor_params)
                 case "SyncCompletionTime":
                     ret_val = SyncCompletionTime.SyncCompletionTime(params=extractor_params)
+                case "LeftJob":
+                    ret_val = LeftJob.LeftJob(params=extractor_params, job_map=self._job_map)
+                case "JobRecommendationReceived":
+                    ret_val = JobRecommendationReceived.JobRecommendationReceived(params=extractor_params, job_map=self._job_map)
+                case "FollowedAdvice":
+                    ret_val = FollowedAdvice.FollowedAdvice(params=extractor_params, job_map=self._job_map)
+                case "SuccessfulAdvice":
+                    ret_val = SuccessfulAdvice.SuccessfulAdvice(params=extractor_params, job_map=self._job_map)
+                case "ExperimentalCondition":
+                    ret_val = ExperimentalCondition.ExperimentalCondition(params=extractor_params, job_map=self._job_map)
+                case "SurveyCompleted":
+                    ret_val = SurveyCompleted.SurveyCompleted(params=extractor_params)
                 case _:
                     Logger.Log(f"'{feature_type}' is not a valid per-count feature type for Aqualab.")
         return ret_val
