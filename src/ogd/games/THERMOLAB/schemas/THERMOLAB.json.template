@@ -1132,7 +1132,7 @@
                         "prompts":"List[str]",
                         "options":"List[str | float]",
                         "selected_options":"List[str | float]",
-                        "is_correct_answer":"float | str | List[float] | List[str]"
+                        "correct_answer":"float | str | List[float] | List[str]"
                     },
                     "description": "A list of the tasks for the current lab section shown to the player (not including any tasks that are available but undisplayed)."
                 },
@@ -1284,12 +1284,6 @@
                 "type": "CorrectAnswerOnFirstGuess",
                 "description": "Counts the number of correct answers given on the first attempt",
                 "return_type": "int"
-            },
-            "AnswerAttemptsCount": {
-                "enabled": true,
-                "type": "AnswerAttemptsCount",
-                "description": "Counts the total number of answer attempts",
-                "return_type": "int"
             }
         },
         "aggregate": {
@@ -1352,6 +1346,12 @@
                 "type": "TotalPlayTime",
                 "description": "Total time spent playing the current session",
                 "return_type": "timedelta"
+            },
+            "AnswerAttemptsCount": {
+                "enabled": true,
+                "type": "AnswerAttemptsCount",
+                "description": "Counts the total number of answer attempts",
+                "return_type": "int"
             }
         }
     },
