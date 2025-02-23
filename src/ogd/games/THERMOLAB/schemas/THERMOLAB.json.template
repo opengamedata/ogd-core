@@ -1280,15 +1280,17 @@
     "features": {
         "per_count": {
             "CorrectAnswerOnFirstGuess": {
-                "enabled": true,
+                "enabled": false,
                 "type": "CorrectAnswerOnFirstGuess",
                 "description": "Counts the number of correct answers given on the first attempt",
-                "return_type": "int"
+                "return_type": "int",
+                "prefix":"quiz_",
+                "count": []
             }
         },
         "aggregate": {
             "LabCompleteCount": {
-                "enabled": false,
+                "enabled": true,
                 "type": "LabCompleteCount",
                 "description": "Count of number of labs completed",
                 "return_type": "int"

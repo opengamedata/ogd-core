@@ -16,11 +16,11 @@ class LabCompleteCount(SessionFeature):
         return ["complete_section"]
 
     def _updateFromEvent(self, event: Event) -> None:
-
+        # Get the 'section' data from the event
         event_data = event.EventData.get("section", None)
         if event_data:
-            percent_complete = event_data.get("percent_complete", 0)
-            if percent_complete >= 100:
+            is_complete = event_data.get("is_complete", False)
+            if is_complete:
                 self.complete_count += 1
 
     def _getFeatureValues(self) -> List[Any]:
