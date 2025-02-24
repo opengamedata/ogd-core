@@ -19,7 +19,7 @@ class LabCompleteCount(SessionFeature):
         # Get the 'section' data from the event
         event_data = event.EventData.get("section", None)
         if event_data:
-            is_complete = event_data.get("is_complete", False)
+            is_complete = event_data.get("IsComplete", False)
             if is_complete:
                 self.complete_count += 1
 
