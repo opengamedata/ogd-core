@@ -40,7 +40,7 @@ class PerJobFeature(PerCountFeature):
     def TargetJobName(self) -> str:
         return self._target_job
 
-    # *** Private FUnctions ***
+    # *** Private Functions ***
 
     def _getTargetJobName(self) -> str:
         ret_val = "NOT FOUND"
