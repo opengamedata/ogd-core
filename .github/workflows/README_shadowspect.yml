@@ -1,0 +1,66 @@
+name: Shadowspect Readme Update Script
+run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
+
+on:
+  push:
+    branches:
+    - master
+    paths:
+    - 'src/ogd/games/SHADOWSPECT/schemas/SHADOWSPECT.json.template'
+    - '.github/workflows/README_shadowspect.yml'
+  workflow_dispatch:
+
+env:
+  GAME_ID: SHADOWSPECT
+
+jobs:
+  ci_export:
+    name: Update Shadowspect README.md
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
+      cancel-in-progress: true
+
+    steps:
+
+  # 1. Local checkout 
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Get Dependencies
+      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.2
+      with:
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
+
+  # 2. Configure cloud & local environments
+    - name: Set up Config File
+      uses: ./.github/actions/OGD_config
+      with:
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+        ssh_host: ${{vars.FD_STORE_HOST}}
+        ssh_user: ${{secrets.VPN_USER}}
+        ssh_pass: ${{secrets.VPN_PASS}}
+    - name: Configure Git User
+      uses: opengamedata/actions-setup-fd-git@v1.1
+      with:
+        username: "fieldday-service"
+        email: "fieldday@office365.wisc.edu"
+
+  # 3. Generate README
+    - name: Create README file
+      uses: ./.github/actions/generate_readme
+      with:
+        game: ${{ env.GAME_ID }}
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
+
+  # 4. Cleanup & complete
+    - name: Upload data as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.GAME_ID }}_readme
+        path: ./src/ogd/games/${{ env.GAME_ID }}/README.md
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: log_data
+        path: ./*.log

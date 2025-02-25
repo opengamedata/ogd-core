@@ -1,0 +1,532 @@
+{
+   "enums": {
+      "LevelType": [ "DEFAULT", "CLUTTER", "BOMBS", "FULL_SET", "FULL_ORDERED_SET", "SHIFTING" ],
+      "LevelDifficulty": ["NORMAL", "HARD", "BONUS"],
+      "PieceShape": [ "HEAD", "ARM", "BODY", "LEG", "BOMB" ],
+      "ReceiptItem": [ "GOOD", "DAMAGED", "JUNK", "MISSED", "FULL_SET", "DUPLICATE", "LEG_POS", "TORSO_POS", "HEAD_POS" ],
+      "PunchType": [ "CLICK", "SPACEBAR" ]
+   },
+   "game_state": {
+      "seconds_from_launch": {
+         "type": "float",
+         "description": "The number of seconds of game time elapsed since the game was launched."
+      },
+      "level": {
+         "type": "int",
+         "description": "The current level the player is in (1-6, or 0 when not in a level)."
+      },
+      "level_info": {
+         "type" : "Dict",
+         "details" : {
+            "type" : "LevelType",
+            "difficulty" : "LevelDifficulty"
+         },
+         "description" : "A dict, containing elements to indicate the type of level the player is on, and whether they are playing in 'hard' mode or not. Note, currently, there's just one level of each type, but this may change in the future."
+      },
+      "level_time": {
+         "type": "int",
+         "description": "The number of seconds elapsed since the start of the level."
+      },
+      "level_max_time": {
+         "type": "int",
+         "description": "The number of seconds the player has to complete the level, i.e. the starting value of the level's countdown timer."
+      },
+      "score": {
+         "type": "int",
+         "description": "The player's score on the current level."
+      },
+      "box_count": {
+         "type": "int",
+         "description": "The number of boxes the player has filled on the current level, which count towards the current score. During the level, this is the number of filled boxes; when the level ends a partially-filled box will also count as it is automatically 'packaged' before the final score is given."
+      },
+      "piece_count": {
+         "type": "int",
+         "description": "The total number of pieces the player has pushed into boxes on the current level."
+      },
+      "target_pieces": {
+         "type" : "List[PieceType]",
+         "description" : "A list of the types of pieces accepted on the given level's target board. For 'ordered set' levels, the order in the list indicates the order pieces must be placed."
+      },
+      "box_contents": {
+         "type" : "List[Dict]",
+         "details" : {
+            "type" : "PieceType",
+            "is_damaged" : "bool",
+            "is_target" : "bool"
+         },
+         "description" : "A list whose elements are dictionaries describing individual pieces placed in the current box. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target."
+      }
+   },
+   "events": {
+      "session_start": {
+         "description": "When the app is started and the gameplay session is assigned a session ID",
+         "event_data": {}
+      },
+      "game_start": {
+         "description": "When the player starts a new game (at present, this happens automatically at launch, but in the future the player may launch a new game from a menu).",
+         "event_data": {}
+      },
+      "game_complete": {
+         "description": "When the player completes the last level of the game, thus completing the game itself.",
+         "event_data": {}
+      },
+      "level_preview_displayed": {
+         "description": "When the system displays a preview of the upcoming level to the player, including the target score and allowed time.",
+         "event_data": {
+            "level_id" : {
+               "type":"int",
+               "description":"The level number for the previewed level."
+            },
+            "level_type" : {
+               "type":"LevelType",
+               "description":"The type of the previewed level."
+            },
+            "duration" : {
+               "type":"int",
+               "description":"The allotted time for the level."
+            },
+            "goal_score" : {
+               "type":"int",
+               "description":"The target score on the level."
+            }
+         }
+      },
+      "click_level_play": {
+         "description": "When the player clicks the 'play' button from the preview to start the level.",
+         "event_data": {
+            "level_id" : {
+               "type":"int",
+               "description":"The level number for the level."
+            },
+            "level_type" : {
+               "type":"LevelType",
+               "description":"The type of the level."
+            },
+            "duration" : {
+               "type":"int",
+               "description":"The allotted time for the level."
+            },
+            "goal_score" : {
+               "type":"int",
+               "description":"The target score on the level."
+            }
+         }
+      },
+      "level_begin": {
+         "description": "When a level actually begins, whether due to the player clicking 'play' from a new level preview, or clicking 'replay' in a level summary.",
+         "event_data": {
+            "level_id" : {
+               "type":"int",
+               "description":"The level number for the level."
+            },
+            "level_type" : {
+               "type":"LevelType",
+               "description":"The type of the level."
+            },
+            "duration" : {
+               "type":"int",
+               "description":"The allotted time for the level."
+            },
+            "goal_score" : {
+               "type":"int",
+               "description":"The target score on the level."
+            }
+         }
+      },
+      "piece_appeared": {
+         "description": "When a new piece appears on the conveyer belt.",
+         "event_data": {
+            "type" : {
+               "type":"PieceShape",
+               "description":"The type of piece that appeared on the belt."
+            }
+         }
+      },
+      "piece_disappeared": {
+         "description": "When a non-packed piece disappears off the conveyer belt.",
+         "event_data": {
+            "type" : {
+               "type":"PieceShape",
+               "description":"The type of piece that left the belt."
+            }
+         }
+      },
+      "punch_launched": {
+         "description": "When the player clicks (or presses key) to punch a piece into the box.",
+         "event_data": {
+            "type" : {
+               "type":"PunchType",
+               "description":"Whether the player triggered the punch with a click or the spacebar."
+            }
+         }
+      },
+      "piece_hit": {
+         "description": "When a piece is hit by a punch, packing it into the box.",
+         "event_data": {
+            "piece": {
+               "type" : "Dict",
+               "details" : {
+                  "type" : "PieceShape",
+                  "is_damaged" : "bool",
+                  "is_target" : "bool"
+               },
+               "description" : "A dict describing the piece that was hit. Indicates the type of the piece, whether the piece was damaged, and whether it matched the level target."
+            },
+            "new_box_contents": {
+               "type" : "List[Dict]",
+               "details" : {
+                  "type" : "PieceShape",
+                  "is_damaged" : "bool",
+                  "is_target" : "bool"
+               },
+               "description" : "A list whose elements are dictionaries describing individual pieces placed in the current box, including the newly-packed piece. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target."
+            },
+            "accuracy" : {
+               "type":"float",
+               "description":"A value, from 0-1, indicating how close the player was to a 'perfectly accurate' punch."
+            }
+         }
+      },
+      "bomb_hit": {
+         "description": "When a bomb is hit by a punch, destroying the current contents of the box.",
+         "event_data": {
+            "pieces_destroyed": {
+               "type" : "List[Dict]",
+               "details" : {
+                  "type" : "PieceShape",
+                  "is_damaged" : "bool",
+                  "is_target" : "bool"
+               },
+               "description" : "A list whose elements are dictionaries describing individual pieces that were in the current box, and destroyed by the bomb. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target."
+            },
+            "accuracy" : {
+               "type":"float",
+               "description":"A value, from 0-1, indicating how close the player was to a 'perfectly accurate' punch."
+            }
+         }
+      },
+      "box_completed": {
+         "description": "When a third piece is packed in a box, completing the box",
+         "event_data": {
+            "pieces": {
+               "type" : "List[Dict]",
+               "details" : {
+                  "type" : "PieceShape",
+                  "is_damaged" : "bool",
+                  "is_target" : "bool"
+               },
+               "description" : "A list whose elements are dictionaries describing individual pieces that were in the completed box. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target."
+            },
+            "score" : {
+               "type":"int",
+               "description":"The points earned for packing the box."
+            },
+            "is_perfect" : {
+               "type":"bool",
+               "description":"Indicator for whether the box score is the maximum possible for the current level."
+            }
+         }
+      },
+      "target_pieces_changed": {
+         "description": "When a player packs a box in a 'SHIFTING' level, and the target for the next box is randomly changed.",
+         "event_data": {
+            "new_target_pieces" : {
+               "type" : "List[PieceShape]",
+               "description" : "A list of the types of pieces accepted for the new target. If the game ever has 'shifting ordered set' levels, the order in the list indicates the order pieces must be placed."
+            }
+         }
+      },
+      "level_end": {
+         "description": "When the level's timer runs out, ending the level.",
+         "event_data": {
+            "receipts": {
+               "type" : "List[Dict]",
+               "details" : {
+                  "items" : "List[Dict[ {'type':ReceiptItem, 'value':int} ]]",
+                  "total_value" : "int",
+                  "is_perfect" : "bool"
+               },
+               "description" : "A list whose elements are dictionaries describing individual boxes that were completed in the level. Each dict contains a point value of the box, an indicator of whether the box was 'perfect', and a sub-list of receipt items; which each contain a ReceiptItem type and a point value."
+            }
+         }
+      },
+      "level_summary_displayed": {
+         "description": "When the system displays a summary of the level results to the player.",
+         "event_data": {
+            "level_id" : {
+               "type":"int",
+               "description":"The level number for the summarized level."
+            },
+            "level_type" : {
+               "type":"LevelType",
+               "description":"The type of the summarized level."
+            },
+            "duration" : {
+               "type":"int",
+               "description":"The allotted time for the level."
+            },
+            "goal_score" : {
+               "type":"int",
+               "description":"The target score on the level."
+            },
+            "final_score" : {
+               "type":"int",
+               "description":"The actual score the player earned on the level."
+            }
+         }
+      },
+      "click_replay_level": {
+         "description": "When the player clicks the 'replay' button in the level summary screen",
+         "event_data": {
+            "level_id" : {
+               "type":"int",
+               "description":"The level number for the replayed level."
+            },
+            "level_type" : {
+               "type":"LevelType",
+               "description":"The type of the replayed level."
+            },
+            "duration" : {
+               "type":"int",
+               "description":"The allotted time for the level."
+            },
+            "goal_score" : {
+               "type":"int",
+               "description":"The target score on the level."
+            },
+            "final_score" : {
+               "type":"int",
+               "description":"The actual score the player earned on the level."
+            }
+         }
+      },
+      "click_breakdown": {
+         "description": "When the player clicks to view the 'breakdown' page for the level",
+         "event_data": {
+         }
+      },
+      "breakdown_page_displayed": {
+         "description": "When the system displays a 'page' of the level breakdown.",
+         "event_data": {
+            "page_index" : {
+               "type":"int",
+               "description":"The index of the 'page' of the level breakdown, among the breakdown pages."
+            },
+            "receipts": {
+               "type" : "List[Dict]",
+               "details" : {
+                  "items" : "List[Dict[ {'type':ReceiptItem, 'value':int} ]]",
+                  "total_value" : "int",
+                  "is_perfect" : "bool"
+               },
+               "description" : "A list whose elements are dictionaries describing individual boxes in the breakdown page. Each dict contains a point value of the box, an indicator of whether the box was 'perfect', and a sub-list of receipt items; which each contain a ReceiptItem type and a point value."
+            }
+         }
+      },
+      "click_next_breakdown_page": {
+         "description": "When the player clicks to advance to the next 'breakdown' page for the level",
+         "event_data": {
+            "old_page_index" : {
+               "type":"int",
+               "description":"The index of the 'page' of the player was on when they clicked the 'next' button."
+            }
+         }
+      },
+      "click_prev_breakdown_page": {
+         "description": "When the player clicks to go to the previous 'breakdown' page for the level",
+         "event_data": {
+            "old_page_index" : {
+               "type":"int",
+               "description":"The index of the 'page' of the player was on when they clicked the 'previous' button."
+            }
+         }
+      },
+      "click_next_level": {
+         "description": "When the player clicks to advance to the next level from the 'summary' page.",
+         "event_data": {
+         }
+      },
+      "click_play_harder": {
+         "description": "Placeholder for an event when the player clicks to play a level on 'hard' mode.",
+         "event_data": {
+         }
+      },
+      "click_play_easier": {
+         "description": "Placeholder for an event when the player clicks to play a level on 'normal' mode.",
+         "event_data": {
+         }
+      },
+      "start_survey": {
+         "description": "When the player enters into a survey after a level",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            }
+         }
+      },
+      "multichoice_item_displayed": {
+         "description": "When the system displays a multi-choice (i.e. select one) survey item.",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            },
+            "item_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey item."
+            },
+            "prompt" : {
+               "type":"str",
+               "description":"The text content of the item prompt."
+            },
+            "choices" : {
+               "type":"List[str]",
+               "description":"The list of possible choices for the survey item."
+            }
+         }
+      },
+      "select_multichoice_response": {
+         "description": "When the player clicks on a choice in a multi-choice survey item, selecting the choice.",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            },
+            "item_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey item."
+            },
+            "choice_value" : {
+               "type":"int",
+               "description":"The index of the selected choice among the available choices, or the value (if the multi-choice item uses a Likert scale or similar)."
+            },
+            "choice_string" : {
+               "type":"str",
+               "description":"The text content of the selected choice."
+            }
+         }
+      },
+      "submit_multichoice_response": {
+         "description": "When the player clicks to submit their choice on a multi-choice survey item.",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            },
+            "item_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey item."
+            },
+            "choice_value" : {
+               "type":"int",
+               "description":"The index of the submitted choice among the available choices, or the value (if the multi-choice item uses a Likert scale or similar)."
+            },
+            "choice_string" : {
+               "type":"str",
+               "description":"The text content of the submitted choice."
+            }
+         }
+      },
+      "slider_item_displayed": {
+         "description": "When the system displays a slider survey item.",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            },
+            "item_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey item."
+            },
+            "prompt" : {
+               "type":"str",
+               "description":"The text content of the item prompt."
+            },
+            "min_value" : {
+               "type":"float | int",
+               "description":"The minimum value the player can select on the survey item."
+            },
+            "max_value" : {
+               "type":"float | int",
+               "description":"The maximum value the player can select on the survey item."
+            },
+            "reference_values" : {
+               "type":"List[Dict]",
+               "details" : {
+                  "label" : "str",
+                  "value" : "float | int"
+               },
+               "description":"A list of other labeled 'reference' values on the slider scale. Each item in the list gives the reference label as well as its value."
+            },
+            "current_value" : {
+               "type":"float | int",
+               "description":"The starting value of the slider."
+            }
+         }
+      },
+      "set_slider_position": {
+         "description": "When the player drags the slider to a new position.",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            },
+            "item_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey item."
+            },
+            "prompt" : {
+               "type":"str",
+               "description":"The text content of the item prompt."
+            },
+            "start_value" : {
+               "type":"float | int",
+               "description":"The value of the slider before it was moved."
+            },
+            "end_value" : {
+               "type":"float | int",
+               "description":"The value to which the player set the slider."
+            },
+            "reference" : {
+               "type":"str | null",
+               "description":"The label of the reference value, if the new slider value matches one of the slider reference value, otherwise null."
+            }
+         }
+      },
+      "submit_slider_response": {
+         "description": "When the player clicks to submit their choice on a slider survey item.",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            },
+            "item_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey item."
+            },
+            "prompt" : {
+               "type":"str",
+               "description":"The text content of the item prompt."
+            },
+            "value" : {
+               "type":"float | int",
+               "description":"The value of the slider when the item was submitted."
+            },
+            "reference" : {
+               "type":"str | null",
+               "description":"The label of the reference value, if the slider was set to one of the slider reference values, otherwise null."
+            }
+         }
+      },
+      "end_survey": {
+         "description": "When the player finishes a survey",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            }
+         }
+      }
+   }
+}

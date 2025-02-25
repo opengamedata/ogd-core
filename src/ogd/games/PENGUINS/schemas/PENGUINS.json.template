@@ -1,0 +1,742 @@
+{
+    "level_range": {
+        "min": 1,
+        "max": 6
+    },
+    "enums" : {
+        "GameMode" : ["HOME_MODE", "..."],
+        "MoveType" : ["BUTTON", "WADDLE"],
+        "Activity" : ["skuas", "mating_dance", "nest", "..."],
+        "Hand"     : ["LEFT", "RIGHT"]
+    },
+    "game_state": {
+        "has_rock": {
+            "type": "bool",
+            "description": "Whether the player was holding a rock in their beak at the time the event occurred."
+        },
+        "pos": {
+            "type": "List[float]",
+            "description": "The current position of the player headset at the moment the event occurred, formatted as [x, y, z]"
+        },
+        "rot": {
+            "type": "List[float]",
+            "description": "The current orientation of the player headset at the moment the event occurred, formatted as [x, y, z, w]"
+        },
+        "seconds_from_launch": {
+            "type": "float",
+            "description": "The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*."
+        }
+    },
+    "events": {
+        "session_start": {
+            "description": "When the app is started and the gameplay session is assigned a session ID. The player has not necessarily begun the game itself yet.",
+            "event_data": {
+                "random_seed": {
+                    "type": "int",
+                    "description": "The random seed used for all random number/position/rotation generation in the game."
+                }
+            }
+        },
+        "game_start": {
+            "description": "When a new game is started",
+            "event_data": {
+                "mode": {
+                    "type": "GameMode",
+                    "description": "The game mode that the player launched"
+                }
+            }
+        },
+        "device_identifier" : {
+            "description": "Event to record a hardware ID, for cross-referencing against survey data at gameplay events.",
+            "event_data": {
+                "hardware_uuid": {
+                    "type": "str",
+                    "description": "The device UUID"
+                }
+            }
+        },
+        "open_menu": {
+            "description": "When the player opens the game menu",
+            "event_data": {}
+        },
+        "close_menu": {
+            "description": "When the player closes the game menu",
+            "event_data": {}
+        },
+        "select_menu_item": {
+            "description": "When the player clicks and item in the menu",
+            "event_data": {
+                "item": {
+                    "type": "str",
+                    "description": "The name of the menu item the player selected"
+                }
+            }
+        },
+        "headset_on": {
+            "description": "When the player puts the headset on, resuming the game",
+            "event_data": {}
+        },
+        "headset_off": {
+            "description": "When the player removes the headset from their head, pausing the game",
+            "event_data": {}
+        },
+        "viewport_data": {
+            "description": "An event sent approximately once per second, containing the in-game position and orientation of the player headset for each frame in the past second",
+            "event_data": {
+                "gaze_data_package": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "pos": "List[float]",
+                        "rot": "List[float]"
+                    },
+                    "description": "A list of dicts, where each dict is one frame of headset data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
+                }
+            }
+        },
+        "left_hand_data": {
+            "description": "An event sent approximately once per second, containing the in-game position and orientation of the player's left hand for each frame in the past second",
+            "event_data": {
+                "left_hand_data_package": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "pos": "List[float]",
+                        "rot": "List[float]"
+                    },
+                    "description": "A list of dicts, where each dict is one frame of left-hand data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
+                }
+            }
+        },
+        "right_hand_data": {
+            "description": "An event sent approximately once per second, containing the in-game position and orientation of the player's right hand for each frame in the past second",
+            "event_data": {
+                "right_hand_data_package": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "pos": "List[float]",
+                        "rot": "List[float]"
+                    },
+                    "description": "A list of dicts, where each dict is one frame of right-hand data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
+                }
+            }
+        },
+        "player_waddle": {
+            "description": "When a player performs a waddle movement to move their penguin avatar forward",
+            "event_data": {
+                "object_id": {
+                    "type": "str",
+                    "description": "The name of... some object"
+                },
+                "pos_old": {
+                    "type": "List[float]",
+                    "description": "The previous position of the player avatar's feet, in [x, y, z] form, i.e. where the waddle started."
+                },
+                "pos_new": {
+                    "type": "List[float]",
+                    "description": "The resulting position of the player avatar's feet, in [x, y, z] form, i.e. where the waddle ended."
+                },
+                "source": {
+                    "type": "MoveType",
+                    "description": "Indicator for whether the player waddled by pressing a button, or by making the 'waddle' gesture with their head."
+                }
+            }
+        },
+        "gaze_object_begin": {
+            "description": "An event triggered when the player has gazed at an object for at least 0.25 seconds, where 'gazed at' means the object is the nearest on a raycast from the viewport center",
+            "event_data": {
+                "object_id": {
+                    "type": "str",
+                    "description": "The name of the object the player is gazing at"
+                }
+            }
+        },
+        "gaze_object_end": {
+            "description": "An event triggered when the player turns away from an object they'd gazed at, so the object is no longer nearest on a raycast from the viewport center. Note there may be a small buffer around the object for the raycast.",
+            "event_data": {
+                "object_id": {
+                    "type": "str",
+                    "description": "The name of the object the player had previously gazed at"
+                }
+            }
+        },
+        "bubble_pop": {
+            "description": "An event triggered when the player pops a bubble in the bubble-popping mini-game. A bubble should be popped on a 'beat' of the music, but can be popped up to 0.5 seconds before or after the 'beat.'",
+            "event_data": {
+                "object_id": {
+                    "type": "str",
+                    "description": "The name of the bubble object the player popped"
+                },
+                "timing_error": {
+                    "type": "float",
+                    "description": "The timing difference between the pop event and the music 'beat.' This value is in the range [-0.5, 0.5], where a negative indicates the bubble was popped before the 'beat,' and positive indicates popping after the 'beat.'"
+                }
+            }
+        },
+        "eat_fish": {
+            "description": "An event triggered when the player eats a fish.",
+            "event_data": {
+                "object_id": {
+                    "type": "str",
+                    "description": "The name of the fish object the player ate"
+                }
+            }
+        },
+        "stand_on_nest": {
+            "description": "An event triggered when the player stands atop a nest.",
+            "event_data": {
+                "nest_id": {
+                    "type": "str",
+                    "description": "The name of the nest object the player stood on"
+                },
+                "nest_pos": {
+                    "type": "List[float]",
+                    "description": "The position of the nest the player stood on"
+                }
+            }
+        },
+        "stand_on_rock": {
+            "description": "An event triggered when the player stands atop a rock.",
+            "event_data": {
+                "rock_id": {
+                    "type": "str",
+                    "description": "The name of the rock object the player stood on"
+                },
+                "rock_pos": {
+                    "type": "List[float]",
+                    "description": "The position of the rock when it got stood on"
+                }
+            }
+        },
+        "flipper_bash_nest": {
+            "description": "An event triggered when the player makes a flipper-bashing move and makes contact with a nest.",
+            "event_data": {
+                "nest_id": {
+                    "type": "str",
+                    "description": "The name of the nest object the player bashed"
+                },
+                "nest_pos": {
+                    "type": "List[float]",
+                    "description": "The position of the nest the player bashed"
+                },
+                "hand": {
+                    "type": "List[float]",
+                    "description": "The position of the nest the player bashed"
+                }
+            }
+        },
+        "flipper_bash_penguin": {
+            "description": "An event triggered when the player makes a flipper-bashing move and makes contact with another penguin.",
+            "event_data": {
+                "penguin_id": {
+                    "type": "str",
+                    "description": "The name of the penguin object the player bashed"
+                },
+                "penguin_pos": {
+                    "type": "List[float]",
+                    "description": "The position of the other penguin when it got bashed"
+                },
+                "hand": {
+                    "type": "Hand",
+                    "description": "Whether the player performed the bash with their right or left hand."
+                }
+            }
+        },
+        "flipper_bash_rock": {
+            "description": "An event triggered when the player makes a flipper-bashing move and makes contact with a rock.",
+            "event_data": {
+                "rock_id": {
+                    "type": "str",
+                    "description": "The name of the rock object the player bashed"
+                },
+                "rock_pos": {
+                    "type": "List[float]",
+                    "description": "The position of the rock when it got bashed"
+                },
+                "hand": {
+                    "type": "Hand",
+                    "description": "Whether the player performed the bash with their right or left hand."
+                }
+            }
+        },
+        "flipper_bash_skua": {
+            "description": "An event triggered when the player makes a flipper-bashing move to shoo a skua away from their nest/egg.",
+            "event_data": {
+                "skua_id": {
+                    "type": "str",
+                    "description": "The name of the skua object the player bashed"
+                },
+                "skua_pos": {
+                    "type": "List[float]",
+                    "description": "The position of the skua when it got bashed"
+                },
+                "penguin_pos": {
+                    "type": "str",
+                    "description": "The position of the player when they slapped the skua. NOTE : This was added due to a mistake in specification, and is redundant with the position element in game_state."
+                },
+                "hand": {
+                    "type": "Hand",
+                    "description": "Whether the player performed the bash with their right or left hand."
+                }
+            }
+        },
+        "peck_nest": {
+            "description": "An event triggered when the player's beak makes contact with a nest.",
+            "event_data": {
+                "nest_id": {
+                    "type": "str",
+                    "description": "The name of the nest object the player pecked"
+                },
+                "nest_pos": {
+                    "type": "List[float]",
+                    "description": "The position of the nest the player pecked"
+                }
+            }
+        },
+        "peck_penguin": {
+            "description": "An event triggered when the player's beak makes contact with another penguin.",
+            "event_data": {
+                "penguin_id": {
+                    "type": "str",
+                    "description": "The name of the penguin object the player pecked"
+                },
+                "penguin_pos": {
+                    "type": "List[float]",
+                    "description": "The position of the other penguin when it got pecked"
+                }
+            }
+        },
+        "peck_rock": {
+            "description": "An event triggered when the player's beak makes contact with a rock.",
+            "event_data": {
+                "rock_id": {
+                    "type": "str",
+                    "description": "The name of the rock object the player pecked"
+                },
+                "rock_pos": {
+                    "type": "List[float]",
+                    "description": "The position of the rock when it got pecked"
+                }
+            }
+        },
+        "peck_skua": {
+            "description": "An event triggered when the player's beak makes contact with a skua.",
+            "event_data": {
+                "skua_id": {
+                    "type": "str",
+                    "description": "The name of the skua object the player pecked"
+                },
+                "skua_pos": {
+                    "type": "List[float]",
+                    "description": "The position of the skua when it got pecked"
+                }
+            }
+        },
+        "pickup_rock": {
+            "description": "An event triggered when the player picks up a rock lying on the ground, which contributes to the building of their nest.",
+            "event_data": {
+                "total_picked_up": {
+                    "type": "int",
+                    "description": "The running total of rocks the player has picked up."
+                }
+            }
+        },
+        "place_rock": {
+            "description": "An event triggered when the player places the rock into their nest.",
+            "event_data": {
+                "percent_complete": {
+                    "type": "float",
+                    "description": "The proportion indicating the player's progress towards completing the nest. So far, the game has always been set to require 4 rocks."
+                },
+                "rock_count": {
+                    "type": "int",
+                    "description": "The total number of rocks the player has placed in their nest."
+                }
+            }
+        },
+        "push_snowball": {
+            "description": "An event triggered when the player pushes a snowball down the hill.",
+            "event_data": {
+                "object_id": {
+                    "type": "str",
+                    "description": "The name of the snowball object the player pushed"
+                },
+                "px": {
+                    "type": "float",
+                    "description": "The x-position of the player when the event happened"
+                },
+                "py": {
+                    "type": "float",
+                    "description": "The y-position of the player when the event happened"
+                },
+                "pz": {
+                    "type": "float",
+                    "description": "The z-position of the player when the event happened"
+                },
+                "qx": {
+                    "type": "float",
+                    "description": "The x-component of the quaternion for the player's orientation when the event happened"
+                },
+                "qy": {
+                    "type": "float",
+                    "description": "The y-component of the quaternion for the player's orientation when the event happened"
+                },
+                "qz": {
+                    "type": "float",
+                    "description": "The z-component of the quaternion for the player's orientation when the event happened"
+                },
+                "qw": {
+                    "type": "float",
+                    "description": "The w-component of the quaternion for the player's orientation when the event happened"
+                }
+            }
+        },
+        "ring_chime": {
+            "description": "An event when the player rings one of the chimes in the chime mini-game.",
+            "event_data": {
+                "note_played": {
+                    "type": "str",
+                    "description": "The name of the chime the player rang"
+                }
+            }
+        },
+        "bubble_appeared": {
+            "description": "Event when a new bubble appears in the mating dance minigame.",
+            "event_data": {
+                "object_id": {
+                    "type": "str",
+                    "description": "The name of the bubble object that appeared"
+                },
+                "posX": {
+                    "type": "float",
+                    "description": "The x-position of the bubble that appeared"
+                },
+                "posY": {
+                    "type": "float",
+                    "description": "The y-position of the bubble that appeared"
+                },
+                "posZ": {
+                    "type": "float",
+                    "description": "The z-position of the bubble that appeared"
+                }
+            }
+        },
+        "bubble_expired": {
+            "description": "Event when a bubble's pop-able time ends and the bubble disappears.",
+            "event_data": {
+                "object_id": {
+                    "type": "str",
+                    "description": "The name of the bubble object that disappeared"
+                }
+            }
+        },
+        "egg_hatch_indicator_updated": {
+            "description": "NOT YET DOCUMENTED",
+            "event_data": {
+                "time_remaining": {
+                    "type": "float",
+                    "description": "The time left until the egg will hatch"
+                }
+            }
+        },
+        "egg_hatched": {
+            "description": "Event when the egg hatches",
+            "event_data": {}
+        },
+        "egg_lost": {
+            "description": "Event when the player's egg is stolen by a skua.",
+            "event_data": {
+                "object_id": {
+                    "type": "str",
+                    "description": "The name of the skua that stole the egg"
+                }
+            }
+        },
+        "egg_recovered": {
+            "description": "Event when the player recovers the egg from the skuas.",
+            "event_data": {}
+        },
+        "mating_dance_indicator_updated": {
+            "description": "Event when a bubble is popped and the indicator for progress to completion of the mating dance updates.",
+            "event_data": {
+                "percent_full": {
+                    "type": "int",
+                    "description": "The new percent to which the dance completion indicator is filled"
+                }
+            }
+        },
+        "nest_complete": {
+            "description": "Event when the player completes the building of their nest.",
+            "event_data": {}
+        },
+        "penguin_pin_fell": {
+            "description": "When one of the pins fell in the bowling area.",
+            "event_data": {}
+        },
+        "skua_spawn": {
+            "description": "Event when a new skua is added in the nest/egg defense mini-game.",
+            "event_data": {
+                "object_id": {
+                    "type": "str",
+                    "description": "The name of the skua object that appeared"
+                },
+                "posX": {
+                    "type": "float",
+                    "description": "The x-position of the skua that appeared"
+                },
+                "posY": {
+                    "type": "float",
+                    "description": "The y-position of the skua that appeared"
+                },
+                "posZ": {
+                    "type": "float",
+                    "description": "The z-position of the skua that appeared"
+                }
+            }
+        },
+        "skua_move": {
+            "description": "Event when a skua moves to a new location in the nest/egg defense mini-game.",
+            "event_data": {
+                "object_id": {
+                    "type": "str",
+                    "description": "The name of the skua object that moved"
+                },
+                "from_position_x": {
+                    "type": "float",
+                    "description": "The initial x-position of the skua that moved"
+                },
+                "from_position_y": {
+                    "type": "float",
+                    "description": "The initial y-position of the skua that moved"
+                },
+                "from_position_z": {
+                    "type": "float",
+                    "description": "The initial z-position of the skua that moved"
+                },
+                "to_position_x": {
+                    "type": "float",
+                    "description": "The new x-position of the skua that moved"
+                },
+                "to_position_y": {
+                    "type": "float",
+                    "description": "The new y-position of the skua that moved"
+                },
+                "to_position_z": {
+                    "type": "float",
+                    "description": "The new z-position of the skua that moved"
+                }
+            }
+        },
+        "enter_region": {
+            "description": "Event when the player moves into one of the regions containing a mini-game or other feature.",
+            "event_data": {
+                "region_name": {
+                    "type": "str",
+                    "description": "The name of the region the player entered"
+                }
+            }
+        },
+        "exit_region": {
+            "description": "Event when a moves out of one of the regions containing a mini-game or other feature.",
+            "event_data": {
+                "region_name": {
+                    "type": "str",
+                    "description": "The name of the region the player left"
+                }
+            }
+        },
+        "activity_begin": {
+            "description": "Event when the player begins to engage with a mini-game activity. Exact trigger varies by activity.",
+            "event_data": {
+                "activity_name": {
+                    "type": "Activity",
+                    "description": "The name of the mini-game/activity with which the player began to engage"
+                }
+            }
+        },
+        "activity_end": {
+            "description": "Event when the player completes a mini-game activity. Exact trigger varies by activity.",
+            "event_data": {
+                "activity_name": {
+                    "type": "Activity",
+                    "description": "The name of the mini-game/activity the player completed."
+                }
+            }
+        },
+        "global_timer_begin": {
+            "description": "NOT YET DOCUMENTED",
+            "event_data": {
+                "time_remaining": {
+                    "type": "int",
+                    "description": "The left on the global timer"
+                }
+            }
+        },
+        "global_timer_pause": {
+            "description": "NOT YET DOCUMENTED",
+            "event_data": {
+                "data": "NOT YET DOCUMENTED"
+            }
+        },
+        "global_timer_expired": {
+            "description": "NOT YET DOCUMENTED",
+            "event_data": {
+                "data": "NOT YET DOCUMENTED"
+            }
+        }
+    },
+    "detectors": {
+        "per_count": {
+            "RegionEnter": {
+                "type": "RegionEnter",
+                "enabled": true,
+                "description": "Triggers an event when a player enter a region"
+            },
+            "RegionExit": {
+                "type": "RegionExit",
+                "enabled": true,
+                "description": "Triggers an event when a player exit a region"
+            }
+        },
+        "aggregate": {}
+    },
+    "features": {
+        "per_count": {
+            "RegionEnterCount": {
+                "type": "RegionEnterCount",
+                "enabled": false,
+                "description": "The number of times a player enterd for a given region of the game.",
+                "return_type": "int"
+            },
+            "RegionDuration": {
+                "type": "RegionDuration",
+                "enabled": true,
+                "count": 11,
+                "prefix": "region",
+                "description": "The duration of time a player played in a given region of the game.",
+                "return_type": "timedelta"
+            },
+            "WaddlePerRegion": {
+                "type": "WaddlePerRegion",
+                "enabled": true,
+                "count": 11,
+                "prefix": "region",
+                "description": "The number of times a player waddled in a given region of the game.",
+                "return_type": "int"
+            }
+        },
+        "aggregate": {
+            "LogVersion": {
+                "type": "LogVersion",
+                "enabled": true,
+                "description": "The version of game the player use.",
+                "return_type": "int"
+            },
+            "SessionDuration": {
+                "type": "SessionDuration",
+                "enabled": true,
+                "description": "The duration each session took.",
+                "return_type": "timedelta"
+            },
+            "BuiltNestCount": {
+                "type": "BuiltNestCount",
+                "enabled": true,
+                "description": "The number of times a player with a rock placed the rock on the correct nest.",
+                "return_type": "int"
+            },
+            "BuiltWrongNestCount": {
+                "type": "BuiltWrongNestCount",
+                "enabled": true,
+                "description": "The number of times a player with a rock that has a peck_nest event, where nest_id does not equal to player nest_id.",
+                "return_type": "int"
+            },
+            "RockPickupCount": {
+                "type": "RockPickupCount",
+                "enabled": true,
+                "description": "The duration each session took.",
+                "return_type": "int"
+            },
+            "RockMultiplePickupCount": {
+                "type": "RockMultiplePickupCount",
+                "enabled": true,
+                "description": "The number of times a player with a rock has peck_rock event.",
+                "return_type": "int"
+            },
+            "RockBashCount": {
+                "type": "RockBashCount",
+                "enabled": true,
+                "description": "he number of times a player had a flipper_bash_rock event.",
+                "return_type": "int"
+            },
+            "SkuaBashCount": {
+                "type": "SkuaBashCount",
+                "enabled": true,
+                "description": "The number of times a player bashed skuas",
+                "return_type": "int"
+            },
+            "SkuaPeckCount": {
+                "type": "SkuaPeckCount",
+                "enabled": true,
+                "description": "The number of times a player pecked skuas, which does not actually affect the skuas",
+                "return_type": "int"
+            },
+            "EggLostCount": {
+                "type": "EggLostCount",
+                "enabled": true,
+                "description": "The number of times a player's egg was stolen by skuas",
+                "return_type": "int"
+            },
+            "EggRecoverTime": {
+                "type": "EggRecoverTime",
+                "enabled": true,
+                "description": "The amount of time the egg spent stolen, with the player trying to recover it",
+                "return_type": "int"
+            },
+            "PenguinInteractCount": {
+                "type": "PenguinInteractCount",
+                "enabled": true,
+                "description": "The number of times a player interacted with another penguin via pecks and/or flipper bashes",
+                "return_type": "int"
+            },
+            "GazeCount": {
+                "type": "GazeCount",
+                "enabled": true,
+                "description": "The number of times a player waddled in a given region of the game.",
+                "return_type": "int"
+            },
+            "GazeDuration": {
+                "type": "GazeDuration",
+                "enabled": true,
+                "description": "How long gaze event last for.",
+                "return_type": "timedelta"
+            },
+            "WaddleCount": {
+                "type": "WaddleCount",
+                "enabled": true,
+                "description": "The number of times a player waddled.",
+                "return_type": "int"
+            },
+            "ActivityCompleted": {
+                "type": "ActivityCompleted",
+                "enabled": true,
+                "description": "The activities completed in a given session.",
+                "return_type": "int"
+            },
+            "ActivityDuration": {
+                "type": "ActivityDuration",
+                "enabled": true,
+                "description": "How long activity last for.",
+                "return_type": "int"
+            },
+            "RegionsEncountered": {
+                "type": "RegionsEncountered",
+                "enabled": true,
+                "description": "The regions entered in a given session.",
+                "return_type": "int"
+            }
+        }
+    },
+    "config": {
+        "SUPPORTED_VERS": [
+            1
+        ]
+    }
+}

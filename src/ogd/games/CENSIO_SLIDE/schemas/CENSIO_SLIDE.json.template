@@ -1,0 +1,439 @@
+{
+   "enums": {
+      "MovementConstraint": [ "NO_ROTATE", "NO_VERTICAL", "NO_HORIZONTAL" ],
+      "ShapeFlag": ["Basic", "Locked", "ConstrainedHorizontal", "ConstrainedVertical", "Rotate", "Goal"],
+      "CardinalDirection": ["N", "E", "S", "W"],
+      "EdgeType": ["OPEN", "CLOSED"],
+      "RotationType": ["CW", "CCW", "NONE"]
+   },
+
+   "game_state": {
+      "seconds_from_launch": {
+         "type": "float",
+         "description": "The number of seconds of game time elapsed since the game was launched."
+      },
+      "level": {
+         "type": "int",
+         "description": "The current level the player is in."
+      },
+      "move_count": {
+         "type": "int",
+         "description": "The number of moves the player has made on the current level."
+      },
+      "level_max_moves": {
+         "type": "int",
+         "description": "The maximum number of moves allowed in the current level."
+      },
+      "level_min_moves": {
+         "type": "int",
+         "description": "The minimum number of moves needed in the current level."
+      },
+      "level_avg_moves": {
+         "type": "int",
+         "description": "The average number of moves the player's peers needed to complete the current level. NOT YET IMPLEMENTED"
+      },
+      "board": {
+         "type" : "List[Dict[str, Any]]",
+         "details" : {
+            "shape_flags": "List[ShapeFlag]",
+            "shape_index": "int",
+            "position": "Dict[str, int]",
+            "block_map": "List[List[int]]"
+         },
+         "description" : "A list of all shapes currently on the game board. Each shape is a sub-dictionary that includes 'flags' indicating any special attributes of the shape, and an index in the overall list for cross-referencing. They also include a 2D 'map' of the shape, which uses 0 (empty) and 1 (filled) to indicate the shape within a bounding box of board tiles. Finally, they include the position of the upper-left corner of the block map, in global coordinates."
+      }
+   },
+
+   "events": {
+      "session_start": {
+         "description": "When the app is started and the gameplay session is assigned a session ID",
+         "event_data": {}
+      },
+      "game_start": {
+         "description": "When the player starts a new game (at present, this happens automatically at launch, but in the future the player may launch a new game from a menu).",
+         "event_data": {}
+      },
+      "game_complete": {
+         "description": "When the player completes the last level of the game, thus completing the game itself.",
+         "event_data": {}
+      },
+      "level_menu_displayed": {
+         "description": "When the system displays a list of the game's levels.",
+         "event_data": {
+            "unlocked_levels" : {
+               "type":"List[Dict]",
+               "details" : {
+                  "level_id" : "int",
+                  "level_max_moves" : "int",
+                  "best_score" : "int | null"
+               },
+               "description":"A list of all currently-unlocked levels, each indicating the level number, max moves allowed, and the player's best score, or null if unplayed."
+            },
+            "locked_levels" : {
+               "type":"List[Dict]",
+               "details" : {
+                  "level_id" : "int",
+                  "level_max_moves" : "int"
+               },
+               "description":"A list of all currently-locked levels, each indicating the level number and max moves allowed."
+            }
+         }
+      },
+      "level_tier_unlocked": {
+         "description": "When the player completes a tier of levels, and the system shows the next tier being unlocked.",
+         "event_data": {
+            "unlocked_levels" : {
+               "type":"List[Dict]",
+               "details" : {
+                  "level_id" : "int",
+                  "level_max_moves" : "int"
+               },
+               "description":"A list of the newly-unlocked levels, each indicating the level number and max moves allowed."
+            }
+         }
+      },
+      "click_select_level": {
+         "description": "When the player selects a level from the menu.",
+         "event_data": {
+            "level_id" : {
+               "type":"int",
+               "description":"The level number for the level."
+            },
+            "level_max_moves" : {
+               "type":"int",
+               "description":"The max number of moves allowed in the level."
+            },
+            "best_score" : {
+               "type":"int | null",
+               "description":"The player's best score on the level, or null if they have not previously played the level."
+            }
+         }
+      },
+      "level_loaded" : {
+         "description": "When the selected level is loaded and play can begin.",
+         "event_data": {
+            "level_id": {
+               "type":"int",
+               "description": "The level that was loaded"
+            },
+            "solution_state": {
+               "type" : "List[Dict[str, Any]]",
+               "details" : {
+                  "shape_flags": "List[ShapeFlag]",
+                  "shape_index": "int",
+                  "position": "Dict[str, int]",
+                  "block_map": "List[List[int]]"
+               },
+               "description" : "The final solution state for the board. This uses the same format and set of elements as the game state's board."
+            }
+         }
+      },
+      "click_undo": {
+         "description": "When the player clicks the button to reset the current puzzle.",
+         "event_data": {
+            "num_undo_used": {
+               "type":"int",
+               "description": "Cumulative, inclusive number of undos the player has used so far in this level"
+            }
+         }
+      },
+      "click_reset": {
+         "description": "When the player clicks the button to reset the current puzzle.",
+         "event_data": {
+         }
+      },
+      "click_confirm_reset": {
+         "description": "When the player clicks the button to confirm they want to reset the current puzzle.",
+         "event_data": {
+         }
+      },
+      "click_cancel_reset": {
+         "description": "When the player clicks the button to cancel resetting the current puzzle.",
+         "event_data": {
+         }
+      },
+      "select_shape": {
+         "description": "When the player selects a level from the menu.",
+         "event_data": {
+            "shape_flags": {
+               "type": "List[ShapeFlag]",
+               "description": "The list of 'flags' indicating any special attributes of the shape."
+            },
+            "shape_index": {
+               "type": "int",
+               "description": "The index of the shape within the overall list of shapes, used for cross-referencing"
+            },
+            "position" : {
+               "type":"Dict[str,int]",
+               "description":"The board coordinates of the upper-left corner of the selected shape's bounding box, in global coordinates."
+            },
+            "block_map": {
+               "type": "List[List[int]]",
+               "description": "A 2D 'map' of the shape, which uses 0 (empty) and 1 (filled) to indicate the shape within a bounding box of board tiles. The map is presented as the shape appears on the board, i.e. a rotated shape will have a rotated map"
+            },
+            "block_details": {
+               "type" : "List[Dict[str, Any]]",
+               "details" : {
+                  "block_offset": "Dict[str, int]",
+                  "block_type": "ShapeFlag",
+                  "edges":"Dict[CardinalDirection, EdgeType]",
+                  "charged": "bool",
+                  "rotation_direction": "RotationType",
+                  "sequence_goal": "int",
+                  "sequence_goal_met": "bool"
+               },
+               "description" : "A list of details for each block in the shape. Includes the block offset (in global coordinates) from the shape's position, which can be used to check which point the given block occupies in the block_map. Other details include any flags specific to the given block (such as whether the given block is the pivot for a rotating shape), and indication of whether each edge of the block is 'open' (carries charge) or 'closed', and specific attributes for rotation and sequenced blocks."
+            }
+         }
+      },
+      "place_shape": {
+         "description": "When the player moves the selected block to a new position.",
+         "event_data": {
+            "shape_flags": {
+               "type": "List[ShapeFlag]",
+               "description": "The list of 'flags' indicating any special attributes of the shape."
+            },
+            "shape_index": {
+               "type": "int",
+               "description": "The index of the shape within the overall list of shapes, used for cross-referencing"
+            },
+            "position" : {
+               "type":"Dict[str,int]",
+               "description":"The board coordinates of the upper-left corner of the selected shape's bounding box, in global coordinates."
+            },
+            "block_map": {
+               "type": "List[List[int]]",
+               "description": "A 2D 'map' of the shape, which uses 0 (empty) and 1 (filled) to indicate the shape within a bounding box of board tiles. The map is presented as the shape appears on the board, i.e. a rotated shape will have a rotated map"
+            },
+            "block_details": {
+               "type" : "List[Dict[str, Any]]",
+               "details" : {
+                  "block_offset": "Dict[str, int]",
+                  "block_type": "ShapeFlag",
+                  "edges":"Dict[CardinalDirection, EdgeType]",
+                  "charged": "bool",
+                  "rotation_direction": "RotationType",
+                  "sequence_goal": "int",
+                  "sequence_goal_met": "int"
+               },
+               "description" : "A list of details for each block in the shape. Includes the block offset (in global coordinates) from the shape's position, which can be used to check which point the given block occupies in the block_map. Other details include any flags specific to the given block (such as whether the given block is the pivot for a rotating shape), and indication of whether each edge of the block is 'open' (carries charge) or 'closed', and specific attributes for rotation and sequenced blocks."
+            },
+            "new_move_count" : {
+               "type":"bool",
+               "description":"The total moves the player has made on the current puzzle, after placing the block."
+            }
+         }
+      },
+      "rotate_shape": {
+         "description": "When the player clicks to rotate a block to a new orientation.",
+         "event_data": {
+            "shape_flags": {
+               "type": "List[ShapeFlag]",
+               "description": "The list of 'flags' indicating any special attributes of the shape."
+            },
+            "shape_index": {
+               "type": "int",
+               "description": "The index of the shape within the overall list of shapes, used for cross-referencing"
+            },
+            "position" : {
+               "type":"Dict[str,int]",
+               "description":"The board coordinates of the upper-left corner of the selected shape's bounding box, in global coordinates."
+            },
+            "block_map": {
+               "type": "List[List[int]]",
+               "description": "A 2D 'map' of the shape, which uses 0 (empty) and 1 (filled) to indicate the shape within a bounding box of board tiles. The map is presented as the shape appears on the board, i.e. a rotated shape will have a rotated map"
+            },
+            "block_details": {
+               "type" : "List[Dict[str, Any]]",
+               "details" : {
+                  "block_offset": "Dict[str, int]",
+                  "block_type": "ShapeFlag",
+                  "edges":"Dict[CardinalDirection, EdgeType]",
+                  "charged": "bool",
+                  "rotation_direction": "RotationType",
+                  "sequence_goal": "int",
+                  "sequence_goal_met": "int"
+               },
+               "description" : "A list of details for each block in the shape. Includes the block offset (in global coordinates) from the shape's position, which can be used to check which point the given block occupies in the block_map. Other details include any flags specific to the given block (such as whether the given block is the pivot for a rotating shape), and indication of whether each edge of the block is 'open' (carries charge) or 'closed', and specific attributes for rotation and sequenced blocks."
+            },
+            "new_move_count" : {
+               "type":"bool",
+               "description":"The total moves the player has made on the current puzzle, after placing the block."
+            }
+         }
+      },
+      "shape_destinations_highlighted": {
+         "description": "When the system displays higlighting on the puzzle board for where the currently-selected block may be placed.",
+         "event_data": {
+            "highlighted_spaces" : {
+               "type":"List[List]",
+               "description":"A list of board coordinates, each indicating a highlighted space on the puzzle board."
+            }
+         }
+      },
+      "out_of_moves" : {
+         "description": "TODO : When the player has made the last allowed move, but not solved the puzzle, and the game displays an 'out of moves' popup.",
+         "event_data": {
+         }
+      },
+      "puzzle_solved": {
+         "description": "When the puzzle enters the 'solved' state after the player has moved all pieces to complete the circuit.",
+         "event_data": {
+         }
+      },
+      "puzzle_solution_lost": {
+         "description": "When the player makes a move after previously solving the puzzle, taking the puzzle out of the 'solved' state.",
+         "event_data": {
+         }
+      },
+      "click_complete_level": {
+         "description": "When the player clicks the button to complete the level, when the puzzle is in the 'solved' state.",
+         "event_data": {
+            "turns_over_min": {
+               "type": "int",
+               "description": "The number of moves above the minimum that the player used."
+            },
+            "turns_over_avg": {
+               "type": "int",
+               "description": "The number of moves above the peer average that the player used."
+            }
+         }
+      },
+      "click_quit_level": {
+         "description": "When the player clicks the button to quit the current level.",
+         "event_data": {
+         }
+      },
+      "click_request_hint": {
+         "description": "When the player clicks on the 'hint' button to display the correct final position of a block.",
+         "event_data": {
+         }
+      },
+      "block_hint_appeared": {
+         "description": "When the game displays the correct final position of a block, as a hint to the player.",
+         "event_data": {
+         }
+      },
+      "block_hint_disappeared": {
+         "description": "When the hinted block position disappears.",
+         "event_data": {
+         }
+      },
+      "click_display_help": {
+         "description" : "When the player clicks the button to display instructions on how to move blocks",
+         "event_data" : {
+         }
+      },
+      "click_open_key": {
+         "description" : "When the player clicks the button to display instructions on how to move blocks. TODO: remove, redundant with click_display_help",
+         "event_data" : {
+         }
+      },
+      "click_close_help": {
+         "description" : "When the player clicks the button to close the instructions on how to move blocks",
+         "event_data" : {
+         }
+      },
+      "click_reveal_move_count": {
+         "description" : "When the player clicks the button to reveal how many moves they have used so far",
+         "event_data" : {
+         }
+      },
+      "click_reveal_min_moves": {
+         "description" : "When the player, during a level, clicks the button to reveal the minimum number of moves needed to solve the level. Todo: Add level_completed parameter - level_completed: { bool:bool, description:True if the player revealed the minimum moves after they completed the level, false if they revealed the minimum moves during play. }",
+         "event_data" : {
+         }
+      },
+      "click_reveal_min_moves_end": {
+         "description" : "When the player, after completing a level, clicks the button to reveal the minimum number of moves needed to solve the level. Todo: merge into click_reveal_min_moves",
+         "event_data" : {
+         }
+      },
+      "click_reveal_peer_avg_moves": {
+         "description" : "When the player clicks the button to reveal the average number of moves used by their peers to complete the level",
+         "event_data" : {
+         }
+      },
+      "start_survey": {
+         "description": "When the player enters into a survey after a level",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            }
+         }
+      },
+      "survey_item_displayed": {
+         "description": "When the system displays a multi-choice (i.e. select one) survey item.",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            },
+            "item_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey item."
+            },
+            "prompt" : {
+               "type":"str",
+               "description":"The text content of the item prompt."
+            },
+            "choices" : {
+               "type":"List[str]",
+               "description":"The list of possible choices for the survey item."
+            }
+         }
+      },
+      "select_survey_response": {
+         "description": "When the player clicks on a choice in a multi-choice survey item, selecting the choice.",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            },
+            "item_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey item."
+            },
+            "choice_value" : {
+               "type":"int",
+               "description":"The index of the selected choice among the available choices, or the value (if the multi-choice item uses a Likert scale or similar)."
+            },
+            "choice_string" : {
+               "type":"str",
+               "description":"The text content of the selected choice."
+            }
+         }
+      },
+      "submit_survey_response": {
+         "description": "When the player clicks to submit their choice on a multi-choice survey item.",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            },
+            "item_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey item."
+            },
+            "choice_value" : {
+               "type":"int",
+               "description":"The index of the submitted choice among the available choices, or the value (if the multi-choice item uses a Likert scale or similar)."
+            },
+            "choice_string" : {
+               "type":"str",
+               "description":"The text content of the submitted choice."
+            }
+         }
+      },
+      "end_survey": {
+         "description": "When the player finishes a survey",
+         "event_data": {
+            "survey_id" : {
+               "type":"str",
+               "description":"An identifier for the specific survey."
+            }
+         }
+      }
+   }
+}

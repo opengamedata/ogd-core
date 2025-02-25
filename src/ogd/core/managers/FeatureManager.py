@@ -4,20 +4,20 @@ import logging
 from datetime import datetime
 from typing import Dict, List, Type, Optional, Set, Tuple, Union
 ## import local files
-from ogd.core.extractors.ExtractorLoader import ExtractorLoader
-from ogd.core.processors.FeatureProcessor import FeatureProcessor
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
+from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.core.processors.PopulationProcessor import PopulationProcessor
 from ogd.core.processors.PlayerProcessor import PlayerProcessor
 from ogd.core.processors.SessionProcessor import SessionProcessor
-from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.schemas.Event import Event
-from ogd.core.utils.Logger import Logger
-from ogd.core.utils.utils import ExportRow
+from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.models.Event import Event
+from ogd.common.utils.Logger import Logger
+from ogd.common.utils.typing import ExportRow
 
 class FeatureManager:
-    def __init__(self, game_schema:GameSchema, LoaderClass:Optional[Type[ExtractorLoader]], feature_overrides:Optional[List[str]]):
-        self._LoaderClass    : Optional[Type[ExtractorLoader]] = LoaderClass
+    def __init__(self, game_schema:GameSchema, LoaderClass:Optional[Type[GeneratorLoader]], feature_overrides:Optional[List[str]]):
         self._game_schema    : GameSchema                 = game_schema
+        self._LoaderClass    : Optional[Type[GeneratorLoader]] = LoaderClass
         self._overrides      : Optional[List[str]]        = feature_overrides
         # local tracking of whether we're up-to-date on getting feature values.
         self._up_to_date     : bool                       = True
@@ -116,7 +116,7 @@ class FeatureManager:
         return self._latest_values
 
     def GetPopulationFeatureNames(self) -> List[str]:
-        return self._population.ExtractorNames if self._population is not None else []
+        return self._population.GeneratorNames if self._population is not None else []
     def GetPopulationFeatures(self, as_str:bool = False) -> List[ExportRow]:
         start = datetime.now()
         self._try_update(as_str=as_str)
@@ -125,7 +125,7 @@ class FeatureManager:
         return ret_val
 
     def GetPlayerFeatureNames(self) -> List[str]:
-        return self._players["null"].ExtractorNames if self._players is not None else []
+        return self._players["null"].GeneratorNames if self._players is not None else []
     def GetPlayerFeatures(self, as_str:bool = False) -> List[ExportRow]:
         start   : datetime = datetime.now()
         self._try_update(as_str=as_str)
@@ -134,7 +134,7 @@ class FeatureManager:
         return ret_val
 
     def GetSessionFeatureNames(self) -> List[str]:
-        return self._sessions["null"]["null"].ExtractorNames if self._sessions is not None else []
+        return self._sessions["null"]["null"].GeneratorNames if self._sessions is not None else []
     def GetSessionFeatures(self, slice_num:int, slice_count:int, as_str:bool = False) -> List[ExportRow]:
         start   : datetime = datetime.now()
         self._try_update(as_str=as_str)
@@ -164,8 +164,8 @@ class FeatureManager:
                                         player_id="null", session_id="null", feature_overrides=self._overrides)
             }
 
-    def _flatHierarchy(self) -> List[FeatureProcessor]:
-        ret_val : List[FeatureProcessor] = []
+    def _flatHierarchy(self) -> List[ExtractorProcessor]:
+        ret_val : List[ExtractorProcessor] = []
         if self._population is not None:
             ret_val = [self._population]
         if self._players is not None:

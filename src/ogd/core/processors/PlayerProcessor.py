@@ -3,33 +3,33 @@ import logging
 import traceback
 from typing import List, Dict, Type, Optional, Set
 # import local files
-from ogd.core.extractors.ExtractorLoader import ExtractorLoader
-from ogd.core.extractors.registries.FeatureRegistry import FeatureRegistry
-from ogd.core.processors.FeatureProcessor import FeatureProcessor
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
+from ogd.core.registries.ExtractorRegistry import ExtractorRegistry
+from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.core.processors.SessionProcessor import SessionProcessor
-from ogd.core.schemas.Event import Event
-from ogd.core.schemas.ExportMode import ExportMode
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
-from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.utils.Logger import Logger
-from ogd.core.utils.utils import ExportRow
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExportMode import ExportMode
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
+from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.utils.Logger import Logger
+from ogd.common.utils.typing import ExportRow
 
 ## @class PlayerProcessor
 #  Class to extract and manage features for a processed csv file.
-class PlayerProcessor(FeatureProcessor):
+class PlayerProcessor(ExtractorProcessor):
 
     # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the PlayerProcessor class.
-    def __init__(self, LoaderClass: Type[ExtractorLoader], game_schema: GameSchema, player_id:str,
+    def __init__(self, LoaderClass: Type[GeneratorLoader], game_schema: GameSchema, player_id:str,
                  feature_overrides:Optional[List[str]]=None):
         """Constructor for the PlayerProcessor class.
            Simply stores some data for use later, including the type of extractor to use.
 
         :param LoaderClass: The type of data extractor to use for input data.
                             This should correspond to whatever game_id is in the TableSchema.
-        :type LoaderClass: Type[ExtractorLoader]
+        :type LoaderClass: Type[GeneratorLoader]
         :param game_schema: A dictionary that defines how the game data itself is structured.
         :type game_schema: GameSchema
         :param player_id: _description_
@@ -63,9 +63,9 @@ class PlayerProcessor(FeatureProcessor):
     def _sessionID(self) -> str:
         return "player"
 
-    def _getExtractorNames(self) -> List[str]:
-        if isinstance(self._registry, FeatureRegistry):
-            return ["PlayerID", "SessionCount"] + self._registry.GetExtractorNames()
+    def _getGeneratorNames(self) -> List[str]:
+        if isinstance(self._registry, ExtractorRegistry):
+            return ["PlayerID", "SessionCount"] + self._registry.GetGeneratorNames()
         else:
             raise TypeError()
 
@@ -78,7 +78,7 @@ class PlayerProcessor(FeatureProcessor):
         :type event: Event
         """
         self._sessions.add(event.SessionID)
-        self._registry.ExtractFromEvent(event=event)
+        self._registry.UpdateFromEvent(event=event)
 
     def _getLines(self) -> List[ExportRow]:
         ret_val : ExportRow
@@ -97,7 +97,7 @@ class PlayerProcessor(FeatureProcessor):
         This is helpful if we're processing a lot of data and want to avoid eating too much memory.
         """
         Logger.Log(f"Clearing features from PlayerProcessor for {self._player_id}.", logging.DEBUG, depth=2)
-        self._registry = FeatureRegistry(mode=self._mode)
+        self._registry = ExtractorRegistry(mode=self._mode)
 
     # *** PUBLIC STATICS ***
 
