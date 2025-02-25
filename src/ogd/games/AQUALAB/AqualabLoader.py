@@ -192,6 +192,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = JobLocationChangesNoKelp.JobLocationChangesNoKelp(params=extractor_params, job_map=self._job_map)
                 case "JobModeling":
                     ret_val = JobModeling.JobModeling(params=extractor_params, job_map=self._job_map)
+                case "JobName":
+                    ret_val = JobName.JobName(params=extractor_params, job_map=self._job_map)
                 case "JobPriorAttempt":
                     ret_val = JobPriorAttempt.JobPriorAttempt(params=extractor_params, job_map=self._job_map)
                 case "JobPriorComplete":

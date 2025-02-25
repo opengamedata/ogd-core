@@ -23,6 +23,7 @@ __all__ = [
     "JobPriorComplete",
     "JobsAttempted",
     "JobsCompleted",
+    "JobName",
     "JobStartCount",
     "JobTasksCompleted",
     "JobTriesInArgument",
@@ -79,6 +80,7 @@ from . import JobHelpCount
 from . import JobLocationChanges
 from . import JobLocationChangesNoKelp
 from . import JobModeling
+from . import JobName
 from . import JobPlayTime
 from . import JobPriorAttempt
 from . import JobPriorComplete
