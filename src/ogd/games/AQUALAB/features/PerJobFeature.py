@@ -6,6 +6,7 @@ from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.common.models.Event import Event
+from ogd.games.AQUALAB.AqualabLoader import METADATA
 
 class PerJobFeature(PerCountFeature):
     def __init__(self, params:GeneratorParameters, job_map:dict):
@@ -31,3 +32,19 @@ class PerJobFeature(PerCountFeature):
     @staticmethod
     def MinVersion() -> Optional[str]:
         return "1"
+
+    # *** Add Property ***
+    
+    @property
+    def TargetJobName(self) -> str:
+        ret_val = "NOT FOUND"
+
+        if self.CountIndex == 0:
+            ret_val = "no-active-job"
+        else:
+            job_list = METADATA.get("jobs", [])
+            # we'll access CountIndex - 1, since index 0 is for no-active-job, so index 1 will be for 0th item in list of jobs.
+            job_dict = job_list[self.CountIndex - 1] if len(job_list) >= self.CountIndex else {}
+            ret_val = job_dict.get("id", "NOT FOUND")
+
+        return ret_val
