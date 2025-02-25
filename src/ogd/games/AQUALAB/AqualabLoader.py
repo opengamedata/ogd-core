@@ -20,6 +20,11 @@ from ogd.common.utils.Logger import Logger
 from . import features
 
 EXPORT_PATH : Final[str] = "games/AQUALAB/DBExport.json"
+METADATA = {}
+_dbexport_path = Path(AQUALAB.__file__) if Path(AQUALAB.__file__).is_dir() else Path(AQUALAB.__file__).parent
+with open(_dbexport_path / "DBExport.json", "r") as file:
+    METADATA = json.load(file)
+
 
 class AqualabLoader(GeneratorLoader):
     """Loader subclass for Aqualab generators"""
@@ -45,18 +50,15 @@ class AqualabLoader(GeneratorLoader):
         self._task_map = {}
 
         # Load Aqualab jobs export and map job names to integer values
-        _dbexport_path = Path(AQUALAB.__file__) if Path(AQUALAB.__file__).is_dir() else Path(AQUALAB.__file__).parent
-        with open(_dbexport_path / "DBExport.json", "r") as file:
-            export = json.load(file)
 
-            task_num = 1
-            for i, job in enumerate(export["jobs"], start=1):
-                self._job_map[job["id"]] = i
-                self._diff_map[i] = job["difficulties"]
-                for task in job["tasks"]:
-                    task_by_job = job["id"] + "_" + task["id"]
-                    self._task_map[task_by_job] = task_num
-                    task_num += 1
+        task_num = 1
+        for i, job in enumerate(AqualabLoader.METADATA.get("jobs", {}), start=1):
+            self._job_map[job["id"]] = i
+            self._diff_map[i] = job["difficulties"]
+            for task in job["tasks"]:
+                task_by_job = job["id"] + "_" + task["id"]
+                self._task_map[task_by_job] = task_num
+                task_num += 1
 
         # Update level count
         self._game_schema._max_level = len(self._job_map) - 1
