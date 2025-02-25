@@ -52,7 +52,7 @@ class AqualabLoader(GeneratorLoader):
         # Load Aqualab jobs export and map job names to integer values
 
         task_num = 1
-        for i, job in enumerate(AqualabLoader.METADATA.get("jobs", {}), start=1):
+        for i, job in enumerate(METADATA.get("jobs", {}), start=1):
             self._job_map[job["id"]] = i
             self._diff_map[i] = job["difficulties"]
             for task in job["tasks"]:
