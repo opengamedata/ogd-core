@@ -190,6 +190,8 @@ jobs:
       with:
         game: ${{ matrix.game }}
         host: ${{ vars.FD_WEB_HOST }}
+        remote_user: ${{ secrets.VPN_USER }}
+        remote_key: ${{ secrets.VPN_KEY }}
         source_path: ./data/${{ matrix.game }}
         remote_data_path: "/var/www/opengamedata/data"
     - name: Upload data as artifact

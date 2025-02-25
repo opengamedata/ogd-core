@@ -639,6 +639,14 @@
                 "description": "Number of times player talked with guide during a job",
                 "return_type": "int"
             },
+            "JobName": {
+                "enabled": true,
+                "type": "JobName",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "The name of the job associated with job0, job1, etc.",
+                "return_type": "str"
+            },
             "JobHelpCount": {
                 "enabled": false,
                 "type": "JobHelpCount",

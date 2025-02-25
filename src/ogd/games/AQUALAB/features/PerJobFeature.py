@@ -1,16 +1,18 @@
 # import libraries
-import logging
+import json
+from pathlib import Path
 from typing import Optional
 # import locals
-from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.common.models.Event import Event
+from ogd.games import AQUALAB
 
 class PerJobFeature(PerCountFeature):
     def __init__(self, params:GeneratorParameters, job_map:dict):
         super().__init__(params=params,)
         self._job_map = job_map
+        self._target_job = self._getTargetJobName()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
@@ -37,3 +39,29 @@ class PerJobFeature(PerCountFeature):
     @staticmethod
     def MinVersion() -> Optional[str]:
         return "1"
+
+    # *** Add Property ***
+    
+    @property
+    def TargetJobName(self) -> str:
+        return self._target_job
+
+    # *** Private Functions ***
+
+    def _getTargetJobName(self) -> str:
+        ret_val = "NOT FOUND"
+
+        METADATA = {}
+        _dbexport_path = Path(AQUALAB.__file__) if Path(AQUALAB.__file__).is_dir() else Path(AQUALAB.__file__).parent
+        with open(_dbexport_path / "DBExport.json", "r") as file:
+            METADATA = json.load(file)
+
+        if self.CountIndex == 0:
+            ret_val = "no-active-job"
+        else:
+            job_list = METADATA.get("jobs", [])
+            # we'll access CountIndex - 1, since index 0 is for no-active-job, so index 1 will be for 0th item in list of jobs.
+            job_dict = job_list[self.CountIndex - 1] if len(job_list) >= self.CountIndex else {}
+            ret_val = job_dict.get("id", "NOT FOUND")
+
+        return ret_val
