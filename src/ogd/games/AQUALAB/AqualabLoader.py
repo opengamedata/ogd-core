@@ -20,10 +20,6 @@ from ogd.common.utils.Logger import Logger
 from . import features
 
 EXPORT_PATH : Final[str] = "games/AQUALAB/DBExport.json"
-METADATA = {}
-_dbexport_path = Path(AQUALAB.__file__) if Path(AQUALAB.__file__).is_dir() else Path(AQUALAB.__file__).parent
-with open(_dbexport_path / "DBExport.json", "r") as file:
-    METADATA = json.load(file)
 
 
 class AqualabLoader(GeneratorLoader):
@@ -50,6 +46,10 @@ class AqualabLoader(GeneratorLoader):
         self._task_map = {}
 
         # Load Aqualab jobs export and map job names to integer values
+        METADATA = {}
+        _dbexport_path = Path(AQUALAB.__file__) if Path(AQUALAB.__file__).is_dir() else Path(AQUALAB.__file__).parent
+        with open(_dbexport_path / "DBExport.json", "r") as file:
+            METADATA = json.load(file)
 
         task_num = 1
         for i, job in enumerate(METADATA.get("jobs", {}), start=1):

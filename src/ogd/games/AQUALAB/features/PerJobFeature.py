@@ -1,17 +1,18 @@
 # import libraries
-import logging
+import json
+from pathlib import Path
 from typing import Optional
 # import locals
-from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.common.models.Event import Event
-from ogd.games.AQUALAB.AqualabLoader import METADATA
+from ogd.games import AQUALAB
 
 class PerJobFeature(PerCountFeature):
     def __init__(self, params:GeneratorParameters, job_map:dict):
         super().__init__(params=params,)
         self._job_map = job_map
+        self._target_job = self._getTargetJobName()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
@@ -37,7 +38,17 @@ class PerJobFeature(PerCountFeature):
     
     @property
     def TargetJobName(self) -> str:
+        return self._target_job
+
+    # *** Private FUnctions ***
+
+    def _getTargetJobName(self) -> str:
         ret_val = "NOT FOUND"
+
+        METADATA = {}
+        _dbexport_path = Path(AQUALAB.__file__) if Path(AQUALAB.__file__).is_dir() else Path(AQUALAB.__file__).parent
+        with open(_dbexport_path / "DBExport.json", "r") as file:
+            METADATA = json.load(file)
 
         if self.CountIndex == 0:
             ret_val = "no-active-job"
