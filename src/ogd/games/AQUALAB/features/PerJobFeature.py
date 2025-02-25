@@ -11,14 +11,14 @@ from ogd.common.models.Event import Event
 from ogd.games import AQUALAB
 
 class PerJobFeature(PerCountFeature):
-    _metadata = None
+    _metadata : Optional[Dict] = None
 
     def __init__(self, params:GeneratorParameters, job_map:dict):
         super().__init__(params=params,)
         self._job_map = job_map
         self._target_job = self._getTargetJobName()
         if PerJobFeature._metadata is None:
-            PerJobFeature._loadMetadata()
+            PerJobFeature._metadata = PerJobFeature._loadMetadata()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
@@ -73,8 +73,9 @@ class PerJobFeature(PerCountFeature):
         if self.CountIndex == 0:
             ret_val = "no-active-job"
         else:
-
             job_list = PerJobFeature._metadata.get("jobs", []) if PerJobFeature._metadata is not None else []
+
+            Logger.Log(f"The job_list has {len(job_list)} elements.")
             # we'll access CountIndex - 1, since index 0 is for no-active-job, so index 1 will be for 0th item in list of jobs.
             job_dict = job_list[self.CountIndex - 1] if len(job_list) >= self.CountIndex else {}
             ret_val = job_dict.get("id", "NOT FOUND")
