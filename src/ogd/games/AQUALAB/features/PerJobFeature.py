@@ -1,18 +1,24 @@
 # import libraries
 import json
+import logging
 from pathlib import Path
-from typing import Optional
+from typing import Dict, Optional
 # import locals
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
+from ogd.common.utils.Logger import Logger
 from ogd.common.models.Event import Event
 from ogd.games import AQUALAB
 
 class PerJobFeature(PerCountFeature):
+    _metadata = None
+
     def __init__(self, params:GeneratorParameters, job_map:dict):
         super().__init__(params=params,)
         self._job_map = job_map
         self._target_job = self._getTargetJobName()
+        if PerJobFeature._metadata is None:
+            PerJobFeature._loadMetadata()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
@@ -48,18 +54,27 @@ class PerJobFeature(PerCountFeature):
 
     # *** Private Functions ***
 
+    @classmethod
+    def _loadMetadata(cls) -> Dict:
+        ret_val = {}
+
+        _dbexport_path = Path(AQUALAB.__file__) if Path(AQUALAB.__file__).is_dir() else Path(AQUALAB.__file__).parent
+        try:
+            with open(_dbexport_path / "DBExport.json", "r") as file:
+                ret_val = json.load(file)
+        except FileNotFoundError:
+            Logger.Log(f"In PerJobFeature, could not open file {_dbexport_path / "DBExport.json"}, the file does not exist!")
+
+        return ret_val
+
     def _getTargetJobName(self) -> str:
         ret_val = "NOT FOUND"
-
-        METADATA = {}
-        _dbexport_path = Path(AQUALAB.__file__) if Path(AQUALAB.__file__).is_dir() else Path(AQUALAB.__file__).parent
-        with open(_dbexport_path / "DBExport.json", "r") as file:
-            METADATA = json.load(file)
 
         if self.CountIndex == 0:
             ret_val = "no-active-job"
         else:
-            job_list = METADATA.get("jobs", [])
+
+            job_list = PerJobFeature._metadata.get("jobs", []) if PerJobFeature._metadata is not None else []
             # we'll access CountIndex - 1, since index 0 is for no-active-job, so index 1 will be for 0th item in list of jobs.
             job_dict = job_list[self.CountIndex - 1] if len(job_list) >= self.CountIndex else {}
             ret_val = job_dict.get("id", "NOT FOUND")
