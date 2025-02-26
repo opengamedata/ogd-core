@@ -75,7 +75,6 @@ class PerJobFeature(PerCountFeature):
         else:
             job_list = PerJobFeature._metadata.get("jobs", []) if PerJobFeature._metadata is not None else []
 
-            Logger.Log(f"The job_list has {len(job_list)} elements.")
             # we'll access CountIndex - 1, since index 0 is for no-active-job, so index 1 will be for 0th item in list of jobs.
             job_dict = job_list[self.CountIndex - 1] if len(job_list) >= self.CountIndex else {}
             ret_val = job_dict.get("id", "NOT FOUND")
