@@ -25,6 +25,11 @@ on:
         description: "The path, on the server, to the data folder containing the reindexer."
         required: true
         default: "/var/www/opengamedata/data"
+      delay:
+        type: string
+        description: "The number of seconds to wait beore running indexing step"
+        required: false
+        default: "60"
 
 jobs:
 
@@ -36,6 +41,9 @@ jobs:
       cancel-in-progress: true
 
     steps:
+    - name: Delay Before Reindex
+      if: ${{ github.event_name == 'workflow_call' }}
+      run: sleep ${{ inputs.delay }}
     - name: Connect to VPN
       uses: opengamedata/actions-openconnect-vpn@v1.1
       with:
