@@ -62,106 +62,15 @@
             "type" : "int",
             "description" : "The current score the player has in play/game mode."
         },
-        "seconds_from_launch" : {
-            "type" : "float",
-            "description" : "The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*."
-        },
-        "tablet_mode" : {
-            "type" : "TabletModes"
-        },
-        "region" : {
-            "type" : "enum(WATER, VAPOR, TWO_PHASE)",
-            "description" : "The current graph region of the water in the piston"
-        },
-        "pressure" : {
-            "type" : "float",
-            "description" : "The current pressure (P) in the piston in kPa"
-        },
-        "temperature" : {
-            "type" : "float",
-            "description" : "The current temperature (T) of the water in the piston in K"
-        },
-        "volume" : {
-            "type" : "float",
-            "description" : "The current volume (V) of the water in the piston m^3"
-        },
-        "internal_energy" : {
-            "type" : "float",
-            "description" : "The current internal energy (u) in the piston"
-        },
-        "entropy" : {
-            "type" : "float",
-            "description" : "The current entropy (s) in the piston in kJ/(kgK)"
-        },
-        "enthalpy" : {
-            "type" : "float",
-            "description" : "The current enthalpy (h) in the piston in kJ/kg"
-        },
-        "vapor" : {
-            "type" : "float",
-            "description" : "The current percentage (by mass) of water in the vapor phase in the piston"
-        },
-        "heat_delta" : {
-            "type" : "float",
-            "description" : "Current readout of net heat change due to inputs from the workstation terminal"
-        },
-        "insulation_tool" : {
+        "slider_chamber_pressure" : {
             "type": "Dict[str, int]",
             "details": {
                 "enabled":"bool",
                 "slider_val":"float"
             },
-            "description": "The state of the insulation tool: whether it is enabled, and the percent effectiveness of the insulation."
+            "description": "The state of the chamber/ambient pressure tool: the ambient pressure in kPa (the ambient pressure is always enabled)."
         },
-        "lower_stop_tool" : {
-            "type": "Dict[str, int]",
-            "details": {
-                "enabled":"bool",
-                "slider_val":"float"
-            },
-            "description": "The state of the lower stop tool: whether it is enabled, and the minimum piston volume in m^3/kg."
-        },
-        "upper_stop_tool" : {
-            "type": "Dict[str, int]",
-            "details": {
-                "enabled":"bool",
-                "slider_val":"float"
-            },
-            "description": "The state of the upper stop tool: whether it is enabled, and the maximum piston volume in m^3/kg."
-        },
-        "increase_weight_tool" : {
-            "type": "Dict[str, int]",
-            "details": {
-                "enabled":"bool",
-                "slider_val":"float"
-            },
-            "description": "The state of the weight (pressure increase) tool: whether it is enabled, and the pressure increase in kPa."
-        },
-        "decrease_weight_tool" : {
-            "type": "Dict[str, int]",
-            "details": {
-                "enabled":"bool",
-                "slider_val":"float"
-            },
-            "description": "The state of the balloon (pressure reduction) tool: whether it is enabled, and the pressure reduction in kPa."
-        },
-        "heat_tool" : {
-            "type": "Dict[str, int]",
-            "details": {
-                "enabled":"bool",
-                "slider_val":"float"
-            },
-            "description": "The state of the bunsen burner tool: whether it is enabled, and the heat per second it generates in kJ/s."
-        },
-        "cooling_tool" : {
-            "type": "Dict[str, int]",
-            "details": {
-                "enabled":"bool",
-                "slider_val":"float"
-            },
-            "description": "The state of the cooling coil tool: whether it is enabled, and the heat per second it removes in kJ/s."
-        },
-        "chamber_temperature_tool" : {
+        "slider_chamber_temperature" : {
             "type": "Dict[str, int]",
             "details": {
                 "enabled":"bool",
@@ -169,13 +78,86 @@
             },
             "description": "The state of the chamber/ambient temperature tool: whether ambient heat exchange is enabled, and the ambient temperature in K."
         },
-        "chamber_pressure_tool" : {
+        "slider_cooling" : {
             "type": "Dict[str, int]",
             "details": {
                 "enabled":"bool",
                 "slider_val":"float"
             },
-            "description": "The state of the chamber/ambient pressure tool: the ambient pressure in kPa (the ambient pressure is always enabled)."
+            "description": "The state of the cooling coil tool: whether it is enabled, and the heat per second it removes in kJ/s."
+        },
+        "slider_heat" : {
+            "type": "Dict[str, int]",
+            "details": {
+                "enabled":"bool",
+                "slider_val":"float"
+            },
+            "description": "The state of the bunsen burner tool: whether it is enabled, and the heat per second it generates in kJ/s."
+        },
+        "slider_insulation" : {
+            "type": "Dict[str, int]",
+            "details": {
+                "enabled":"bool",
+                "slider_val":"float"
+            },
+            "description": "The state of the insulation tool: whether it is enabled, and the percent effectiveness of the insulation."
+        },
+        "slider_lower_stop" : {
+            "type": "Dict[str, int]",
+            "details": {
+                "enabled":"bool",
+                "slider_val":"float"
+            },
+            "description": "The state of the lower stop tool: whether it is enabled, and the minimum piston volume in m^3/kg."
+        },
+        "slider_upper_stop" : {
+            "type": "Dict[str, int]",
+            "details": {
+                "enabled":"bool",
+                "slider_val":"float"
+            },
+            "description": "The state of the upper stop tool: whether it is enabled, and the maximum piston volume in m^3/kg."
+        },
+        "slider_weight" : {
+            "type": "Dict[str, int]",
+            "details": {
+                "enabled":"bool",
+                "slider_val":"float"
+            },
+            "description": "The state of the weight (pressure increase) tool: whether it is enabled, and the pressure increase in kPa."
+        },
+        "slider_negative_weight" : {
+            "type": "Dict[str, int]",
+            "details": {
+                "enabled":"bool",
+                "slider_val":"float"
+            },
+            "description": "The state of the balloon (pressure reduction) tool: whether it is enabled, and the pressure reduction in kPa."
+        },
+        "tablet_mode" : {
+            "type" : "TabletModes"
+        },
+        "thermo_attributes" : {
+            "type": "Dict[str, str | float]",
+            "details": {
+                "P":"float",
+                "Region":"str",
+                "T":"float",
+                "V":"float",
+                "h":"float",
+                "s":"float",
+                "u":"float",
+                "x":"float"
+            },
+            "description": "The state of the cooling coil tool: whether it is enabled, and the heat per second it removes in kJ/s."
+        },
+        "seconds_from_launch" : {
+            "type" : "float",
+            "description" : "The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*. WARNING : Not implemented as of log version 5"
+        },
+        "heat_delta" : {
+            "type" : "float",
+            "description" : "Current readout of net heat change due to inputs from the workstation terminal. WARNING : Not implemented as of log version 5"
         }
     },
 
