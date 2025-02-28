@@ -1215,12 +1215,12 @@
                 "section" : {
                     "type": "Dict[str, Any]",
                     "details": {
-                        "lab_name" : "str",
-                        "section_number" : "int",
-                        "description" : "str",
-                        "is_complete" : "bool",
-                        "is_active" : "bool",
-                        "tasks" : "List[Dict]"
+                        "Description": "str",
+                        "Index" : "int",
+                        "LabName" : "str",
+                        "IsActive" : "bool",
+                        "IsComplete" : "bool",
+                        "Tasks" : "List[Dict]"
                     },
                     "description" : "Details of the section the player selected, including task sub-objects."
                 }
