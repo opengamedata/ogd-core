@@ -145,15 +145,15 @@ jobs:
         ssh_pass: ${{secrets.VPN_PASS}}
         slice_size: ${{ github.event.inputs.slice_size }}
         log_level: ${{ github.event.inputs.log_level }}
-    - name: Set up Alternate Data Source
-      if: github.event.inputs.use_alternate_data_source == 'true'
-      uses: ./.github/actions/set_custom_db
-      with:
-        game_id:       ${{ matrix.game }}
-        source_id:     ${{ github.event.inputs.source_id }}
-        database_name: ${{ github.event.inputs.database_name }}
-        table_name:    ${{ github.event.inputs.table_name }}
-        schema_id:     ${{ github.event.inputs.schema_id }}
+    # - name: Set up Alternate Data Source
+    #   if: github.event.inputs.use_alternate_data_source == 'true'
+    #   uses: ./.github/actions/set_custom_db
+    #   with:
+    #     game_id:       ${{ matrix.game }}
+    #     source_id:     ${{ github.event.inputs.source_id }}
+    #     database_name: ${{ github.event.inputs.database_name }}
+    #     table_name:    ${{ github.event.inputs.table_name }}
+    #     schema_id:     ${{ github.event.inputs.schema_id }}
 
     # 3. Execute process
     - name: Do Export of Month
