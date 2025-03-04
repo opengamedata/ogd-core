@@ -14,7 +14,7 @@ on:
         required: true
         default: "/var/www/opengamedata/data"
   workflow_call:
-   inputs:
+    inputs:
       FILE_SERVER:
         type: string
         description: "The server to connect to."
@@ -30,6 +30,16 @@ on:
         description: "The number of seconds to wait beore running indexing step"
         required: false
         default: "60"
+    secrets:
+      VPN_USER:
+        description: "Username for connecting to VPN"
+        required: true
+      VPN_PASS:
+        description: "Password for connecting to VPN"
+        required: true
+      VPN_KEY:
+        description: "Access key for SSH connection over VPN"
+        required: true
 
 jobs:
 
