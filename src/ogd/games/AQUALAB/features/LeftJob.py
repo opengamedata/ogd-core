@@ -32,9 +32,6 @@ class LeftJob(PerJobFeature):
             new_job = event.GameState.get("job_name")
             if new_job != "no-active-job":
                 self._left_job = True
-        
-        elif event.EventName == "complete_job":
-            self._left_job = False 
 
     def _updateFromFeatureData(self, feature:FeatureData):
         return

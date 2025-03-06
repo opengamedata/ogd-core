@@ -23,14 +23,21 @@ class FollowedAdvice(PerJobFeature):
         return []
     
     def _updateFromEvent(self, event: Event) -> None:
-        if event.EventName == "recommended_job":
-            self._received_recommendation = True
-            self._waiting_for_switch = True
-            self._followed_advice = False 
+        player_actions = ["receive_fact", "receive_entity", "complete_job", "complete_task", "begin_dive", "begin_model", "begin_simulation", "add_environment", "remove_environment", "add_critter", "remove_critter", "begin_experiment", "begin_argument"]
 
+        if event.EventName == "recommended_job":
+            attempted_job_name = event.EventData.get("attempted_job_name", None)
+            if attempted_job_name and attempted_job_name == self.TargetJobName:
+                self._received_recommendation = True
+                self._waiting_for_switch = True
+                self._followed_advice = False 
+        
+        if self._waiting_for_switch and event.EventName in player_actions:
+                    self._waiting_for_switch = False
         elif event.EventName == "switch_job" and self._waiting_for_switch:
-            prev_job_name = event.EventData.get("prev_job_name")
-            if prev_job_name and self._job_map.get(prev_job_name) == self.CountIndex:
+            pre_job_name = event.EventData.get("prev_job_name", None)
+            # if pre_job_name in self._job_map and self._job_map.get(pre_job_name) == self.CountIndex:
+            if pre_job_name == self.TargetJobName:
                 self._followed_advice = True
                 self._waiting_for_switch = False
    

@@ -2,14 +2,14 @@ from typing import Any, List, Optional
 # Import locals
 from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
+from ogd.core.generators.extractors.Feature import Feature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 
-class ExperimentalCondition(PerJobFeature):
+class ExperimentalCondition(Feature):
     def __init__(self, params: GeneratorParameters, job_map: dict):
-        super().__init__(params=params, job_map=job_map)
+        super().__init__(params=params)
         self.app_branch = None  
 
     @classmethod

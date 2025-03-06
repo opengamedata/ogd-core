@@ -571,14 +571,7 @@
     },
     "features": {
         "per_count": {
-            "ExperimentalCondition": {
-                "enabled": true,
-                "type": "ExperimentalCondition",
-                "count": "level_range",
-                "prefix": "job",
-                "description": "Returns the first event branch",
-                "return_type": "str"
-            },
+    
             "FollowedAdvice": {
                 "enabled": true,
                 "type": "FollowedAdvice",
@@ -875,6 +868,21 @@
             }
         },
         "aggregate": {
+            "ExperimentalCondition": {
+                "enabled": true,
+                "type": "ExperimentalCondition",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Returns the first event branch",
+                "return_type": "str"
+            },
+            "TotalJobRecommendationReceived": {
+                "enabled": true,
+                "type": "CountEvent",
+                "description": "Count of total recommendations received",
+                "target": "recommended_job",
+                "return_type": "int"
+            },
             "ActiveJobs": {
                 "enabled": true,
                 "type": "ActiveJobs",

@@ -8,7 +8,6 @@ from typing import Any, Callable, Dict, Final, List, Optional
 from ogd.games import AQUALAB
 from ogd.games.AQUALAB.detectors import *
 from ogd.games.AQUALAB.features import *
-from ogd.games.AQUALAB.features import FollowedAdvice, SuccessfulAdvice, ExperimentalCondition, SurveyCompleted
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.GeneratorLoader import GeneratorLoader

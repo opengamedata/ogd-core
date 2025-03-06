@@ -24,17 +24,26 @@ class SuccessfulAdvice(PerJobFeature):
         return []
     
     def _updateFromEvent(self, event: Event) -> None:
+
         if event.EventName == "recommended_job":
-            self._received_recommendation = True
-            self._successful_advice = False
+            attempted_job_name = event.EventData.get("attempted_job_name", None)
+            if attempted_job_name in self._job_map and attempted_job_name == self.TargetJobName:
+                self._received_recommendation = True
+                self._successful_advice = False
         
         elif event.EventName == "switch_job" and self._received_recommendation:
-            job_name = event.GameState.get("job_name")
-            if job_name != self.CountIndex:
-                self._switched_away = True
-            elif self._switched_away:
-                self._switched_back = True
-        
+            prev_job_name = event.EventData.get("prev_job_name")
+            if prev_job_name and prev_job_name in self._job_map:
+                prev_job_index = self._job_map[prev_job_name]
+                if prev_job_index == self.CountIndex:
+                    self._switched_away = True 
+            
+            current_job_name = event.GameState.get("job_name")
+            if current_job_name and current_job_name in self._job_map:
+                current_job_index = self._job_map[current_job_name]
+                if current_job_index == self.CountIndex and self._switched_away:
+                    self._switched_back = True
+
         elif event.EventName == "complete_job" and self._switched_away and self._switched_back:
             self._successful_advice = True
         
@@ -47,3 +56,4 @@ class SuccessfulAdvice(PerJobFeature):
     @staticmethod
     def MinVersion() -> Optional[str]:
         return "1"
+
