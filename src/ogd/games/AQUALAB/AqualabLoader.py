@@ -95,6 +95,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = EchoSessionID.EchoSessionID(params=extractor_params)
                 case "EventList":
                     ret_val = EventList.EventList(params=extractor_params)
+                case "ExperimentalCondition":
+                    ret_val = ExperimentalCondition.ExperimentalCondition(params=extractor_params, job_map=self._job_map)
                 case "JobsCompleted":
                     ret_val = JobsCompleted.JobsCompleted(params=extractor_params, player_id=self._player_id)
                 case "JobTriesInArgument":
@@ -224,8 +226,6 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = FollowedAdvice.FollowedAdvice(params=extractor_params, job_map=self._job_map)
                 case "SuccessfulAdvice":
                     ret_val = SuccessfulAdvice.SuccessfulAdvice(params=extractor_params, job_map=self._job_map)
-                case "ExperimentalCondition":
-                    ret_val = ExperimentalCondition.ExperimentalCondition(params=extractor_params, job_map=self._job_map)
                 case "SurveyCompleted":
                     ret_val = SurveyCompleted.SurveyCompleted(params=extractor_params)
                 case _:

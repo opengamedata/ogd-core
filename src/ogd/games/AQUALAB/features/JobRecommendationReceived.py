@@ -24,6 +24,7 @@ class JobRecommendationReceived(PerJobFeature):
         return []
 
     def _updateFromEvent(self, event:Event) -> None:
+
         job_name = event.EventData.get("attempted_job_name", None)
         if job_name == self.TargetJobName:
             self.recommendation_received += 1
