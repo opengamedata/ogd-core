@@ -37,7 +37,7 @@ class PerJobFeature(PerCountFeature):
             pre_job_name = event.EventData.get("prev_job_name", "PREVIOUS JOB NOT FOUND")
             if pre_job_name in self._job_map and self._job_map[pre_job_name] == self.CountIndex:
                 ret_val = True
-        if event.EventName == "recommend_job":
+        if event.EventName == "recommended_job":
             attempted_job_name = event.EventData.get("attempted_job_name", "ATTEMPTED JOB NOT FOUND")
             if attempted_job_name == self.TargetJobName:
                 ret_val = True
