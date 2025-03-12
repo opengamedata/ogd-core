@@ -48,8 +48,8 @@ class TotalPlayerTime(SessionFeature):
             or self.previous_player_id != event.user_id
         ):
             Logger.Log(
-                f"Session or Player ID changed. Ignoring time contribution. "
-                f"Previous: (SessionID={self.previous_session_id}, PlayerID={self.previous_player_id}), "
+                f"Session or Player ID changed. Ignoring time contribution.\n"
+                f"Previous: (SessionID={self.previous_session_id}, PlayerID={self.previous_player_id}),\n"
                 f"Current: (SessionID={event.SessionID}, PlayerID={event.user_id})",
                 level=logging.INFO,
             )
