@@ -32,7 +32,7 @@ jobs:
     - name: Set up Google Cloud
       uses: ./.github/actions/gCloud_setup
       with:
-        game: ${{ matrix.game }}
+        game: WAVES
         ogd_id:  ${{ secrets.OGD_BQ_PROJECT_ID }}
         ogd_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
         mashopolis_id:  ${{ secrets.BQ_MASHOPOLIS_PROJECT_ID }}
@@ -41,10 +41,6 @@ jobs:
         shadowspect_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
         shipwrecks_id:  ${{ secrets.BQ_SHIPWRECKS_PROJECT_ID }}
         shipwrecks_key: ${{ secrets.BQ_SHIPWRECKS_JSON }}
-    - name: Get Dependencies
-      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.2
-      with:
-        python_version: ${{ vars.OGD_PYTHON_VERSION }}
     - name: Set up Config File
       uses: ./.github/actions/OGD_config
       with:
