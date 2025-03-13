@@ -571,6 +571,15 @@
     },
     "features": {
         "per_count": {
+    
+            "FollowedAdvice": {
+                "enabled": true,
+                "type": "FollowedAdvice",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "followed advice during a job",
+                "return_type": "bool"
+            },
             "JobActiveTime": {
                 "enabled": true,
                 "type": "JobActiveTime",
@@ -639,6 +648,14 @@
                 "description": "Number of times player talked with guide during a job",
                 "return_type": "int"
             },
+            "JobName": {
+                "enabled": true,
+                "type": "JobName",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "The name of the job associated with job0, job1, etc.",
+                "return_type": "str"
+            },
             "JobHelpCount": {
                 "enabled": false,
                 "type": "JobHelpCount",
@@ -680,6 +697,22 @@
                         "return_type": "int"
                     }
                 }
+            },
+            "JobRecommendationReceived": {
+                "enabled": true,
+                "type": "JobRecommendationReceived",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Number of times player received a job recommendation",
+                "return_type": "int"
+            },
+            "LeftJob": {
+                "enabled": true,
+                "type": "LeftJob",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Job left off on by player",
+                "return_type": "int"
             },
             "SessionDurationPerJob": {
                 "enabled": true,
@@ -809,6 +842,22 @@
                 "description": "The human-readable version of the name for a given region",
                 "return_type": "str"
             },
+            "SuccessfulAdvice": {
+                "enabled": true,
+                "type": "SuccessfulAdvice",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "successfully followed advice during a job",
+                "return_type": "bool"
+            },
+            "SurveyCompleted":{
+                "enabled": true,
+                "type": "SurveyCompleted",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Survey completed during a job",
+                "return_type": "bool"
+            },
             "SyncCompletionTime": {
                 "enabled": true,
                 "type": "SyncCompletionTime",
@@ -819,6 +868,21 @@
             }
         },
         "aggregate": {
+            "ExperimentalCondition": {
+                "enabled": true,
+                "type": "ExperimentalCondition",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Returns the first event branch",
+                "return_type": "str"
+            },
+            "TotalJobRecommendationReceived": {
+                "enabled": true,
+                "type": "CountEvent",
+                "description": "Count of total recommendations received",
+                "target": "recommended_job",
+                "return_type": "int"
+            },
             "ActiveJobs": {
                 "enabled": true,
                 "type": "ActiveJobs",
@@ -858,11 +922,11 @@
             "PlayLocations": {
                 "enabled": false,
                 "type": "PlayLocations",
-                "description": "An indicator of whether play happened during normal school hours or not",
+                "description": "Play Locations",
                 "return_type": "List[bool]",
                 "subfeatures": {
                     "LocalTime": {
-                        "description": "The actual local time when each session started",
+                        "description": "An indicator of whether play happened during normal school hours or not",
                         "return_type": "datetime"
                     }
                 }
@@ -884,7 +948,33 @@
                 "type": "SessionDuration",
                 "description": "Time spent playing in a given session",
                 "threshold": 60,
-                "return_type": "timedelta"
+                "return_type": "timedelta",
+                "subfeatures": {
+                    "Seconds": {
+                        "description": "The total play time, whether active or idle, in seconds",
+                        "return_type": "float"
+                    },
+                    "Active": {
+                        "description": "The active play time, i.e. play without any gaps above the threshold, as a timedelta",
+                        "return_type": "timedelta"
+                    },
+                    "ActiveSeconds": {
+                        "description": "The active play time, i.e. play without any gaps above the threshold, in seconds",
+                        "return_type": "float"
+                    },
+                    "Idle": {
+                        "description": "The total time spent idle",
+                        "return_type": "float"
+                    },
+                    "IdleSeconds": {
+                        "description": "The idle time, in seconds",
+                        "return_type": "timedelta"
+                    },
+                    "MaxIdle": {
+                        "description": "The longest time spent idle",
+                        "return_type": "float"
+                    }
+                }
             },
             "SessionID": {
                 "enabled": false,
@@ -950,6 +1040,27 @@
                 "enabled": true,
                 "type": "TotalPlayTime",
                 "description": "Total time the player had the game open, based on sum total of SessionDurations.",
+                "return_type": "timedelta"
+            },
+            "TotalSessionTime": {
+                "enabled": true,
+                "type": "TotalSessionTime",
+                "description": "Total time spent playing in a given session",
+                "threshold": 30,
+                "return_type": "timedelta"
+            },
+            "TotalPopulationTime": {
+                "enabled": true,
+                "type": "TotalPopulationTime",
+                "description": "Total population playing in a given session",
+                "threshold": 30,
+                "return_type": "timedelta"
+            },
+            "TotalPlayerTime": {
+                "enabled": true,
+                "type": "TotalPlayerTime",
+                "description": "Total players playing in a given session",
+                "threshold": 30,
                 "return_type": "timedelta"
             },
             "TimeInJournal": {

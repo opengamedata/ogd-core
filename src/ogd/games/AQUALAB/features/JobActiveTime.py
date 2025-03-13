@@ -55,6 +55,9 @@ class JobActiveTime(PerJobFeature):
             self._last_start_time = event.timestamp
         elif event.EventName == "switch_job":
             new_job = event.GameState.get('job_name', event.EventData.get('job_name', None))
+            if isinstance(new_job, dict):
+                new_job = new_job['string_value']
+
             if new_job is None:
                 raise KeyError("Could not find key 'job_name' in GameState or EventData!")
             old_job = event.EventData["prev_job_name"]
@@ -101,6 +104,9 @@ class JobActiveTime(PerJobFeature):
         ret_val : bool = False
 
         _current_job = event.GameState.get('job_name', event.EventData.get('job_name', None))
+        if isinstance(_current_job, dict):
+            _current_job = _current_job['string_value']
+
         if _current_job is None:
             raise KeyError("Could not find key 'job_name' in GameState or EventData!")
         if self._job_map.get(_current_job, None) is not None:

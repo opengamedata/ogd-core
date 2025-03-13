@@ -1180,6 +1180,13 @@
           "target": "select_policy_card",
           "return_type": "int"
         },
+        "PhosphorusViewCount": {
+          "enabled": true,
+          "type": "CountEvent",
+          "description": "Number of times the player opened the phosphorus view",
+          "target": "open_phosphorus_view",
+          "return_type": "int"
+        },
         "StorageInspectionCount": {
           "enabled": true,
           "type": "CountEvent",
