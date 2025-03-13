@@ -961,6 +961,18 @@
                     "ActiveSeconds": {
                         "description": "The active play time, i.e. play without any gaps above the threshold, in seconds",
                         "return_type": "float"
+                    },
+                    "Idle": {
+                        "description": "The total time spent idle",
+                        "return_type": "float"
+                    },
+                    "IdleSeconds": {
+                        "description": "The idle time, in seconds",
+                        "return_type": "timedelta"
+                    },
+                    "MaxIdle": {
+                        "description": "The longest time spent idle",
+                        "return_type": "float"
                     }
                 }
             },
