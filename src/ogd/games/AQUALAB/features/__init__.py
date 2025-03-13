@@ -7,6 +7,8 @@ __all__ = [
     "AverageSessionTime",
     "EchoSessionID",
     "EventList",
+    "ExperimentalCondition",
+    "FollowedAdvice",
     "JobActiveTime",
     "JobArgumentation",
     "JobCompletionTime",
@@ -24,13 +26,17 @@ __all__ = [
     "JobsAttempted",
     "JobsCompleted",
     "JobName",
+    "JobRecommendationReceived",
     "JobStartCount",
     "JobTasksCompleted",
     "JobTriesInArgument",
+    "LeftJob",
     "ModelExportCount",
     "ModelInterveneCount",
     "ModelPredictCount",
+    "PerJobFeature",
     "PlayerSummary",
+    "PlayLocations",
     "PopulationSummary",
     "RegionJobCount",
     "RegionName",
@@ -41,6 +47,8 @@ __all__ = [
     "SessionHelpCount",
     "SessionID",
     "SessionJobsCompleted",
+    "SuccessfulAdvice",
+    "SurveyCompleted",
     "SwitchJobsCount",
     "SyncCompletionTime",
     "TankRulesCount",
@@ -54,9 +62,13 @@ __all__ = [
     "TotalExperimentationTime",
     "TotalGuideCount",
     "TotalHelpCount",
+    "TimeInJournal",
     "TotalKelpTime",
     "TotalModelingTime",
     "TotalPlayTime",
+    "TotalSessionTime",
+    "TotalPopulationTime",
+    "TotalPlayerTime",
     "TimeInJournal",
     "UserAvgActiveTime",
     "UserAvgSessionDuration",
@@ -69,6 +81,8 @@ from . import AppVersions
 from . import AverageSessionTime
 from . import EchoSessionID
 from . import EventList
+from . import ExperimentalCondition
+from . import FollowedAdvice
 from . import JobActiveTime
 from . import JobArgumentation
 from . import JobCompletionTime
@@ -79,6 +93,7 @@ from . import JobGuideCount
 from . import JobHelpCount
 from . import JobLocationChanges
 from . import JobLocationChangesNoKelp
+from . import TimeInJournal
 from . import JobModeling
 from . import JobName
 from . import JobPlayTime
@@ -86,13 +101,17 @@ from . import JobPriorAttempt
 from . import JobPriorComplete
 from . import JobsAttempted
 from . import JobsCompleted
+from . import JobRecommendationReceived
 from . import JobStartCount
 from . import JobTasksCompleted
 from . import JobTriesInArgument
+from . import LeftJob
 from . import ModelExportCount
 from . import ModelInterveneCount
 from . import ModelPredictCount
+from . import PerJobFeature
 from . import PlayerSummary
+from . import PlayLocations
 from . import PopulationSummary
 from . import RegionJobCount
 from . import RegionName
@@ -103,6 +122,8 @@ from . import SessionGuideCount
 from . import SessionHelpCount
 from . import SessionID
 from . import SessionJobsCompleted
+from . import SuccessfulAdvice
+from . import SurveyCompleted
 from . import SwitchJobsCount
 from . import SyncCompletionTime
 from . import TankRulesCount
@@ -119,6 +140,9 @@ from . import TotalHelpCount
 from . import TotalKelpTime
 from . import TotalModelingTime
 from . import TotalPlayTime
+from . import TotalSessionTime
+from . import TotalPopulationTime
+from . import TotalPlayerTime
 from . import TimeInJournal
 from . import UserAvgActiveTime
 from . import UserAvgSessionDuration
