@@ -37,7 +37,9 @@ class CollectFactNoJob(Detector):
         :param event: _description_
         :type event: Event
         """
-        self._current_job = event.GameState.get('job_name', event.EventData.get('job_name', None))['string_value']
+        self._current_job = event.GameState.get('job_name', event.EventData.get('job_name', None))
+        if isinstance(self._current_job, dict):
+            self._current_job = self._current_job['string_value']
         if self._current_job is None:
             raise KeyError("Could not find key 'job_name' in GameState or EventData!")
         if self._current_job == "no-active-job":
