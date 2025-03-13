@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, List
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.Event import Event
