@@ -34,6 +34,7 @@ __all__ = [
     "ModelExportCount",
     "ModelInterveneCount",
     "ModelPredictCount",
+    "PerJobFeature",
     "PlayerSummary",
     "PlayLocations",
     "PopulationSummary",
@@ -61,6 +62,7 @@ __all__ = [
     "TotalExperimentationTime",
     "TotalGuideCount",
     "TotalHelpCount",
+    "TimeInJournal",
     "TotalKelpTime",
     "TotalModelingTime",
     "TotalPlayTime",
@@ -91,6 +93,7 @@ from . import JobGuideCount
 from . import JobHelpCount
 from . import JobLocationChanges
 from . import JobLocationChangesNoKelp
+from . import TimeInJournal
 from . import JobModeling
 from . import JobName
 from . import JobPlayTime
@@ -106,6 +109,7 @@ from . import LeftJob
 from . import ModelExportCount
 from . import ModelInterveneCount
 from . import ModelPredictCount
+from . import PerJobFeature
 from . import PlayerSummary
 from . import PlayLocations
 from . import PopulationSummary
