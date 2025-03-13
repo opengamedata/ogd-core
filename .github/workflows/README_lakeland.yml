@@ -26,6 +26,8 @@ jobs:
   # 1. Local checkout 
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GH_SERVICE_TOKEN }}
     - name: Get Dependencies
       uses: opengamedata/actions-setup-ogd-py-dependencies@v1.2
       with:
@@ -41,7 +43,7 @@ jobs:
         ssh_user: ${{secrets.VPN_USER}}
         ssh_pass: ${{secrets.VPN_PASS}}
     - name: Configure Git User
-      uses: opengamedata/actions-setup-fd-git@v1.0
+      uses: opengamedata/actions-setup-fd-git@v1.1
       with:
         username: "fieldday-service"
         email: "fieldday@office365.wisc.edu"

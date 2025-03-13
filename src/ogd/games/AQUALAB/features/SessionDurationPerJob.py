@@ -5,10 +5,10 @@ from typing import Any, List
 # import locals
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
-from ogd.core.schemas.Event import Event, EventSource
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
-from ogd.core.utils.Logger import Logger
+from ogd.common.models.Event import Event, EventSource
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
+from ogd.common.utils.Logger import Logger
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 
 

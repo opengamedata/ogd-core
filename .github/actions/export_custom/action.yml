@@ -44,9 +44,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+  # TODO : re-enable using the 'skip' inputs at some point when we have workflows that actually need to hook in.
     - name: Execute data export
       if: ${{ inputs.with_events == 'true' && inputs.with_features == 'true' }}
-      run: python${{ inputs.python_version }} main.py export ${{ inputs.game }} ${{ inputs.start_date }} ${{ inputs.end_date }} ${{ inputs.skip_sessions && '--no_session_file' }} ${{ inputs.skip_players && '--no_player_file' }} ${{ inputs.skip_population && '--no_pop_file' }}
+      # run: python${{ inputs.python_version }} main.py export ${{ inputs.game }} ${{ inputs.start_date }} ${{ inputs.end_date }} ${{ inputs.skip_sessions && '--no_session_file' }} ${{ inputs.skip_players && '--no_player_file' }} ${{ inputs.skip_population && '--no_pop_file' }}
+      run: python${{ inputs.python_version }} main.py export ${{ inputs.game }} ${{ inputs.start_date }} ${{ inputs.end_date }}
       shell: bash
     - name: Execute data export (events only)
       if: ${{ inputs.with_events == 'true' && inputs.with_features == 'false' }}
@@ -54,7 +56,8 @@ runs:
       shell: bash
     - name: Execute data export (features only)
       if: ${{ inputs.with_events == 'false' && inputs.with_features == 'true' }}
-      run: python${{ inputs.python_version }} main.py export-features ${{ inputs.game }} ${{ inputs.start_date }} ${{ inputs.end_date }} ${{ inputs.skip_sessions && '--no_session_file' }} ${{ inputs.skip_players && '--no_player_file' }} ${{ inputs.skip_population && '--no_pop_file' }}
+      # run: python${{ inputs.python_version }} main.py export-features ${{ inputs.game }} ${{ inputs.start_date }} ${{ inputs.end_date }} ${{ inputs.skip_sessions && '--no_session_file' }} ${{ inputs.skip_players && '--no_player_file' }} ${{ inputs.skip_population && '--no_pop_file' }}
+      run: python${{ inputs.python_version }} main.py export-features ${{ inputs.game }} ${{ inputs.start_date }} ${{ inputs.end_date }}
       shell: bash
     - name: Execute data export (empty)
       if: ${{ inputs.with_events == 'false' && inputs.with_features == 'false' }}
