@@ -68,7 +68,6 @@ class Idle(Detector):
             self._job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
             if isinstance(self._job_name, dict):
                 self._job_name = self._job_name['string_value']
-
         return
 
     def _trigger_condition(self) -> bool:
