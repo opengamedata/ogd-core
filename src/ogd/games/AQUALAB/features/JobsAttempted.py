@@ -61,6 +61,9 @@ class JobsAttempted(Feature):
                 # self._job_start_time = event.Timestamp
 
         _current_job = event.GameState.get('job_name', event.EventData.get('job_name', None))
+        if isinstance(_current_job, dict):
+            _current_job = _current_job['string_value']
+
         if _current_job is None:
             raise KeyError("Could not find key 'job_name' in GameState or EventData!")
         if self._validate_job(_current_job):

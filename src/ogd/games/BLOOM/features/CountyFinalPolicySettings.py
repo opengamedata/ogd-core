@@ -5,8 +5,9 @@ from ogd.core.generators.extractors.Feature import Feature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
+from ogd.games.BLOOM.features.PerCountyFeature import PerCountyFeature
 
-class CountyFinalPolicySettings(Feature):
+class CountyFinalPolicySettings(PerCountyFeature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.policy_settings: Dict[str, Optional[str]] = {
