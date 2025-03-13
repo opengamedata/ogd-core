@@ -21,7 +21,7 @@ class TotalSessionTime(SessionFeature):
         self.total_session_time = timedelta(0)
 
     def Subfeatures(self) -> List[str]:
-        return ["Seconds", "Active", "ActiveSeconds", "Idle" "IdleSeconds"]
+        return ["Seconds", "Active", "ActiveSeconds", "Idle", "IdleSeconds"]
 
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:

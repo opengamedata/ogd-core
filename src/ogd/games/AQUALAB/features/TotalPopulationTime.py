@@ -23,7 +23,7 @@ class TotalPopulationTime(SessionFeature):
         self.previous_player_id = None
  
     def Subfeatures(self) -> List[str]:
-        return ["Seconds", "Active", "ActiveSeconds", "Idle" "IdleSeconds"]
+        return ["Seconds", "Active", "ActiveSeconds", "Idle", "IdleSeconds"]
 
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
