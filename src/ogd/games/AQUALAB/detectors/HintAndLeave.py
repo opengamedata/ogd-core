@@ -1,6 +1,6 @@
 # import standard libraries
 from datetime import datetime, timedelta
-from typing import Callable, Final, List, Optional, Union
+from typing import Any, Callable, Final, List, Optional, Union
 # import local files
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
@@ -24,7 +24,7 @@ class HintAndLeave(Detector):
         self._found = False
         self._sess_id             : str = "Unknown"
         self._scene               : str = "Unknown"
-        self._job_name            : str = "Unknown"
+        self._job_name            : Any = "Unknown"
         self._hint                : str = "Unknown"
         self._last_hint_time      : Optional[datetime] = None
         self._time_spent          : Optional[Union[timedelta, float]] = None
@@ -60,6 +60,8 @@ class HintAndLeave(Detector):
         if event.EventName == "ask_for_help":
             self._last_hint_time = event.Timestamp
             self._job_name = event.GameState.get('job_name', event.EventData.get('job_name', None))
+            if isinstance(self._job_name, dict):
+                self._job_name = self._job_name['string_value']
             self._hint = event.EventData.get("node_id", "NODE NOT FOUND")
             return
 

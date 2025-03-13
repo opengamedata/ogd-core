@@ -31,6 +31,9 @@ class ActiveJobs(Feature):
 
     def _updateFromEvent(self, event:Event) -> None:
         _current_job = event.GameState.get('job_name', event.EventData.get('job_name', None))
+        if isinstance(_current_job, dict):
+            _current_job = _current_job['string_value']
+
         if self._validate_job(_current_job):
             user_code = event.UserID
 
