@@ -70,13 +70,17 @@ class EventList(Feature):
         return []
 
     def _updateFromEvent(self, event:Event) -> None:
+        _job_name = event.GameState.get('job_name', event.EventData.get('job_name', "UNDEFINED"))
+        if isinstance(_job_name, dict):
+            _job_name = _job_name['string_value']
+
         if event.UserID:
             next_event = {
                 "name": event.EventName,
                 "user_id": event.UserID,
                 "session_id": event.SessionID,
                 "timestamp": event.Timestamp.isoformat(),
-                "job_name": event.GameState.get('job_name', event.EventData.get('job_name', "UNDEFINED"))['string_value'],
+                "job_name": _job_name,
                 "index": event.EventSequenceIndex,
                 "event_primary_detail": None
             }
