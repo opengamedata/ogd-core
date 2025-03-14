@@ -23,7 +23,7 @@ class SessionDuration(PerJobFeature):
         self.total_session_time = timedelta(0)
         # self._session_duration = 0
     def Subfeatures(self) -> List[str]:
-            return ["Total", "Seconds", "Active", "ActiveSeconds", "Idle" "IdleSeconds", "MaxIdle"]
+            return ["Total", "Seconds", "Active", "ActiveSeconds", "Idle", "IdleSeconds", "MaxIdle"]
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode:ExtractionMode) -> List[str]:

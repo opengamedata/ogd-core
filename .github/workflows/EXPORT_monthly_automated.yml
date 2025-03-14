@@ -109,6 +109,7 @@ jobs:
     if: always()
     needs: export_data
     uses: ./.github/workflows/REINDEX_fileserver.yml
+    secrets: inherit
     with:
       FILE_SERVER: ${{ vars.FD_WEB_HOST }}
       data_path: "/var/www/opengamedata/data"

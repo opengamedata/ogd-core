@@ -25,8 +25,12 @@ class PerJobFeature(PerCountFeature):
     def _validateEventCountIndex(self, event:Event):
         ret_val : bool = False
 
-        # If event occurred in the instance's target job, accept it.
         job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
+
+        if type(job_name) is dict:
+            job_name = job_name['string_value']
+
+        # If event occurred in the instance's target job, accept it.
         if job_name is not None:
             if job_name in self._job_map and self._job_map[job_name] == self.CountIndex:
                 ret_val = True

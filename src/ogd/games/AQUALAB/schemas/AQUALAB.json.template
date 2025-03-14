@@ -948,7 +948,33 @@
                 "type": "SessionDuration",
                 "description": "Time spent playing in a given session",
                 "threshold": 60,
-                "return_type": "timedelta"
+                "return_type": "timedelta",
+                "subfeatures": {
+                    "Seconds": {
+                        "description": "The total play time, whether active or idle, in seconds",
+                        "return_type": "float"
+                    },
+                    "Active": {
+                        "description": "The active play time, i.e. play without any gaps above the threshold, as a timedelta",
+                        "return_type": "timedelta"
+                    },
+                    "ActiveSeconds": {
+                        "description": "The active play time, i.e. play without any gaps above the threshold, in seconds",
+                        "return_type": "float"
+                    },
+                    "Idle": {
+                        "description": "The total time spent idle",
+                        "return_type": "float"
+                    },
+                    "IdleSeconds": {
+                        "description": "The idle time, in seconds",
+                        "return_type": "timedelta"
+                    },
+                    "MaxIdle": {
+                        "description": "The longest time spent idle",
+                        "return_type": "float"
+                    }
+                }
             },
             "SessionID": {
                 "enabled": false,
