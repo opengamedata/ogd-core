@@ -856,7 +856,17 @@
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Survey completed during a job",
-                "return_type": "bool"
+                "return_type": "bool",
+                "subfeatures": {
+                    "Name": {
+                        "description": "String name of the survey",
+                        "return_type": "string"
+                    },
+                    "Responses": {
+                        "description": "",
+                        "return_type": "int"
+                    }
+                }
             },
             "SyncCompletionTime": {
                 "enabled": true,
