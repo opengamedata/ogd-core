@@ -61,13 +61,10 @@ class SurveyCompleted(PerCountFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._completed, self._responses]
+        return [self._completed, self.KNOWN_SURVEY_NAMES[self.CountIndex], self._responses]
 
     def Subfeatures(self) -> List[str]:
         return ["Name", "Responses"]
-
-    def _getSubfeatureValues(self) -> List[Any]:
-        return [self.KNOWN_SURVEY_NAMES[self.CountIndex], self._responses]
 
     @staticmethod
     def MinVersion() -> Optional[str]:
