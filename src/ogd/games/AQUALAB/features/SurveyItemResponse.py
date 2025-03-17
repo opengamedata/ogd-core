@@ -8,7 +8,7 @@ from ogd.common.models.FeatureData import FeatureData
 from ogd.common.utils.Logger import Logger
 
 class SurveyItemResponse(PerCountFeature):
-    def __init__(self, params: GeneratorParameters, target_survey:str, retest:bool):
+    def __init__(self, params: GeneratorParameters, target_survey:str, retest:bool=False):
         super().__init__(params=params)
         self._target_survey = target_survey
         self._response = None
