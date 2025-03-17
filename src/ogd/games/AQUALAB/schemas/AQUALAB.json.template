@@ -854,7 +854,7 @@
                 "enabled": true,
                 "type": "SurveyCompleted",
                 "count": "level_range",
-                "prefix": "job",
+                "prefix": "svy",
                 "description": "Survey completed during a job",
                 "return_type": "bool",
                 "subfeatures": {
