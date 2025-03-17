@@ -81,6 +81,7 @@ class SurveyItemResponse(PerCountFeature):
         else:
             return ["Prompt", "Count"]
 
+    @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
         return [ExtractionMode.SESSION, ExtractionMode.PLAYER]
 
