@@ -70,10 +70,16 @@ class SurveyItemResponse(PerCountFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._response, self._prompt, self._response_count]
+        if self._retest:
+            return [self._response, self._retest_response, self._prompt, self._response_count]
+        else:
+            return [self._response, self._prompt, self._response_count]
 
     def Subfeatures(self) -> List[str]:
-        return ["Prompt", "Count"]
+        if self._retest:
+            return ["Retest", "Prompt", "Count"]
+        else:
+            return ["Prompt", "Count"]
 
     @staticmethod
     def MinVersion() -> Optional[str]:
