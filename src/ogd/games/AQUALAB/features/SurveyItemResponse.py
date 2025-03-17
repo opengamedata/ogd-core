@@ -12,6 +12,7 @@ class SurveyItemResponse(PerCountFeature):
         super().__init__(params=params)
         self._target_survey = target_survey
         self._response = None
+        self._prompt = None
         self._response_count = 0
 
     @classmethod
@@ -49,6 +50,7 @@ class SurveyItemResponse(PerCountFeature):
         _responses = event.EventData.get("responses", {})
         if len(_responses) > self.CountIndex:
             self._response = _responses[self.CountIndex].get("response", None)
+            self._prompt = _responses[self.CountIndex].get("prompt", None)
             if self._response:
                 self._response_count += 1
             else:
@@ -60,10 +62,10 @@ class SurveyItemResponse(PerCountFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._response, self._response_count]
+        return [self._response, self._prompt, self._response_count]
 
     def Subfeatures(self) -> List[str]:
-        return ["Count"]
+        return ["Prompt", "Count"]
 
     @staticmethod
     def MinVersion() -> Optional[str]:
