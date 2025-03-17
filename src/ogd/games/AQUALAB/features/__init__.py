@@ -49,6 +49,7 @@ __all__ = [
     "SessionJobsCompleted",
     "SuccessfulAdvice",
     "SurveyCompleted",
+    "SurveyItemResponse",
     "SwitchJobsCount",
     "SyncCompletionTime",
     "TankRulesCount",
@@ -124,6 +125,7 @@ from . import SessionID
 from . import SessionJobsCompleted
 from . import SuccessfulAdvice
 from . import SurveyCompleted
+from . import SurveyItemResponse
 from . import SwitchJobsCount
 from . import SyncCompletionTime
 from . import TankRulesCount
