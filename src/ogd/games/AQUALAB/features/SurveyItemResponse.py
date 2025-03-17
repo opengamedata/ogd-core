@@ -8,12 +8,14 @@ from ogd.common.models.FeatureData import FeatureData
 from ogd.common.utils.Logger import Logger
 
 class SurveyItemResponse(PerCountFeature):
-    def __init__(self, params: GeneratorParameters, target_survey:str):
+    def __init__(self, params: GeneratorParameters, target_survey:str, retest:bool):
         super().__init__(params=params)
         self._target_survey = target_survey
         self._response = None
         self._prompt = None
         self._response_count = 0
+        self._retest = retest
+        self._retest_response = None
 
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
@@ -47,14 +49,20 @@ class SurveyItemResponse(PerCountFeature):
         return survey_name == self._target_survey
 
     def _updateFromEvent(self, event: Event) -> None:
+        self._response_count += 1
+
         _responses = event.EventData.get("responses", {})
         if len(_responses) > self.CountIndex:
-            self._response = _responses[self.CountIndex].get("response", None)
             self._prompt = _responses[self.CountIndex].get("prompt", None)
-            if self._response:
-                self._response_count += 1
+            # If it was the first time they got the survey, 
+            if self._response_count == 0:
+                self._response = _responses[self.CountIndex].get("response", None)
+            elif self._retest:
+                self._retest_response = _responses[self.CountIndex].get("response", None)
             else:
-                Logger.Log(f"SurveyItemResponse feature for {self._target_survey} did not get a response value for the response at index {self.CountIndex}!", logging.WARN)
+                Logger.Log(f"SurveyItemResponse feature for {self._target_survey} had an unexpected retest!", logging.WARN)
+                self._response = _responses[self.CountIndex].get("response", None)
+
         else:
             Logger.Log(f"SurveyItemResponse feature for {self._target_survey} got a survey_submitted event with fewer than {self.CountIndex} items!", logging.WARN)
 
