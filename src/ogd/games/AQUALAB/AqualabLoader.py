@@ -228,6 +228,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = SuccessfulAdvice.SuccessfulAdvice(params=extractor_params, job_map=self._job_map)
                 case "SurveyCompleted":
                     ret_val = SurveyCompleted.SurveyCompleted(params=extractor_params)
+                case "SurveyItemResponse":
+                    ret_val = SurveyItemResponse.SurveyItemResponse(params=extractor_params, target_survey=schema_args.get("target", "NO TARGET CONFIGURED"))
                 case _:
                     Logger.Log(f"'{feature_type}' is not a valid per-count feature type for Aqualab.")
         return ret_val
