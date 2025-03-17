@@ -70,16 +70,10 @@ class SurveyItemResponse(PerCountFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        if self._retest:
-            return [self._response, self._retest_response, self._prompt, self._response_count]
-        else:
-            return [self._response, self._prompt, self._response_count]
+        return [self._response, self._retest_response, self._prompt, self._response_count]
 
     def Subfeatures(self) -> List[str]:
-        if self._retest:
-            return ["Retest", "Prompt", "Count"]
-        else:
-            return ["Prompt", "Count"]
+        return ["Retest", "Prompt", "Count"]
 
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
