@@ -9,13 +9,13 @@ from ogd.common.utils.Logger import Logger
 
 class SurveyItemResponse(PerCountFeature):
     def __init__(self, params: GeneratorParameters, target_survey:str, retest:bool=False):
-        super().__init__(params=params)
         self._target_survey = target_survey
         self._response = None
         self._prompt = None
         self._response_count = 0
         self._retest = retest
         self._retest_response = None
+        super().__init__(params=params)
 
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
@@ -80,6 +80,9 @@ class SurveyItemResponse(PerCountFeature):
             return ["Retest", "Prompt", "Count"]
         else:
             return ["Prompt", "Count"]
+
+    def AvailableModes() -> List[ExtractionMode]:
+        return [ExtractionMode.SESSION, ExtractionMode.PLAYER]
 
     @staticmethod
     def MinVersion() -> Optional[str]:
