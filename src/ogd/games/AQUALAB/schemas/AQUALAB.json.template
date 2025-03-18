@@ -854,9 +854,315 @@
                 "enabled": true,
                 "type": "SurveyCompleted",
                 "count": "level_range",
-                "prefix": "job",
+                "prefix": "svy",
                 "description": "Survey completed during a job",
-                "return_type": "bool"
+                "return_type": "bool",
+                "subfeatures": {
+                    "Name": {
+                        "description": "String name of the survey",
+                        "return_type": "string"
+                    },
+                    "Responses": {
+                        "description": "",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "DemographicItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "demographics",
+                "retest": false,
+                "count": 4,
+                "prefix": "dem",
+                "description": "Responses to each item on the demographics survey",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "AffectItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "affective",
+                "retest": true,
+                "count": 2,
+                "prefix": "aff",
+                "description": "Responses to each item on the affective state survey",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Retest": {
+                        "description": "The response the player gave upon taking the survey a second time",
+                        "return_type": "int | str"
+                    },
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "ScienceEfficacyItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "science-efficacy",
+                "retest": true,
+                "count": 7,
+                "prefix": "scieff",
+                "description": "Responses to each item on the science self-efficacy survey",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Retest": {
+                        "description": "The response the player gave upon taking the survey a second time",
+                        "return_type": "int | str"
+                    },
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "ScienceIdentityItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "science-identity",
+                "retest": true,
+                "count": 4,
+                "prefix": "sciid",
+                "description": "Responses to each item on the science identity survey",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Retest": {
+                        "description": "The response the player gave upon taking the survey a second time",
+                        "return_type": "int | str"
+                    },
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "ScienceInterestItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "science-interest",
+                "retest": true,
+                "count": 4,
+                "prefix": "sciint",
+                "description": "Responses to each item on the science interest survey",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Retest": {
+                        "description": "The response the player gave upon taking the survey a second time",
+                        "return_type": "int | str"
+                    },
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "HansonInterestsItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "interest-items-hanson-2021",
+                "retest": false,
+                "count": 12,
+                "prefix": "int",
+                "description": "Responses to each item on the Hanson interests survey",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "Values1ItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "values-1",
+                "retest": false,
+                "count": 3,
+                "prefix": "val1",
+                "description": "Responses to each item on the values survey, part 1",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "Values2ItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "values-2",
+                "retest": false,
+                "count": 3,
+                "prefix": "val2",
+                "description": "Responses to each item on the values survey, part 2",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "Values3ItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "values-3",
+                "retest": false,
+                "count": 3,
+                "prefix": "val3",
+                "description": "Responses to each item on the values survey, part 3",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "Values4ItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "values-4",
+                "retest": false,
+                "count": 3,
+                "prefix": "val4",
+                "description": "Responses to each item on the values survey, part 4",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "Values5ItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "values-5",
+                "retest": false,
+                "count": 3,
+                "prefix": "val5",
+                "description": "Responses to each item on the values survey, part 5",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "Values6ItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "values-6",
+                "retest": false,
+                "count": 3,
+                "prefix": "val6",
+                "description": "Responses to each item on the values survey, part 6",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "Values7ItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "values-7",
+                "retest": false,
+                "count": 3,
+                "prefix": "val7",
+                "description": "Responses to each item on the values survey, part 7",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "EnjoymentItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "enjoyment",
+                "retest": false,
+                "count": 7,
+                "prefix": "ejy",
+                "description": "Responses to each item on the enjoyment survey",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
             },
             "SyncCompletionTime": {
                 "enabled": true,
