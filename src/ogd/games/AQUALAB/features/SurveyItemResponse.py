@@ -55,7 +55,7 @@ class SurveyItemResponse(PerCountFeature):
         if len(_responses) > self.CountIndex:
             self._prompt = _responses[self.CountIndex].get("prompt", None)
             # If it was the first time they got the survey, 
-            if self._response_count == 0:
+            if self._response_count == 1:
                 self._response = _responses[self.CountIndex].get("response", None)
             elif self._retest:
                 self._retest_response = _responses[self.CountIndex].get("response", None)
