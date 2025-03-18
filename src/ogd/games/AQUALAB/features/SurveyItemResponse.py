@@ -62,7 +62,6 @@ class SurveyItemResponse(PerCountFeature):
             else:
                 Logger.Log(f"SurveyItemResponse feature for {self._target_survey} had an unexpected retest!", logging.WARN)
                 self._response = _responses[self.CountIndex].get("response", None)
-
         else:
             Logger.Log(f"SurveyItemResponse feature for {self._target_survey} got a survey_submitted event with fewer than {self.CountIndex} items!", logging.WARN)
 
