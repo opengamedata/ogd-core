@@ -8,6 +8,7 @@ __all__ = [
     "EchoSessionID",
     "EventList",
     "ExperimentalCondition",
+    "PlayedNonexperimentalVersion",
     "FollowedAdvice",
     "JobActiveTime",
     "JobArgumentation",
@@ -83,6 +84,7 @@ from . import AverageSessionTime
 from . import EchoSessionID
 from . import EventList
 from . import ExperimentalCondition
+from . import PlayedNonexperimentalVersion
 from . import FollowedAdvice
 from . import JobActiveTime
 from . import JobArgumentation

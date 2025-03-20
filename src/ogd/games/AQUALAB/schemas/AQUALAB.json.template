@@ -1177,9 +1177,13 @@
             "ExperimentalCondition": {
                 "enabled": true,
                 "type": "ExperimentalCondition",
-                "count": "level_range",
-                "prefix": "job",
                 "description": "Returns the first event branch",
+                "return_type": "str"
+            },
+            "PlayedNonexperimentalVersion": {
+                "enabled": true,
+                "type": "PlayedNonexperimentalVersion",
+                "description": "True if the player ever had an event in a non-experimental branch.",
                 "return_type": "str"
             },
             "TotalJobRecommendationReceived": {
