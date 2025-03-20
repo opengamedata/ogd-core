@@ -13,7 +13,7 @@ class PlayedNonexperimentalVersion(Feature):
         "production-no-failure-prediction-alt-job-graph",
         "production-no-failure-prediction-original-job-graph"
     ]
-    def __init__(self, params: GeneratorParameters, job_map: dict):
+    def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.played_nonexperiment = False  
 
