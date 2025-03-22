@@ -853,7 +853,7 @@
             "SurveyCompleted":{
                 "enabled": true,
                 "type": "SurveyCompleted",
-                "count": "level_range",
+                "count": 14,
                 "prefix": "svy",
                 "description": "Survey completed during a job",
                 "return_type": "bool",
