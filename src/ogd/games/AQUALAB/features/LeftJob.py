@@ -17,22 +17,22 @@ class LeftJob(PerJobFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
-        return ["start_job", "switch_job", "complete_job"]
+        return ["accept_job", "switch_job", "complete_job"]
 
     @classmethod
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event:Event) -> None:
-        if event.EventName == "start_job":
+        if event.EventName == "accept_job":
             self._job_started = True
             self._left_job = False 
-        
+            
         elif event.EventName == "switch_job":
-            new_job = event.GameState.get("job_name")
-            if new_job != "no-active-job":
+            old_job = event.EventData.get("prev_job_name")
+            if old_job == self.TargetJobName:
                 self._left_job = True
-
+                
     def _updateFromFeatureData(self, feature:FeatureData):
         return
 

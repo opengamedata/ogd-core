@@ -208,8 +208,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = JobPriorAttempt.JobPriorAttempt(params=extractor_params, job_map=self._job_map)
                 case "JobPriorComplete":
                     ret_val = JobPriorComplete.JobPriorComplete(params=extractor_params, job_map=self._job_map)
-                case "JobStartCount":
-                    ret_val = JobStartCount.JobStartCount(params=extractor_params, job_map=self._job_map)
+                case "JobStarted":
+                    ret_val = JobStarted.JobStarted(params=extractor_params, job_map=self._job_map)
                 case "JobTasksCompleted":
                     ret_val = JobTasksCompleted.JobTasksCompleted(params=extractor_params, job_map=self._job_map)
                 case "JobsAttempted":
