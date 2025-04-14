@@ -28,7 +28,7 @@ __all__ = [
     "JobsCompleted",
     "JobName",
     "JobRecommendationReceived",
-    "JobStartCount",
+    "JobStarted",
     "JobTasksCompleted",
     "JobTriesInArgument",
     "LeftJob",
@@ -105,7 +105,7 @@ from . import JobPriorComplete
 from . import JobsAttempted
 from . import JobsCompleted
 from . import JobRecommendationReceived
-from . import JobStartCount
+from . import JobStarted
 from . import JobTasksCompleted
 from . import JobTriesInArgument
 from . import LeftJob
