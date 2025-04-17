@@ -47,6 +47,17 @@
       "phosphorus_view_enabled" : {
          "type" : "bool",
          "description" : "Whether the player currently has the phosphorus overlay mode enabled"
+      },
+      "win_conditions": {
+         "type" : "Dict[str, bool]",
+         "details": {
+            "condition1":"bool",
+            "condition2":"bool",
+            "condition3":"bool",
+            "condition4":"bool",
+            "condition5":"bool"
+         },
+         "description": "The set of win conditions for the game, and whether they are met at the time the event occurred. The game itself only updates its flags for these conditions periodically; it is possible for a player to have the win condition marked as false even when they technically have the requisite state for the win condition (e.g. a player with at least 50% market share of processed fertilizer may not have `conditionX` set to true until the game performs its next update to the win condition flags. Players' win conditions will never be checked until they have unlocked the final county (URBAN). TODO: Add the actual condition names"
       }
    },
    
