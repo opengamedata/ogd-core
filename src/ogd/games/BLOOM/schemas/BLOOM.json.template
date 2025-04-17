@@ -18,7 +18,7 @@
       "ViewType"          : ["PHOSPHORUS_VIEW", "ECONOMY_VIEW"],
       "EndType"           : ["WIN", "FAIL"],
       "ConditionName"     : ["CONDITION1", "CONDITION2", "CONDITION3", "CONDITION4", "CONDITION5", "CONDITION6", "CONDITION7", "CONDITION8", "CONDITION9"],
-      "CityName"          : ["Hillside", "Forest", "Prairie", "Wetland", "Urban"]
+      "CountyName"          : ["Hillside", "Forest", "Prairie", "Wetland", "Urban"]
    },
    "game_state" : {
       "seconds_from_launch" : {
@@ -26,7 +26,7 @@
          "description" : "The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*."
       },
       "current_county" : {
-         "type" : "str",
+         "type" : "CountyName",
          "description" : "The current county where the player is located"
       },
       "current_money" : {
@@ -115,7 +115,7 @@
                "description" : "The index of the county in the order counties unlock."
             },
             "county_name" : {
-               "type" : "str",
+               "type" : "CountyName",
                "description" : "The name of the county in which the loss occurred."
             },
             "lose_condition" : {
@@ -238,7 +238,7 @@
          "description": "When the game unlocks a new county for the player to explore",
          "event_data": {
             "county_name" : {
-               "type" : "str",
+               "type" : "CountyName",
                "description" : "The name of the newly-unlocked county."
             },
             "county_state" : {
@@ -370,7 +370,7 @@
          "description": "When player leaves from one county to another.",
          "event_data": {
             "to_county" : {
-               "type" : "str",
+               "type" : "CountyName",
                "description" : "The new county the player is entering as they leave the current county."
             }
          }
@@ -379,7 +379,7 @@
          "description": "When player has crossed into a county from another, and the interface updates to show the new county's money, policies, etc.",
          "event_data": {
             "from_county" : {
-               "type" : "str",
+               "type" : "CountyName",
                "description" : "The county the player left to enter the current one."
             }
          }
@@ -689,7 +689,7 @@
                "details": {
                   "is_active_tab" : "bool",
                   "buyer_name"    : "str",
-                  "buyer_county"  : "str",
+                  "buyer_county"  : "CountyName",
                   "base_price"    : "int",
                   "shipping_cost" : "int",
                   "total_profit"  : "int"
@@ -701,7 +701,7 @@
                "details": {
                   "is_active_tab" : "bool",
                   "seller_name"   : "str",
-                  "seller_county" : "str",
+                  "seller_county" : "CountyName",
                   "base_price"    : "int",
                   "shipping_cost" : "int",
                   "sales_policy"  : "int",
@@ -732,7 +732,7 @@
                "details": {
                   "is_active_tab" : "bool",
                   "seller_name"    : "str",
-                  "seller_county"  : "str",
+                  "seller_county"  : "CountyName",
                   "base_price"    : "int",
                   "shipping_cost" : "int",
                   "sales_policy"  : "int",
@@ -746,7 +746,7 @@
                "details": {
                   "is_active_tab" : "bool",
                   "buyer_name"    : "str",
-                  "buyer_county"  : "str",
+                  "buyer_county"  : "CountyName",
                   "base_price"    : "int",
                   "total_profit"  : "int"
                },
@@ -757,7 +757,7 @@
                "details": {
                   "is_active_tab" : "bool",
                   "buyer_name"    : "str",
-                  "buyer_county"  : "str",
+                  "buyer_county"  : "CountyName",
                   "base_price"    : "int",
                   "shipping_cost" : "int",
                   "runoff_fine"   : "int",
