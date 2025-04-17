@@ -15,7 +15,10 @@
       "ZoomType"          : ["BUTTON", "SCROLL"],
       "LossType"          : ["CityFailed", "TooManyBlooms", "OutOfMoney"],
       "AttributeStatus"   : ["GOOD", "OK", "BAD"],
-      "ViewType"          : ["PHOSPHORUS_VIEW", "ECONOMY_VIEW"]
+      "ViewType"          : ["PHOSPHORUS_VIEW", "ECONOMY_VIEW"],
+      "EndType"           : ["WIN", "FAIL"],
+      "ConditionName"     : ["CONDITION1", "CONDITION2", "CONDITION3", "CONDITION4", "CONDITION5", "CONDITION6", "CONDITION7", "CONDITION8", "CONDITION9"],
+      "CityName"          : ["Hillside", "Forest", "Prairie", "Wetland", "Urban"]
    },
    "game_state" : {
       "seconds_from_launch" : {
@@ -122,6 +125,40 @@
             "map_state" : {
                "type" : "TODO : BuildMap",
                "description" : "The state of the build map when the player entered the win state."
+            }
+         }
+      },
+      "end_condition_met" : {
+         "description": "When the game checks the player's current state, and the player has reached a new condition that contributes to a game ending, whether the ending is a WIN or FAIL. Most (but not all) FAIL endings require only a single condition to be met, while the WIN ending requires a set of five conditions to be met.",
+         "event_data": {
+            "type" : {
+               "type" : "EndType",
+               "description" : "WIN if the condition contributes towards a win ending, or FAIL if it contributes to a failure ending."
+            },
+            "condition" : {
+               "type" : "ConditionName",
+               "description" : "The name of the condition that was met."
+            },
+            "county" : {
+               "type" : "CountyName",
+               "description" : "The name of the county in which the condition was met. For WIN conditions, this is always the URBAN county."
+            }
+         }
+      },
+      "end_condition_lost" : {
+         "description": "When the game checks the player's current state, and the player no longer meets a previously-met ending condition. Not all conditions can be lost, such as the 'spent at least 90 sim cycles in URBAN county' condition.",
+         "event_data": {
+            "type" : {
+               "type" : "EndType",
+               "description" : "WIN if the condition contributed towards a win ending, or FAIL if it contributed to a failure ending."
+            },
+            "condition" : {
+               "type" : "ConditionName",
+               "description" : "The name of the condition that was lost."
+            },
+            "county" : {
+               "type" : "CountyName",
+               "description" : "The name of the county in which the condition was lost. For WIN conditions, this is always the URBAN county."
             }
          }
       },
