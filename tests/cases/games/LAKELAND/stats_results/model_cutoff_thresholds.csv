@@ -1,0 +1,6 @@
+Model,Cutoff,,"NOTE: For justification and supporting stats/data, see individual spreadsheets for each model in the ""stats_results"" folder."
+TimeSinceImpactModel,300,,
+TimeSinceActiveEvent,30,,
+TimeSinceExploratoryModel,60,,
+TimeSinceLastFarmHouseDairyModel,600,,
+TimeSinceLastSaleModel,600,,
