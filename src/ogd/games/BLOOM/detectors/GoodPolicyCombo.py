@@ -123,7 +123,7 @@ class GoodPolicyCombo(Detector):
         # For now, include the triggering event's EventData, for better debugging.
         ret_val : DetectorEvent = self.GenerateEvent(
             app_id="BLOOM", event_name="good_policy_combo",
-            event_data=self._triggering_event.EventData.update({"combination":self._triggered})
+            event_data=self._triggering_event.EventData | {"combination":self._triggered}
         )
         self._triggered = None
         return ret_val
