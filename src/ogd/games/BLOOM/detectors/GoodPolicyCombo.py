@@ -62,7 +62,7 @@ class GoodPolicyCombo(Detector):
         :type event: Event
         """
         policy = event.EventData.get("policy")
-        selection = event.EventData.get("choice_name")
+        selection = event.EventData.get("choice_number", -1)
         # 1. Check for skimming + high taxation combo:
         if policy == "SkimmingPolicy" and selection > 0:
             taxation = event.GameState.get("sales", {}).get("policy_choice")
@@ -74,7 +74,7 @@ class GoodPolicyCombo(Detector):
                 self._triggered = GoodPolicyCombo.Combination.TAX_FOR_SKIMMERS
         # 2. Check for relaxed taxes coinciding with large surplus of money
         elif policy == "SalesTaxPolicy" and selection in [0, 3]:
-            budget = event.GameState.get("current_money")
+            budget = event.GameState.get("current_money", 0)
             if budget > self._surplus_threshold:
                 self._triggered = GoodPolicyCombo.Combination.GOLDEN_AGE
         # 3. Check for player using runoff policy of some kind
