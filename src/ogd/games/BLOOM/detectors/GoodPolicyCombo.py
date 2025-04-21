@@ -62,7 +62,7 @@ class GoodPolicyCombo(Detector):
         :type event: Event
         """
         policy = event.EventData.get("policy")
-        selection = event.EvenData.get("choice_name")
+        selection = event.EventData.get("choice_name")
         # 1. Check for skimming + high taxation combo:
         if policy == "SkimmingPolicy" and selection > 0:
             taxation = event.GameState.get("sales", {}).get("policy_choice")

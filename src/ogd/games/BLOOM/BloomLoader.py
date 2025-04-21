@@ -124,7 +124,7 @@ class BloomLoader(GeneratorLoader):
         match detector_type:
             case "GoodPolicyCombo":
                 _budget_threshold = schema_args.get("threshold", 150)
-                ret_val = GoodPolicyCombo.GoodPolicyCombo(params=extractor_params, trigger_callback=trigger_callback, surplus_budge_threshold=_budget_threshold)
+                ret_val = GoodPolicyCombo.GoodPolicyCombo(params=extractor_params, trigger_callback=trigger_callback, surplus_budget_threshold=_budget_threshold)
             case _:
                 raise NotImplementedError(f"'{detector_type}' is not a valid detector for Bloom.")
         return ret_val
