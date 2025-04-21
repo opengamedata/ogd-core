@@ -1119,6 +1119,14 @@
          "count": 5,
          "description": "Time to unlock county",
          "return_type": "int"
+       },
+       "CountyPolicyChangeCount": {
+         "enabled": true,
+         "type": "CountyPolicyChangeCount",
+         "prefix": "cty",
+         "count": 5,
+         "description": "Policy change count per county",
+         "return_type": "int" 
        }
       },
       "aggregate": {
