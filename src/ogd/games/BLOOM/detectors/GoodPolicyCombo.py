@@ -8,6 +8,7 @@ from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.utils.Logger import Logger
 
 class GoodPolicyCombo(Detector):
     class Combination(IntEnum):
@@ -65,17 +66,17 @@ class GoodPolicyCombo(Detector):
         selection = event.EventData.get("choice_number", -1)
         # 1. Check for skimming + high taxation combo:
         if policy == "SkimmingPolicy" and selection > 0:
-            taxation = event.GameState.get("sales", {}).get("policy_choice")
-            if taxation == 2:
+            taxation = event.GameState.get("county_policies", {}).get("sales", {}).get("policy_choice")
+            if int(taxation) == 2:
                 self._triggered = GoodPolicyCombo.Combination.TAX_FOR_SKIMMERS
         elif policy == "SalesTaxPolicy" and selection == 2:
-            skimming = event.GameState.get("cleanup", {}).get("policy_choice")
-            if skimming > 0:
+            skimming = event.GameState.get("county_policies", {}).get("cleanup", {}).get("policy_choice")
+            if int(skimming) > 0:
                 self._triggered = GoodPolicyCombo.Combination.TAX_FOR_SKIMMERS
         # 2. Check for relaxed taxes coinciding with large surplus of money
         elif policy == "SalesTaxPolicy" and selection in [0, 3]:
             budget = event.GameState.get("current_money", 0)
-            if budget > self._surplus_threshold:
+            if int(budget) > self._surplus_threshold:
                 self._triggered = GoodPolicyCombo.Combination.GOLDEN_AGE
         # 3. Check for player using runoff policy of some kind
         elif policy == "RunoffPolicy" and selection > 0:
@@ -123,7 +124,7 @@ class GoodPolicyCombo(Detector):
         # For now, include the triggering event's EventData, for better debugging.
         ret_val : DetectorEvent = self.GenerateEvent(
             app_id="BLOOM", event_name="good_policy_combo",
-            event_data=self._triggering_event.EventData | {"combination":self._triggered}
+            event_data=self._triggering_event.EventData | {"combination":str(self._triggered)}
         )
         self._triggered = None
         return ret_val
