@@ -1060,6 +1060,16 @@
          }
       }
    },
+   "detectors": {
+      "aggregate": {
+         "GoodPolicyCombo": {
+               "type": "GoodPolicyCombo",
+               "enabled": true,
+               "description": "Detector for cases where the player implements a good combination of policies for a given county, which may be based on the state of the county at the time the policy was implemented",
+               "threshold": 150
+         }
+      }
+   },
    "features": {
       "per_count": {
         "CountyBloomAlertCount": {
