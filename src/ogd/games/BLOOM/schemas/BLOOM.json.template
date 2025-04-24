@@ -1204,7 +1204,7 @@
         "EconomyViewCount": {
           "enabled": true,
           "type": "CountEvent",
-          "description": "Count of times the player viewed the economy view",
+          "description": "Count of times the player opened the economy view",
           "target": "open_economy_view",
           "return_type": "int"
         },
