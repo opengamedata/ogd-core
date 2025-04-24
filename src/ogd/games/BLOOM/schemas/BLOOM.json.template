@@ -1208,6 +1208,16 @@
           "target": "open_economy_view",
           "return_type": "int"
         },
+         "EconomyViewTime": {
+            "enabled": true,
+            "type": "StopwatchTimer",
+            "description": "Time player spent in the economy view",
+            "start_event": "open_economy_view",
+            "end_event": "close_economy_view",
+            "ignore_events": ["click_resume_game", "click_play_game"],
+            "reset_events": ["session_start"],
+            "return_type": "int"
+         },
         "FailCount": {
           "enabled": true,
           "type": "FailCount",
