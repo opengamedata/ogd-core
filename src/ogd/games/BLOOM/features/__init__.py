@@ -27,7 +27,10 @@ __all__ = [
     "QuitOnBloomFail", 
     "QuitOnCityFail",
     "QuitOnBankruptcy",
-    "BuildingInspectorTabCount"
+    "BuildingInspectorTabCount",
+    "GoodPolicyCount",
+    # "PhosphorusViewTime",
+    # "InspectorResponseCount"
 ]
 
 
@@ -58,4 +61,6 @@ from . import QuitOnBloomFail
 from . import QuitOnCityFail
 from . import QuitOnBankruptcy
 from . import BuildingInspectorTabCount
-
+from . import GoodPolicyCount
+# from . import PhosphorusViewTime
+# from . import InspectorResponseCount

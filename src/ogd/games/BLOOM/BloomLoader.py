@@ -94,6 +94,12 @@ class BloomLoader(GeneratorLoader):
                     ret_val = QuitOnBankruptcy.QuitOnBankruptcy(params=extractor_params)
                 case "BuildingInspectorTabCount":  # Add BuildingInspectorTabCount feature here
                     ret_val = BuildingInspectorTabCount.BuildingInspectorTabCount(params=extractor_params)
+                case "GoodPolicyCount":
+                    ret_val = GoodPolicyCount.GoodPolicyCount(params=extractor_params)
+                # case "PhosphorusViewTime":
+                #     ret_val = PhosphorusViewTime.PhosphorusViewTime(params=extractor_params)
+                # case "InspectorResponseCount":
+                #     ret_val = InspectorResponseCount.InspectorResponseCount(params=extractor_params)
                 case _:
                     ret_val = None
 
