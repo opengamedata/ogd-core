@@ -90,6 +90,9 @@ class ActiveTime(Feature):
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
+        # if a new session is starting, we don't want to count time since last event.
+        if event.EventName == "session_start":
+            self.previous_time = None
         if event.EventSource == EventSource.GAME:
             if self.previous_time is not None:
                 event_duration = event.Timestamp - self.previous_time
