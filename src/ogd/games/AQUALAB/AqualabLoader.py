@@ -184,6 +184,10 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = JobActiveTime.JobActiveTime(params=extractor_params, job_map=self._job_map)
                 case "JobArgumentation":
                     ret_val = JobArgumentation.JobArgumentation(params=extractor_params, job_map=self._job_map)
+                case "JobArgumentationRejects":
+                    ret_val = JobArgumentationRejects.JobArgumentationRejects(params=extractor_params, job_map=self._job_map)
+                case "JobComplete":
+                    ret_val = JobComplete.JobComplete(params=extractor_params, job_map=self._job_map)
                 case "JobCompletionTime":
                     ret_val = JobCompletionTime.JobCompletionTime(params=extractor_params, job_map=self._job_map)
                 case "JobDiveSitesCount":

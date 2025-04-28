@@ -13,6 +13,8 @@ class LeftJob(PerJobFeature):
         super().__init__(params=params, job_map=job_map)
         self._left_job = False
         self._job_started = False
+        self._switch_count = 0
+        self._complete_count = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -27,17 +29,20 @@ class LeftJob(PerJobFeature):
         if event.EventName == "accept_job":
             self._job_started = True
             self._left_job = False 
-            
         elif event.EventName == "switch_job":
             old_job = event.EventData.get("prev_job_name")
             if old_job == self.TargetJobName:
-                self._left_job = True
+                self._switch_count += 1
+        elif event.EventName == "complete_job":
+            completed_job = event.GameState.get("job_name")
+            if completed_job == self.TargetJobName:
+                self._complete_count += 1
                 
     def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [int(self._left_job)]
+        return [self._switch_count - self._complete_count]
 
     # *** Optionally override public functions. ***
     @staticmethod
