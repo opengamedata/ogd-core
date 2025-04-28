@@ -12,6 +12,8 @@ __all__ = [
     "FollowedAdvice",
     "JobActiveTime",
     "JobArgumentation",
+    "JobArgumentationRejects",
+    "JobComplete",
     "JobCompletionTime",
     "JobDiveSitesCount",
     "JobDiveTime",
@@ -88,6 +90,8 @@ from . import PlayedNonexperimentalVersion
 from . import FollowedAdvice
 from . import JobActiveTime
 from . import JobArgumentation
+from . import JobArgumentationRejects
+from . import JobComplete
 from . import JobCompletionTime
 from . import JobDiveSitesCount
 from . import JobDiveTime
