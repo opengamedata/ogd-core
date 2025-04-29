@@ -1,5 +1,5 @@
 # import libraries
-from typing import Any, Dict, List, Optional
+from typing import Any, List
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.common.models.Event import Event
