@@ -36,7 +36,7 @@ class CountEvent(BuiltinExtractor):
 
         if isinstance(cls._target_event, str):
             ret_val = [cls._target_event]
-        elif isinstance(cls._target_event, dict):
+        elif isinstance(cls._target_event, list):
             ret_val = cls._target_event
         else:
             raise TypeError(f"CountEvent type was given a target ({cls._target_event}) with unexpected type {type(cls._target_event)}")
