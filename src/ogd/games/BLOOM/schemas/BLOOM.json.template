@@ -1064,142 +1064,174 @@
        }
       },
       "aggregate": {
-        "ActiveTime": {
-          "threshold": 30,
-          "enabled": true,
-          "type": "ActiveTime",
-          "description": "Active time of a player",
-          "return_type": "timedelta"
-        },
-        "AlertCount": {
-          "enabled": true,
-          "type": "AlertCount",
-          "description": "Count of alerts",
-          "return_type": "int"
-        },
-        "AlertReviewCount": {
-          "enabled": true,
-          "type": "AlertReviewCount",
-          "description": "Count of alert reviews",
-          "return_type": "int"
-        },
-        "AverageActiveTime": {
-          "enabled": true,
-          "type": "AverageActiveTime",
-          "description": "Average active time of a player",
-          "return_type": "timedelta"
-        },
-        "BloomAlertCount": {
-          "enabled": true,
-          "type": "BloomAlertCount",
-          "description": "Count of bloom alerts",
-          "return_type": "int"
-        },
-        "BuildCount": {
-          "enabled": true,
-          "type": "CountEvent",
-          "description": "Count of builds",
-          "target": "click_execute_build",
-          "return_type": "int"
-        },
-        "BuildingUnlockCount": {
-          "enabled": true,
-          "type": "BuildingUnlockCount",
-          "description": "Count of building unlocks",
-          "return_type": "int"
-        },
-        "CityInspectionCount": {
-          "enabled": true,
-          "type": "CountEvent",
-          "description": "Count of city inspections",
-          "target": "city_inspector_displayed",
-          "return_type": "int"
-        },
-        "CountyUnlockCount": {
-          "enabled": true,
-          "type": "CountyUnlockCount",
-          "description": "Number of counties unlocked",
-          "return_type": "int"
-        },
-        "DairyInspectionCount": {
-          "enabled": true,
-          "type": "CountEvent",
-          "description": "Count of dairy inspections",
-          "target": "dairy_inspector_displayed",
-          "return_type": "int"
-        },
-        "TotalPolicyChangeCount": {
-          "enabled": true,
-          "type": "CountEvent",
-          "description": "Total count of policy changes",
-          "target": "select_policy_card",
-          "return_type": "int"
-        },
-        "EconomyViewCount": {
-          "enabled": true,
-          "type": "CountEvent",
-          "description": "Count of times the player viewed the economy view",
-          "target": "open_economy_view",
-          "return_type": "int"
-        },
-        "FailCount": {
-          "enabled": true,
-          "type": "FailCount",
-          "description": "Number of failure count",
-          "return_type": "int"
-        },
-        "GameCompletionStatus": {
-          "enabled": true,
-          "type": "GameCompletionStatus",
-          "description": "Game completion status",
-          "return_type": "str"
-        },
-        "GrainInspectionCount": {
-          "enabled": true,
-          "type": "CountEvent",
-          "description": "Count of grain inspections",
-          "target": "grain_inspector_displayed",
-          "return_type": "int"
-        },
-        "NumberOfSessionsPerPlayer": {
-          "enabled": false,
-          "type": "NumberOfSessionsPerPlayer",
-          "description": "Number of sessions per player",
-          "return_type": "int"
-        },
-        "PersistThroughFailure": {
-          "enabled": true,
-          "type": "PersistThroughFailure",
-          "description": "Count of persistence after failure",
-          "return_type": "int"
-        },
-        "PolicyAdjustments": {
-          "enabled": true,
-          "type": "CountEvent",
-          "description": "Count of policy changes",
-          "target": "select_policy_card",
-          "return_type": "int"
-        },
-        "PhosphorusViewCount": {
-          "enabled": true,
-          "type": "CountEvent",
-          "description": "Number of times the player opened the phosphorus view",
-          "target": "open_phosphorus_view",
-          "return_type": "int"
-        },
-        "StorageInspectionCount": {
-          "enabled": true,
-          "type": "CountEvent",
-          "description": "Count of storage inspections",
-          "target": "storage_inspector_displayed",
-          "return_type": "int"
-        },
-        "SucceededThroughFailure": {
-          "enabled": true,
-          "type": "SucceededThroughFailure",
-          "description": "Number of times failed but persisted through the task",
-          "return_type": "int"
-        },
+         "ActiveTime": {
+            "threshold": 30,
+            "enabled": true,
+            "type": "ActiveTime",
+            "description": "Active time of a player",
+            "return_type": "timedelta"
+         },
+         "AlertCount": {
+            "enabled": true,
+            "type": "AlertCount",
+            "description": "Count of alerts",
+            "return_type": "int"
+         },
+         "AlertReviewCount": {
+            "enabled": true,
+            "type": "AlertReviewCount",
+            "description": "Count of alert reviews",
+            "return_type": "int"
+         },
+         "AverageActiveTime": {
+            "enabled": true,
+            "type": "AverageActiveTime",
+            "description": "Average active time of a player",
+            "return_type": "timedelta"
+         },
+         "AverageEconomyViewTime": {
+            "enabled": true,
+            "type": "AverageEconomyViewTime",
+            "description": "Average time a player spent each time they activated the economy view.",
+            "return_type": "timedelta"
+         },
+         "AveragePhosphorusViewTime": {
+            "enabled": true,
+            "type": "AveragePhosphorusViewTime",
+            "description": "Average time a player spent each time they activated the phosphorus view.",
+            "return_type": "timedelta"
+         },
+         "BloomAlertCount": {
+            "enabled": true,
+            "type": "BloomAlertCount",
+            "description": "Count of bloom alerts",
+            "return_type": "int"
+         },
+         "BuildCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Count of builds",
+            "target": "click_execute_build",
+            "return_type": "int"
+         },
+         "BuildingUnlockCount": {
+            "enabled": true,
+            "type": "BuildingUnlockCount",
+            "description": "Count of building unlocks",
+            "return_type": "int"
+         },
+         "CityInspectionCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Count of city inspections",
+            "target": "city_inspector_displayed",
+            "return_type": "int"
+         },
+         "CountyUnlockCount": {
+            "enabled": true,
+            "type": "CountyUnlockCount",
+            "description": "Number of counties unlocked",
+            "return_type": "int"
+         },
+         "DairyInspectionCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Count of dairy inspections",
+            "target": "dairy_inspector_displayed",
+            "return_type": "int"
+         },
+         "TotalPolicyChangeCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Total count of policy changes",
+            "target": "select_policy_card",
+            "return_type": "int"
+         },
+         "EconomyViewCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Count of times the player opened the economy view",
+            "target": "open_economy_view",
+            "return_type": "int"
+         },
+         "EconomyViewTime": {
+            "enabled": true,
+            "type": "StopwatchTimer",
+            "description": "Time player spent in the economy view",
+            "start_event": "open_economy_view",
+            "end_event": "close_economy_view",
+            "ignore_events": ["click_resume_game", "click_play_game"],
+            "reset_events": ["session_start"],
+            "return_type": "int"
+         },
+         "FailCount": {
+            "enabled": true,
+            "type": "FailCount",
+            "description": "Number of failure count",
+            "return_type": "int"
+         },
+         "GameCompletionStatus": {
+            "enabled": true,
+            "type": "GameCompletionStatus",
+            "description": "Game completion status",
+            "return_type": "str"
+         },
+         "GrainInspectionCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Count of grain inspections",
+            "target": "grain_inspector_displayed",
+            "return_type": "int"
+         },
+         "NumberOfSessionsPerPlayer": {
+            "enabled": false,
+            "type": "NumberOfSessionsPerPlayer",
+            "description": "Number of sessions per player",
+            "return_type": "int"
+         },
+         "PersistThroughFailure": {
+            "enabled": true,
+            "type": "PersistThroughFailure",
+            "description": "Count of persistence after failure",
+            "return_type": "int"
+         },
+         "PolicyAdjustments": {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Count of policy changes",
+            "target": "select_policy_card",
+            "return_type": "int"
+         },
+         "PhosphorusViewCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Number of times the player opened the phosphorus view",
+            "target": "open_phosphorus_view",
+            "return_type": "int"
+         },
+         "PhosphorusViewTime": {
+            "enabled": true,
+            "type": "StopwatchTimer",
+            "description": "Time player spent with the phosphorus view enabled",
+            "start_event": "open_phosphorus_view",
+            "end_event": "close_phosphorus_view",
+            "ignore_events": ["click_resume_game", "click_play_game"],
+            "reset_events": ["session_start"],
+            "return_type": "int"
+         },
+         "StorageInspectionCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Count of storage inspections",
+            "target": "storage_inspector_displayed",
+            "return_type": "int"
+         },
+         "SucceededThroughFailure": {
+            "enabled": true,
+            "type": "SucceededThroughFailure",
+            "description": "Number of times failed but persisted through the task",
+            "return_type": "int"
+         },
          "QuitOnBloomFail": {
             "enabled": true,
             "type": "QuitOnBloomFail",
