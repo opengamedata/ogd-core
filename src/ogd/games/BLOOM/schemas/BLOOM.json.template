@@ -1263,6 +1263,16 @@
           "target": "open_phosphorus_view",
           "return_type": "int"
         },
+        "PhosphorusViewTime": {
+           "enabled": true,
+           "type": "StopwatchTimer",
+           "description": "Time player spent with the phosphorus view enabled",
+           "start_event": "open_phosphorus_view",
+           "end_event": "close_phosphorus_view",
+           "ignore_events": ["click_resume_game", "click_play_game"],
+           "reset_events": ["session_start"],
+           "return_type": "int"
+        },
         "StorageInspectionCount": {
           "enabled": true,
           "type": "CountEvent",
