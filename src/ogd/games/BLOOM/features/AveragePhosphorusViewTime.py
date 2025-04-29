@@ -39,6 +39,3 @@ class AveragePhosphorusViewTime(Feature):
         else:
             avg = None
         return [ avg ]
-
-    def Subfeatures(self) -> List[str]:
-        return ["Breakdown"]
