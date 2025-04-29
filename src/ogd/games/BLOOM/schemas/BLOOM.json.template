@@ -1155,6 +1155,18 @@
             "description": "Average active time of a player",
             "return_type": "timedelta"
          },
+         "AverageEconomyViewTime": {
+            "enabled": true,
+            "type": "AverageEconomyViewTime",
+            "description": "Average time a player spent each time they activated the economy view.",
+            "return_type": "timedelta"
+         },
+         "AveragePhosphorusViewTime": {
+            "enabled": true,
+            "type": "AveragePhosphorusViewTime",
+            "description": "Average time a player spent each time they activated the phosphorus view.",
+            "return_type": "timedelta"
+         },
          "BloomAlertCount": {
             "enabled": true,
             "type": "BloomAlertCount",
