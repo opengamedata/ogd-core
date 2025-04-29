@@ -32,7 +32,16 @@ class CountEvent(BuiltinExtractor):
         :return: _description_
         :rtype: List[str]
         """
-        return [cls._target_event]
+        ret_val : List
+
+        if isinstance(cls._target_event, str):
+            ret_val = [cls._target_event]
+        elif isinstance(cls._target_event, dict):
+            ret_val = cls._target_event
+        else:
+            raise TypeError(f"CountEvent type was given a target ({cls._target_event}) with unexpected type {type(cls._target_event)}")
+
+        return ret_val
 
     @classmethod
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
