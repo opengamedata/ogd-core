@@ -7,6 +7,8 @@ __all__ = [
     "AlertCount",
     "AlertReviewCount",
     "AverageActiveTime",
+    "AverageEconomyViewTime",
+    "AveragePhosphorusViewTime",
     "BloomAlertCount",
     "BuildCount",
     "BuildingUnlockCount",
@@ -40,6 +42,8 @@ from . import ActiveTime
 from . import AlertCount
 from . import AlertReviewCount
 from . import AverageActiveTime
+from . import AverageEconomyViewTime
+from . import AveragePhosphorusViewTime
 from . import BloomAlertCount
 from . import BuildCount
 from . import BuildingUnlockCount
