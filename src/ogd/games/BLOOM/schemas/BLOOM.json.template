@@ -1292,6 +1292,13 @@
             "target": "storage_inspector_displayed",
             "return_type": "int"
          },
+         "TotalBuildingInspectCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Count of all time the player clicked to initiate a building inspection (not including auto-displays).",
+            "target": ["click_inspect_building"],
+            "return_type": "int"
+         },
          "SucceededThroughFailure": {
             "enabled": true,
             "type": "SucceededThroughFailure",
