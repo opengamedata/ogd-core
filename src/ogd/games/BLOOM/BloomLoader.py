@@ -66,6 +66,8 @@ class BloomLoader(GeneratorLoader):
                     ret_val = AlertReviewCount.AlertReviewCount(params=extractor_params)
                 case "AverageActiveTime":
                     ret_val = AverageActiveTime.AverageActiveTime(params=extractor_params)
+                case "AverageBuildingInspectTime":
+                    ret_val = AverageBuildingInspectTime.AverageBuildingInspectTime(params=extractor_params)
                 case "AverageEconomyViewTime":
                     ret_val = AverageEconomyViewTime.AverageEconomyViewTime(params=extractor_params)
                 case "AveragePhosphorusViewTime":
