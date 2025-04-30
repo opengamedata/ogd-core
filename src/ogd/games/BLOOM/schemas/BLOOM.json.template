@@ -1155,6 +1155,12 @@
             "description": "Average active time of a player",
             "return_type": "timedelta"
          },
+         "AverageBuildingInspectTime": {
+            "enabled": true,
+            "type": "AverageBuildingInspectTime",
+            "description": "Average time a player had the building inspector open, across all times they opened it manually.",
+            "return_type": "float"
+         },
          "AverageEconomyViewTime": {
             "enabled": true,
             "type": "AverageEconomyViewTime",
@@ -1268,7 +1274,7 @@
             "target": "select_policy_card",
             "return_type": "int"
          },
-         "ManualBuildingInspectionTime": {
+         "ManualBuildingInspectTime": {
             "enabled": true,
             "type": "StopwatchTimer",
             "description": "Time player spent with an inspector open, not including when inspectors are auto-opened.",
