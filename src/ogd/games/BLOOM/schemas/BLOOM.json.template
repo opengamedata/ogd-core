@@ -1268,6 +1268,16 @@
             "target": "select_policy_card",
             "return_type": "int"
          },
+         "ManualBuildingInspectionTime": {
+            "enabled": true,
+            "type": "StopwatchTimer",
+            "description": "Time player spent with an inspector open, not including when inspectors are auto-opened.",
+            "start_event": "click_inspect_building",
+            "end_event": "dismiss_building_inspector",
+            "ignore_events": ["click_resume_game", "click_play_game"],
+            "reset_events": ["session_start"],
+            "return_type": "int"
+         },
          "PhosphorusViewCount": {
             "enabled": true,
             "type": "CountEvent",
@@ -1292,7 +1302,7 @@
             "target": "storage_inspector_displayed",
             "return_type": "int"
          },
-         "TotalBuildingInspectCount": {
+         "ManualBuildingInspectCount": {
             "enabled": true,
             "type": "CountEvent",
             "description": "Count of all time the player clicked to initiate a building inspection (not including auto-displays).",
