@@ -1062,6 +1062,18 @@
    },
    "detectors": {
       "aggregate": {
+         "AlertFollowedByInspect": {
+            "type": "AlertFollowedByInspect",
+            "enabled": true,
+            "description": "Detector for cases where the player checked an alert, and quickly followed with an inspection of the relevant building tile",
+            "threshold": 15
+         },
+         "AlertFollowedByPolicy": {
+            "type": "AlertFollowedByPolicy",
+            "enabled": true,
+            "description": "Detector for cases where the player checked an alert, and quickly followed with a policy adjustment to alleviate the issue",
+            "threshold": 30
+         },
          "GoodPolicyCombo": {
                "type": "GoodPolicyCombo",
                "enabled": true,
