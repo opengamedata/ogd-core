@@ -2,7 +2,7 @@
 import math
 from datetime import timedelta
 from enum import IntEnum
-from typing import Callable, List
+from typing import Callable, List, Optional
 
 # import local files
 from ogd.core.generators.detectors.Detector import Detector
@@ -53,6 +53,7 @@ class AlertFollowedByPolicy(Detector):
         """
         time_since_alert = (event.Timestamp - self._last_alert_time) if self._last_alert_time is not None else timedelta(days=self._policy_threshold.days + 1)
         within_threshold = time_since_alert < self._policy_threshold
+        old_choice_num : Optional[int | float]
         match event.EventName:
             case "click_local_alert":
                 self._found_alert = True
@@ -68,11 +69,13 @@ class AlertFollowedByPolicy(Detector):
                             # figure out if they chose stricter policy
                             match policy_type:
                                 case "RUNOFFPOLICY":
-                                    old_choice_num : float = event.GameState.get("county_policies", {}).get("runoff", {}).get("policy_choice", math.inf)
+                                    old_choice_num = event.GameState.get("county_policies", {}).get("runoff", {}).get("policy_choice")
+                                    old_choice_num = int(old_choice_num) if old_choice_num else math.inf
                                     if choice_num is not None and choice_num > old_choice_num:
                                         self._triggered = AlertFollowedByPolicy.Adjustment.BLOOM_INCREASE_RUNOFF
                                 case "SKIMMINGPOLICY":
-                                    old_choice_num : float = event.GameState.get("county_policies", {}).get("cleanup", {}).get("policy_choice", math.inf)
+                                    old_choice_num = event.GameState.get("county_policies", {}).get("cleanup", {}).get("policy_choice")
+                                    old_choice_num = int(old_choice_num) if old_choice_num else math.inf
                                     if choice_num is not None and choice_num > old_choice_num:
                                         self._triggered = AlertFollowedByPolicy.Adjustment.BLOOM_INCREASE_CLEANUP
                                 case _:
@@ -81,14 +84,16 @@ class AlertFollowedByPolicy(Detector):
                             match policy_type:
                                 case "SALESTAXPOLICY":
                                     old_choice_num = event.GameState.get("county_policies", {}).get("sales", {}).get("policy_choice")
+                                    old_choice_num = int(old_choice_num) if old_choice_num else None
                                     # for sales tax, choice 3 is a subsidy, which is actually lowest option (player is paying out subsidy, rather than collecting a tax)
                                     # thus, need to rotate choices to make the 3 a 0, and bump all the others.
+                                    old_choice_num = (int(old_choice_num) + 1) % 4 if old_choice_num else -math.inf
                                     choice_num = (choice_num + 1) % 4 if choice_num else None
-                                    old_choice_num = (old_choice_num + 1) % 4 if old_choice_num else -math.inf
                                     if choice_num is not None and choice_num < old_choice_num:
                                         self._triggered = AlertFollowedByPolicy.Adjustment.SELLINGLOSS_LOWER_TAX
                                 case "RUNOFFPOLICY":
-                                    old_choice_num = event.GameState.get("county_policies", {}).get("runoff", {}).get("policy_choice", -math.inf)
+                                    old_choice_num = event.GameState.get("county_policies", {}).get("runoff", {}).get("policy_choice")
+                                    old_choice_num = int(old_choice_num) if old_choice_num else -math.inf
                                     if choice_num is not None and choice_num < old_choice_num:
                                         self._triggered = AlertFollowedByPolicy.Adjustment.SELLINGLOSS_LOWER_RUNOFF
                                 case _:
