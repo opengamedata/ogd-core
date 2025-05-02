@@ -1,4 +1,5 @@
 # import standard libraries
+from datetime import timedelta
 from pathlib import Path
 from typing import Any, Callable, Dict, Final, List, Optional
 
@@ -134,6 +135,12 @@ class BloomLoader(GeneratorLoader):
     def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         ret_val : Detector
         match detector_type:
+            case "AlertFollowedByInspect":
+                _inspect_threshold = timedelta(seconds=schema_args.get("threshold", 15))
+                ret_val = AlertFollowedByInspect.AlertFollowedByInspect(params=extractor_params, trigger_callback=trigger_callback, inspect_time_threshold=_inspect_threshold)
+            case "AlertFollowedByInspect":
+                _policy_threshold = timedelta(seconds=schema_args.get("threshold", 30))
+                ret_val = AlertFollowedByPolicy.AlertFollowedByPolicy(params=extractor_params, trigger_callback=trigger_callback, policy_time_threshold=_policy_threshold)
             case "GoodPolicyCombo":
                 _budget_threshold = schema_args.get("threshold", 150)
                 ret_val = GoodPolicyCombo.GoodPolicyCombo(params=extractor_params, trigger_callback=trigger_callback, surplus_budget_threshold=_budget_threshold)

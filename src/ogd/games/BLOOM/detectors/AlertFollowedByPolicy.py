@@ -26,9 +26,9 @@ class AlertFollowedByPolicy(Detector):
         def __str__(self):
             return self.name
 
-    def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None], inspect_time_threshold:timedelta):
+    def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None], policy_time_threshold:timedelta):
         super().__init__(params=params, trigger_callback=trigger_callback)
-        self._inspect_threshold = inspect_time_threshold
+        self._policy_threshold = policy_time_threshold
         self._found_alert = False
         self._alert_type = "ALERT TYPE NOT FOUND!"
         self._last_alert_time = None
@@ -51,8 +51,8 @@ class AlertFollowedByPolicy(Detector):
         :param event: _description_
         :type event: Event
         """
-        time_since_alert = (event.Timestamp - self._last_alert_time) if self._last_alert_time is not None else timedelta(days=self._inspect_threshold.days + 1)
-        within_threshold = time_since_alert < self._inspect_threshold
+        time_since_alert = (event.Timestamp - self._last_alert_time) if self._last_alert_time is not None else timedelta(days=self._policy_threshold.days + 1)
+        within_threshold = time_since_alert < self._policy_threshold
         match event.EventName:
             case "click_local_alert":
                 self._found_alert = True
