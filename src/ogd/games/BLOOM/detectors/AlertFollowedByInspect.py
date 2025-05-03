@@ -84,7 +84,7 @@ class AlertFollowedByInspect(Detector):
         # For now, include the triggering event's EventData, for better debugging.
         ret_val : DetectorEvent = self.GenerateEvent(
             app_id="BLOOM", event_name="alert_followed_by_inspect",
-            event_data=self._triggering_event.EventData | {"alert_inspection":str(self._triggered)}
+            event_data=self._triggering_event.EventData | {"player_action":str(self._triggered)}
         )
         self._triggered = None
         return ret_val
