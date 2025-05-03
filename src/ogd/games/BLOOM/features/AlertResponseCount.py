@@ -7,7 +7,7 @@ from ogd.common.models.FeatureData import FeatureData
 from ogd.games.BLOOM.detectors.AlertFollowedByInspect import AlertFollowedByInspect
 from ogd.games.BLOOM.detectors.AlertFollowedByPolicy import AlertFollowedByPolicy
 
-class GoodPolicyCount(Feature):
+class AlertResponseCount(Feature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.alert_response_counts = {

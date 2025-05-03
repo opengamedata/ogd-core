@@ -5,6 +5,7 @@ __all__ = [
     "PerPolicyFeature",           
     "ActiveTime",
     "AlertCount",
+    "AlertResponseCount",
     "AlertReviewCount",
     "AverageActiveTime",
     "AverageBuildingInspectTime",
@@ -41,6 +42,7 @@ from . import PerCountyFeature
 from . import PerPolicyFeature
 from . import ActiveTime
 from . import AlertCount
+from . import AlertResponseCount
 from . import AlertReviewCount
 from . import AverageActiveTime
 from . import AverageBuildingInspectTime
