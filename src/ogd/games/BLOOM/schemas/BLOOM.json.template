@@ -1155,6 +1155,21 @@
             "description": "Count of alerts",
             "return_type": "int"
          },
+         "AlertResponseCount": {
+            "enabled": true,
+            "type": "AlertResponseCount",
+            "description": "Count of alert responses",
+            "return_type": "int",
+            "subfeatures" : [
+               "EXCESS_RUNOFF",
+               "SELLING_LOSS",
+               "BLOOM_INCREASE_RUNOFF",
+               "BLOOM_INCREASE_CLEANUP",
+               "SELLINGLOSS_LOWER_TAX",
+               "SELLINGLOSS_LOWER_RUNOFF",
+               "DECLININGPOP_SUBSIDIZE_MILK"
+            ]
+         },
          "AlertReviewCount": {
             "enabled": true,
             "type": "AlertReviewCount",
