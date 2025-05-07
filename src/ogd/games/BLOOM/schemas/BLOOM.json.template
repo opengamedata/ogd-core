@@ -1392,6 +1392,12 @@
               "GrainFarmTabCount",
               "StorageTabCount"
             ]
+          },
+          "GoodPolicyCount": {
+            "enabled": true,
+            "type": "GoodPolicyCount",
+            "description": "Count of good policies",
+            "return_type": "int"
           }
       }
    },
