@@ -1230,7 +1230,7 @@
                 "return_type": "dict"
             },
             "PlayLocations": {
-                "enabled": false,
+                "enabled": true,
                 "type": "PlayLocations",
                 "description": "Play Locations",
                 "return_type": "List[bool]",
