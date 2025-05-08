@@ -60,8 +60,9 @@ class SurveyItemResponse(PerCountFeature):
             elif self._retest:
                 self._retest_response = _responses[self.CountIndex].get("response", None)
             else:
-                Logger.Log(f"SurveyItemResponse feature for {self._target_survey} had an unexpected retest, for player {event.UserID}, session {event.SessionID}!", logging.WARN)
-                self._response = _responses[self.CountIndex].get("response", None)
+                if self.ExtractionMode != ExtractionMode.POPULATION:
+                    Logger.Log(f"SurveyItemResponse feature for {self._target_survey} had an unexpected retest, for player {event.UserID}, session {event.SessionID}!", logging.WARN)
+                    self._response = _responses[self.CountIndex].get("response", None)
         else:
             Logger.Log(f"SurveyItemResponse feature for {self._target_survey} got a survey_submitted event with fewer than {self.CountIndex} items, for player {event.UserID}, session {event.SessionID}!", logging.WARN)
 
