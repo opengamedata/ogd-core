@@ -47,8 +47,8 @@ class PlayLocations(SessionFeature):
             self._session_locations.append(in_school)
 
     def _getFeatureValues(self) -> List[Any]:
-        start_in_school = self._session_locations[0] == "SCHOOL"
-        resumed_at_home = "HOME" in self._session_locations[1:]
+        start_in_school = self._session_locations[0] == "SCHOOL" if len(self._session_locations) > 0 else False
+        resumed_at_home = "HOME" in self._session_locations[1:] if len(self._session_locations) > 0 else False
         converted = start_in_school and resumed_at_home
         return [self._session_locations, self._session_times, converted]
 
