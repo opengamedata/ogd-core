@@ -10,37 +10,40 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 
-class JobStarted(PerJobFeature):
+class JobQuitsPerComplete(Feature):
 
-    def __init__(self, params:GeneratorParameters, job_map:dict):
-        self._job_map = job_map
-        super().__init__(params=params, job_map=job_map)
-        self._job_started = False
-        self._job_accept_count = 0
-        self._switch_job_count = 0
+    def __init__(self, params:GeneratorParameters):
+        super().__init__(params=params)
+        self._total_job_quits = 0
+        self._jobs_completed = 0
 
     def Subfeatures(self) -> List[str]:
-        return ["Count"]
+        return []
     
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
-        return ["switch_job"]
+        return []
 
     @classmethod
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
-        return []
+        return ["TotalJobQuits", "JobsCompleted"]
 
     def _updateFromEvent(self, event:Event) -> None:
-       
-        job = event.GameState.get("job_name")
-        if job == self.TargetJobName:
-            self._switch_job_count += 1
-
+        return 
+    
     def _updateFromFeatureData(self, feature:FeatureData):
-        return
+        if feature.ExportMode == self.ExtractionMode:
+            if feature.Name == "TotalJobQuits":
+                self._total_job_quits = feature.FeatureValues[0]
+            elif feature.Name == "JobsCompleted":
+                self._jobs_completed = feature.FeatureValues[0]
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._switch_job_count > 0, self._switch_job_count]
+        if self._jobs_completed != 0:
+            value = self._total_job_quits / self._jobs_completed
+        else:
+            value = 0
+        return [value]
 
     # *** Optionally override public functions. ***

@@ -22,6 +22,7 @@ __all__ = [
     "JobHelpCount",
     "JobLocationChanges",
     "JobLocationChangesNoKelp",
+    "JobQuitsPerComplete",
     "JobModeling",
     "JobPlayTime",
     "JobPriorAttempt",
@@ -33,7 +34,7 @@ __all__ = [
     "JobStarted",
     "JobTasksCompleted",
     "JobTriesInArgument",
-    "LeftJob",
+    "QuitJob",
     "ModelExportCount",
     "ModelInterveneCount",
     "ModelPredictCount",
@@ -57,6 +58,7 @@ __all__ = [
     "SyncCompletionTime",
     "TankRulesCount",
     "TopJobCompletionDestinations",
+    "TotalJobQuits",
     "TopJobSwitchDestinations",
     "TotalArcticTime",
     "TotalArgumentationTime",
@@ -100,6 +102,7 @@ from . import JobGuideCount
 from . import JobHelpCount
 from . import JobLocationChanges
 from . import JobLocationChangesNoKelp
+from . import JobQuitsPerComplete
 from . import TimeInJournal
 from . import JobModeling
 from . import JobName
@@ -112,7 +115,7 @@ from . import JobRecommendationReceived
 from . import JobStarted
 from . import JobTasksCompleted
 from . import JobTriesInArgument
-from . import LeftJob
+from . import QuitJob
 from . import ModelExportCount
 from . import ModelInterveneCount
 from . import ModelPredictCount
@@ -137,6 +140,7 @@ from . import SyncCompletionTime
 from . import TankRulesCount
 from . import TopJobCompletionDestinations
 from . import TopJobSwitchDestinations
+from . import TotalJobQuits
 from . import TotalArcticTime
 from . import TotalArgumentationTime
 from . import TotalBayouTime
