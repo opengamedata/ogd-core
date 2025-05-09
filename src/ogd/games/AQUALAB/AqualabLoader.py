@@ -103,6 +103,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = JobsCompleted.JobsCompleted(params=extractor_params, player_id=self._player_id)
                 case "JobTriesInArgument":
                     ret_val = JobTriesInArgument.JobTriesInArgument(params=extractor_params, job_map=self._job_map)
+                case "JobQuitsPerComplete":
+                    ret_val = JobQuitsPerComplete.JobQuitsPerComplete(params=extractor_params)
                 case "JobPlayTime":
                     ret_val = JobPlayTime.JobPlayTime(params=extractor_params, job_map=self._job_map)
                 case "ModelExportCount":
@@ -137,6 +139,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = TankRulesCount.TankRulesCount(params=extractor_params)
                 case "TopJobCompletionDestinations":
                     ret_val = TopJobCompletionDestinations.TopJobCompletionDestinations(params=extractor_params, job_map=self._job_map)
+                case "TotalJobQuits":
+                    ret_val = TotalJobQuits.TotalJobQuits(params=extractor_params)
                 case "TopJobSwitchDestinations":
                     ret_val = TopJobSwitchDestinations.TopJobSwitchDestinations(params=extractor_params, job_map=self._job_map)
                 case "TotalArcticTime":
@@ -224,8 +228,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = RegionJobCount.RegionJobCount(params=extractor_params)
                 case "SyncCompletionTime":
                     ret_val = SyncCompletionTime.SyncCompletionTime(params=extractor_params)
-                case "LeftJob":
-                    ret_val = LeftJob.LeftJob(params=extractor_params, job_map=self._job_map)
+                case "QuitJob":
+                    ret_val = QuitJob.QuitJob(params=extractor_params, job_map=self._job_map)
                 case "JobRecommendationReceived":
                     ret_val = JobRecommendationReceived.JobRecommendationReceived(params=extractor_params, job_map=self._job_map)
                 case "FollowedAdvice":
