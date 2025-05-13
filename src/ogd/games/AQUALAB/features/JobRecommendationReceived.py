@@ -44,4 +44,4 @@ class JobRecommendationReceived(PerJobFeature):
         return "1"
 
     def Subfeatures(self) -> List[str]:
-        return ["SpecificRecommendation"]
+        return ["SpecificRecommendations"]
