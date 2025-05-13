@@ -1,4 +1,6 @@
+import json
 from typing import Any, Dict, List, Optional
+
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.common.models.Event import Event
