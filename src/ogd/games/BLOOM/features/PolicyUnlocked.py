@@ -6,7 +6,6 @@ from ogd.core.generators.extractors.Feature import Feature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
-from ogd.games.BLOOM.detectors.GoodPolicyCombo import GoodPolicyCombo
 
 class PolicyUnlocked(Feature):
     def __init__(self, params: GeneratorParameters):
