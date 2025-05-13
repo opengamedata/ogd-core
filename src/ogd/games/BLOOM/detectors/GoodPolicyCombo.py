@@ -37,11 +37,6 @@ class GoodPolicyCombo(Detector):
         def __str__(self):
             return self.name
 
-    """Template file to serve as a guide for creating custom Feature subclasses for games.
-
-    :param Feature: Base class for a Custom Feature class.
-    :type Feature: _type_
-    """
     def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None], surplus_budget_threshold:int):
         super().__init__(params=params, trigger_callback=trigger_callback)
         self._surplus_threshold = surplus_budget_threshold
