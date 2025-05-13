@@ -69,31 +69,32 @@ class GoodPolicyCombo(Detector):
             case "SKIMMINGPOLICY":
                 # 1. Check for skimming + high taxation combo:
                 if selection > 0:
+                    self._triggered = []
                     taxation = event.GameState.get("county_policies", {}).get("sales", {}).get("policy_choice")
                     if int(taxation) == 2:
-                        self._triggered = GoodPolicyCombo.Combination.TAX_FOR_SKIMMERS
+                        self._triggered.append(GoodPolicyCombo.Combination.TAX_FOR_SKIMMERS)
                 # 2. Check for player using skimming or dredging in high-risk counties
                     county = event.GameState.get("current_county", "COUNTY_NOT_FOUND").upper()
                     if county in ["HILLSIDE", "FOREST", "MARSH"]:
                         if selection in [1, 2]:
-                            self._triggered = GoodPolicyCombo.Combination.SKIMMING_BASIC
+                            self._triggered.append(GoodPolicyCombo.Combination.SKIMMING_BASIC)
                         if selection == 3:
-                            self._triggered = GoodPolicyCombo.Combination.DREDGE_BASIC
+                            self._triggered.append(GoodPolicyCombo.Combination.DREDGE_BASIC)
             case "SALESTAXPOLICY":
                 # 1b. Check for skimming + high taxation combo:
                 if selection == 2:
                     skimming = event.GameState.get("county_policies", {}).get("cleanup", {}).get("policy_choice")
                     if int(skimming) > 0:
-                        self._triggered = GoodPolicyCombo.Combination.TAX_FOR_SKIMMERS
+                        self._triggered = [GoodPolicyCombo.Combination.TAX_FOR_SKIMMERS]
                 # 3. Check for relaxed taxes coinciding with large surplus of money
                 elif selection in [0, 3]:
                     budget = event.GameState.get("current_money", 0)
                     if int(budget) > self._surplus_threshold:
-                        self._triggered = GoodPolicyCombo.Combination.GOLDEN_AGE
+                        self._triggered = [GoodPolicyCombo.Combination.GOLDEN_AGE]
             case "RUNOFFPOLICY":
                 # 4. Check for player using runoff policy of some kind
                 if selection > 0:
-                    self._triggered = GoodPolicyCombo.Combination.RUNOFF_BASIC
+                    self._triggered = [GoodPolicyCombo.Combination.RUNOFF_BASIC]
             case "IMPORTTAXPOLICY":
                 # 5. Check for player setting a subsidy to the correct resource
                 county = event.GameState.get("current_county", "COUNTY_NOT_FOUND").upper()
@@ -104,15 +105,15 @@ class GoodPolicyCombo(Detector):
                     case 1:
                         # Milk
                         if county in ["HILLSIDE", "URBAN"]:
-                            self._triggered = GoodPolicyCombo.Combination.HELPFUL_SUBSIDY
+                            self._triggered = [GoodPolicyCombo.Combination.HELPFUL_SUBSIDY]
                     case 2:
                         # Grain
                         if county in ["FOREST", "MARSH"]:
-                            self._triggered = GoodPolicyCombo.Combination.HELPFUL_SUBSIDY
+                            self._triggered = [GoodPolicyCombo.Combination.HELPFUL_SUBSIDY]
                     case 3:
                         # Fertilizer
                         if county == "PRAIRIE":
-                            self._triggered = GoodPolicyCombo.Combination.HELPFUL_SUBSIDY
+                            self._triggered = [GoodPolicyCombo.Combination.HELPFUL_SUBSIDY]
             case _:
                 Logger.Log(f"GoodPolicyCombo got a(n) {event.EventName} event with no policy set, for user {event.UserID}!", logging.WARNING)
 
@@ -131,7 +132,7 @@ class GoodPolicyCombo(Detector):
         # For now, include the triggering event's EventData, for better debugging.
         ret_val : DetectorEvent = self.GenerateEvent(
             app_id="BLOOM", event_name="good_policy_combo",
-            event_data=self._triggering_event.EventData | {"combination":str(self._triggered)}
+            event_data=self._triggering_event.EventData | {"combinations":str(self._triggered)}
         )
         self._triggered = None
         return ret_val
