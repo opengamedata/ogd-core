@@ -64,50 +64,54 @@ class GoodPolicyCombo(Detector):
         """
         policy = event.EventData.get("policy")
         selection = event.EventData.get("choice_number", -1)
-        # 1. Check for skimming + high taxation combo:
-        if policy == "SkimmingPolicy" and selection > 0:
-            taxation = event.GameState.get("county_policies", {}).get("sales", {}).get("policy_choice")
-            if int(taxation) == 2:
-                self._triggered = GoodPolicyCombo.Combination.TAX_FOR_SKIMMERS
-        elif policy == "SalesTaxPolicy" and selection == 2:
-            skimming = event.GameState.get("county_policies", {}).get("cleanup", {}).get("policy_choice")
-            if int(skimming) > 0:
-                self._triggered = GoodPolicyCombo.Combination.TAX_FOR_SKIMMERS
-        # 2. Check for relaxed taxes coinciding with large surplus of money
-        elif policy == "SalesTaxPolicy" and selection in [0, 3]:
-            budget = event.GameState.get("current_money", 0)
-            if int(budget) > self._surplus_threshold:
-                self._triggered = GoodPolicyCombo.Combination.GOLDEN_AGE
-        # 3. Check for player using runoff policy of some kind
-        elif policy == "RunoffPolicy" and selection > 0:
-            self._triggered = GoodPolicyCombo.Combination.RUNOFF_BASIC
-        # 4. Check for player setting a subsidy to the correct resource
-        elif policy == "ImportTaxPolicy":
-            county = event.GameState.get("current_county", "COUNTY_NOT_FOUND").upper()
-            match selection:
-                case 0 | -1:
-                    # None/not set
-                    pass
-                case 1:
-                    # Milk
-                    if county in ["HILLSIDE", "URBAN"]:
-                        self._triggered = GoodPolicyCombo.Combination.HELPFUL_SUBSIDY
-                case 2:
-                    # Grain
-                    if county in ["FOREST", "MARSH"]:
-                        self._triggered = GoodPolicyCombo.Combination.HELPFUL_SUBSIDY
-                case 3:
-                    # Fertilizer
-                    if county == "PRAIRIE":
-                        self._triggered = GoodPolicyCombo.Combination.HELPFUL_SUBSIDY
-        # 5. Check for player using skimming or dredging in high-risk counties
-        elif policy  == "SkimmingPolicy":
-            county = event.GameState.get("current_county", "COUNTY_NOT_FOUND").upper()
-            if county in ["HILLSIDE", "FOREST", "MARSH"]:
-                if selection in [1, 2]:
-                    self._triggered = GoodPolicyCombo.Combination.SKIMMING_BASIC
-                if selection == 3:
-                    self._triggered = GoodPolicyCombo.Combination.DREDGE_BASIC
+        match policy:
+            case "SkimmingPolicy":
+                # 1. Check for skimming + high taxation combo:
+                if selection > 0:
+                    taxation = event.GameState.get("county_policies", {}).get("sales", {}).get("policy_choice")
+                    if int(taxation) == 2:
+                        self._triggered = GoodPolicyCombo.Combination.TAX_FOR_SKIMMERS
+                # 2. Check for player using skimming or dredging in high-risk counties
+                    county = event.GameState.get("current_county", "COUNTY_NOT_FOUND").upper()
+                    if county in ["HILLSIDE", "FOREST", "MARSH"]:
+                        if selection in [1, 2]:
+                            self._triggered = GoodPolicyCombo.Combination.SKIMMING_BASIC
+                        if selection == 3:
+                            self._triggered = GoodPolicyCombo.Combination.DREDGE_BASIC
+            case "SalesTaxPolicy":
+                # 1b. Check for skimming + high taxation combo:
+                if selection == 2:
+                    skimming = event.GameState.get("county_policies", {}).get("cleanup", {}).get("policy_choice")
+                    if int(skimming) > 0:
+                        self._triggered = GoodPolicyCombo.Combination.TAX_FOR_SKIMMERS
+                # 3. Check for relaxed taxes coinciding with large surplus of money
+                elif selection in [0, 3]:
+                    budget = event.GameState.get("current_money", 0)
+                    if int(budget) > self._surplus_threshold:
+                        self._triggered = GoodPolicyCombo.Combination.GOLDEN_AGE
+            case "RunoffPolicy":
+                # 4. Check for player using runoff policy of some kind
+                if selection > 0:
+                    self._triggered = GoodPolicyCombo.Combination.RUNOFF_BASIC
+            case "ImportTaxPolicy":
+                # 5. Check for player setting a subsidy to the correct resource
+                county = event.GameState.get("current_county", "COUNTY_NOT_FOUND").upper()
+                match selection:
+                    case 0 | -1:
+                        # None/not set
+                        pass
+                    case 1:
+                        # Milk
+                        if county in ["HILLSIDE", "URBAN"]:
+                            self._triggered = GoodPolicyCombo.Combination.HELPFUL_SUBSIDY
+                    case 2:
+                        # Grain
+                        if county in ["FOREST", "MARSH"]:
+                            self._triggered = GoodPolicyCombo.Combination.HELPFUL_SUBSIDY
+                    case 3:
+                        # Fertilizer
+                        if county == "PRAIRIE":
+                            self._triggered = GoodPolicyCombo.Combination.HELPFUL_SUBSIDY
 
     def _trigger_condition(self) -> bool:
         if self._triggered:
