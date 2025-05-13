@@ -20,6 +20,7 @@ __all__ = [
     "CountyFinalPolicySettings",
     "CountyLatestMoney",
     "CountyUnlockCount",
+    "EconomyViewUnlocked",
     "FailCount",
     "GameCompletionStatus",
     "NumberOfSessionsPerPlayer",
@@ -27,6 +28,7 @@ __all__ = [
     "SucceededThroughFailure",
     "CountyPolicyChangeCount",
     "PersistenceTime",
+    "PhosphorusViewUnlocked",
     "PolicyUnlocked",
     "CountyUnlockTime",
     "QuitOnBloomFail", 
@@ -58,6 +60,7 @@ from . import CountyFailCount
 from . import CountyFinalPolicySettings
 from . import CountyLatestMoney
 from . import CountyUnlockCount
+from . import EconomyViewUnlocked
 from . import FailCount
 from . import GameCompletionStatus
 from . import NumberOfSessionsPerPlayer
@@ -65,6 +68,7 @@ from . import PersistThroughFailure
 from . import SucceededThroughFailure
 from . import CountyPolicyChangeCount
 from . import PersistenceTime
+from . import PhosphorusViewUnlocked
 from . import PolicyUnlocked
 from . import CountyUnlockTime
 from . import QuitOnBloomFail

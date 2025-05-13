@@ -81,6 +81,8 @@ class BloomLoader(GeneratorLoader):
                     ret_val = BuildCount.BuildCount(params=extractor_params)
                 case "BuildingUnlockCount":
                     ret_val = BuildingUnlockCount.BuildingUnlockCount(params=extractor_params)
+                case "EconomyViewUnlocked":
+                    ret_val = EconomyViewUnlocked.EconomyViewUnlocked(params=extractor_params)
                 case "FailCount":
                     ret_val = FailCount.FailCount(params=extractor_params)
                 case "GameCompletionStatus":
@@ -95,6 +97,8 @@ class BloomLoader(GeneratorLoader):
                     ret_val = PersistThroughFailure.PersistThroughFailure(params=extractor_params)
                 case "PersistenceTime":
                     ret_val = PersistenceTime.PersistenceTime(params=extractor_params)
+                case "PhosphorusViewUnlocked":
+                    ret_val = PhosphorusViewUnlocked.PhosphorusViewUnlocked(params=extractor_params)
                 case "PolicyUnlocked":
                     ret_val = PolicyUnlocked.PolicyUnlocked(params=extractor_params)
                 case "QuitOnBloomFail":
