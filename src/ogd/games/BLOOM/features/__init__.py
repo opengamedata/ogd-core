@@ -27,6 +27,7 @@ __all__ = [
     "SucceededThroughFailure",
     "CountyPolicyChangeCount",
     "PersistenceTime",
+    "PolicyUnlocked",
     "CountyUnlockTime",
     "QuitOnBloomFail", 
     "QuitOnCityFail",
@@ -64,6 +65,7 @@ from . import PersistThroughFailure
 from . import SucceededThroughFailure
 from . import CountyPolicyChangeCount
 from . import PersistenceTime
+from . import PolicyUnlocked
 from . import CountyUnlockTime
 from . import QuitOnBloomFail
 from . import QuitOnCityFail
