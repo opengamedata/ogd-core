@@ -1239,6 +1239,15 @@
             "target": "dairy_inspector_displayed",
             "return_type": "int"
          },
+         "EconomyViewUnlocked": {
+            "enabled": true,
+            "type": "EconomyViewUnlocked",
+            "description": "Whether the player unlocked the economy view. Subfeature indicates the number of repeated unlocks (total unlocks minus one), if any. Under normal circumstances, repeat unlocks should not be possible, but a player who loses or leaves and resumes from a checkpoint prior to the unlock might end up repeating.",
+            "return_type": "int",
+            "subfeatures": [
+              "Repeats"
+            ]
+         },
          "TotalPolicyChangeCount": {
             "enabled": true,
             "type": "CountEvent",
@@ -1293,6 +1302,32 @@
             "type": "PersistThroughFailure",
             "description": "Count of persistence after failure",
             "return_type": "int"
+         },
+         "PhosphorusViewUnlocked": {
+            "enabled": true,
+            "type": "PhosphorusViewUnlocked",
+            "description": "Whether the player unlocked the phosphorus view. Subfeature indicates the number of repeated unlocks (total unlocks minus one), if any. Under normal circumstances, repeat unlocks should not be possible, but a player who loses or leaves and resumes from a checkpoint prior to the unlock might end up repeating.",
+            "return_type": "int",
+            "subfeatures": [
+              "Repeats"
+            ]
+         },
+         "PolicyUnlocked": {
+            "enabled": true,
+            "type": "PolicyUnlocked",
+            "description": "The number of different policies a player unlocked, excluding repeats. Subfeatures indicate whether each individual policy was ever unlocked, as well as the number of repeated unlocks (total unlocks minus one), if any, at the overall and per-policy level. Under normal circumstances, repeat unlocks should not be possible, but a player who loses or leaves and resumes from a checkpoint prior to the unlock may unlock an additional time.",
+            "return_type": "int",
+            "subfeatures": [
+              "Repeats",
+              "SalesTax",
+              "SalesTax-Repeats",
+              "ImportTax",
+              "ImportTax-Repeats",
+              "Runoff",
+              "Runoff-Repeats",
+              "Skimming",
+              "Skimming-Repeats"
+            ]
          },
          "PolicyAdjustments": {
             "enabled": true,
