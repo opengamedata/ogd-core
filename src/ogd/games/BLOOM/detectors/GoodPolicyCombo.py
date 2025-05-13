@@ -1,4 +1,5 @@
 # import standard libraries
+import logging
 from enum import IntEnum
 from typing import Callable, List
 
@@ -62,10 +63,10 @@ class GoodPolicyCombo(Detector):
         :param event: _description_
         :type event: Event
         """
-        policy = event.EventData.get("policy")
+        policy = event.EventData.get("policy", "POLICY NOT FOUND")
         selection = event.EventData.get("choice_number", -1)
-        match policy:
-            case "SkimmingPolicy":
+        match policy.upper():
+            case "SKIMMINGPOLICY":
                 # 1. Check for skimming + high taxation combo:
                 if selection > 0:
                     taxation = event.GameState.get("county_policies", {}).get("sales", {}).get("policy_choice")
@@ -78,7 +79,7 @@ class GoodPolicyCombo(Detector):
                             self._triggered = GoodPolicyCombo.Combination.SKIMMING_BASIC
                         if selection == 3:
                             self._triggered = GoodPolicyCombo.Combination.DREDGE_BASIC
-            case "SalesTaxPolicy":
+            case "SALESTAXPOLICY":
                 # 1b. Check for skimming + high taxation combo:
                 if selection == 2:
                     skimming = event.GameState.get("county_policies", {}).get("cleanup", {}).get("policy_choice")
@@ -89,11 +90,11 @@ class GoodPolicyCombo(Detector):
                     budget = event.GameState.get("current_money", 0)
                     if int(budget) > self._surplus_threshold:
                         self._triggered = GoodPolicyCombo.Combination.GOLDEN_AGE
-            case "RunoffPolicy":
+            case "RUNOFFPOLICY":
                 # 4. Check for player using runoff policy of some kind
                 if selection > 0:
                     self._triggered = GoodPolicyCombo.Combination.RUNOFF_BASIC
-            case "ImportTaxPolicy":
+            case "IMPORTTAXPOLICY":
                 # 5. Check for player setting a subsidy to the correct resource
                 county = event.GameState.get("current_county", "COUNTY_NOT_FOUND").upper()
                 match selection:
@@ -112,6 +113,8 @@ class GoodPolicyCombo(Detector):
                         # Fertilizer
                         if county == "PRAIRIE":
                             self._triggered = GoodPolicyCombo.Combination.HELPFUL_SUBSIDY
+            case _:
+                Logger.Log(f"GoodPolicyCombo got a(n) {event.EventName} event with no policy set, for user {event.UserID}!", logging.WARNING)
 
     def _trigger_condition(self) -> bool:
         if self._triggered:
