@@ -23,9 +23,10 @@ class GoodPolicyCount(Feature):
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        policyCombo = event.EventData.get("combination", None)
-        if policyCombo is not None:
-            self.good_policy_count[policyCombo] += 1
+        policy_combos = event.EventData.get("combination", None)
+        if policy_combos is not None and isinstance(policy_combos, list):
+            for policy in policy_combos:
+                self.good_policy_count[policy] += 1
 
     def _updateFromFeatureData(self, feature: FeatureData) -> None:
         return
