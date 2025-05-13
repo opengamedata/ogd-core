@@ -34,7 +34,8 @@ class PolicyUnlocked(Feature):
 
         
         ret_val = [
-            self.policies_unlocked.total(),
+            len(self.policies_unlocked),
+            max(self.policies_unlocked.total() - len(self.policies_unlocked), 0),
             self.policies_unlocked["SALESTAXPOLICY"]  > 0, max(self.policies_unlocked["SALESTAXPOLICY"]  - 1, 0),
             self.policies_unlocked["IMPORTTAXPOLICY"] > 0, max(self.policies_unlocked["IMPORTTAXPOLICY"] - 1, 0),
             self.policies_unlocked["RUNOFFPOLICY"]    > 0, max(self.policies_unlocked["RUNOFFPOLICY"]    - 1, 0),
@@ -47,4 +48,4 @@ class PolicyUnlocked(Feature):
         return "Count"
 
     def Subfeatures(self) -> List[str]:
-        return ["SalesTax", "SalesTax-Repeats", "ImportTax", "ImportTax-Repeats", "Runoff", "Runoff-Repeats", "Skimming", "Skimming-Repeats"]
+        return ["Repeats", "SalesTax", "SalesTax-Repeats", "ImportTax", "ImportTax-Repeats", "Runoff", "Runoff-Repeats", "Skimming", "Skimming-Repeats"]
