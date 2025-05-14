@@ -1188,10 +1188,13 @@
             },
             "TotalJobRecommendationReceived": {
                 "enabled": true,
-                "type": "CountEvent",
+                "type": "TotalJobRecommendationReceived",
                 "description": "Count of total recommendations received",
                 "target": "recommended_job",
-                "return_type": "int"
+                "return_type": "int",
+                "subfeatures": [
+                    "SpecificRecommendations"
+                ]
             },
             "ActiveJobs": {
                 "enabled": true,
