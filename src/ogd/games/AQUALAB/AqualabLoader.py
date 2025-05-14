@@ -141,6 +141,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = TopJobCompletionDestinations.TopJobCompletionDestinations(params=extractor_params, job_map=self._job_map)
                 case "TotalJobQuits":
                     ret_val = TotalJobQuits.TotalJobQuits(params=extractor_params)
+                case "TotalJobRecommendationReceived":
+                    ret_val = TotalJobRecommendationReceived.TotalJobRecommendationReceived(params=extractor_params)
                 case "TopJobSwitchDestinations":
                     ret_val = TopJobSwitchDestinations.TopJobSwitchDestinations(params=extractor_params, job_map=self._job_map)
                 case "TotalArcticTime":

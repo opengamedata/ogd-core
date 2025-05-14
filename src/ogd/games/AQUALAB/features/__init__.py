@@ -69,6 +69,7 @@ __all__ = [
     "TotalGuideCount",
     "TotalHelpCount",
     "TimeInJournal",
+    "TotalJobRecommendationReceived",
     "TotalKelpTime",
     "TotalModelingTime",
     "TotalPlayTime",
@@ -141,6 +142,7 @@ from . import TankRulesCount
 from . import TopJobCompletionDestinations
 from . import TopJobSwitchDestinations
 from . import TotalJobQuits
+from . import TotalJobRecommendationReceived
 from . import TotalArcticTime
 from . import TotalArgumentationTime
 from . import TotalBayouTime
