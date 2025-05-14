@@ -63,3 +63,13 @@ class SuccessfulAdvice(PerJobFeature):
     @staticmethod
     def MinVersion() -> Optional[str]:
         return "1"
+
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
+        """List of ExtractionMode supported by the Feature.
+
+        Overridden from Extractor's version of the function, only makes the Feature-related modes supported.
+        :return: _description_
+        :rtype: List[ExtractionMode]
+        """
+        return [ExtractionMode.PLAYER, ExtractionMode.SESSION]
