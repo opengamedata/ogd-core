@@ -31,7 +31,7 @@ class SuccessfulAdvice(PerJobFeature):
         if event.EventName == "recommended_job":
             attempted_job_name = event.EventData.get("attempted_job_name", None)
             if self._received_recommendation:
-                Logger.Log("Received multiple recommendations for the same job!", logging.WARNING)
+                Logger.Log(f"Received multiple recommendations for the same job ({attempted_job_name})!", logging.DEBUG)
             if attempted_job_name in self._job_map and attempted_job_name == self.TargetJobName:
                 self._received_recommendation = True
                 self._waiting_to_leave = True
