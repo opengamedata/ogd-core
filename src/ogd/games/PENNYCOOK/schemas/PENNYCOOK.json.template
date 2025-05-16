@@ -23,7 +23,7 @@
         },
         "day": {
             "type": "int",
-            "description": "The current day (level) the player is in (from 1 to TODO : number of days)"
+            "description": "The current day (level) the player is in (from 1 to 5)"
         },
         "location": {
             "type": "Location",
@@ -112,7 +112,7 @@
             "event_data": {
                 "day_index" : {
                     "type": "int",
-                    "description": "The number of the day, indexed from 1 to TODO"
+                    "description": "The number of the day, indexed from 1 to 5"
                 }
             }
         },
@@ -121,7 +121,7 @@
             "event_data": {
                 "day_index" : {
                     "type": "int",
-                    "description": "The number of the day, indexed from TODO to TODO"
+                    "description": "The number of the day, indexed from 1 to 5"
                 }
             }
         },
