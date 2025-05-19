@@ -46,8 +46,7 @@ class JobLocationChangesNoKelp(PerJobFeature):
                 self._last_time = event.Timestamp
         elif event.EventName == "complete_task":
             task_id = event.EventData.get("task_id", "UNKNOWN_TASK")
-            print("TASK!")
-            print(task_id)
+            # Logger.Log(f"TASK! {task_id}")
             self._by_task[task_id] = self._current_count
             self._current_count = 0
 

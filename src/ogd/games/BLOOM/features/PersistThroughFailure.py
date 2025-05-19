@@ -48,6 +48,7 @@ class PersistThroughFailure(Feature):
         return [self.persisted > 0]
 
     # Subfeature "count"
+    # TODO : This isn't how subfeatures work, need to fix this.
     def _getSubfeatureValues(self) -> Dict[str, Any]:
         return {"count": self.persisted}
 
