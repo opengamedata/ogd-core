@@ -483,7 +483,7 @@
                         "pos_y": "float",
                         "pos_z": "float"
                     },
-                    "description": "The position at which Margo was held when the scan triggered."
+                    "description": "The position at which Margo was held when the capture triggered."
                 },
                 "margo_orientation": {
                     "type": "List[float]",
@@ -493,7 +493,7 @@
                         "rot_z": "float",
                         "rot_w": "float"
                     },
-                    "description": "The direction Margo was pointed when the scan triggered."
+                    "description": "The direction Margo was pointed when the capture triggered."
                 }
             }
         },
