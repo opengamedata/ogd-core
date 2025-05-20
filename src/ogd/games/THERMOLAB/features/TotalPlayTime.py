@@ -27,7 +27,7 @@ class TotalPlayTime(SessionFeature):
         elif event.EventName == "headset_on":
             self.session_start_time = event.Timestamp
         elif event.EventName == "headset_off" and self.session_start_time:
-            self.total_time = event.Timestamp - self.session_start_time
+            self.total_time += event.Timestamp - self.session_start_time
             self.session_start_time = None
 
     def _updateFromFeatureData(self, feature:FeatureData):
