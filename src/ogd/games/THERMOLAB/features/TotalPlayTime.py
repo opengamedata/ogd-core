@@ -35,10 +35,3 @@ class TotalPlayTime(SessionFeature):
 
     def _getFeatureValues(self) -> List[Any]:
         return [self.total_time.total_seconds()]
-
-    @classmethod
-    def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
-        return []
-
-    def _updateFromFeatureData(self, feature: FeatureData):
-        return

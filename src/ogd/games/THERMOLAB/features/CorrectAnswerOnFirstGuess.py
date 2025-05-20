@@ -24,22 +24,21 @@ class CorrectAnswerOnFirstGuess(PerCountFeature):
     def _initialize_quiz_list(self, event: Event) -> List[str]:
         quizzes = set()
 
-        for e in event:
-            if e.EventType == "click_submit_answer":
-                quiz_task = e.EventData.get("quiz_task")
-                if quiz_task:
-                    # Convert nested keys to snake_case
-                    quiz_task = self._convert_keys_to_snake_case(quiz_task)
+        if event.EventName == "click_submit_answer":
+            quiz_task = event.EventData.get("quiz_task")
+            if quiz_task:
+                # Convert nested keys to snake_case
+                quiz_task = self._convert_keys_to_snake_case(quiz_task)
 
-                    lab_name = quiz_task.get("lab_name", "")
-                    section_number = quiz_task.get("section_number", "")
-                    task_number = quiz_task.get("task_number", "")
-                    prompt = quiz_task.get("prompts", [])
+                lab_name = quiz_task.get("lab_name", "")
+                section_number = quiz_task.get("section_number", "")
+                task_number = quiz_task.get("task_number", "")
+                prompt = quiz_task.get("prompts", [])
 
-                    quiz_id = f"{lab_name}.{section_number}.{task_number}"
-                    if prompt:
-                        quiz_id += f"_{prompt[0]}" 
-                    quizzes.add(quiz_id)
+                quiz_id = f"{lab_name}.{section_number}.{task_number}"
+                if prompt:
+                    quiz_id += f"_{prompt[0]}" 
+                quizzes.add(quiz_id)
 
         return list(quizzes)
 
