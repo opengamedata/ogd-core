@@ -16,6 +16,10 @@ class AnswerAttemptsCount(SessionFeature):
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
         return ["click_submit_answer"]
 
+    @classmethod
+    def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
+        return []
+
     def _updateFromEvent(self, event: Event) -> None:
         if event.EventName == "click_submit_answer":
             quiz_task = event.EventData.get("quiz_task")
@@ -29,6 +33,9 @@ class AnswerAttemptsCount(SessionFeature):
 
                 if quiz_task.get("is_complete") and event.EventData.get("is_correct_answer", False):
                     self.correct_answers[task_id] = True
+
+    def _updateFromFeatureData(self, feature:FeatureData):
+        return
 
     def _getFeatureValues(self) -> List[Any]:
         return [{"attempts": self.quiz_attempts, "correct_answers": self.correct_answers}]

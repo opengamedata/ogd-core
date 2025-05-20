@@ -16,6 +16,10 @@ class SectionCompleteCount(SessionFeature):
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
         return ["complete_section"]
 
+    @classmethod
+    def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
+        return []
+
     def _updateFromEvent(self, event: Event) -> None:
         if event.EventName == "complete_section":
             section = event.EventData.get("section")
@@ -25,15 +29,11 @@ class SectionCompleteCount(SessionFeature):
                 section_id = f"{section.get('lab_name')}_{section.get('section_number')}"
                 self.completed_sections.add(section_id)
 
+    def _updateFromFeatureData(self, feature:FeatureData):
+        return
+
     def _getFeatureValues(self) -> List[Any]:
         return [len(self.completed_sections)]
-
-    @classmethod
-    def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
-        return []
-
-    def _updateFromFeatureData(self, feature: FeatureData):
-        return
 
     def _convert_keys_to_snake_case(self, data: dict) -> dict:
         return {self._pascal_to_snake_case(k): v for k, v in data.items()}

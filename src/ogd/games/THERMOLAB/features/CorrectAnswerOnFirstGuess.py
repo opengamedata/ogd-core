@@ -3,7 +3,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-
+from ogd.common.models.FeatureData import FeatureData
 
 class CorrectAnswerOnFirstGuess(PerCountFeature):
 
@@ -81,6 +81,9 @@ class CorrectAnswerOnFirstGuess(PerCountFeature):
             self.quiz_results[quiz_id] = is_correct
 
             self.quiz_prompts[quiz_id] = prompt
+
+    def _updateFromFeatureData(self, feature:FeatureData):
+        return
 
     def _getFeatureValues(self) -> List[Any]:
         quiz_id = self._quiz_list[self.CountIndex]
