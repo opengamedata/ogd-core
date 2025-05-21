@@ -1177,17 +1177,24 @@
             "ExperimentalCondition": {
                 "enabled": true,
                 "type": "ExperimentalCondition",
-                "count": "level_range",
-                "prefix": "job",
                 "description": "Returns the first event branch",
+                "return_type": "str"
+            },
+            "PlayedNonexperimentalVersion": {
+                "enabled": true,
+                "type": "PlayedNonexperimentalVersion",
+                "description": "True if the player ever had an event in a non-experimental branch.",
                 "return_type": "str"
             },
             "TotalJobRecommendationReceived": {
                 "enabled": true,
-                "type": "CountEvent",
+                "type": "TotalJobRecommendationReceived",
                 "description": "Count of total recommendations received",
                 "target": "recommended_job",
-                "return_type": "int"
+                "return_type": "int",
+                "subfeatures": [
+                    "SpecificRecommendations"
+                ]
             },
             "ActiveJobs": {
                 "enabled": true,
@@ -1226,7 +1233,7 @@
                 "return_type": "dict"
             },
             "PlayLocations": {
-                "enabled": false,
+                "enabled": true,
                 "type": "PlayLocations",
                 "description": "Play Locations",
                 "return_type": "List[bool]",

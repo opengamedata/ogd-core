@@ -8,9 +8,12 @@ __all__ = [
     "EchoSessionID",
     "EventList",
     "ExperimentalCondition",
+    "PlayedNonexperimentalVersion",
     "FollowedAdvice",
     "JobActiveTime",
     "JobArgumentation",
+    "JobArgumentationRejects",
+    "JobComplete",
     "JobCompletionTime",
     "JobDiveSitesCount",
     "JobDiveTime",
@@ -19,6 +22,7 @@ __all__ = [
     "JobHelpCount",
     "JobLocationChanges",
     "JobLocationChangesNoKelp",
+    "JobQuitsPerComplete",
     "JobModeling",
     "JobPlayTime",
     "JobPriorAttempt",
@@ -27,10 +31,10 @@ __all__ = [
     "JobsCompleted",
     "JobName",
     "JobRecommendationReceived",
-    "JobStartCount",
+    "JobStarted",
     "JobTasksCompleted",
     "JobTriesInArgument",
-    "LeftJob",
+    "QuitJob",
     "ModelExportCount",
     "ModelInterveneCount",
     "ModelPredictCount",
@@ -54,6 +58,7 @@ __all__ = [
     "SyncCompletionTime",
     "TankRulesCount",
     "TopJobCompletionDestinations",
+    "TotalJobQuits",
     "TopJobSwitchDestinations",
     "TotalArcticTime",
     "TotalArgumentationTime",
@@ -64,6 +69,7 @@ __all__ = [
     "TotalGuideCount",
     "TotalHelpCount",
     "TimeInJournal",
+    "TotalJobRecommendationReceived",
     "TotalKelpTime",
     "TotalModelingTime",
     "TotalPlayTime",
@@ -83,9 +89,12 @@ from . import AverageSessionTime
 from . import EchoSessionID
 from . import EventList
 from . import ExperimentalCondition
+from . import PlayedNonexperimentalVersion
 from . import FollowedAdvice
 from . import JobActiveTime
 from . import JobArgumentation
+from . import JobArgumentationRejects
+from . import JobComplete
 from . import JobCompletionTime
 from . import JobDiveSitesCount
 from . import JobDiveTime
@@ -94,6 +103,7 @@ from . import JobGuideCount
 from . import JobHelpCount
 from . import JobLocationChanges
 from . import JobLocationChangesNoKelp
+from . import JobQuitsPerComplete
 from . import TimeInJournal
 from . import JobModeling
 from . import JobName
@@ -103,10 +113,10 @@ from . import JobPriorComplete
 from . import JobsAttempted
 from . import JobsCompleted
 from . import JobRecommendationReceived
-from . import JobStartCount
+from . import JobStarted
 from . import JobTasksCompleted
 from . import JobTriesInArgument
-from . import LeftJob
+from . import QuitJob
 from . import ModelExportCount
 from . import ModelInterveneCount
 from . import ModelPredictCount
@@ -131,6 +141,8 @@ from . import SyncCompletionTime
 from . import TankRulesCount
 from . import TopJobCompletionDestinations
 from . import TopJobSwitchDestinations
+from . import TotalJobQuits
+from . import TotalJobRecommendationReceived
 from . import TotalArcticTime
 from . import TotalArgumentationTime
 from . import TotalBayouTime
