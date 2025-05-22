@@ -36,7 +36,7 @@ class JobRecommendationReceived(PerJobFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self.recommendation_received]
+        return [self.recommendation_received, self.specific_recommendation_received]
 
     # *** Optionally override public functions. ***
     @staticmethod
