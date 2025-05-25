@@ -1210,7 +1210,7 @@
             "enabled": true,
             "type": "CountEvent",
             "description": "Count of builds",
-            "target": "click_execute_build",
+            "target": "execute_build_queue",
             "return_type": "int"
          },
          "BuildingUnlockCount": {
