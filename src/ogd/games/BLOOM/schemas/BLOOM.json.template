@@ -892,7 +892,7 @@
             }
          }
       },
-      "click_execute_build": {
+      "execute_build_queue": {
          "description": "When the player clicks to complete the building of all buildings in the build queue.",
          "event_data": {
             "built_items" : {
