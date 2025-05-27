@@ -38,7 +38,7 @@ class AlertClickThrough(Detector):
         """
         super().__init__(params=params, trigger_callback=trigger_callback)
         self.MAX_RATE = max_reading_rate
-        self._last_session        : Optional[str]
+        self._last_session        : Optional[str] = None
         self._current_alert_type  : Optional[str]
         self._current_dialog_node : Optional[str]
         self._in_dialog   : bool
@@ -55,7 +55,7 @@ class AlertClickThrough(Detector):
 
     def _updateFromEvent(self, event: Event) -> None:
         # if the session ID changed, assume we reset out of any active alert.
-        if event.SessionID != self._last_session:
+        if event.SessionID != self._last_session and self._last_session is not None:
             self._reset()
         match event.EventName:
             case "click_local_alert":
@@ -82,12 +82,17 @@ class AlertClickThrough(Detector):
                     # blank out last time after use
                     self._last_time = None
             case "dialogue_end":
-                _rate = sum(self._word_counts) / sum(self._read_times, timedelta(0)).total_seconds() * 60
+                _rate = 0
+                if len(self._word_counts) != 0 and len(self._read_times) != 0:
+                    if len(self._word_counts) == len(self._read_times):
+                        _rate = sum(self._word_counts) / sum(self._read_times, timedelta(0)).total_seconds() * 60
+                    else:
+                        Logger.Log(f"The word count and read times for {self._last_session} do not match! For a {self._current_alert_type} alert, with node ID of {self._current_dialog_node}, word counts = {len(self._word_counts)}, read times = {len(self._read_times)}")
                 # if rate was too high, they clicked through
                 if _rate > self.MAX_RATE:
                     self._triggered = True
-                # else, reset for the next time around
-                else:
+                # else, reset for the next time around, if this end was the end of what we started...
+                elif self._current_dialog_node == event.EventData.get("node_id"):
                     self._reset()
                 # in either case, blank out alert type and state after use
                 self._in_dialog = False
