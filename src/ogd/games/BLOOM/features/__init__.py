@@ -12,7 +12,6 @@ __all__ = [
     "AverageEconomyViewTime",
     "AveragePhosphorusViewTime",
     "BloomAlertCount",
-    "BuildCount",
     "BuildingUnlockCount",
     "CountyBloomAlertCount",
     "CountyBuildCount",
@@ -52,7 +51,6 @@ from . import AverageBuildingInspectTime
 from . import AverageEconomyViewTime
 from . import AveragePhosphorusViewTime
 from . import BloomAlertCount
-from . import BuildCount
 from . import BuildingUnlockCount
 from . import CountyBloomAlertCount
 from . import CountyBuildCount
