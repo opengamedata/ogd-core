@@ -77,8 +77,6 @@ class BloomLoader(GeneratorLoader):
                     ret_val = AveragePhosphorusViewTime.AveragePhosphorusViewTime(params=extractor_params)
                 case "BloomAlertCount":
                     ret_val = BloomAlertCount.BloomAlertCount(params=extractor_params)
-                case "BuildCount":
-                    ret_val = BuildCount.BuildCount(params=extractor_params)
                 case "BuildingUnlockCount":
                     ret_val = BuildingUnlockCount.BuildingUnlockCount(params=extractor_params)
                 case "EconomyViewUnlocked":
