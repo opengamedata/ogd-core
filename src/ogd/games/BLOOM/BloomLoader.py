@@ -141,6 +141,9 @@ class BloomLoader(GeneratorLoader):
     def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         ret_val : Detector
         match detector_type:
+            case "AlertClickThrough":
+                _max_rate = schema_args.get("max_rate", AlertClickThrough.AlertClickThrough.DEFAULT_MAX_RATE)
+                ret_val = AlertClickThrough.AlertClickThrough(params=extractor_params, trigger_callback=trigger_callback, max_reading_rate=_max_rate)
             case "AlertFollowedByInspect":
                 _inspect_threshold = timedelta(seconds=schema_args.get("threshold", 15))
                 ret_val = AlertFollowedByInspect.AlertFollowedByInspect(params=extractor_params, trigger_callback=trigger_callback, inspect_time_threshold=_inspect_threshold)
