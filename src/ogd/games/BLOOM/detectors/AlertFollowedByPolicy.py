@@ -31,6 +31,15 @@ class AlertFollowedByPolicy(Detector):
             return self.name
 
     def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None], policy_time_threshold:timedelta):
+        """_summary_
+
+        :param params: The general initialization parameters used by the Generator base class.
+        :type params: GeneratorParameters
+        :param trigger_callback: A callback function for use when the detector is triggered, used by the Detector base class.
+        :type trigger_callback: Callable[[Event], None]
+        :param policy_time_threshold: _description_
+        :type policy_time_threshold: timedelta
+        """
         super().__init__(params=params, trigger_callback=trigger_callback)
         self._policy_threshold = policy_time_threshold
         self._found_alert = False
