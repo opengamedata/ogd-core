@@ -10,12 +10,16 @@ from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.utils.Logger import Logger
 
 class AlertFollowedByPolicy(Detector):
     class Adjustment(IntEnum):
         """An enum for the various ways a player could respond to an alert they viewed by inspecting an appropriate building.
 
+        * BLOOM_INCREASE_RUNOFF: A player opened a bloom alert, and changed the runoff policy in the county to a higher fine.
+        * BLOOM_INCREASE_CLEANUP: A player opened a bloom alert, and changed the cleanup policy to a higher level of cleaning (e.g. from low to high skimming).
+        * SELLINGLOSS_LOWER_TAX: A player opened a "selling at a loss" alert, and then changed the tax policy to a lower level, in accordance with the recommendation given in the alert.
+        * SELLINGLOSS_LOWER_RUNOFF: A player opened a "selling at a loss" alert, and then changed the runoff policy to a lower fine, in accordance with the recommendation given in the alert.
+        * DECLININGPOP_SUBSIDIZE_MILK: A player opened a "declining population" alert, and then implemented a milk subsidy in the county.
         """
         BLOOM_INCREASE_RUNOFF = 1
         BLOOM_INCREASE_CLEANUP = 2
