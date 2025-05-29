@@ -1,4 +1,5 @@
 # import libraries
+import logging
 from collections import Counter
 from typing import Any, List, Optional, Union
 # import locals
@@ -28,7 +29,7 @@ class JobTasksCompleted(PerJobFeature):
     def _updateFromEvent(self, event:Event) -> None:
         _task = event.EventData.get("task_id", "TASK NAME NOT FOUND")
         if _task in self._completed_tasks:
-            Logger.Log(f"Player {event.UserID} repeated task {_task}!")
+            Logger.Log(f"Player {event.UserID} repeated task {_task} in job {event.GameState.get("job_name")}!", logging.WARN)
         match self.ExtractionMode:
             case ExtractionMode.POPULATION:
                 self._task_counter[_task] += 1
@@ -43,7 +44,7 @@ class JobTasksCompleted(PerJobFeature):
     def _getFeatureValues(self) -> List[Any]:
         _base_val = self._task_counter         if self.ExtractionMode == ExtractionMode.POPULATION else self._completed_tasks
         _count    = self._task_counter.total() if self.ExtractionMode == ExtractionMode.POPULATION else len(self._completed_tasks)
-        return [_base_val, _count]
+        return [_base_val, len(self._completed_tasks)]
 
     def Subfeatures(self) -> List[str]:
         return ["Count"]
