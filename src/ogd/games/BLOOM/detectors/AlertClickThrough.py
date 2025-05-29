@@ -68,6 +68,7 @@ class AlertClickThrough(Detector):
             case "dialogue_start":
                 if self._current_alert_type is not None:
                     self._in_dialog = True
+                    self._current_dialog_node = event.EventData.get("node_id", "NOT FOUND")
             case "character_line_displayed":
                 if self._in_dialog:
                     _line = event.EventData.get("line_text")
