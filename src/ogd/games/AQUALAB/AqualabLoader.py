@@ -192,6 +192,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = JobArgumentation.JobArgumentation(params=extractor_params, job_map=self._job_map)
                 case "JobArgumentationRejects":
                     ret_val = JobArgumentationRejects.JobArgumentationRejects(params=extractor_params, job_map=self._job_map)
+                case "JobTotalAttempts":
+                    ret_val = JobTotalAttempts.JobTotalAttempts(params=extractor_params, job_map=self._job_map)
                 case "JobAttempted":
                     ret_val = JobAttempted.JobAttempted(params=extractor_params, job_map=self._job_map)
                 case "JobComplete":
