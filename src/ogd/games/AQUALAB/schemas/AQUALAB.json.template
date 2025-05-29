@@ -602,6 +602,14 @@
                     }
                 }
             },
+            "JobAttempted": {
+                "enabled": true,
+                "type": "JobAttempted",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Indicator for whether the player ever entered into the given job",
+                "return_type": "bool"
+            },
             "JobCompletionTime": {
                 "enabled": true,
                 "type": "JobCompletionTime",
