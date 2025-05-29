@@ -1,5 +1,4 @@
 # import libraries
-import logging
 from typing import Any, List, Optional
 # import locals
 from ogd.common.utils.Logger import Logger
@@ -13,7 +12,7 @@ class JobTasksCompleted(PerJobFeature):
     
     def __init__(self, params:GeneratorParameters, job_map:dict):
         super().__init__(params=params, job_map=job_map)
-        self._count = 0
+        self._completed_tasks = []
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -25,13 +24,19 @@ class JobTasksCompleted(PerJobFeature):
         return []
 
     def _updateFromEvent(self, event:Event) -> None:
-        self._count += 1
+        _task = event.EventData.get("task_id", "TASK NAME NOT FOUND")
+        if _task in self._completed_tasks:
+            Logger.Log(f"Player {event.UserID} repeated task {_task}!")
+        self._completed_tasks.append(_task)
 
     def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._count]
+        return [self._completed_tasks, len(self._completed_tasks)]
+
+    def Subfeatures(self) -> List[str]:
+        return ["Count"]
 
     # *** Optionally override public functions. ***
     @staticmethod
