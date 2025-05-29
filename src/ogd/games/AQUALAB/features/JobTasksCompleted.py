@@ -41,7 +41,9 @@ class JobTasksCompleted(PerJobFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._completed_tasks, len(self._completed_tasks)]
+        _base_val = self._task_counter         if self.ExtractionMode == ExtractionMode.POPULATION else self._completed_tasks
+        _count    = self._task_counter.total() if self.ExtractionMode == ExtractionMode.POPULATION else len(self._completed_tasks)
+        return [_base_val, _count]
 
     def Subfeatures(self) -> List[str]:
         return ["Count"]
