@@ -610,6 +610,14 @@
                 "description": "Indicator for whether the player ever entered into the given job",
                 "return_type": "bool"
             },
+            "JobTotalAttempts": {
+                "enabled": true,
+                "type": "JobTotalAttempts",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "The total number of players who attempted the job.",
+                "return_type": "int"
+            },
             "JobCompletionTime": {
                 "enabled": true,
                 "type": "JobCompletionTime",
