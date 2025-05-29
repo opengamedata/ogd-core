@@ -3,15 +3,15 @@ from typing import Any, List, Optional
 # import locals
 from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
+from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 
-class JobRecommendationReceived(PerJobFeature):
+class TotalJobRecommendationReceived(SessionFeature):
 
-    def __init__(self, params:GeneratorParameters, job_map:dict):
-        super().__init__(params=params, job_map=job_map)
+    def __init__(self, params:GeneratorParameters):
+        super().__init__(params=params)
         self.recommendation_received = 0
         self.specific_recommendation_received = 0
 
@@ -25,12 +25,10 @@ class JobRecommendationReceived(PerJobFeature):
         return []
 
     def _updateFromEvent(self, event:Event) -> None:
-        job_name = event.EventData.get("attempted_job_name", None)
         recommended_job_name = event.EventData.get("recommended_job_name")
-        if job_name == self.TargetJobName:
-            self.recommendation_received += 1
-            if recommended_job_name != "":
-                self.specific_recommendation_received += 1
+        self.recommendation_received += 1
+        if recommended_job_name != "":
+            self.specific_recommendation_received += 1
 
     def _updateFromFeatureData(self, feature:FeatureData):
         return
