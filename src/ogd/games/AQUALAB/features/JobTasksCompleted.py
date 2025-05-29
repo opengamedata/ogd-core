@@ -1,5 +1,6 @@
 # import libraries
-from typing import Any, List, Optional
+from collections import Counter
+from typing import Any, List, Optional, Union
 # import locals
 from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
@@ -13,6 +14,7 @@ class JobTasksCompleted(PerJobFeature):
     def __init__(self, params:GeneratorParameters, job_map:dict):
         super().__init__(params=params, job_map=job_map)
         self._completed_tasks = []
+        self._task_counter    = Counter()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -27,7 +29,13 @@ class JobTasksCompleted(PerJobFeature):
         _task = event.EventData.get("task_id", "TASK NAME NOT FOUND")
         if _task in self._completed_tasks:
             Logger.Log(f"Player {event.UserID} repeated task {_task}!")
-        self._completed_tasks.append(_task)
+        match self.ExtractionMode:
+            case ExtractionMode.POPULATION:
+                self._task_counter[_task] += 1
+            case ExtractionMode.PLAYER | ExtractionMode.SESSION:
+                self._completed_tasks.append(_task)
+            case _:
+                raise ValueError(f"JobTasksCompleted was given an invalid extraction mode of {self.ExtractionMode}!")
 
     def _updateFromFeatureData(self, feature:FeatureData):
         return
