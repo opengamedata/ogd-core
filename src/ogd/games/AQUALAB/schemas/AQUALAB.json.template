@@ -786,8 +786,14 @@
                 "type": "JobTasksCompleted",
                 "count": "level_range",
                 "prefix": "job",
-                "description": "Number of tasks completed for a given job",
-                "return_type": "int"
+                "description": "List of tasks completed for a given job",
+                "return_type": "List[str]",
+                "subfeatures": {
+                    "Count": {
+                        "description": "Number of tasks completed for the given job",
+                        "return_type": "int"
+                    }
+                }
             },
             "JobsAttempted": {
                 "type": "JobsAttempted",
