@@ -1170,6 +1170,13 @@
                "DECLININGPOP_SUBSIDIZE_MILK"
             ]
          },
+         "AlertClickThroughCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Counter for the number of times a player clicked rapidly through an alert dialog",
+            "target": "alert_click_through",
+            "return_type": "int"
+         },
          "AlertReviewCount": {
             "enabled": true,
             "type": "AlertReviewCount",

@@ -22,7 +22,9 @@ class AlertClickThrough(Detector):
     Third, there is a strict assumption that local alerts are followed by a dialog_start, and later a dialog_end, and that all dialog in between is given by "character_line" events, as opposed to cutscene-related events.
         Any review of real, logged data will reveal that this second set of assumptions is violated by the logging code with regularity, because of course it is.
     """
-    DEFAULT_MAX_RATE = 200*2
+    # We use a max rate of twice the average reading rate for fiction suggested by Brysbaert in "How many words do we read per minute? A review and meta-analysis of reading rate"
+    # This is ultimately arbitrary, but not unreasonable as a cutoff for "reading too fast"
+    DEFAULT_MAX_RATE = 260*2
 
     def __init__(self, params: GeneratorParameters, trigger_callback:Callable[[Event], None], max_reading_rate:int=DEFAULT_MAX_RATE):
         """Constructor for an instance of the AlertClickThrough detector, which estimates when players click straight through the dialog following a local event click.
