@@ -1062,6 +1062,12 @@
    },
    "detectors": {
       "aggregate": {
+         "AlertClickThrough": {
+            "type": "AlertClickThrough",
+            "enabled": true,
+            "description": "Detector for cases where the player checked an alert, but clicked through the character lines too quickly to have read them",
+            "threshold": 520
+         },
          "AlertFollowedByInspect": {
             "type": "AlertFollowedByInspect",
             "enabled": true,
