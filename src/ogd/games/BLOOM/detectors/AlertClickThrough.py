@@ -112,12 +112,19 @@ class AlertClickThrough(Detector):
         :rtype: List[Any]
         """
         # For now, include the triggering event's EventData, for better debugging.
-        ret_val : DetectorEvent = self.GenerateEvent(
+        ret_val : DetectorEvent
+        
+        _total_words = sum(self._word_counts)
+        _total_time = sum(self._read_times, timedelta(0))
+        
+        ret_val = self.GenerateEvent(
             app_id="BLOOM", event_name="alert_click_through",
             event_data={
                 "alert_type":str(self._current_alert_type),
                 "node_id":str(self._current_dialog_node),
-                "reading_rate":sum(self._word_counts) / sum(self._read_times, timedelta(0)).total_seconds() * 60
+                "word_count": _total_words,
+                "total_reading_time": _total_time,
+                "reading_rate": _total_words / _total_time.total_seconds() * 60
             }
         )
         self._reset()
