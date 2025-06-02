@@ -258,7 +258,7 @@
             }
          }
       },
-      "dialog_start": {
+      "dialogue_start": {
          "description": "When an in-game dialog scene begins, whether a part of a tutorial, the result of the player clicking a dialog notification, or clicking a warning notification",
          "event_data": {
             "node_id" : {
@@ -271,7 +271,7 @@
             }
          }
       },
-      "dialog_end": {
+      "dialogue_end": {
          "description": "When an in-game dialog scene completes, whether it was triggered as a part of a tutorial, the result of the player clicking a dialog notification, or clicking a warning notification",
          "event_data": {
             "node_id" : {
