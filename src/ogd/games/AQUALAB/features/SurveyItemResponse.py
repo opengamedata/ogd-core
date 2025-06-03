@@ -43,7 +43,7 @@ class SurveyItemResponse(PerCountFeature):
         survey_name = event.EventData.get("display_event_id", None)
         
         if not survey_name:
-            Logger.Log("Missing display_event_id in survey event", level=logging.WARNING)
+            Logger.Log(f"Missing display_event_id in survey event, for player {event.UserID}, session {event.SessionID}", level=logging.WARNING)
             return False
             
         return survey_name == self._target_survey
@@ -60,10 +60,11 @@ class SurveyItemResponse(PerCountFeature):
             elif self._retest:
                 self._retest_response = _responses[self.CountIndex].get("response", None)
             else:
-                Logger.Log(f"SurveyItemResponse feature for {self._target_survey} had an unexpected retest!", logging.WARN)
-                self._response = _responses[self.CountIndex].get("response", None)
+                if self.ExtractionMode != ExtractionMode.POPULATION:
+                    Logger.Log(f"SurveyItemResponse feature for {self._target_survey} had an unexpected retest, for player {event.UserID}, session {event.SessionID}!", logging.WARN)
+                    self._response = _responses[self.CountIndex].get("response", None)
         else:
-            Logger.Log(f"SurveyItemResponse feature for {self._target_survey} got a survey_submitted event with fewer than {self.CountIndex} items!", logging.WARN)
+            Logger.Log(f"SurveyItemResponse feature for {self._target_survey} got a survey_submitted event with fewer than {self.CountIndex} items, for player {event.UserID}, session {event.SessionID}!", logging.WARN)
 
     def _updateFromFeatureData(self, feature: FeatureData):
         return
