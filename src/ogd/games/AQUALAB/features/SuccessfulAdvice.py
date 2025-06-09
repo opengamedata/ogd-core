@@ -31,7 +31,7 @@ class SuccessfulAdvice(PerJobFeature):
         if event.EventName == "recommended_job":
             attempted_job_name = event.EventData.get("attempted_job_name", None)
             if self._received_recommendation:
-                Logger.Log("Received multiple recommendations for the same job!", logging.WARNING)
+                Logger.Log(f"Received multiple recommendations for the same job ({attempted_job_name})!", logging.DEBUG)
             if attempted_job_name in self._job_map and attempted_job_name == self.TargetJobName:
                 self._received_recommendation = True
                 self._waiting_to_leave = True
@@ -63,3 +63,13 @@ class SuccessfulAdvice(PerJobFeature):
     @staticmethod
     def MinVersion() -> Optional[str]:
         return "1"
+
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
+        """List of ExtractionMode supported by the Feature.
+
+        Overridden from Extractor's version of the function, only makes the Feature-related modes supported.
+        :return: _description_
+        :rtype: List[ExtractionMode]
+        """
+        return [ExtractionMode.PLAYER, ExtractionMode.SESSION]
