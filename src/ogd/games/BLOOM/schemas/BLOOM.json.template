@@ -1080,6 +1080,12 @@
             "description": "Detector for cases where the player checked an alert, and quickly followed with a policy adjustment to alleviate the issue",
             "threshold": 30
          },
+         "CutsceneClickThrough": {
+            "type": "CutsceneClickThrough",
+            "enabled": true,
+            "description": "Detector for cases where the player reached a cutscene, but clicked through the cutscene pages too quickly to have read them",
+            "threshold": 520
+         },
          "GoodPolicyCombo": {
                "type": "GoodPolicyCombo",
                "enabled": true,
@@ -1243,6 +1249,20 @@
             "enabled": true,
             "type": "CountyUnlockCount",
             "description": "Number of counties unlocked",
+            "return_type": "int"
+         },
+         "CutsceneCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "target": "cutscene_start",
+            "description": "Count of cutscenes encountered",
+            "return_type": "int"
+         },
+         "CutsceneClickThroughCount": {
+            "type": "CountEvent",
+            "enabled": true,
+            "target": "cutscene_click_through",
+            "description": "Counter for the number of times a player clicked rapidly through a cutscene",
             "return_type": "int"
          },
          "DairyInspectionCount": {
