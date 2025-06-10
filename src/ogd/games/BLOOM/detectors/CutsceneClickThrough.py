@@ -12,20 +12,18 @@ class CutsceneClickThrough(Detector):
     """Detector to estimate when players click straight through the dialog following a local event click.
 
     There are a few specific design decisions/limitations to keep in mind.
-    First, this is based on an estimated "reading rate" across the entirety of lines between "dialog_start" and "dialog_end" following a local alert click.
+    First, this is based on an estimated "reading rate" across the entirety of lines between "cutscene_start" and "cutscene_end".
         The estimated rate is compared to a "maximum reading rate" parameter.
         There is no adjustment for reading difficulty, nor an attempt to account for distracted players leaving a dialog open for some time, but otherwise clicking through.
     Second, word counts are based on spaces, with nothing to account for punctuation.
         For example, "well-known" would be considered a single word.
-    Third, there is a strict assumption that local alerts are followed by a dialog_start, and later a dialog_end, and that all dialog in between is given by "character_line" events, as opposed to cutscene-related events.
-        Any review of real, logged data will reveal that this second set of assumptions is violated by the logging code with regularity, because of course it is.
     """
     # We use a max rate of twice the average reading rate for fiction suggested by Brysbaert in "How many words do we read per minute? A review and meta-analysis of reading rate"
     # This is ultimately arbitrary, but not unreasonable as a cutoff for "reading too fast"
     DEFAULT_MAX_RATE = 260*2
 
     def __init__(self, params: GeneratorParameters, trigger_callback:Callable[[Event], None], max_reading_rate:int=DEFAULT_MAX_RATE):
-        """Constructor for an instance of the AlertClickThrough detector, which estimates when players click straight through the dialog following a local event click.
+        """Constructor for an instance of the CutsceneClickThrough detector, which estimates when players click straight through the dialog following a local event click.
 
         :param params: The general initialization parameters used by the Generator base class.
         :type params: GeneratorParameters
@@ -56,7 +54,7 @@ class CutsceneClickThrough(Detector):
                 ]
 
     def _updateFromEvent(self, event: Event) -> None:
-        # if the session ID changed, assume we reset out of any active alert.
+        # if the session ID changed, assume we reset out of any active cutscene.
         if event.SessionID != self._last_session and self._last_session is not None:
             self._reset()
         match event.EventName:
@@ -96,7 +94,7 @@ class CutsceneClickThrough(Detector):
                 # else, reset for the next time around, if this end was the end of what we started...
                 elif self._current_cutscene == event.EventData.get("node_id"):
                     self._reset()
-                # in either case, blank out alert type and state after use
+                # in either case, blank out state after use
                 self._in_cutscene = False
         self._last_session = event.SessionID
 
