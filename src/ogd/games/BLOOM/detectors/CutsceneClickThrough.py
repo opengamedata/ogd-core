@@ -119,7 +119,7 @@ class CutsceneClickThrough(Detector):
         ret_val = self.GenerateEvent(
             app_id="BLOOM", event_name="cutscene_click_through",
             event_data={
-                "node_id":str(self._current_cutscene),
+                "cutscene_id":str(self._current_cutscene),
                 "word_count": _total_words,
                 "total_reading_time": _total_time,
                 "reading_rate": _total_words / _total_time.total_seconds() * 60
