@@ -1,13 +1,11 @@
 from datetime import datetime,timedelta
-from statistics import mean
-from typing import Any, Callable, List, Optional
+from typing import Callable, List, Optional
 
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
 from ogd.common.utils.Logger import Logger
 
 class AlertClickThrough(Detector):
