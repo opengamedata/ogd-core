@@ -76,7 +76,7 @@ class AlertClickThrough(Detector):
                     self._current_dialog_node = event.EventData.get("node_id", "NOT FOUND")
             case "character_line_displayed" | "cutscene_page_displayed":
                 if self._in_dialog and not self._paused:
-                    _line = event.EventData.get("line_text")
+                    _line = event.EventData.get("line_text") if event.EventName == "character_line_displayed" else event.EventData.get("page_text")
                     self._word_counts.append(len(_line.split(" ")) if _line is not None else 0)
                     self._last_time = event.Timestamp
             case "click_next_character_line" | "click_cutscene_next":
