@@ -44,6 +44,7 @@ class AlertClickThrough(Detector):
         self._current_alert_type  : Optional[str]
         self._current_dialog_node : Optional[str]
         self._in_dialog   : bool
+        self._paused      : bool
         self._word_counts : List[int]
         self._read_times  : List[timedelta]
         self._last_time   : Optional[datetime]
@@ -53,7 +54,11 @@ class AlertClickThrough(Detector):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["click_local_alert", "dialogue_start", "dialogue_end", "click_next_character_line", "character_line_displayed"]
+        return ["click_local_alert", "dialogue_start", "dialogue_end",
+                "cutscene_start", "cutscene_end",
+                "click_next_character_line", "character_line_displayed",
+                "click_cutscene_next", "cutscene_page_displayed"
+                ]
 
     def _updateFromEvent(self, event: Event) -> None:
         # if the session ID changed, assume we reset out of any active alert.
@@ -71,19 +76,26 @@ class AlertClickThrough(Detector):
                 if self._current_alert_type is not None:
                     self._in_dialog = True
                     self._current_dialog_node = event.EventData.get("node_id", "NOT FOUND")
-            case "character_line_displayed":
-                if self._in_dialog:
+            case "character_line_displayed" | "cutscene_page_displayed":
+                if self._in_dialog and not self._paused:
                     _line = event.EventData.get("line_text")
                     self._word_counts.append(len(_line.split(" ")) if _line is not None else 0)
                     self._last_time = event.Timestamp
-            case "click_next_character_line":
-                if self._in_dialog:
+            case "click_next_character_line" | "click_cutscene_next":
+                if self._in_dialog and not self._paused:
                     _delta = timedelta(0)
                     if self._last_time is not None:
                         _delta = event.Timestamp - self._last_time
                     self._read_times.append(_delta)
                     # blank out last time after use
                     self._last_time = None
+            case "cutscene_start":
+                # if dialog was interrupted by a cutscene, don't count reading time until we reach end of cutscene.
+                if self._in_dialog:
+                    self._paused = True
+            case "cutscene_end":
+                if self._in_dialog:
+                    self._paused = False
             case "dialogue_end":
                 _rate = 0
                 if len(self._word_counts) != 0 and len(self._read_times) != 0:
@@ -136,6 +148,7 @@ class AlertClickThrough(Detector):
         self._current_alert_type = None
         self._current_dialog_node = None
         self._in_dialog = False
+        self._paused = False
         self._word_counts = []
         self._read_times = []
         self._last_time = None
