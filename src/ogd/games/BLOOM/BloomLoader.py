@@ -150,6 +150,9 @@ class BloomLoader(GeneratorLoader):
             case "AlertFollowedByPolicy":
                 _policy_threshold = timedelta(seconds=schema_args.get("threshold", 30))
                 ret_val = AlertFollowedByPolicy.AlertFollowedByPolicy(params=extractor_params, trigger_callback=trigger_callback, policy_time_threshold=_policy_threshold)
+            case "CutsceneClickThrough":
+                _max_rate = schema_args.get("max_rate", CutsceneClickThrough.CutsceneClickThrough.DEFAULT_MAX_RATE)
+                ret_val = CutsceneClickThrough.CutsceneClickThrough(params=extractor_params, trigger_callback=trigger_callback, max_reading_rate=_max_rate)
             case "GoodPolicyCombo":
                 _budget_threshold = schema_args.get("threshold", 150)
                 ret_val = GoodPolicyCombo.GoodPolicyCombo(params=extractor_params, trigger_callback=trigger_callback, surplus_budget_threshold=_budget_threshold)
