@@ -19,8 +19,7 @@ class Thermotool(Enum):
 
 class ToolNudgeCount(SessionFeature):
 
-    def __init__(self, params:GeneratorParameters, player_id:str):
-        self._player_id = player_id
+    def __init__(self, params:GeneratorParameters):
         self._tool_nudge_count = {tool: 0 for tool in Thermotool}
         super().__init__(params=params)
 

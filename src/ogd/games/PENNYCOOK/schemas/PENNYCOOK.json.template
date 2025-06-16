@@ -1,0 +1,641 @@
+{
+    "enums": {
+        "Speaker": ["PLAYER", "MARGO", "PENNY"],
+        "DialogType": ["STORY", "COMMENTARY"],
+        "HighlightType": ["OBJECT", "DESTINATION"],
+        "Location": ["INSIDE", "OUTSIDE"],
+        "MargoModes": ["SCAN", "WARP", "CAPTURE", "COUNT"],
+        "TaskTypes": ["SCAN", "COUNT", "CAPTURE", "TAG", "RECOVER"],
+        "TagTypes" : ["LEG", "ARM", "BACK"],
+        "WarpPoints": ["WarpDesk", "WarpBluff", "WarpBluffBack", "WarpRookery", "WarpRookeryBack", "WarpRookeryFar", "WarpRookerySide", "WarpRookeryMiddle", "WarpRookeryCorral"],
+        "BehaviorType" : ["MATING_DANCE", "REGURGITATION"],
+        "DockLocation" : ["TENT", "CASE"],
+        "GrabbableObject" : ["PROP", "MARGO", "LEG_BAND", "PENGUIN", "ARM_BAND", "BACK_TRACKER"],
+        "TagLocations" : ["CASE", "PENGUIN"],
+        "RelativeDirections" : ["FORWARD", "BACKWARD", "LEFT", "RIGHT"],
+        "RotationDirections" : ["CW", "CCW"],
+        "ScannableObjects" : ["PENGUIN", "CHICK", "EGG", "NEST", "GATE"]
+    },
+    "game_state": {
+        "seconds_from_launch": {
+            "type": "float",
+            "description": "The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*."
+        },
+        "day": {
+            "type": "int",
+            "description": "The current day (level) the player is in (from 1 to 5)"
+        },
+        "location": {
+            "type": "Location",
+            "description": "Indicator for whether the player is located inside in the tent, or outside the tent/in the rookery."
+        },
+        "pos": {
+            "type": "List[float]",
+            "description": "The current position (x, y, z) of the headset at the moment the event occurred."
+        },
+        "rot": {
+            "type": "List[float]",
+            "description": "The current orientation (x, y, z, w) of the headset at the moment the event occurred."
+        },
+        "margo_mode" : {
+            "type": "enum(MargoModes) | None",
+            "description": "Which mode Margo is in, or null when Margo does not have a mode available."
+        },
+        "margo_taskbar" : {
+            "items" : "List[Dict[str, str | bool]]",
+            "description": "A list of items representing the current set of sub-tasks.",
+            "details": {
+                "task_text":"str",
+                "is_completed":"bool"
+            }
+        }
+    },
+    "events": {
+        "session_start": {
+            "description": "When the app is started and the gameplay session is assigned a session ID",
+            "event_data": {}
+        },
+        "game_start": {
+            "description": "When the player starts a new game (at present, this happens automatically at launch, but in the future the player will launch a new game from a menu).",
+            "event_data": {
+            }
+        },
+        "viewport_data": {
+            "description": "An event sent approximately once per second, containing the in-game position and orientation of the player headset for each frame in the past second",
+            "event_data": {
+                "gaze_data_package": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "pos": "List[float]",
+                        "rot": "List[float]"
+                    },
+                    "description": "A list of dicts, where each dict is one frame of headset data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
+                }
+            }
+        },
+        "left_hand_data": {
+            "description": "An event sent approximately once per second, containing the in-game position and orientation of the player's left hand for each frame in the past second",
+            "event_data": {
+                "left_hand_data_package": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "pos": "List[float]",
+                        "rot": "List[float]"
+                    },
+                    "description": "A list of dicts, where each dict is one frame of left-hand data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
+                }
+            }
+        },
+        "right_hand_data": {
+            "description": "An event sent approximately once per second, containing the in-game position and orientation of the player's right hand for each frame in the past second",
+            "event_data": {
+                "right_hand_data_package": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "pos": "List[float]",
+                        "rot": "List[float]"
+                    },
+                    "description": "A list of dicts, where each dict is one frame of right-hand data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
+                }
+            }
+        },
+        "headset_on": {
+            "description": "When the player puts the headset on, resuming the game",
+            "event_data": {}
+        },
+        "headset_off": {
+            "description": "When the player removes the headset from their head, pausing the game",
+            "event_data": {}
+        },
+        "day_complete": {
+            "description": "When the player has completed all requirements for a day and the day ends",
+            "event_data": {
+                "day_index" : {
+                    "type": "int",
+                    "description": "The number of the day, indexed from 1 to 5"
+                }
+            }
+        },
+        "day_begin": {
+            "description": "When the scene for a new day begins",
+            "event_data": {
+                "day_index" : {
+                    "type": "int",
+                    "description": "The number of the day, indexed from 1 to 5"
+                }
+            }
+        },
+        "dialog_audio_start": {
+            "description": "When a voiceover audio clip begins",
+            "event_data": {
+                "dialog_id": {
+                    "type": "str",
+                    "description": "The identifier of the dialog audio, which can be cross-referenced against DBExport."
+                },
+                "dialog_type": {
+                    "type": "enum(DialogType)",
+                    "description": "Indicator for whether the dialog was story content or a dynamic exposition line."
+                },
+                "speaker": {
+                    "type": "enum(Speaker)",
+                    "description": "Which character speaks the dialog"
+                }
+            }
+        },
+        "dialog_audio_end": {
+            "description": "When a voiceover audio clip ends",
+            "event_data": {
+                "dialog_id": {
+                    "type": "str",
+                    "description": "The identifier of the dialog audio, which can be cross-referenced against DBExport."
+                },
+                "dialog_type": {
+                    "type": "enum(DialogType)",
+                    "description": "Indicator for whether the dialog was story content or a dynamic exposition line."
+                },
+                "speaker": {
+                    "type": "enum(Speaker)",
+                    "description": "Which character spoke the dialog"
+                }
+            }
+        },
+        "grab_gesture": {
+            "description": "When the player presses the trigger to perform a grab, whether the 'grab' did anything or not.",
+            "event_data": {
+                "pos": {
+                    "type": "Dict[str, float]",
+                    "details": {
+                        "pos_x": "float",
+                        "pos_y": "float",
+                        "pos_z": "float"
+                    },
+                    "description": "The position of the hand when the 'grab' was triggered"
+                },
+                "rot": {
+                    "type": "Dict[str, float]",
+                    "details": {
+                        "rot_x": "float",
+                        "rot_y": "float",
+                        "rot_z": "float",
+                        "rot_w": "float"
+                    },
+                    "description": "The orientation of the hand when the 'grab' was triggered"
+                },
+                "is_grab_toggle": {
+                    "type": "bool",
+                    "description": "True if the grab was performed as a 'toggle' to keep the grab on, or false if the grab only lasts as long as the button is held."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed with their right or left hand."
+                }
+            }
+        },
+        "release_gesture": {
+            "description": "When the player releases the trigger button to end a 'grab'",
+            "event_data": {
+                "pos": {
+                    "type": "Dict[str, float]",
+                    "details": {
+                        "pos_x": "float",
+                        "pos_y": "float",
+                        "pos_z": "float"
+                    },
+                    "description": "The position of the hand when the 'grab' was released"
+                },
+                "rot": {
+                    "type": "Dict[str, float]",
+                    "details": {
+                        "rot_x": "float",
+                        "rot_y": "float",
+                        "rot_z": "float",
+                        "rot_w": "float"
+                    },
+                    "description": "The orientation of the hand when the 'grab' was released"
+                },
+                "is_grab_toggle": {
+                    "type": "bool",
+                    "description": "True if the grab was released as a 'toggle' out of a grab, or false if the grab ended due to the button being released."
+                },
+                "hand": {
+                    "type": "enum(Hand)",
+                    "description": "Indicator of whether the player grabbed with their right or left hand."
+                }
+            }
+        },
+        "joystick_rotate": {
+            "description": "When the player uses the joystick to rotate their view by a fixed amount at a time.",
+            "event_data": {
+                "new_rot": {
+                    "type": "Dict[str, float]",
+                    "details": {
+                        "rot_x": "float",
+                        "rot_y": "float",
+                        "rot_z": "float",
+                        "rot_w": "float"
+                    },
+                    "description": "The orientation of the viewport after the rotation occurred. Note, the initial rotation is given by the game_state"
+                },
+                "rotation_direction" : {
+                    "type": "enum(RotationDirection)",
+                    "description" : "The direction the character's view was rotated, either clockwise or counter-clockwise."
+                },
+                "rotation_amount" : {
+                    "type": "TODO",
+                    "description" : "The amount of rotation in TODO (degrees or rads)."
+                }
+            }
+        },
+        "joystick_navigate": {
+            "description": "When the player uses the joystick to shift their position by a fixed amount at a time.",
+            "event_data": {
+                "new_pos": {
+                    "type": "Dict[str, float]",
+                    "details": {
+                        "pos_x": "float",
+                        "pos_y": "float",
+                        "pos_z": "float"
+                    },
+                    "description": "The position of the viewport after the navigation occurred. Note, the initial position is given by the game_state"
+                },
+                "navigation_direction" : {
+                    "type": "enum(RelativeDirection)",
+                    "description" : "The direction the character moved."
+                },
+                "navigation_amount" : {
+                    "type": "TODO",
+                    "description" : "The amount of movement in TODO."
+                }
+            }
+        },
+        "teleport_from_invalid_location": {
+            "description": "When the player has navigated to an invalid location, and is automatically moved back to a valid location.",
+            "event_data": {
+                "new_pos": {
+                    "type": "Dict[str, float]",
+                    "details": {
+                        "pos_x": "float",
+                        "pos_y": "float",
+                        "pos_z": "float"
+                    },
+                    "description": "The position of the viewport after teleportation occurred. Note, the initial (invalid) position is given by the game_state"
+                },
+                "new_rot": {
+                    "type": "Dict[str, float]",
+                    "details": {
+                        "rot_x": "float",
+                        "rot_y": "float",
+                        "rot_z": "float",
+                        "rot_w": "float"
+                    },
+                    "description": "The orientation of the viewport after the teleportation occurred. Note, the initial (invalid) rotation is given by the game_state"
+                }
+            }
+        },
+        "object_grabbed": {
+            "description": "When a player successfully grabs hold of an object with the grab gesture.",
+            "event_data": {
+                "object_id": {
+                    "description": "The individual ID of the grabbed object",
+                    "type": "str"
+                },
+                "object_type": {
+                    "description": "The type of the object that was grabbed",
+                    "type": "enum(GrabbableObject)"
+                }
+            }
+        },
+        "object_released": {
+            "description": "When a player releases hold of an object with the release gesture.",
+            "event_data": {
+                "object_id": {
+                    "description": "The individual ID of the released object",
+                    "type": "str"
+                },
+                "object_type": {
+                    "description": "The type of the object that was released",
+                    "type": "enum(GrabbableObject)"
+                }
+            }
+        },
+        "switch_margo_mode" : {
+            "description": "When the player toggles to a new mode on Margo's screen",
+            "event_data": {
+                "new_mode": {
+                    "type": "enum(MargoModes) | None",
+                    "description": "The new mode Margo was switched to. Note, the initial mode is given by the game_state"
+                }
+            }
+        },
+        "margo_tooltip_displayed" : {
+            "description": "When a new tooltip appears at the top of Margo's screen during tutorialization, indicating what the player should do next.",
+            "event_data" : {
+                "tooltip_id": {
+                    "type": "str",
+                    "description": "An identifier for the specific tooltip that was shown."
+                },
+                "tooltip_content": {
+                    "type": "str",
+                    "description": "The actual text content of the tooltip."
+                }
+            }
+        },
+        "margo_tooltip_hidden": {
+            "description": "When a tooltip at the top of Margo's screen is no longer needed, and disappears",
+            "event_data" : {
+                "tooltip_id": {
+                    "type": "str",
+                    "description": "An identifier for the specific tooltip that was hidden."
+                },
+                "tooltip_content": {
+                    "type": "str",
+                    "description": "The actual text content of the tooltip."
+                }
+            }
+        },
+        "warp_to_point" : {
+            "description": "When the player is in warp mode, and clicks to warp to a new warp point",
+            "event_data" : {
+                "point_id" : {
+                    "type": "enum(WarpPoints)",
+                    "description": "The ID of the point to which the player is warpin."
+                },
+                "point_location": {
+                    "type": "List[float]",
+                    "details": {
+                        "pos_x": "float",
+                        "pos_y": "float",
+                        "pos_z": "float"
+                    },
+                    "description": "The map location of the point to which the player is warping"
+                }
+            }
+        },
+        "tent_door_opened": {
+            "description": "When the player toggles the tent door open by gazing/aiming at it.",
+            "event_data": {
+            }
+        },
+        "tent_door_closed": {
+            "description": "When the player toggles the tent door open by gazing/aiming at it.",
+            "event_data": {
+            }
+        },
+        "margo_task_assigned" : {
+            "description": "When a new task is assigned to the player that is completed using one of Margo's modes, such as scanning or capturing",
+            "event_data" : {
+                "task_id": {
+                    "type":"str",
+                    "description": "An ID of the specific in-game task the player was assigned"
+                },
+                "task_type": {
+                    "type":"enum(TaskTypes)",
+                    "description": "The type of task that was assigned"
+                }
+            }
+        },
+        "margo_task_completed" : {
+            "description": "When the player completes a task using one of Margo's modes, such as scanning or capturing",
+            "event_data" : {
+                "task_id": {
+                    "type":"str",
+                    "description": "An ID of the specific in-game task the player completed"
+                },
+                "task_type": {
+                    "type":"enum(TaskTypes)",
+                    "description": "The type of task that was completed"
+                }
+            }
+        },
+        "tag_task_assigned": {
+            "description": "When a new task is assigned to the player that is completed using a tag item, such as leg or flipper monitors",
+            "event_data" : {
+                "task_id": {
+                    "type":"str",
+                    "description": "An ID of the specific in-game task the player was assigned"
+                },
+                "task_type": {
+                    "type":"enum(TaskTypes)",
+                    "description": "The type of task that was assigned"
+                },
+                "tag_type": {
+                    "type":"enum(TagTypes)",
+                    "description": "The type of tag used in the assigned task"
+                }
+            }
+        },
+        "tag_task_completed": {
+            "description": "When completes a task using a tag item, such as leg or flipper monitors",
+            "event_data" : {
+                "task_id": {
+                    "type":"str",
+                    "description": "An ID of the specific in-game task the player completed"
+                },
+                "task_type": {
+                    "type":"enum(TaskTypes)",
+                    "description": "The type of task that was completed"
+                },
+                "tag_type": {
+                    "type":"enum(TagTypes)",
+                    "description": "The type of tag used in the completed task"
+                }
+            }
+        },
+        "penguin_counted" : {
+            "description": "When the player has Margo set to counting mode during a counting task, and a new penguin is added to the count",
+            "event_data": {
+                "running_count": {
+                    "type":"int",
+                    "description": "The updated total number of penguins counted during the counting task."
+                },
+                "penguin_id": {
+                    "type":"str",
+                    "description": "The individual ID of the penguin that was counted."
+                }
+            }
+        },
+        "trigger_scan" : {
+            "description": "When the player clicks to trigger a scan while in Margo's scanning mode. This event occurs even if there is no valid scanning target highlighted.",
+            "event_data": {
+                TODO
+            }
+        },
+        "object_scanned" : {
+            "description": "When a player's scan successfully scans one of the current scanning targets",
+            "event_data" : {
+                "object_type" : {
+                    "type": "enum(ScannableObject)",
+                    "description" : "The type of object that was scanned."
+                },
+                "object_id": {
+                    "type":"str",
+                    "description": "The ID of the specific object that was scanned."
+                }
+            }
+        },
+        "trigger_image_capture": {
+            "description": "When the player clicks to trigger an image capture while in Margo's capture mode.",
+            "event_data": {
+                "margo_position": {
+                    "type": "List[float]",
+                    "details": {
+                        "pos_x": "float",
+                        "pos_y": "float",
+                        "pos_z": "float"
+                    },
+                    "description": "The position at which Margo was held when the scan triggered."
+                },
+                "margo_orientation": {
+                    "type": "List[float]",
+                    "details": {
+                        "rot_x": "float",
+                        "rot_y": "float",
+                        "rot_z": "float",
+                        "rot_w": "float"
+                    },
+                    "description": "The direction Margo was pointed when the scan triggered."
+                }
+            }
+        },
+        "penguin_behavior_captured" : {
+            "description": "When a player has triggered an image capture from capture mode, and the target behavior was shown in the captured image.",
+            "event_data": {
+                "behavior" : {
+                    "type": "enum(BehaviorType)",
+                    "description": "The type of target behavior that was captured"
+                },
+                "penguin_id" : {
+                    "type":"str",
+                    "description": "The ID of the penguin that was captured exhibiting the target behavior."
+                }
+            }
+        },
+        "case_relocated" : {
+            "description": "When the case containing the tag objects moves to remain near the player",
+            "event_data": {
+                "old_position": {
+                    "type":"List[float]",
+                    "details": {
+                        "pos_x": "float",
+                        "pos_y": "float",
+                        "pos_z": "float"
+                    },
+                    "description": "The position the case was at prior to relocating."
+                },
+                "position": {
+                    "type":"List[float]",
+                    "details": {
+                        "pos_x": "float",
+                        "pos_y": "float",
+                        "pos_z": "float"
+                    },
+                    "description": "The updated position of the case after relocating."
+                }
+            }
+        },
+        "place_tag" : {
+            "description": "When a player places a tag onto a penguin, or into the case, in a tagging task",
+            "event_data": {
+                "tag_location": {
+                    "type": "enum(TagLocations)",
+                    "description": "Whether the tag was placed on a penguin, or into the case."
+                },
+                "tag_type": {
+                    "type": "enum(TagTypes)",
+                    "description": "The type of tag that was placed."
+                },
+                "penguin_id": {
+                    "type": "str | None",
+                    "description": "The ID of the penguin that was tagged, or null if the tag was placed in the case."
+                }
+            }
+        },
+        "remove_tag" : {
+            "description": "When a player removes a tag from a penguin, or from the case, in a tagging task",
+            "event_data": {
+                "tag_location": {
+                    "type": "enum(TagLocations)",
+                    "description": "Whether the tag was removed from on a penguin or the case."
+                },
+                "tag_type": {
+                    "type": "enum(TagTypes)",
+                    "description": "The type of tag that was removed."
+                },
+                "penguin_id": {
+                    "type": "str | None",
+                    "description": "The ID of the penguin that had its tag removed, or null if the tag was taken from the case."
+                }
+            }
+        },
+        "dock_margo" : {
+            "description": "When the player places Margo into a docking spot.",
+            "event_data": {
+                "dock_location": {
+                    "type": "enum(DockLocations)",
+                    "description": "Whether the player docked Margo at the docking spot inside the tent, or in the equipment case in the rookery."
+                }
+            }
+        },
+        "click_margo_sync": {
+            "description": "When the player clicks the button to sync Margo with the computer in the tent."
+            "event_data": {
+                TODO
+            }
+        },
+
+        "display_penguin_population": {
+            "TODO"
+        },
+        "display_penguin_data": {
+            "TODO"
+        },
+
+        "penguin_highlighted": {
+            TODO
+        },
+        "penguin_unhighlighted": {
+            TODO
+        },
+        "warp_point_highlighted": {
+            TODO
+        },
+        "warp_point_unhighlighted": {
+            TODO
+        },
+        "object_highlighted": {
+            "description": "When an object is highlighted, indicating the player should move the object, or place another object on it.",
+            "event_data": {
+                "highlight_object": {
+                    "type": "enum(HighlightObject) | enum(HighlightDestination)",
+                    "description": "The object that was highlighted."
+                },
+                "highlight_type": {
+                    "type": "enum(HighlightType)",
+                    "description": "Indicator of whether the object was a normal object, or an object destination."
+                }
+            }
+        },
+        "object_unhighlighted": {
+            "description": "When the highlighting on an object is cleared",
+            "event_data": {
+                "highlight_object": {
+                    "type": "enum(HighlightObject) | enum(HighlightDestination)",
+                    "description": "The object that was highlighted."
+                },
+                "highlight_type": {
+                    "type": "enum(HighlightType)",
+                    "description": "Indicator of whether the object was a normal object, or an object destination."
+                }
+            }
+        },
+    },
+    "features": {
+        "per_count": {},
+        "aggregate": {}
+    },
+    "config": {
+        "SUPPORTED_VERS": [
+            1
+        ]
+    }
+}
