@@ -47,7 +47,7 @@ runs:
   steps:
     - name: Execute data export
       if: ${{ inputs.with_events == 'true' && inputs.with_features == 'true' }}
-      run: python${{ inputs.python_version }} main.py export ${{ inputs.game }} ${{ inputs.month_year }} --monthly ${{ inputs.skip_sessions == 'true' && '--no_session_file' }} ${{ inputs.skip_players == 'true' && '--no_player_file' }} ${{ inputs.skip_populations == 'true' && '--no_pop_file' }}
+      run: python${{ inputs.python_version }} main.py export ${{ inputs.game }} ${{ inputs.month_year }} --monthly ${{ inputs.skip_sessions == 'true' && '--no_session_file' || ''}} ${{ inputs.skip_players == 'true' && '--no_player_file' || ''}} ${{ inputs.skip_populations == 'true' && '--no_pop_file' || ''}}
       shell: bash
     - name: Execute data export (events only)
       if: ${{ inputs.with_events == 'true' && inputs.with_features == 'false' }}
@@ -55,7 +55,7 @@ runs:
       shell: bash
     - name: Execute data export (features only)
       if: ${{ inputs.with_events == 'false' && inputs.with_features == 'true' }}
-      run: python${{ inputs.python_version }} main.py export-features ${{ inputs.game }} ${{ inputs.month_year }} --monthly ${{ inputs.skip_sessions && '--no_session_file' }} ${{ inputs.skip_players && '--no_player_file' }} ${{ inputs.skip_population && '--no_pop_file' }}
+      run: python${{ inputs.python_version }} main.py export-features ${{ inputs.game }} ${{ inputs.month_year }} --monthly ${{ inputs.skip_sessions && '--no_session_file' || ''}} ${{ inputs.skip_players && '--no_player_file' || ''}} ${{ inputs.skip_population && '--no_pop_file' || ''}}
       shell: bash
     - name: Execute data export (empty)
       if: ${{ inputs.with_events == 'false' && inputs.with_features == 'false' }}
