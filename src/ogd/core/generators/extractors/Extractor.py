@@ -71,14 +71,14 @@ class Extractor(Generator):
 
     # *** PUBLIC METHODS ***
 
-    def ToFeatureData(self, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> FeatureData:
+    def ToFeatureData(self,  mode:ExtractionMode, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> FeatureData:
         return FeatureData(
             name=self.Name,
             feature_type=type(self).__name__,
             count_index=self.CountIndex,
             cols=self.GetFeatureNames(),
             vals=self.GetFeatureValues(),
-            mode=self.ExtractionMode,
+            mode=mode,
             player_id=player_id,
             sess_id=sess_id
         )
