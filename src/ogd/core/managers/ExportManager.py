@@ -173,6 +173,10 @@ class ExportManager:
                 time_delta = datetime.now() - start
                 Logger.Log(f"Processing time for slice [{i+1}/{len(slices)}]: {time_delta} to handle {len(_next_slice_data)} events", logging.INFO, depth=2)
 
+                if self._model_mgr:
+                    _sess_feats = self._feat_mgr.GetSessionFeatureData()
+                    self._model_mgr.ProcessFeatureData(_sess_feats)
+
             # 2. Write out the session data and reset for next slice.
                 start = datetime.now()
                 Logger.Log(f"Outputting slice [{i+1}/{len(slices)}]...", logging.INFO, depth=2)
