@@ -34,3 +34,9 @@ class Model(Generator):
 
     def Apply(self, apply_to:List[FeatureData | Event]) -> FeatureData | Event:
         return self._apply(apply_to=apply_to)
+    
+    def Render(self, save_path:str = None):
+        return self._render(save_path=save_path)
+    
+    def ModelInfo(self):
+        return self._modelInfo()

@@ -9,6 +9,7 @@ from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.core.processors.PopulationProcessor import PopulationProcessor
 from ogd.core.processors.PlayerProcessor import PlayerProcessor
 from ogd.core.processors.SessionProcessor import SessionProcessor
+from ogd.common.models.FeatureData import FeatureData
 from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.models.Event import Event
 from ogd.common.utils.Logger import Logger
@@ -80,10 +81,14 @@ class FeatureManager:
         # 1. Get population 1st-order data
         if self._population is not None and self._players is not None and self._sessions is not None:
             pop_data = self._population.GetFeatureData(order=1)
+
+            print("\n\n\nInside ProcessFeatureData of FeatureManager")
+            print(f"Population 1st-order data: {pop_data}, {type(pop_data)}")
             # 2. Distribute population 1st-order data
             self._population.ProcessFeatureData(feature_list=pop_data)
             for player in self._players.values():
                 player.ProcessFeatureData(feature_list=pop_data)
+                
             for session_list in self._sessions.values():
                 for session in session_list.values():
                     session.ProcessFeatureData(feature_list=pop_data)
@@ -117,6 +122,7 @@ class FeatureManager:
 
     def GetPopulationFeatureNames(self) -> List[str]:
         return self._population.GeneratorNames if self._population is not None else []
+    
     def GetPopulationFeatures(self, as_str:bool = False) -> List[ExportRow]:
         start = datetime.now()
         self._try_update(as_str=as_str)
@@ -135,6 +141,7 @@ class FeatureManager:
 
     def GetSessionFeatureNames(self) -> List[str]:
         return self._sessions["null"]["null"].GeneratorNames if self._sessions is not None else []
+    
     def GetSessionFeatures(self, slice_num:int, slice_count:int, as_str:bool = False) -> List[ExportRow]:
         start   : datetime = datetime.now()
         self._try_update(as_str=as_str)
@@ -142,10 +149,25 @@ class FeatureManager:
         time_delta = datetime.now() - start
         Logger.Log(f"Time to retrieve Session lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val
+    
+    #new
+    def GetAllFeatureData(self) -> List[FeatureData]:
+        all_features = []
+        if self._population is not None:
+            all_features.append(self._population.GetFeatureData(order=1))
+        if self._players is not None:
+            for player in self._players.values():
+                all_features.append(player.GetFeatureData(order=1))
+        if self._sessions is not None:
+            for sess_list in self._sessions.values():
+                for session in sess_list.values():
+                    all_features.append(session.GetFeatureData(order=1))
+        return all_features
 
     def ClearPopulationLines(self) -> None:
         if self._population is not None:
             self._population.ClearLines()
+            
     def ClearPlayerLines(self) -> None:
         if self._players is not None and self._LoaderClass is not None:
             for player in self._players.values():

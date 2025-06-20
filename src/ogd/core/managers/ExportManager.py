@@ -16,6 +16,7 @@ from ogd import games
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.managers.EventManager import EventManager
 from ogd.core.managers.FeatureManager import FeatureManager
+from ogd.core.managers.ModelManager import ModelManager
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.common.models.enums.IDMode import IDMode
@@ -46,6 +47,7 @@ class ExportManager:
         self._config      : ConfigSchema = config
         self._event_mgr   : Optional[EventManager]   = None
         self._feat_mgr    : Optional[FeatureManager] = None
+        self._model_mgr   : Optional[ModelManager] = None
         self._debug_count : int                      = 0
 
     def __str__(self):
@@ -148,6 +150,9 @@ class ExportManager:
             self._feat_mgr = FeatureManager(game_schema=_game_schema, LoaderClass=load_class, feature_overrides=request._feat_overrides)
         else:
             Logger.Log("Feature data not requested, or extractor loader unavailable, skipping feature manager.", logging.INFO, depth=1)
+
+
+        self._model_mgr = ModelManager(game_schema=_game_schema, LoaderClass=load_class, feature_overrides=request._feat_overrides)
     # 4. Open the outerfaces
         for outerface in request.Outerfaces:
             outerface.Open()
@@ -192,6 +197,55 @@ class ExportManager:
             Logger.Log(f"Skipping feature output for post-process, no FeatureManager exists!", logging.DEBUG, depth=3)
         time_delta = datetime.now() - start
         Logger.Log(f"Output time for population: {time_delta}", logging.INFO, depth=2)
+
+        # if self._model_mgr is not None:
+        #     feature_data_list = self._feat_mgr.GetAllFeatureData()
+        #     print(feature_data_list)
+        #     self._model_mgr.UpdateFromFeatureData(feature_data_list)
+        #     self._model_mgr.TrainModels()
+        #     # model_outputs = self._model_mgr.GetModels(as_str=True)
+        #     # model_info = self._model_mgr.ModelOutputs()
+        #     # for outerface in request.Outerfaces:
+        #     #     outerface.WriteLines(lines=model_outputs["models"], mode=ExportMode.POPULATION)
+
+        if self._model_mgr is not None and self._feat_mgr is not None:
+        # 1. Get the list of lists from FeatureManager.
+            Logger.Log("Retrieving all feature data for modeling...", logging.INFO, depth=2)
+            list_of_feature_lists = self._feat_mgr.GetAllFeatureData()
+
+            print("type of feature data list", type(list_of_feature_lists))
+            
+            # FIX: Flatten the list of lists into a single, flat list of features.
+            all_feature_data = []
+            for feature_list in list_of_feature_lists:
+                all_feature_data.extend(feature_list)
+
+            # --- ADD THIS DEBUGGING BLOCK ---
+            print(" DEBUGGING: CHECKPOINT 1 (ExportManager)")
+            if all_feature_data:
+                first_feature = all_feature_data[0]
+                print(f"Sample FeatureData object retrieved from FeatureManager:")
+                print(f"  -> Name:           {first_feature.Name}")
+                print(f"  -> Values:         {first_feature.FeatureValues}")
+                # This next line is the most important one!
+                print(f"  -> ExtractionMode: {getattr(first_feature, 'ExtractionMode', '!!! ATTRIBUTE NOT FOUND !!!')}")
+            else:
+                print("No feature data was retrieved from FeatureManager.")
+            # --- END OF DEBUGGING BLOCK ---
+
+            print("type of all_feature_data", type(all_feature_data))
+            print(all_feature_data)
+
+            Logger.Log(f"Passing {len(all_feature_data)} features to the Model Manager...", logging.INFO, depth=2)
+            self._model_mgr.ProcessFeatureData(all_feature_data) 
+            
+            Logger.Log("Training models...", logging.INFO, depth=2)
+            self._model_mgr.TrainModels()
+            
+            # 4. Get the model outputs.
+            Logger.Log("Retrieving model outputs...", logging.INFO, depth=2)
+            self._model_mgr.GetModelInfo()
+            self._model_mgr.RenderModels()
 
     @staticmethod
     def _loadLoaderClass(game_id:str) -> Optional[Type[GeneratorLoader]]:
@@ -313,6 +367,8 @@ class ExportManager:
                 self._event_mgr.ProcessEvent(event=next_event)
             if self._feat_mgr is not None:
                 self._feat_mgr.ProcessEvent(event=next_event)
+            if self._model_mgr is not None:
+                self._model_mgr.ProcessEvent(event=next_event)
         except Exception as err:
             if self._config.FailFast:
                 Logger.Log(f"Error while processing event {next_event.EventName}:\n{next_event}", logging.ERROR, depth=2)

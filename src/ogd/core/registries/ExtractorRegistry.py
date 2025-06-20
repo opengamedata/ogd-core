@@ -202,6 +202,7 @@ class ExtractorRegistry(GeneratorRegistry):
                              table assiciated with this game is structured.
         :type table_schema: TableSchema
         """
+        
         listeners = self._feature_registry.get(feature.FeatureType, [])
         # send feature to every listener for the given feature name.
         for listener in listeners:
@@ -229,7 +230,7 @@ class ExtractorRegistry(GeneratorRegistry):
         order_index = order - 1 # orders are counted from 1, so need to adjust to index from 0.
         ret_val : List[FeatureData] = []
         for feature in self._features[order_index].values():
-            ret_val.append(feature.ToFeatureData(player_id=player_id, sess_id=sess_id))
+            ret_val.append(feature.ToFeatureData(mode=self._mode, player_id=player_id, sess_id=sess_id))
         return ret_val
 
     def GetFeatureValues(self) -> List[Any]:

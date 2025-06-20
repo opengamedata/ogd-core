@@ -63,6 +63,7 @@ class GeneratorProcessor(Processor):
     # *** PUBLIC METHODS ***
 
     def ProcessFeatureData(self, feature_list:List[FeatureData]) -> None:
+        # print("\n\n\nInside ProcessFeatureData of GeneratorProcessor")
         if self._registry is not None:
             for feature in feature_list:
                 self._registry.UpdateFromFeatureData(feature=feature)
