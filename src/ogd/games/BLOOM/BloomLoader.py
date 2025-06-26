@@ -63,6 +63,8 @@ class BloomLoader(GeneratorLoader):
                     ret_val = ActiveTime.ActiveTime(params=extractor_params, idle_threshold=schema_args.get("threshold", 30))
                 case "AlertCount":
                     ret_val = AlertCount.AlertCount(params=extractor_params)
+                case "ActiveCounties":
+                    ret_val = ActiveCounties.ActiveCounties(params=extractor_params)
                 case "AlertResponseCount":
                     ret_val = AlertResponseCount.AlertResponseCount(params=extractor_params)
                 case "AlertReviewCount":

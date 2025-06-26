@@ -4,6 +4,7 @@ __all__ = [
     "PerCountyFeature",
     "PerPolicyFeature",           
     "ActiveTime",
+    "ActiveCounties",
     "AlertCount",
     "AlertResponseCount",
     "AlertReviewCount",
@@ -39,7 +40,7 @@ __all__ = [
     # "InspectorResponseCount"
 ]
 
-
+from . import ActiveCounties
 from . import PerCountyFeature
 from . import PerPolicyFeature
 from . import ActiveTime
