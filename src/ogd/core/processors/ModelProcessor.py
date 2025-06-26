@@ -124,14 +124,14 @@ class ModelProcessor(ExtractorProcessor):
         self._registry._loadFromSchema(schema=self._game_schema, loader=self._loader, overrides=self._overrides)
             
     def ProcessFeature(self, feature: FeatureData):
-        self._registry = self._createRegistry()
+        # self._registry = self._createRegistry()
         if self._registry:
             self._registry._updateFromFeatureData(feature)
 
     def TrainModels(self):
-        self._registry = self._createRegistry()
+        # self._registry = self._createRegistry()
         if self._registry:
-            self._registry._loadFromSchema(schema=self._game_schema, loader=self._loader, overrides=self._overrides)
+            self._registry.TrainModels()
 
     @property
     def _mode(self) -> ExtractionMode:

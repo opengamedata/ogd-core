@@ -151,19 +151,33 @@ class FeatureManager:
         return ret_val
     
     #new
-    def GetAllFeatureData(self) -> List[FeatureData]:
-        all_features = []
+    # def GetAllFeatureData(self) -> List[FeatureData]:
+    #     all_features = []
+    #     if self._population is not None:
+    #         all_features.append(self._population.GetFeatureData(order=1))
+    #     if self._players is not None:
+    #         for player in self._players.values():
+    #             all_features.append(player.GetFeatureData(order=1))
+    #     if self._sessions is not None:
+    #         for sess_list in self._sessions.values():
+    #             for session in sess_list.values():
+    #                 all_features.append(session.GetFeatureData(order=1))
+    #     return all_features
+
+    def GetPopulationFeatureData(self) -> List[FeatureData]:
+        population_data = []
         if self._population is not None:
-            all_features.append(self._population.GetFeatureData(order=1))
-        if self._players is not None:
-            for player in self._players.values():
-                all_features.append(player.GetFeatureData(order=1))
+            population_data += self._population.GetFeatureData(order=1)
+        return population_data
+    
+    def GetSessionFeatureData(self) -> List[FeatureData]:
+        session_data = []
         if self._sessions is not None:
             for sess_list in self._sessions.values():
                 for session in sess_list.values():
-                    all_features.append(session.GetFeatureData(order=1))
-        return all_features
-
+                    session_data += session.GetFeatureData(order=1)
+        return session_data
+   
     def ClearPopulationLines(self) -> None:
         if self._population is not None:
             self._population.ClearLines()

@@ -195,17 +195,19 @@ class ModelRegistry(GeneratorRegistry):
             if self._mode in kmeans_model.AvailableModes():
                 self._register(model=kmeans_model, iter_mode=IterationMode.AGGREGATE)
                 Logger.Log(f"Loaded and registered hardcoded KMeansModel: {model_name}", logging.INFO)
-                # self._updateFromFeatureData(FeatureData)
-                self.TrainModels()
         except Exception as e:
             Logger.Log(f"Failed to create hardcoded KMeansModel: {e}", logging.ERROR)
 
     def _updateFromFeatureData(self, feature: FeatureData) -> None:
         Logger.Log(f"Updating models with feature data: {feature.Name}", logging.DEBUG)
         listeners = self._feature_registry.get(feature.Name, [])
+        print("\n\n\n\n\nFeature listeners:", listeners)
         for listener in listeners:
+            print("\n\n\n\n\nProcessing listener:", listener)
+            Logger.Log(f"Routing {feature.Name} to {listener.name}", logging.DEBUG)
             if listener.name in self._models:
                 self._models[listener.name]._updateFromFeatureData(feature)
+        # self._models[listener.name].Train()
         
     def TrainModels(self):
         Logger.Log(f"Beginning training for {len(self._models)} models...", logging.INFO)

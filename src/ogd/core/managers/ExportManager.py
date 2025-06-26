@@ -174,8 +174,8 @@ class ExportManager:
                 Logger.Log(f"Processing time for slice [{i+1}/{len(slices)}]: {time_delta} to handle {len(_next_slice_data)} events", logging.INFO, depth=2)
 
                 if self._model_mgr:
-                    _sess_feats = self._feat_mgr.GetSessionFeatureData()
-                    self._model_mgr.ProcessFeatureData(_sess_feats)
+                    self._sess_feats = self._feat_mgr.GetSessionFeatureData()
+                    self._model_mgr.ProcessFeatureData(self._sess_feats)
 
             # 2. Write out the session data and reset for next slice.
                 start = datetime.now()
@@ -215,19 +215,19 @@ class ExportManager:
         if self._model_mgr is not None and self._feat_mgr is not None:
         # 1. Get the list of lists from FeatureManager.
             Logger.Log("Retrieving all feature data for modeling...", logging.INFO, depth=2)
-            list_of_feature_lists = self._feat_mgr.GetAllFeatureData()
+            # list_of_feature_lists = self._feat_mgr.GetAllFeatureData()
 
-            print("type of feature data list", type(list_of_feature_lists))
+            # print("type of feature data list", type(list_of_feature_lists))
             
             # FIX: Flatten the list of lists into a single, flat list of features.
-            all_feature_data = []
-            for feature_list in list_of_feature_lists:
-                all_feature_data.extend(feature_list)
+            # all_feature_data = []
+            # for feature_list in list_of_feature_lists:
+            #     all_feature_data.extend(feature_list)
 
             # --- ADD THIS DEBUGGING BLOCK ---
             print(" DEBUGGING: CHECKPOINT 1 (ExportManager)")
-            if all_feature_data:
-                first_feature = all_feature_data[0]
+            if self._sess_feats:
+                first_feature = self._sess_feats[0]
                 print(f"Sample FeatureData object retrieved from FeatureManager:")
                 print(f"  -> Name:           {first_feature.Name}")
                 print(f"  -> Values:         {first_feature.FeatureValues}")
@@ -237,11 +237,11 @@ class ExportManager:
                 print("No feature data was retrieved from FeatureManager.")
             # --- END OF DEBUGGING BLOCK ---
 
-            print("type of all_feature_data", type(all_feature_data))
-            print(all_feature_data)
+            print("type of all_feature_data", type(self._sess_feats))
+            # print(self._sess_feats)
 
-            Logger.Log(f"Passing {len(all_feature_data)} features to the Model Manager...", logging.INFO, depth=2)
-            self._model_mgr.ProcessFeatureData(all_feature_data) 
+            Logger.Log(f"Passing {len(self._sess_feats)} features to the Model Manager...", logging.INFO, depth=2)
+            # self._model_mgr.ProcessFeatureData(self._sess_feats) 
             
             Logger.Log("Training models...", logging.INFO, depth=2)
             self._model_mgr.TrainModels()

@@ -1,4 +1,3 @@
-
 # from typing import List, Dict, Any
 # import pandas as pd
 # import numpy as np
@@ -228,6 +227,7 @@ class KMeansModel(PopulationModel):
 
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
+        print("\n\nInitializing KMeans Model\n\n")
         # Feature data accumulators
         self._crop_build_count = []
         self._dairy_build_count = []
@@ -278,6 +278,7 @@ class KMeansModel(PopulationModel):
             if feature.Name == "CropBuildCount":
                 print("  -> NAME CHECK: PASSED. Appending to _crop_build_count.")
                 self._crop_build_count.append(numeric_value)
+                print(self._crop_build_count)
             elif feature.Name == "DairyBuildCount":
                 print("  -> NAME CHECK: PASSED. Appending to _dairy_build_count.")
                 self._dairy_build_count.append(numeric_value)
@@ -292,6 +293,8 @@ class KMeansModel(PopulationModel):
                 self._total_build_count.append(numeric_value)
             else:
                 print(f"  -> NAME CHECK: FAILED (Name '{feature.Name}' did not match any list)")
+            
+            print("lenght for checking append", len(self._crop_build_count))
         # --- END OF DETAILED DEBUGGING BLOCK ---
 
     def _updateFromEvent(self, event):
@@ -302,6 +305,7 @@ class KMeansModel(PopulationModel):
 
         print("--- KMEANSMODEL: INSPECTING DATA AT START OF _train ---")
         print(f"Total entries for CropBuildCount:      {len(self._crop_build_count)}")
+        print(self._crop_build_count)
         print(f"  -> First 5 values: {self._crop_build_count[:5]}")
         # This logic is correct and will be called by the registry at the right time.
         min_length = min(
