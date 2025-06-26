@@ -168,6 +168,16 @@ class ExportManager:
                 time_delta = datetime.now() - start
                 Logger.Log(f"Processing time for slice [{i+1}/{len(slices)}]: {time_delta} to handle {len(_next_slice_data)} events", logging.INFO, depth=2)
 
+<<<<<<< Updated upstream
+=======
+                if self._model_mgr:
+                    self._sess_feats = self._feat_mgr.GetSessionFeatureData()
+                    # self._sess_feats = self._feat_mgr.GetSessionFeatures(slice_num=i+1, slice_count=len(slices), as_str=True)
+                    print(self._sess_feats[:20])
+                    print(f"DEBUGGING: CHECKPOINT 2 (ExportManager) - Number of session features: {len(self._sess_feats), type(self._sess_feats)}")
+                    # print(self._sess_feats)
+                    self._model_mgr.ProcessFeatureData(self._sess_feats)
+
             # 2. Write out the session data and reset for next slice.
                 start = datetime.now()
                 Logger.Log(f"Outputting slice [{i+1}/{len(slices)}]...", logging.INFO, depth=2)
@@ -193,6 +203,58 @@ class ExportManager:
         time_delta = datetime.now() - start
         Logger.Log(f"Output time for population: {time_delta}", logging.INFO, depth=2)
 
+<<<<<<< Updated upstream
+=======
+        # if self._model_mgr is not None:
+        #     feature_data_list = self._feat_mgr.GetAllFeatureData()
+        #     print(feature_data_list)
+        #     self._model_mgr.UpdateFromFeatureData(feature_data_list)
+        #     self._model_mgr.TrainModels()
+        #     # model_outputs = self._model_mgr.GetModels(as_str=True)
+        #     # model_info = self._model_mgr.ModelOutputs()
+        #     # for outerface in request.Outerfaces:
+        #     #     outerface.WriteLines(lines=model_outputs["models"], mode=ExportMode.POPULATION)
+
+        if self._model_mgr is not None and self._feat_mgr is not None:
+        # 1. Get the list of lists from FeatureManager.
+            Logger.Log("Retrieving all feature data for modeling...", logging.INFO, depth=2)
+            # list_of_feature_lists = self._feat_mgr.GetAllFeatureData()
+
+            # print("type of feature data list", type(list_of_feature_lists))
+            
+            # # FIX: Flatten the list of lists into a single, flat list of features.
+            # all_feature_data = []
+            # for feature_list in list_of_feature_lists:
+            #     all_feature_data.extend(feature_list)
+
+            # --- ADD THIS DEBUGGING BLOCK ---
+            print(" DEBUGGING: CHECKPOINT 1 (ExportManager)")
+            if self._sess_feats:
+                first_feature = self._sess_feats[0]
+                print(f"Sample FeatureData object retrieved from FeatureManager:")
+                print(f"  -> Name:           {first_feature.Name}")
+                print(f"  -> Values:         {first_feature.FeatureValues}")
+                # This next line is the most important one!
+                print(f"  -> ExtractionMode: {getattr(first_feature, 'ExtractionMode', '!!! ATTRIBUTE NOT FOUND !!!')}")
+            else:
+                print("No feature data was retrieved from FeatureManager.")
+            # --- END OF DEBUGGING BLOCK ---
+
+            # print("type of all_feature_data", type(all_feature_data))
+            # print(all_feature_data)
+
+            # Logger.Log(f"Passing {len(all_feature_data)} features to the Model Manager...", logging.INFO, depth=2)
+            # self._model_mgr.ProcessFeatureData(all_feature_data) 
+            
+            Logger.Log("Training models...", logging.INFO, depth=2)
+            self._model_mgr.TrainModels()
+            
+            # 4. Get the model outputs.
+            Logger.Log("Retrieving model outputs...", logging.INFO, depth=2)
+            self._model_mgr.GetModelInfo()
+            self._model_mgr.RenderModels()
+
+>>>>>>> Stashed changes
     @staticmethod
     def _loadLoaderClass(game_id:str) -> Optional[Type[GeneratorLoader]]:
         _loader_class: Optional[Type[GeneratorLoader]] = None

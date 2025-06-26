@@ -6,42 +6,52 @@ from ogd.core.generators.extractors.Feature import Feature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
+from collections import defaultdict
 
-class AlertCount(Feature):
+
+class TopCountySwitchDestinations(Feature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        self.alert_counts: Counter = Counter()
+        self.last_county_per_player = {}
+        self.county_switch_pairs = defaultdict(lambda: defaultdict(list))
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["local_alert_displayed"]
+        return ["county_changed"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        alert_type = event.EventData.get("alert_type", "").upper()
-        if alert_type != "GLOBAL":
-            self.alert_counts[alert_type] += 1
+        print(f"Processing event: {event}")
+        player_id = event.user_id
+
+        from_county = self.last_county_per_player.get(player_id)
+        to_county = event.EventData.get("county_name")
+
+        if from_county and to_county and from_county != to_county:
+            self.county_switch_pairs[from_county][to_county].append(player_id)
+        self.last_county_per_player[player_id] = to_county
 
     def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [
-            sum(self.alert_counts.values()),
-            self.alert_counts["DIALOGUE"],
-            self.alert_counts["CRITIMBALANCE"],
-            self.alert_counts["DIEOFF"],
-            self.alert_counts["DECLININGPOP"],
-            self.alert_counts["EXCESSRUNOFF"],
-            self.alert_counts["SELLINGLOSS"],
-        ]
+        ret_val = {}
+        for src, dests in self.county_switch_pairs.items():
+            sorted_dests = sorted(
+                dests.items(),
+                key=lambda item: len(item[1]),
+                reverse=True
+            )
+            ret_val[src] = {item[0]: item[1] for item in sorted_dests[:5]}
+        return [ret_val]
+    
 
     def Subfeatures(self) -> List[str]:
-        return ["Dialogue", "CritImbalance", "DieOff", "DecliningPop", "ExcessRunoff", "SellingLoss"]
+        return []
 
     # *** Optionally override public functions. ***
     @staticmethod

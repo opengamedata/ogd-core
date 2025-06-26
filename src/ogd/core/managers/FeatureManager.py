@@ -84,6 +84,7 @@ class FeatureManager:
             self._population.ProcessFeatureData(feature_list=pop_data)
             for player in self._players.values():
                 player.ProcessFeatureData(feature_list=pop_data)
+
             for session_list in self._sessions.values():
                 for session in session_list.values():
                     session.ProcessFeatureData(feature_list=pop_data)
@@ -126,6 +127,7 @@ class FeatureManager:
 
     def GetPlayerFeatureNames(self) -> List[str]:
         return self._players["null"].GeneratorNames if self._players is not None else []
+    
     def GetPlayerFeatures(self, as_str:bool = False) -> List[ExportRow]:
         start   : datetime = datetime.now()
         self._try_update(as_str=as_str)
@@ -142,6 +144,21 @@ class FeatureManager:
         time_delta = datetime.now() - start
         Logger.Log(f"Time to retrieve Session lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val
+    
+    #new
+    def GetPopulationFeatureData(self) -> List[FeatureData]:
+        if self._population is not None:
+            population_data = self._population.GetFeatureData(order=1)
+        return population_data if self._population is not None else []
+    
+    def GetSessionFeatureData(self) -> List[FeatureData]:
+        session_data=[]
+        if self._sessions is not None:
+            for sess_list in self._sessions.values():
+                for session in sess_list.values():
+                     session_data += session.GetFeatureData(order=1)
+        return session_data
+    
 
     def ClearPopulationLines(self) -> None:
         if self._population is not None:
