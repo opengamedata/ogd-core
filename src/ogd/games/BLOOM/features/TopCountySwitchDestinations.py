@@ -9,36 +9,51 @@ from ogd.common.models.FeatureData import FeatureData
 from collections import defaultdict
 
 
-class ActiveCounties(Feature):
+class TopCountySwitchDestinations(Feature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        self.last_unlocked_county = dict()  
-        self.county_left_off = defaultdict(list) 
-        
+        self.last_county_per_player = {}
+        self.county_switch_pairs = defaultdict(lambda: defaultdict(list))
+
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["county_unlocked"]
+        return ["county_changed"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
+        print(f"Processing event: {event}")
         player_id = event.user_id
-        county_name = event.EventData.get("county_name")
-        self.last_unlocked_county[player_id] = county_name
+
+        from_county = self.last_county_per_player.get(player_id)
+        to_county = event.EventData.get("county_name")
+
+        if from_county and to_county and from_county != to_county:
+            self.county_switch_pairs[from_county][to_county].append(player_id)
+        self.last_county_per_player[player_id] = to_county
 
     def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        for player_id, county_name in self.last_unlocked_county.items():
-            self.county_left_off[county_name].append(player_id)
-        return [self.county_left_off]
+        ret_val = {}
+        for src, dests in self.county_switch_pairs.items():
+            sorted_dests = sorted(
+                dests.items(),
+                key=lambda item: len(item[1]),
+                reverse=True
+            )
+            ret_val[src] = {item[0]: item[1] for item in sorted_dests[:5]}
+        return [ret_val]
+    
 
     def Subfeatures(self) -> List[str]:
         return []
 
+    # *** Optionally override public functions. ***
     @staticmethod
     def MinVersion() -> Optional[str]:
         return "1"
