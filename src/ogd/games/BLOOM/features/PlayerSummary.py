@@ -18,6 +18,7 @@ class PlayerSummary(SessionFeature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self._summary = {}
+        self.player_won = False
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -26,12 +27,11 @@ class PlayerSummary(SessionFeature):
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["CountyUnlockCount", "ActiveTime", "SessionCount"]
+        return ["CountyUnlockCount", "ActiveTime", "NumberOfSessionsPerPlayer", "GameCompletionStatus"]
 
     def _updateFromEvent(self, event: Event) -> None:
         pass
-
-
+       
     def _updateFromFeatureData(self, feature: FeatureData):
         # print(f"Processing feature: {feature}")
         player_id = feature.PlayerID
@@ -40,13 +40,16 @@ class PlayerSummary(SessionFeature):
             if player_id not in self._summary:
                 self._summary[player_id] = {
                     "active_time": 0,
-                    "counties_unlocked": [],
+                    "counties_unlocked": 0,
+                    "sessions": set(),
                     "num_sessions": 0
                 }
 
             if feature.FeatureType == "CountyUnlockCount":
                 # print(f"Processing CountyUnlockCount for player {player_id}: {feature.FeatureValues[0]}")
+                # print(feature)
                 self._summary[player_id]["counties_unlocked"] = feature.FeatureValues[0]
+
             elif feature.FeatureType == "ActiveTime":
                 # print(f"Processing ActiveTime for player {player_id}: {feature.FeatureValues[1]}")
                 if isinstance(feature.FeatureValues[0], timedelta):
@@ -55,10 +58,17 @@ class PlayerSummary(SessionFeature):
                     pass
                 else:
                     raise ValueError(f"PlayerSummary got {feature.Name} feature with value {feature.FeatureValues[0]} of non-timedelta type {type(feature.FeatureValues[0])} in the {feature.FeatureNames[0]} column!")
+            elif feature.FeatureType == "GameCompletionStatus":
+                if feature.FeatureValues[0] == 'WIN':
+                    self._summary[player_id]["counties_unlocked"] += 1
+                    # print(f"Updated summary for player {player_id}: {self._summary[player_id]}")
         elif feature.ExportMode == ExtractionMode.SESSION:
-            if feature.FeatureType == "SessionCount":
-                print(f"Processing Session for player {player_id}: {feature.FeatureValues[0]}")
-                self._summary[player_id]["num_sessions"] += feature.FeatureValues[0]
+            if feature.FeatureType == "NumberOfSessionsPerPlayer":
+                # print(f"Processing Session for player {player_id}: {feature.FeatureValues[0]}")
+                self._summary[player_id]["sessions"].add(feature.SessionID)
+                self._summary[player_id]["num_sessions"] = len(self._summary[player_id]["sessions"])
+
+       
 
     def _getFeatureValues(self) -> List[Any]:
         return [self._summary]

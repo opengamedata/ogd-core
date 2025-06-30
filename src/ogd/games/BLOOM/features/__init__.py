@@ -31,6 +31,7 @@ __all__ = [
     "PersistenceTime",
     "PhosphorusViewUnlocked",
     "PlayerSummary", 
+    "PopulationSummary",
     "PolicyUnlocked",
     "CountyUnlockTime",
     "QuitOnBloomFail", 
@@ -74,6 +75,7 @@ from . import CountyPolicyChangeCount
 from . import PersistenceTime
 from . import PhosphorusViewUnlocked
 from . import PlayerSummary
+from . import PopulationSummary
 from . import PolicyUnlocked
 from . import CountyUnlockTime
 from . import QuitOnBloomFail

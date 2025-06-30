@@ -102,6 +102,8 @@ class BloomLoader(GeneratorLoader):
                     ret_val = PhosphorusViewUnlocked.PhosphorusViewUnlocked(params=extractor_params)
                 case "PlayerSummary":
                     ret_val = PlayerSummary.PlayerSummary(params=extractor_params)
+                case "PopulationSummary":
+                    ret_val = PopulationSummary.PopulationSummary(params=extractor_params)
                 case "PolicyUnlocked":
                     ret_val = PolicyUnlocked.PolicyUnlocked(params=extractor_params)
                 case "QuitOnBloomFail":
