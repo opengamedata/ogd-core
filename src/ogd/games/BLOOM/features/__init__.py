@@ -22,6 +22,7 @@ __all__ = [
     "CountyUnlockCount",
     "EconomyViewUnlocked",
     "FailCount",
+    "JobsAttempted",
     "GameCompletionStatus",
     "NumberOfSessionsPerPlayer",
     "PersistThroughFailure",
@@ -29,11 +30,14 @@ __all__ = [
     "CountyPolicyChangeCount",
     "PersistenceTime",
     "PhosphorusViewUnlocked",
+    "PlayerSummary", 
     "PolicyUnlocked",
     "CountyUnlockTime",
     "QuitOnBloomFail", 
     "QuitOnCityFail",
     "QuitOnBankruptcy",
+    "TopCountySwitchDestinations",
+    "TopCountyCompletionDestinations",
     "BuildingInspectorTabCount",
     "GoodPolicyCount",
     # "PhosphorusViewTime",
@@ -61,6 +65,7 @@ from . import CountyLatestMoney
 from . import CountyUnlockCount
 from . import EconomyViewUnlocked
 from . import FailCount
+from . import JobsAttempted
 from . import GameCompletionStatus
 from . import NumberOfSessionsPerPlayer
 from . import PersistThroughFailure
@@ -68,11 +73,14 @@ from . import SucceededThroughFailure
 from . import CountyPolicyChangeCount
 from . import PersistenceTime
 from . import PhosphorusViewUnlocked
+from . import PlayerSummary
 from . import PolicyUnlocked
 from . import CountyUnlockTime
 from . import QuitOnBloomFail
 from . import QuitOnCityFail
 from . import QuitOnBankruptcy
+from . import TopCountySwitchDestinations
+from . import TopCountyCompletionDestinations
 from . import BuildingInspectorTabCount
 from . import GoodPolicyCount
 # from . import PhosphorusViewTime

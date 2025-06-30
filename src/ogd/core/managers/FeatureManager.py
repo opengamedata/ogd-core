@@ -146,18 +146,18 @@ class FeatureManager:
         return ret_val
     
     #new
-    def GetPopulationFeatureData(self) -> List[FeatureData]:
-        if self._population is not None:
-            population_data = self._population.GetFeatureData(order=1)
-        return population_data if self._population is not None else []
+    # def GetPopulationFeatureData(self) -> List[FeatureData]:
+    #     if self._population is not None:
+    #         population_data = self._population.GetFeatureData(order=1)
+    #     return population_data if self._population is not None else []
     
-    def GetSessionFeatureData(self) -> List[FeatureData]:
-        session_data=[]
-        if self._sessions is not None:
-            for sess_list in self._sessions.values():
-                for session in sess_list.values():
-                     session_data += session.GetFeatureData(order=1)
-        return session_data
+    # def GetSessionFeatureData(self) -> List[FeatureData]:
+    #     session_data=[]
+    #     if self._sessions is not None:
+    #         for sess_list in self._sessions.values():
+    #             for session in sess_list.values():
+    #                  session_data += session.GetFeatureData(order=1)
+    #     return session_data
     
 
     def ClearPopulationLines(self) -> None:

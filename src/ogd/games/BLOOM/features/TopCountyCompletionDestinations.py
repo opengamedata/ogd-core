@@ -25,7 +25,7 @@ class TopCountyCompletionDestinations(Feature):
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        print(f"Processing event: {event}")
+        # print(f"Processing event: {event}")
         player_id = event.user_id
 
         current_county = event.EventData.get("county_name")

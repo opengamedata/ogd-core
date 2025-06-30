@@ -85,6 +85,7 @@ class BloomLoader(GeneratorLoader):
                     ret_val = EconomyViewUnlocked.EconomyViewUnlocked(params=extractor_params)
                 case "FailCount":
                     ret_val = FailCount.FailCount(params=extractor_params)
+
                 case "GameCompletionStatus":
                     ret_val = GameCompletionStatus.GameCompletionStatus(params=extractor_params)
                 case "NumberOfSessionsPerPlayer":
@@ -99,6 +100,8 @@ class BloomLoader(GeneratorLoader):
                     ret_val = PersistenceTime.PersistenceTime(params=extractor_params)
                 case "PhosphorusViewUnlocked":
                     ret_val = PhosphorusViewUnlocked.PhosphorusViewUnlocked(params=extractor_params)
+                case "PlayerSummary":
+                    ret_val = PlayerSummary.PlayerSummary(params=extractor_params)
                 case "PolicyUnlocked":
                     ret_val = PolicyUnlocked.PolicyUnlocked(params=extractor_params)
                 case "QuitOnBloomFail":
@@ -107,7 +110,11 @@ class BloomLoader(GeneratorLoader):
                     ret_val = QuitOnCityFail.QuitOnCityFail(params=extractor_params)
                 case "QuitOnBankruptcy":
                     ret_val = QuitOnBankruptcy.QuitOnBankruptcy(params=extractor_params)
-                case "BuildingInspectorTabCount":  # Add BuildingInspectorTabCount feature here
+                case "TopCountySwitchDestinations":
+                    ret_val = TopCountySwitchDestinations.TopCountySwitchDestinations(params=extractor_params)
+                case "TopCountyCompletionDestinations":
+                    ret_val = TopCountyCompletionDestinations.TopCountyCompletionDestinations(params=extractor_params)
+                case "BuildingInspectorTabCount": 
                     ret_val = BuildingInspectorTabCount.BuildingInspectorTabCount(params=extractor_params)
                 case "GoodPolicyCount":
                     ret_val = GoodPolicyCount.GoodPolicyCount(params=extractor_params)
@@ -135,6 +142,10 @@ class BloomLoader(GeneratorLoader):
                     ret_val = CountyLatestMoney.CountyLatestMoney(params=extractor_params)
                 case "CountyPolicyChangeCount":
                     ret_val = CountyPolicyChangeCount.CountyPolicyChangeCount(params=extractor_params)
+                
+                case "JobsAttempted":
+                    ret_val = JobsAttempted.JobsAttempted(params=extractor_params)
+                    
                 case _:
                     ret_val = None
 

@@ -25,7 +25,7 @@ class TopCountySwitchDestinations(Feature):
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        print(f"Processing event: {event}")
+        # print(f"Processing event: {event}")
         player_id = event.user_id
 
         from_county = self.last_county_per_player.get(player_id)
