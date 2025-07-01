@@ -37,8 +37,7 @@ class GeneratorCollectionConfig(Config):
     _DEFAULT_FEATURE_MAP = FeatureMapConfig(name="DefaultFeatureMap", legacy_mode=_DEFAULT_LEGACY_MODE, legacy_perlevel_feats=_DEFAULT_LEGACY_PERCOUNTS,
                                             percount_feats=_DEFAULT_FEAT_PERCOUNTS, aggregate_feats=_DEFAULT_FEAT_AGGREGATES, other_elements={})
     _DEFAULT_CONFIG = {}
-    _DEFAULT_MIN_LEVEL = None
-    _DEFAULT_MAX_LEVEL = None
+    _DEFAULT_LEVEL_RANGE = None
     _DEFAULT_OTHER_RANGES = {}
     _DEFAULT_VERSIONS = None
     _DEFAULT_GAME_FOLDER = Path("./") / "ogd" / "games"
@@ -48,50 +47,42 @@ class GeneratorCollectionConfig(Config):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, name:str, game_id:str, 
-                 detector_map:DetectorMapConfig,
-                 extractor_map:FeatureMapConfig,
-                 config:Map, min_level:Optional[int], max_level:Optional[int], other_ranges:Dict[str, range],
+    def __init__(self, name:str, game_id:str, config:Map,
+                 detector_map:DetectorMapConfig, extractor_map:FeatureMapConfig,
+                 subunit_range:Optional[range], other_ranges:Dict[str, range],
+                 supported_versions:Optional[List],
                  other_elements:Optional[Map]=None):
         """Constructor for the GeneratorCollectionConfig class.
-        Given a path and filename, it loads the data from a JSON schema,
-        storing the full schema into a private variable, and compiling a list of
-        all features to be extracted.
 
         :param name: _description_
         :type name: str
         :param game_id: _description_
         :type game_id: str
+        :param config: _description_
+        :type config: Map
         :param detector_map: _description_
         :type detector_map: DetectorMapConfig
         :param extractor_map: _description_
         :type extractor_map: FeatureMapConfig
-        :param config: _description_
-        :type config: Map
-        :param min_level: _description_
-        :type min_level: Optional[int]
-        :param max_level: _description_
-        :type max_level: Optional[int]
+        :param subunit_range: _description_
+        :type subunit_range: Optional[range]
         :param other_ranges: _description_
         :type other_ranges: Dict[str, range]
-        :param other_elements: _description_
-        :type other_elements: Dict[str, Any]
-        :return: The new instance of GeneratorCollectionConfig
-        :rtype: GeneratorCollectionConfig
+        :param other_elements: _description_, defaults to None
+        :type other_elements: Optional[Map], optional
         """
         unparsed_elements = other_elements or {}
 
     # 1. define instance vars
-        self._game_id                : str               = game_id
-        self._detector_map           : DetectorMapConfig = detector_map
-        self._extractor_map          : FeatureMapConfig  = extractor_map
-        self._config                 : Map               = config
-        self._level_range            : Optional[range]   = range(min_level, max_level+1) if min_level is not None and max_level is not None else None
-        # self._min_level              : Optional[int]   = min_level
-        # self._max_level              : Optional[int]   = max_level
-        self._other_ranges           : Dict[str, range]  = other_ranges
+        self._game_id            : str               = game_id
+        self._detector_map       : DetectorMapConfig = detector_map
+        self._extractor_map      : FeatureMapConfig  = extractor_map
+        self._config             : Map               = config
+        self._subunit_range      : Optional[range]   = subunit_range
+        self._supported_versions : Optional[List]    = supported_versions
+        self._other_ranges       : Dict[str, range]  = other_ranges
 
-        super().__init__(name=self._game_id, other_elements=other_elements)
+        super().__init__(name=self._game_id, other_elements=unparsed_elements)
 
     # def __getitem__(self, key) -> Any:
     #     return _schema[key] if _schema is not None else None
@@ -113,8 +104,10 @@ class GeneratorCollectionConfig(Config):
         """Property for the compiled list of all detector names.
         """
         ret_val : List[str] = []
-        for _category in self.Detectors.values():
-            ret_val += [detector.Name for detector in _category.values()]
+
+        ret_val = [detector.Name for detector in self.Detectors.AggregateDetectors.values()] \
+                + [detector.Name for detector in self.Detectors.PerCountDetectors.values()]
+
         return ret_val
 
     @property
@@ -148,8 +141,9 @@ class GeneratorCollectionConfig(Config):
         """Property for the compiled list of all feature names.
         """
         ret_val : List[str] = []
-        for _category in self.Features.values():
-            ret_val += [feature.Name for feature in _category.values()]
+        ret_val = [extractor.Name for extractor in self.Extractors.AggregateFeatures.values()] \
+                + [extractor.Name for extractor in self.Extractors.PerCountFeatures.values()] \
+                + [extractor.Name for extractor in self.Extractors.LegacyPerLevelFeatures.values()]
         return ret_val
 
     @property
@@ -171,16 +165,20 @@ class GeneratorCollectionConfig(Config):
         return self.Extractors.AggregateFeatures
 
     @property
-    def LevelRange(self) -> range:
-        """Property for the range of levels defined in the schema if any.
+    def SubunitRange(self) -> Optional[range]:
+        """Property for the range of levels or other game sub-units that are the primary per-count property for the given game.
         """
-        ret_val = range(0)
-        if self._min_level is not None and self._max_level is not None:
-            # for i in range(self._min_level, self._max_level+1):
-            ret_val = range(self._min_level, self._max_level+1)
+        ret_val = None
+        if self._subunit_range:
+            ret_val = self._subunit_range
         else:
-            Logger.Log(f"Could not generate per-level features, min_level={self._min_level} and max_level={self._max_level}", logging.ERROR)
+            Logger.Log(f"Could not get game sub-unit (or per-level) feature range, there was no range configured!", logging.ERROR)
         return ret_val
+    @property
+    def LevelRange(self) -> Optional[range]:
+        """Alias for the primary game sub-unit range.
+        """
+        return self.SubunitRange
 
     @property
     def OtherRanges(self) -> Dict[str, range]:
@@ -188,65 +186,54 @@ class GeneratorCollectionConfig(Config):
 
     @property
     def Config(self) -> Dict[str, Any]:
+        """Property for additional config items
+
+        :return: _description_
+        :rtype: Dict[str, Any]
+        """
         return self._config
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     @property
     def AsMarkdown(self) -> str:
-        event_summary = ["## Logged Events",
-                         "The individual fields encoded in the *game_state* and *user_data* Event element for all event types, and the fields in the *event_data* Event element for each individual event type logged by the game."
-                        ]
-        enum_list     = ["### Enums",
-                         "\n".join(
-                             ["| **Name** | **Values** |",
-                             "| ---      | ---        |"]
-                         + [f"| {name} | {val_list} |" for name,val_list in self.EnumDefs.items()]
-                        )]
-        game_state_list = ["### Game State",
-                           "\n".join(
-                               ["| **Name** | **Type** | **Description** | **Sub-Elements** |",
-                               "| ---      | ---      | ---             | ---         |"]
-                           + [elem.AsMarkdownRow for elem in self.GameState.values()]
-                          )]
-        user_data_list = ["### User Data",
-                          "\n".join(
-                              ["| **Name** | **Type** | **Description** | **Sub-Elements** |",
-                              "| ---      | ---      | ---             | ---         |"]
-                          + [elem.AsMarkdownRow for elem in self.UserData.values()]
-                         )]
-        # Set up list of events
-        event_list = [event.AsMarkdownTable for event in self.Events] if len(self.Events) > 0 else ["None"]
         # Set up list of detectors
         detector_summary = ["## Detected Events",
                             "The custom, data-driven Events calculated from this game's logged events by OpenGameData when an 'export' is run."
                            ]
-        detector_list = []
-        for detect_kind in ["perlevel", "per_count", "aggregate"]:
-            if detect_kind in self._detector_map:
-                detector_list += [detector.AsMarkdown for detector in self.Detectors[detect_kind].values()]
+        detector_list = [detector.AsMarkdown for detector in self.Detectors.AggregateDetectors.values()] \
+                      + [detector.AsMarkdown for detector in self.Detectors.PerCountDetectors.values()]
         detector_list = detector_list if len(detector_list) > 0 else ["None"]
         # Set up list of features
         feature_summary = ["## Processed Features",
                            "The features/metrics calculated from this game's event logs by OpenGameData when an 'export' is run."
                           ]
-        feature_list = [feature.AsMarkdown for feature in self._aggregate_feats.values()] + [feature.AsMarkdown for feature in self._percount_feats.values()]
+        feature_list = [feature.AsMarkdown for feature in self.Features.AggregateFeatures.values()] \
+                     + [feature.AsMarkdown for feature in self.Features.PerCountFeatures.values()] \
+
+        feature_list = feature_list + [feature.AsMarkdown for feature in self.Features.LegacyPerLevelFeatures.values()] if self.Features.LegacyMode else feature_list
         feature_list = feature_list if len(feature_list) > 0 else ["None"]
         # Include other elements
-        other_summary = ["## Other Elements",
-                         "Other (potentially non-standard) elements specified in the game's schema, which may be referenced by event/feature processors."
-                         ]
+        other_summary = [
+            "## Other Elements",
+            "Other (potentially non-standard) elements specified in the game's schema, which may be referenced by event/feature processors."
+        ]
         other_element_list = [ f"{key} : {self._other_elements[key]}" for key in self._other_elements.keys()]
-        other_range_summary = ["### Other Ranges",
-                         "Extra ranges specified in the game's schema, which may be referenced by event/feature processors."
-                         ]
+        level_range_summary = [
+            "### Sub-unit/Level Range",
+            "The range for the primary sub-unit (e.g. level) of gameplay."
+        ] if self.SubunitRange else []
+        level_range_list = [ str(self.SubunitRange) ] if self.SubunitRange else []
+        other_range_summary = [
+            "### Other Ranges",
+            "Extra ranges specified in the game's schema, which may be referenced by event/feature processors."
+        ]
         other_range_list = [ f"{key} : {self.OtherRanges[key]}" for key in self.OtherRanges ]
 
-        ret_val = "  \n\n".join(event_summary
-                              + enum_list + game_state_list + user_data_list + event_list
-                              + detector_summary + detector_list
+        ret_val = "  \n\n".join(detector_summary + detector_list
                               + feature_summary + feature_list
                               + other_summary + other_element_list
+                              + level_range_summary + level_range_list
                               + other_range_summary + other_range_list)
 
         return ret_val
@@ -271,46 +258,26 @@ class GeneratorCollectionConfig(Config):
         :rtype: GeneratorCollectionConfig
         """
     # 1. define local vars
-        _game_id                : str                                  = name
-        _enum_defs              : Dict[str, List[str]]
-        _game_state             : Dict[str, Any]
-        _user_data              : Dict[str, Any]
-        _event_list             : List[EventSchema]
-        _detector_map           : Dict[str, Dict[str, DetectorConfig]]
-        _aggregate_feats        : Dict[str, AggregateConfig] = {}
-        _percount_feats         : Dict[str, PerCountConfig]  = {}
-        _legacy_perlevel_feats  : Dict[str, PerCountConfig]  = {}
-        _legacy_mode            : bool
-        _config                 : Dict[str, Any]
-        _min_level              : Optional[int]
-        _max_level              : Optional[int]
-        _other_ranges           : Dict[str, range]
-        _supported_vers         : Optional[List[int]]
+        _game_id        : str                  = name
+        _detector_map   : DetectorMapConfig
+        _feature_map    : FeatureMapConfig
+        _config         : Dict[str, Any]
+        _level_range    : Optional[range]
+        _other_ranges   : Dict[str, range]
+        _supported_vers : Optional[List[int]]
 
         if not isinstance(unparsed_elements, dict):
             unparsed_elements   = {}
             Logger.Log(f"For {_game_id} GeneratorCollectionConfig, unparsed_elements was not a dict, defaulting to empty dict", logging.WARN)
 
-    # 2. set instance vars, starting with event data
-
-        _enum_defs = cls._parseEnumDefs(unparsed_elements=unparsed_elements)
-        _game_state = cls._parseGameState(unparsed_elements=unparsed_elements)
-        _user_data = cls._parseUserData(unparsed_elements=unparsed_elements)
-
-        _event_list = cls._parseEventList(unparsed_elements=unparsed_elements)
-
-    # 3. Get detector information
+    # 2. set instance vars, starting with  detector information
         # TODO : investigate weird Dict[str, Dict[str, DetectorConfig]] type inference
-        _detector_map = cls._parseDetectorMap(unparsed_elements=unparsed_elements).AsDict
+        _detector_map = cls._parseDetectorMap(unparsed_elements=unparsed_elements)
 
-    # 4. Get feature information
-        _feat_map = cls._parseFeatureMap(unparsed_elements=unparsed_elements)
-        _aggregate_feats.update(_feat_map.AggregateFeatures)
-        _percount_feats.update(_feat_map.PerCountFeatures)
-        _legacy_perlevel_feats.update(_feat_map.LegacyPerLevelFeatures)
-        _legacy_mode = _feat_map.LegacyMode
+    # 3. Get feature information
+        _feature_map = cls._parseFeatureMap(unparsed_elements=unparsed_elements)
 
-    # 5. Get config, if any
+    # 4. Get config, if any
         if "config" in unparsed_elements.keys():
             _config = unparsed_elements['config']
         else:
@@ -321,42 +288,30 @@ class GeneratorCollectionConfig(Config):
             _supported_vers = None
             Logger.Log(f"{_game_id} game schema does not define supported versions, defaulting to support all versions.", logging.INFO)
 
-    # 6. Get level range and other ranges, if any
-        _min_level, _max_level = cls._parseLevelRange(unparsed_elements=unparsed_elements)
+    # 5. Get level range and other ranges, if any
+        _level_range = cls._parseLevelRange(unparsed_elements=unparsed_elements)
 
         _other_ranges = {key : range(val.get('min', 0), val.get('max', 1)) for key,val in unparsed_elements.items() if key.endswith("_range")}
 
-    # 7. Collect any other, unexpected elements
+    # 6. Collect any other, unexpected elements
         _used = {'enums', 'game_state', 'user_data', 'events', 'detectors', 'features', 'level_range', 'config'}.union(_other_ranges.keys())
         _leftovers = { key:val for key,val in unparsed_elements.items() if key not in _used }
-        return GeneratorCollectionConfig(name=name, game_id=_game_id, enum_defs=_enum_defs,
-                          game_state=_game_state, user_data=_user_data,
-                          event_list=_event_list, detector_map=_detector_map,
-                          aggregate_feats=_aggregate_feats, percount_feats=_percount_feats,
-                          legacy_perlevel_feats=_legacy_perlevel_feats, use_legacy_mode=_legacy_mode,
-                          config=_config, min_level=_min_level, max_level=_max_level,
-                          other_ranges=_other_ranges, supported_vers=_supported_vers,
-                          other_elements=_leftovers)
+        return GeneratorCollectionConfig(name=name, game_id=_game_id, config=_config,
+                          detector_map=_detector_map, extractor_map=_feature_map,
+                          subunit_range=_level_range, other_ranges=_other_ranges,
+                          supported_versions=_supported_vers, other_elements=_leftovers)
 
     @classmethod
     def Default(cls) -> "GeneratorCollectionConfig":
         return GeneratorCollectionConfig(
             name="DefaultGeneratorCollectionConfig",
             game_id="DEFAULT_GAME",
-            enum_defs=cls._DEFAULT_ENUMS,
-            game_state=cls._DEFAULT_GAME_STATE,
-            user_data=cls._DEFAULT_USER_DATA,
-            event_list=cls._DEFAULT_EVENT_LIST,
-            detector_map=cls._DEFAULT_DETECTOR_MAP,
-            aggregate_feats=cls._DEFAULT_AGGREGATES,
-            percount_feats=cls._DEFAULT_PERCOUNTS,
-            legacy_perlevel_feats=cls._DEFAULT_LEGACY_PERCOUNTS,
-            use_legacy_mode=cls._DEFAULT_LEGACY_MODE,
             config=cls._DEFAULT_CONFIG,
-            min_level=cls._DEFAULT_MIN_LEVEL,
-            max_level=cls._DEFAULT_MAX_LEVEL,
+            detector_map=cls._DEFAULT_DETECTOR_MAP,
+            extractor_map=cls._DEFAULT_FEATURE_MAP,
+            subunit_range=cls._DEFAULT_LEVEL_RANGE,
             other_ranges=cls._DEFAULT_OTHER_RANGES,
-            supported_vers=cls._DEFAULT_VERSIONS,
+            supported_versions=cls._DEFAULT_VERSIONS,
             other_elements={}
         )
 
@@ -376,7 +331,7 @@ class GeneratorCollectionConfig(Config):
         :return: _description_
         :rtype: GeneratorCollectionConfig
         """
-        ret_val : Schema
+        ret_val : Config
         # Give schema_path a default, don't think we can use game_id to construct it directly in the function header (so do it here if None)
         schema_path = schema_path or cls._DEFAULT_GAME_FOLDER / game_id / "schemas"
         ret_val = cls._fromFile(schema_name=game_id, schema_path=schema_path, search_templates=search_templates)
@@ -397,17 +352,20 @@ class GeneratorCollectionConfig(Config):
         :return: The range object with name given by `count`, or a new range from 0 to (but not including) `int(count)`
         :rtype: range
         """
+        ret_val :range
+
         if isinstance(count, str):
-            if count.lower() == "level_range":
-                count_range = self.LevelRange
+            if count.lower() == "level_range" and self.LevelRange:
+                ret_val = self.LevelRange
             elif count in self.OtherRanges.keys():
-                count_range = self.OtherRanges.get(count, range(0))
+                ret_val = self.OtherRanges.get(count, range(0))
             else:
                 other_range : Dict[str, int] = self.NonStandardElements.get(count, {'min':0, 'max':-1})
-                count_range = range(other_range['min'], other_range['max']+1)
+                ret_val = range(other_range['min'], other_range['max']+1)
         else:
-            count_range = range(0,int(count))
-        return count_range
+            ret_val = range(0,int(count))
+
+        return ret_val
 
     def DetectorEnabled(self, detector_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
         """Function to check if detector with given base name and iteration mode (aggregate or percount) is enabled for given extract mode.
@@ -422,16 +380,14 @@ class GeneratorCollectionConfig(Config):
         :return: True if the given detector is enabled in the schema, otherwise False
         :rtype: bool
         """
-        if self._legacy_mode:
-            return False
         ret_val : bool
 
         _detector_schema : Optional[DetectorConfig]
         match iter_mode:
             case IterationMode.AGGREGATE:
-                _detector_schema = self.Detectors['aggregate'].get(detector_name)
+                _detector_schema = self.Detectors.AggregateDetectors.get(detector_name)
             case IterationMode.PERCOUNT:
-                _detector_schema = self.Detectors['per_count'].get(detector_name, self.Detectors['perlevel'].get(detector_name))
+                _detector_schema = self.Detectors.PerCountDetectors.get(detector_name)
             case _:
                 raise ValueError(f"In GeneratorCollectionConfig, DetectorEnabled was given an unrecognized iteration mode of {iter_mode.name}")
         if _detector_schema is not None:
@@ -442,7 +398,7 @@ class GeneratorCollectionConfig(Config):
         return ret_val
 
     def FeatureEnabled(self, feature_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
-        if self._legacy_mode:
+        if self.Extractors.LegacyMode:
             return feature_name == "legacy"
         ret_val : bool
 
@@ -462,7 +418,7 @@ class GeneratorCollectionConfig(Config):
         return ret_val
 
     def EnabledDetectors(self, iter_modes:Set[IterationMode], extract_modes:Set[ExtractionMode]=set()) -> Dict[str, DetectorConfig]:
-        if self._legacy_mode:
+        if self.Extractors.LegacyMode:
             return {}
         ret_val : Dict[str, DetectorConfig] = {}
 
@@ -473,7 +429,7 @@ class GeneratorCollectionConfig(Config):
         return ret_val
 
     def EnabledFeatures(self, iter_modes:Set[IterationMode]={IterationMode.AGGREGATE, IterationMode.PERCOUNT}, extract_modes:Set[ExtractionMode]=set()) -> Dict[str, FeatureConfig]:
-        if self._legacy_mode:
+        if self.Extractors.LegacyMode:
             return {"legacy" : self._DEFAULT_LEGACY_CONFIG} if IterationMode.AGGREGATE in iter_modes else {}
         ret_val : Dict[str, FeatureConfig] = {}
 
@@ -484,86 +440,6 @@ class GeneratorCollectionConfig(Config):
         return ret_val
 
     # *** PRIVATE STATICS ***
-
-    @staticmethod
-    def _parseEnumDefs(unparsed_elements:Map) -> Dict[str, List[str]]:
-        """_summary_
-
-        TODO : Fully parse this, rather than just getting dictionary.
-
-        :param unparsed_elements: _description_
-        :type unparsed_elements: Map
-        :return: _description_
-        :rtype: Dict[str, List[str]]
-        """
-        ret_val : Dict[str, List[str]]
-
-        enums_list = GeneratorCollectionConfig.ParseElement(
-            unparsed_elements=unparsed_elements,
-            valid_keys=["enums"],
-            to_type=dict,
-            default_value=GeneratorCollectionConfig._DEFAULT_ENUMS,
-            remove_target=True
-        )
-        if isinstance(enums_list, dict):
-            ret_val = enums_list
-        else:
-            ret_val = GeneratorCollectionConfig._DEFAULT_ENUMS
-            Logger.Log(f"enums_list was unexpected type {type(enums_list)}, defaulting to {ret_val}.", logging.WARN)
-        return ret_val
-
-    @staticmethod
-    def _parseGameState(unparsed_elements:Map) -> Dict[str, DataElementSchema]:
-        ret_val : Dict[str, DataElementSchema]
-
-        game_state = GeneratorCollectionConfig.ParseElement(
-            unparsed_elements=unparsed_elements,
-            valid_keys=["game_state"],
-            to_type=dict,
-            default_value=GeneratorCollectionConfig._DEFAULT_GAME_STATE,
-            remove_target=True
-        )
-        ret_val = {
-            name : DataElementSchema.FromDict(name=name, unparsed_elements=elems)
-            for name,elems in game_state.items()
-        }
-
-        return ret_val
-
-    @staticmethod
-    def _parseUserData(unparsed_elements:Map) -> Dict[str, DataElementSchema]:
-        ret_val : Dict[str, DataElementSchema]
-
-        user_data = GeneratorCollectionConfig.ParseElement(
-            unparsed_elements=unparsed_elements,
-            valid_keys=["user_data"],
-            to_type=dict,
-            default_value=GeneratorCollectionConfig._DEFAULT_USER_DATA,
-            remove_target=True
-        )
-        ret_val = {
-            name : DataElementSchema.FromDict(name=name, unparsed_elements=elems)
-            for name,elems in user_data.items()
-        }
-
-        return ret_val
-
-    @staticmethod
-    def _parseEventList(unparsed_elements:Map) -> List[EventSchema]:
-        ret_val : List[EventSchema]
-
-        events_list = GeneratorCollectionConfig.ParseElement(
-            unparsed_elements=unparsed_elements,
-            valid_keys=["events"],
-            to_type=dict,
-            default_value=GeneratorCollectionConfig._DEFAULT_EVENT_LIST,
-            remove_target=True
-        )
-        ret_val = [
-            EventSchema.FromDict(name=key, unparsed_elements=val) for key,val in events_list.items()
-        ]
-
-        return ret_val
 
     @staticmethod
     def _parseDetectorMap(unparsed_elements:Map) -> DetectorMapConfig:
@@ -595,8 +471,8 @@ class GeneratorCollectionConfig(Config):
         return ret_val
 
     @staticmethod
-    def _parseLevelRange(unparsed_elements:Map) -> Tuple[Optional[int], Optional[int]]:
-        ret_val : Tuple[Optional[int], Optional[int]]
+    def _parseLevelRange(unparsed_elements:Map) -> Optional[range]:
+        ret_val : Optional[range] = GeneratorCollectionConfig._DEFAULT_LEVEL_RANGE
 
         level_range = GeneratorCollectionConfig.ParseElement(
             unparsed_elements=unparsed_elements,
@@ -607,11 +483,15 @@ class GeneratorCollectionConfig(Config):
         )
 
         if isinstance(level_range, dict):
-            ret_val = (level_range.get("min", None), level_range.get("max", None))
+            _min = level_range.get("min", 0)
+            _max = level_range.get("max", None)
+            if _max:
+                ret_val = range(_min, _max)
+            else:
+                Logger.Log(f"level_range had no max element defined, defaulting to {ret_val}.", logging.WARN)
         elif level_range == None:
-            ret_val = (GeneratorCollectionConfig._DEFAULT_MIN_LEVEL, GeneratorCollectionConfig._DEFAULT_MAX_LEVEL)
+            pass
         else:
-            ret_val = (GeneratorCollectionConfig._DEFAULT_MIN_LEVEL, GeneratorCollectionConfig._DEFAULT_MAX_LEVEL)
             Logger.Log(f"level_range was unexpected type {type(level_range)}, defaulting to {ret_val}.", logging.WARN)
         return ret_val
 
