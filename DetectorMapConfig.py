@@ -3,7 +3,7 @@ import logging
 from typing import Dict, Optional
 # import local files
 from ogd.common.configs.Config import Config
-from ogd.common.configs.games.DetectorConfig import DetectorConfig
+from ogd.common.configs.generators.DetectorConfig import DetectorConfig
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import Map
 

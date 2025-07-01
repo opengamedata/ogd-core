@@ -4,13 +4,13 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple, Union
 # import local files
 from ogd.common.configs.Config import Config
-from ogd.common.configs.games.DetectorMapConfig import DetectorMapConfig
-from ogd.common.configs.games.FeatureMapConfig import FeatureMapConfig
-from ogd.common.configs.games.AggregateConfig import AggregateConfig
-from ogd.common.configs.games.DetectorConfig import DetectorConfig
-from ogd.common.configs.games.DetectorMapConfig import DetectorMapConfig
-from ogd.common.configs.games.PerCountConfig import PerCountConfig
-from ogd.common.configs.games.FeatureConfig import FeatureConfig
+from ogd.common.configs.generators.DetectorMapConfig import DetectorMapConfig
+from ogd.common.configs.generators.FeatureMapConfig import FeatureMapConfig
+from ogd.common.configs.generators.AggregateConfig import AggregateConfig
+from ogd.common.configs.generators.DetectorConfig import DetectorConfig
+from ogd.common.configs.generators.DetectorMapConfig import DetectorMapConfig
+from ogd.common.configs.generators.PerCountConfig import PerCountConfig
+from ogd.common.configs.generators.FeatureConfig import FeatureConfig
 from ogd.common.models.enums.IterationMode import IterationMode
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.utils.Logger import Logger
