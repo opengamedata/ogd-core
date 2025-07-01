@@ -8,7 +8,6 @@ from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import Map
 
 class DetectorMapConfig(Config):
-    _DEFAULT_PERLEVEL_DETECTORS  = {}
     _DEFAULT_PERCOUNT_DETECTORS  = {}
     _DEFAULT_AGGREGATE_DETECTORS = {}
 
@@ -16,21 +15,14 @@ class DetectorMapConfig(Config):
 
     """
     Dumb struct to contain the specification and config of a set of features for a game.
-
-    TODO : Remove per-level detectors, we'll never use it.
     """
     def __init__(self, name:str,
-                 perlevel_detectors:Dict[str, DetectorConfig], percount_detectors:Dict[str, DetectorConfig], aggregate_detectors:Dict[str, DetectorConfig],
+                 percount_detectors:Dict[str, DetectorConfig], aggregate_detectors:Dict[str, DetectorConfig],
                  other_elements:Optional[Map]=None):
-        self._perlevel_detectors  : Dict[str, DetectorConfig] = perlevel_detectors or self._parsePerLevelDetectors(unparsed_elements=other_elements or {})
         self._percount_detectors  : Dict[str, DetectorConfig] = percount_detectors or self._parsePerCountDetectors(unparsed_elements=other_elements or {})
         self._aggregate_detectors : Dict[str, DetectorConfig] = aggregate_detectors or self._parseAggregateDetectors(unparsed_elements=other_elements or {})
 
         super().__init__(name=name, other_elements=other_elements)
-
-    @property
-    def PerLevelDetectors(self) -> Dict[str, DetectorConfig]:
-        return self._perlevel_detectors
 
     @property
     def PerCountDetectors(self) -> Dict[str, DetectorConfig]:
@@ -54,7 +46,6 @@ class DetectorMapConfig(Config):
     @property
     def AsDict(self) -> Dict[str, Dict[str, DetectorConfig]]:
         ret_val = {
-            "perlevel"  : self.PerLevelDetectors,
             "per_count" : self.PerCountDetectors,
             "aggregate" : self.AggregateDetectors
         }
@@ -66,13 +57,6 @@ class DetectorMapConfig(Config):
 
         Expected structure is:
         {
-            "perlevel" : {
-                "example" : {
-                    "type":"ExampleDetectorClass",
-                    "enabled":true,
-                    "description":"Info about the per-level detector; the perlevel is a legacy sub-dict and should not be included."
-                }
-            },
             "per_count" : {
                 "example" : {
                     "type":"ExampleDetectorClass",
@@ -96,20 +80,18 @@ class DetectorMapConfig(Config):
         :return: A DetectorMapConfig based on the given collection of elements.
         :rtype: DetectorMapConfig
         """
-        _perlevel_detectors  : Dict[str, DetectorConfig]
         _percount_detectors  : Dict[str, DetectorConfig]
         _aggregate_detectors : Dict[str, DetectorConfig]
 
         if not isinstance(unparsed_elements, dict):
             unparsed_elements = {}
             Logger.Log(f"For DetectorMap config of `{name}`, unparsed_elements was not a dict, defaulting to empty dict", logging.WARN)
-        _perlevel_detectors  = cls._parsePerLevelDetectors(unparsed_elements=unparsed_elements)
         _percount_detectors  = cls._parsePerCountDetectors(unparsed_elements=unparsed_elements)
         _aggregate_detectors = cls._parseAggregateDetectors(unparsed_elements=unparsed_elements)
 
-        _used = {"perlevel", "per_level", "per_count", "percount", "aggregate"}
+        _used = {"per_count", "percount", "aggregate"}
         _leftovers = { key : val for key,val in unparsed_elements.items() if key not in _used }
-        return DetectorMapConfig(name=name, perlevel_detectors=_perlevel_detectors,
+        return DetectorMapConfig(name=name,
                                  percount_detectors=_percount_detectors, aggregate_detectors=_aggregate_detectors,
                                  other_elements=_leftovers)
 
@@ -117,7 +99,6 @@ class DetectorMapConfig(Config):
     def Default(cls) -> "DetectorMapConfig":
         return DetectorMapConfig(
             name="DefaultDetectorMapConfig",
-            perlevel_detectors=cls._DEFAULT_PERLEVEL_DETECTORS,
             percount_detectors=cls._DEFAULT_PERCOUNT_DETECTORS,
             aggregate_detectors=cls._DEFAULT_AGGREGATE_DETECTORS,
             other_elements={}
@@ -138,23 +119,6 @@ class DetectorMapConfig(Config):
     # *** PUBLIC METHODS ***
 
     # *** PRIVATE STATICS ***
-
-    @staticmethod
-    def _parsePerLevelDetectors(unparsed_elements:Map) -> Dict[str, DetectorConfig]:
-        ret_val : Dict[str, DetectorConfig]
-
-        perlevels = DetectorMapConfig.ParseElement(
-            unparsed_elements=unparsed_elements,
-            valid_keys=["perlevel", "per_level"],
-            to_type=dict,
-            default_value=DetectorMapConfig._DEFAULT_PERLEVEL_DETECTORS
-        )
-        if isinstance(perlevels, dict):
-            ret_val = { key : DetectorConfig.FromDict(name=key, unparsed_elements=val) for key,val in perlevels.items() }
-        else:
-            ret_val = {}
-            Logger.Log("Per-level detectors map was not a dict, defaulting to empty dict", logging.WARN)
-        return ret_val
 
     @staticmethod
     def _parsePerCountDetectors(unparsed_elements:Map) -> Dict[str, DetectorConfig]:
