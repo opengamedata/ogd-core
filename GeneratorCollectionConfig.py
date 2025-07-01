@@ -17,7 +17,7 @@ from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import Map
 
 ## @class GameSchema
-class GameGeneratorsConfig(Config):
+class GeneratorCollectionConfig(Config):
     """A fairly simple class that reads a JSON config with information on the features we want to extract
     for a given game.
     The class includes several functions for easy access to the various parts of
