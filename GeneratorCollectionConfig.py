@@ -1,7 +1,7 @@
 # import standard libraries
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple, Union
+from typing import Any, Dict, List, Optional, Set
 # import local files
 from ogd.common.configs.Config import Config
 from ogd.common.configs.generators.DetectorMapConfig import DetectorMapConfig
@@ -23,9 +23,7 @@ class GeneratorCollectionConfig(Config):
     The class includes several functions for easy access to the various parts of
     this schema data.
 
-    TODO : Use DetectorMapConfig and FeatureMapConfig instead of just dicts... I think. Depending how these all work together.
     TODO : make parser functions for config and versions, so we can do ElementFromDict for them as well.
-    TODO : In general, there's a metric fuckload of parsing functions and other things missing from standard way of doing this, class as a whole needs work.
     """
     _DEFAULT_DET_AGGREGATES = {}
     _DEFAULT_DET_PERCOUNTS = {}
