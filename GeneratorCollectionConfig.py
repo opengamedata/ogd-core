@@ -238,25 +238,12 @@ class GeneratorCollectionConfig(Config):
         :rtype: GeneratorCollectionConfig
         """
     # 1. define local vars
-        _game_id        : str                  = name
-        _detector_map   : DetectorMapConfig
-        _feature_map    : FeatureMapConfig
-        _level_range    : Optional[range]
-        _other_ranges   : Dict[str, range]
+        _game_id        : str               = name
+        _detector_map   : DetectorMapConfig = cls._parseDetectorMap(unparsed_elements=unparsed_elements)
+        _feature_map    : FeatureMapConfig  = cls._parseFeatureMap(unparsed_elements=unparsed_elements)
+        _level_range    : Optional[range]   = cls._parseLevelRange(unparsed_elements=unparsed_elements)
+        _other_ranges   : Dict[str, range]  = {key : range(val.get('min', 0), val.get('max', 1)) for key,val in unparsed_elements.items() if key.endswith("_range")}
 
-    # 2. set instance vars, starting with  detector information
-        # TODO : investigate weird Dict[str, Dict[str, DetectorConfig]] type inference
-        _detector_map = cls._parseDetectorMap(unparsed_elements=unparsed_elements)
-
-    # 3. Get feature information
-        _feature_map = cls._parseFeatureMap(unparsed_elements=unparsed_elements)
-
-    # 4. Get level range and other ranges, if any
-        _level_range = cls._parseLevelRange(unparsed_elements=unparsed_elements)
-
-        _other_ranges = {key : range(val.get('min', 0), val.get('max', 1)) for key,val in unparsed_elements.items() if key.endswith("_range")}
-
-    # 5. Collect any other, unexpected elements
         _used = {'enums', 'game_state', 'user_data', 'events', 'detectors', 'features', 'level_range', 'config'}.union(_other_ranges.keys())
         _leftovers = { key:val for key,val in unparsed_elements.items() if key not in _used }
         return GeneratorCollectionConfig(name=name, game_id=_game_id,
