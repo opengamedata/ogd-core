@@ -22,8 +22,6 @@ class GeneratorCollectionConfig(Config):
     for a given game.
     The class includes several functions for easy access to the various parts of
     this schema data.
-
-    TODO : make parser functions for config and versions, so we can do ElementFromDict for them as well.
     """
     _DEFAULT_DET_AGGREGATES = {}
     _DEFAULT_DET_PERCOUNTS = {}
@@ -34,10 +32,8 @@ class GeneratorCollectionConfig(Config):
     _DEFAULT_LEGACY_MODE = False
     _DEFAULT_FEATURE_MAP = FeatureMapConfig(name="DefaultFeatureMap", legacy_mode=_DEFAULT_LEGACY_MODE, legacy_perlevel_feats=_DEFAULT_LEGACY_PERCOUNTS,
                                             percount_feats=_DEFAULT_FEAT_PERCOUNTS, aggregate_feats=_DEFAULT_FEAT_AGGREGATES, other_elements={})
-    _DEFAULT_CONFIG = {}
     _DEFAULT_LEVEL_RANGE = None
     _DEFAULT_OTHER_RANGES = {}
-    _DEFAULT_VERSIONS = None
     _DEFAULT_GAME_FOLDER = Path("./") / "ogd" / "games"
     @property
     def _DEFAULT_LEGACY_CONFIG(self) -> AggregateConfig:
@@ -45,10 +41,9 @@ class GeneratorCollectionConfig(Config):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, name:str, game_id:str, config:Map,
+    def __init__(self, name:str, game_id:str,
                  detector_map:DetectorMapConfig, extractor_map:FeatureMapConfig,
                  subunit_range:Optional[range], other_ranges:Dict[str, range],
-                 supported_versions:Optional[List],
                  other_elements:Optional[Map]=None):
         """Constructor for the GeneratorCollectionConfig class.
 
@@ -56,8 +51,6 @@ class GeneratorCollectionConfig(Config):
         :type name: str
         :param game_id: _description_
         :type game_id: str
-        :param config: _description_
-        :type config: Map
         :param detector_map: _description_
         :type detector_map: DetectorMapConfig
         :param extractor_map: _description_
@@ -75,9 +68,7 @@ class GeneratorCollectionConfig(Config):
         self._game_id            : str               = game_id
         self._detector_map       : DetectorMapConfig = detector_map
         self._extractor_map      : FeatureMapConfig  = extractor_map
-        self._config             : Map               = config
         self._subunit_range      : Optional[range]   = subunit_range
-        self._supported_versions : Optional[List]    = supported_versions
         self._other_ranges       : Dict[str, range]  = other_ranges
 
         super().__init__(name=name, other_elements=unparsed_elements)
@@ -182,15 +173,6 @@ class GeneratorCollectionConfig(Config):
     def OtherRanges(self) -> Dict[str, range]:
         return self._other_ranges
 
-    @property
-    def Config(self) -> Dict[str, Any]:
-        """Property for additional config items
-
-        :return: _description_
-        :rtype: Dict[str, Any]
-        """
-        return self._config
-
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     @property
@@ -259,10 +241,8 @@ class GeneratorCollectionConfig(Config):
         _game_id        : str                  = name
         _detector_map   : DetectorMapConfig
         _feature_map    : FeatureMapConfig
-        _config         : Dict[str, Any]
         _level_range    : Optional[range]
         _other_ranges   : Dict[str, range]
-        _supported_vers : Optional[List[int]]
 
         if not isinstance(unparsed_elements, dict):
             unparsed_elements   = {}
@@ -275,41 +255,28 @@ class GeneratorCollectionConfig(Config):
     # 3. Get feature information
         _feature_map = cls._parseFeatureMap(unparsed_elements=unparsed_elements)
 
-    # 4. Get config, if any
-        if "config" in unparsed_elements.keys():
-            _config = unparsed_elements['config']
-        else:
-            Logger.Log(f"{_game_id} game schema does not define any config items.", logging.INFO)
-        if "SUPPORTED_VERS" in _config:
-            _supported_vers = _config['SUPPORTED_VERS']
-        else:
-            _supported_vers = None
-            Logger.Log(f"{_game_id} game schema does not define supported versions, defaulting to support all versions.", logging.INFO)
-
-    # 5. Get level range and other ranges, if any
+    # 4. Get level range and other ranges, if any
         _level_range = cls._parseLevelRange(unparsed_elements=unparsed_elements)
 
         _other_ranges = {key : range(val.get('min', 0), val.get('max', 1)) for key,val in unparsed_elements.items() if key.endswith("_range")}
 
-    # 6. Collect any other, unexpected elements
+    # 5. Collect any other, unexpected elements
         _used = {'enums', 'game_state', 'user_data', 'events', 'detectors', 'features', 'level_range', 'config'}.union(_other_ranges.keys())
         _leftovers = { key:val for key,val in unparsed_elements.items() if key not in _used }
-        return GeneratorCollectionConfig(name=name, game_id=_game_id, config=_config,
+        return GeneratorCollectionConfig(name=name, game_id=_game_id,
                           detector_map=_detector_map, extractor_map=_feature_map,
                           subunit_range=_level_range, other_ranges=_other_ranges,
-                          supported_versions=_supported_vers, other_elements=_leftovers)
+                          other_elements=_leftovers)
 
     @classmethod
     def Default(cls) -> "GeneratorCollectionConfig":
         return GeneratorCollectionConfig(
             name="DefaultGeneratorCollectionConfig",
             game_id="DEFAULT_GAME",
-            config=cls._DEFAULT_CONFIG,
             detector_map=cls._DEFAULT_DETECTOR_MAP,
             extractor_map=cls._DEFAULT_FEATURE_MAP,
             subunit_range=cls._DEFAULT_LEVEL_RANGE,
             other_ranges=cls._DEFAULT_OTHER_RANGES,
-            supported_versions=cls._DEFAULT_VERSIONS,
             other_elements={}
         )
 
