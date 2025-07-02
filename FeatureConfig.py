@@ -70,7 +70,7 @@ class FeatureConfig(GeneratorConfig):
             remove_target=True
         )
         if isinstance(subfeatures, dict):
-            ret_val = {name:SubfeatureConfig.FromDict(name=name, unparsed_elements=elems) for name,elems in subfeatures.items()}
+            ret_val = {name:SubfeatureConfig._fromDict(name=name, unparsed_elements=elems) for name,elems in subfeatures.items()}
         else:
             ret_val = {}
             Logger.Log(f"Extractor subfeatures was unexpected type {type(subfeatures)}, defaulting to empty list.", logging.WARN)

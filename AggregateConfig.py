@@ -34,7 +34,7 @@ class AggregateConfig(FeatureConfig):
         return ret_val
 
     @classmethod
-    def FromDict(cls, name:str, unparsed_elements:Dict[str, Any])-> "AggregateConfig":
+    def _fromDict(cls, name:str, unparsed_elements:Dict[str, Any])-> "AggregateConfig":
         """_summary_
 
         TODO : Add example of what format unparsed_elements is expected to have.

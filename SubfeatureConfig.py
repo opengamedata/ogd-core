@@ -44,7 +44,7 @@ class SubfeatureConfig(Schema):
         return ret_val
 
     @classmethod
-    def FromDict(cls, name:str, unparsed_elements:Dict[str, Any])-> "SubfeatureConfig":
+    def _fromDict(cls, name:str, unparsed_elements:Dict[str, Any])-> "SubfeatureConfig":
         """_summary_
 
         Example SubfeatureConfig dictionary format:

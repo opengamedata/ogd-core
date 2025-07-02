@@ -52,7 +52,7 @@ class DetectorMapConfig(Config):
         return ret_val
 
     @classmethod
-    def FromDict(cls, name:str, unparsed_elements:Map)-> "DetectorMapConfig":
+    def _fromDict(cls, name:str, unparsed_elements:Map)-> "DetectorMapConfig":
         """Function to generate a DetectorMapConfig from a JSON-formatted dictionary.
 
         Expected structure is:
@@ -131,7 +131,7 @@ class DetectorMapConfig(Config):
             default_value=DetectorMapConfig._DEFAULT_PERCOUNT_DETECTORS
         )
         if isinstance(percounts, dict):
-            ret_val = { key : DetectorConfig.FromDict(name=key, unparsed_elements=val) for key,val in percounts.items() }
+            ret_val = { key : DetectorConfig._fromDict(name=key, unparsed_elements=val) for key,val in percounts.items() }
         else:
             ret_val = {}
             Logger.Log("Per-count detectors map was not a dict, defaulting to empty dict", logging.WARN)
@@ -148,7 +148,7 @@ class DetectorMapConfig(Config):
             default_value=DetectorMapConfig._DEFAULT_AGGREGATE_DETECTORS
         )
         if isinstance(aggregates, dict):
-            ret_val = {key : DetectorConfig.FromDict(name=key, unparsed_elements=val) for key,val in aggregates.items()}
+            ret_val = {key : DetectorConfig._fromDict(name=key, unparsed_elements=val) for key,val in aggregates.items()}
         else:
             ret_val = {}
             Logger.Log("Aggregate detectors map was not a dict, defaulting to empty dict", logging.WARN)
