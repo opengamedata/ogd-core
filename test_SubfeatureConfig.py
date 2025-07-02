@@ -38,34 +38,27 @@ class test_SubfeatureConfig(TestCase):
         _str = self.test_schema.Name
         self.assertIsInstance(_str, str)
         self.assertEqual(_str, "Seconds")
-        pass
-
 
     def test_Description(self):
         _str = self.test_schema.Description
         self.assertIsInstance(_str, str)
         self.assertEqual(_str, "The number of seconds of active time.")
-        pass
 
     def test_ReturnType(self):
         _str = self.test_schema.ReturnType
         self.assertIsInstance(_str, str)
         self.assertEqual(_str, "int")
-        pass
 
     def test_NonStandardElements(self):
         _elems = { "foo":"bar" }
         self.assertIsInstance(self.test_schema.NonStandardElements, dict)
         self.assertEqual(self.test_schema.NonStandardElements, _elems)
-        pass
 
     def test_NonStandardElementNames(self):
         _elem_names = ["foo"]
         self.assertIsInstance(self.test_schema.NonStandardElementNames, list)
         self.assertEqual(self.test_schema.NonStandardElementNames, _elem_names)
-        pass
 
-    @unittest.skip("Not implemented")
     def test_FromDict(self):
         """Test case for whether the FromDict function is working properly.
         """
