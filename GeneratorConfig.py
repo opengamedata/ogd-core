@@ -14,7 +14,7 @@ class GeneratorConfig(Config):
     _DEFAULT_DESCRIPTION = "Default Generator schema object. Does not correspond to any actual data."
 
     def __init__(self, name:str, enabled:Optional[Set[ExtractionMode]], type_name:Optional[str], description:Optional[str], other_elements:Optional[Map]=None):
-        unparsed_elements : Map = other_elements or {}
+        unparsed_elements : Map = {key.upper() : val for key, val in other_elements.items()} if other_elements else {}
 
         self._enabled     : Set[ExtractionMode]
         self._type_name   : str

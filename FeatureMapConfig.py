@@ -25,7 +25,7 @@ class FeatureMapConfig(Config):
     def __init__(self, name:str, legacy_mode: bool,        legacy_perlevel_feats:Dict[str, PerCountConfig],
                  percount_feats:Dict[str, PerCountConfig], aggregate_feats:Dict[str, AggregateConfig],
                  other_elements:Optional[Map]=None):
-        unparsed_elements : Map = other_elements or {}
+        unparsed_elements : Map = {key.upper() : val for key, val in other_elements.items()} if other_elements else {}
 
         self._legacy_mode           : bool                       = legacy_mode           or self._parseLegacyMode(unparsed_elements=unparsed_elements)
         self._legacy_perlevel_feats : Dict[str, PerCountConfig]  = legacy_perlevel_feats or self._parsePerLevelFeatures(unparsed_elements=unparsed_elements)

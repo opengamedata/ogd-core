@@ -62,7 +62,7 @@ class GeneratorCollectionConfig(Config):
         :param other_elements: _description_, defaults to None
         :type other_elements: Optional[Map], optional
         """
-        unparsed_elements = other_elements or {}
+        unparsed_elements : Map = {key.upper() : val for key, val in other_elements.items()} if other_elements else {}
 
     # 1. define instance vars
         self._game_id            : str               = game_id

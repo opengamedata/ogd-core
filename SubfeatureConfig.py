@@ -19,7 +19,7 @@ class SubfeatureConfig(Schema):
                  # dict of leftovers
                  other_elements:Optional[Map]=None
         ):
-        unparsed_elements : Map = other_elements or {}
+        unparsed_elements : Map = {key.upper() : val for key, val in other_elements.items()} if other_elements else {}
         
         self._return_type : str = return_type or self._parseReturnType(unparsed_elements=unparsed_elements)
         self._description : str = description or self._parseDescription(unparsed_elements=unparsed_elements)
