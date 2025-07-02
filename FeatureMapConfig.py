@@ -176,7 +176,7 @@ class FeatureMapConfig(Config):
             default_value=FeatureMapConfig._DEFAULT_LEGACY_FEATS
         )
         if isinstance(perlevels, dict):
-            ret_val = { key : PerCountConfig._fromDict(name=key, unparsed_elements=val) for key,val in perlevels.items() }
+            ret_val = { key : PerCountConfig.FromDict(name=key, unparsed_elements=val) for key,val in perlevels.items() }
         else:
             ret_val = {}
             Logger.Log("Per-level features map was not a dict, defaulting to empty dict", logging.WARN)
@@ -193,7 +193,7 @@ class FeatureMapConfig(Config):
             default_value=FeatureMapConfig._DEFAULT_PERCOUNT_FEATS
         )
         if isinstance(percounts, dict):
-            ret_val = { key : PerCountConfig._fromDict(name=key, unparsed_elements=val) for key,val in percounts.items() }
+            ret_val = { key : PerCountConfig.FromDict(name=key, unparsed_elements=val) for key,val in percounts.items() }
         else:
             ret_val = {}
             Logger.Log("Per-count features map was not a dict, defaulting to empty dict", logging.WARN)
@@ -210,7 +210,7 @@ class FeatureMapConfig(Config):
             default_value=FeatureMapConfig._DEFAULT_AGGREGATE_FEATS
         )
         if isinstance(aggregates, dict):
-            ret_val = {key : AggregateConfig._fromDict(name=key, unparsed_elements=val) for key,val in aggregates.items()}
+            ret_val = {key : AggregateConfig.FromDict(name=key, unparsed_elements=val) for key,val in aggregates.items()}
         else:
             ret_val = {}
             Logger.Log("Aggregate features map was not a dict, defaulting to empty dict", logging.WARN)

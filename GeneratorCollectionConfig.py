@@ -37,7 +37,7 @@ class GeneratorCollectionConfig(Config):
     _DEFAULT_GAME_FOLDER = Path("./") / "ogd" / "games"
     @property
     def _DEFAULT_LEGACY_CONFIG(self) -> AggregateConfig:
-        return AggregateConfig._fromDict("legacy", {"type":"legacy", "return_type":None, "description":"", "enabled":True})
+        return AggregateConfig.FromDict("legacy", {"type":"legacy", "return_type":None, "description":"", "enabled":True})
 
     # *** BUILT-INS & PROPERTIES ***
 
@@ -400,7 +400,7 @@ class GeneratorCollectionConfig(Config):
             default_value=GeneratorCollectionConfig._DEFAULT_DETECTOR_MAP,
             remove_target=True
         )
-        ret_val = DetectorMapConfig._fromDict(name="DetectorMap", unparsed_elements=detector_map)
+        ret_val = DetectorMapConfig.FromDict(name="DetectorMap", unparsed_elements=detector_map)
 
         return ret_val
 
@@ -415,7 +415,7 @@ class GeneratorCollectionConfig(Config):
             default_value=GeneratorCollectionConfig._DEFAULT_FEATURE_MAP,
             remove_target=True
         )
-        ret_val = FeatureMapConfig._fromDict(name="FeatureMap", unparsed_elements=feature_map)
+        ret_val = FeatureMapConfig.FromDict(name="FeatureMap", unparsed_elements=feature_map)
         return ret_val
 
     @staticmethod
