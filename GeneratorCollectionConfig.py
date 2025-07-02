@@ -244,10 +244,6 @@ class GeneratorCollectionConfig(Config):
         _level_range    : Optional[range]
         _other_ranges   : Dict[str, range]
 
-        if not isinstance(unparsed_elements, dict):
-            unparsed_elements   = {}
-            Logger.Log(f"For {_game_id} GeneratorCollectionConfig, unparsed_elements was not a dict, defaulting to empty dict", logging.WARN)
-
     # 2. set instance vars, starting with  detector information
         # TODO : investigate weird Dict[str, Dict[str, DetectorConfig]] type inference
         _detector_map = cls._parseDetectorMap(unparsed_elements=unparsed_elements)
