@@ -80,7 +80,7 @@ class GeneratorCollectionConfig(Config):
         self._supported_versions : Optional[List]    = supported_versions
         self._other_ranges       : Dict[str, range]  = other_ranges
 
-        super().__init__(name=self._game_id, other_elements=unparsed_elements)
+        super().__init__(name=name, other_elements=unparsed_elements)
 
     # def __getitem__(self, key) -> Any:
     #     return _schema[key] if _schema is not None else None
