@@ -47,7 +47,14 @@ class SubfeatureConfig(Schema):
     def FromDict(cls, name:str, unparsed_elements:Dict[str, Any])-> "SubfeatureConfig":
         """_summary_
 
-        TODO : Add example of what format unparsed_elements is expected to have.
+        Example SubfeatureConfig dictionary format:
+
+        ```json
+        "Seconds": {
+            "description": "The number of seconds of active time.",
+            "return_type": "int"
+        }
+        ```
 
         :param name: _description_
         :type name: str
