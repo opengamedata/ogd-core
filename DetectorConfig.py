@@ -17,7 +17,7 @@ class DetectorConfig(GeneratorConfig):
                  # dict of leftovers
                  other_elements:Optional[Map]=None
         ):
-        unparsed_elements : Map = {key.upper() : val for key, val in other_elements.items()} if other_elements else {}
+        unparsed_elements : Map = other_elements or {}
 
         super().__init__(name=name, enabled=enabled, type_name=type_name, description=description, other_elements=unparsed_elements)
 

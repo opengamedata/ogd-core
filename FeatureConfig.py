@@ -24,7 +24,7 @@ class FeatureConfig(GeneratorConfig):
                  # dict of leftovers
                  other_elements:Optional[Map]=None
         ):
-        unparsed_elements : Map = {key.upper() : val for key, val in other_elements.items()} if other_elements else {}
+        unparsed_elements : Map = other_elements or {}
 
         self._subfeatures : Dict[str, SubfeatureConfig] = subfeatures or FeatureConfig._parseSubfeatures(unparsed_elements=unparsed_elements)
         self._return_type : str                         = return_type or FeatureConfig._parseReturnType(unparsed_elements=unparsed_elements)

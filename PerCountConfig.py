@@ -24,7 +24,7 @@ class PerCountConfig(FeatureConfig):
                  # dict of leftovers
                  other_elements:Optional[Map]=None
         ):
-        unparsed_elements : Map = {key.upper() : val for key, val in other_elements.items()} if other_elements else {}
+        unparsed_elements : Map = other_elements or {}
 
         self._count  : int | str = count  or self._parseCount(unparsed_elements=unparsed_elements)
         self._prefix : str       = prefix or self._parsePrefix(unparsed_elements=unparsed_elements)
