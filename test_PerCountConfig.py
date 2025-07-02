@@ -14,6 +14,7 @@ class test_PerCountConfig(TestCase):
     """Testbed for the PerCountConfig class.
 
         TODO : Test more 'enabled' options/combinations.
+        TODO : Tests with certain elements skipped
     """
 
     @classmethod
