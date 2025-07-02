@@ -80,14 +80,8 @@ class DetectorMapConfig(Config):
         :return: A DetectorMapConfig based on the given collection of elements.
         :rtype: DetectorMapConfig
         """
-        _percount_detectors  : Dict[str, DetectorConfig]
-        _aggregate_detectors : Dict[str, DetectorConfig]
-
-        if not isinstance(unparsed_elements, dict):
-            unparsed_elements = {}
-            Logger.Log(f"For DetectorMap config of `{name}`, unparsed_elements was not a dict, defaulting to empty dict", logging.WARN)
-        _percount_detectors  = cls._parsePerCountDetectors(unparsed_elements=unparsed_elements)
-        _aggregate_detectors = cls._parseAggregateDetectors(unparsed_elements=unparsed_elements)
+        _percount_detectors  : Dict[str, DetectorConfig] = cls._parsePerCountDetectors(unparsed_elements=unparsed_elements)
+        _aggregate_detectors : Dict[str, DetectorConfig] = cls._parseAggregateDetectors(unparsed_elements=unparsed_elements)
 
         _used = {"per_count", "percount", "aggregate"}
         _leftovers = { key : val for key,val in unparsed_elements.items() if key not in _used }

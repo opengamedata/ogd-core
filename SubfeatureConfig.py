@@ -63,15 +63,8 @@ class SubfeatureConfig(Schema):
         :return: _description_
         :rtype: SubfeatureConfig
         """
-        _return_type : str
-        _description : str    
-
-        if not isinstance(unparsed_elements, dict):
-            _elements = {}
-            Logger.Log(f"For {name} subfeature config, unparsed_elements was not a dict, defaulting to empty dict", logging.WARN)
-
-        _return_type = cls._parseReturnType(unparsed_elements=unparsed_elements)
-        _description = cls._parseDescription(unparsed_elements=unparsed_elements)
+        _return_type : str = cls._parseReturnType(unparsed_elements=unparsed_elements)
+        _description : str = cls._parseDescription(unparsed_elements=unparsed_elements)
 
         _used = {"return_type", "description"}
         _leftovers = { key : val for key,val in unparsed_elements.items() if key not in _used }

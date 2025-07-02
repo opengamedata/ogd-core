@@ -101,18 +101,10 @@ class FeatureMapConfig(Config):
         :return: A DetectorMapConfig based on the given collection of elements.
         :rtype: DetectorMapConfig
         """
-        _legacy_mode           : bool
-        _legacy_perlevel_feats : Dict[str, PerCountConfig]
-        _percount_feats        : Dict[str, PerCountConfig]
-        _aggregate_feats       : Dict[str, AggregateConfig]
-
-        if not isinstance(unparsed_elements, dict):
-            unparsed_elements = {}
-            Logger.Log(f"For FeatureMap config of `{name}`, unparsed_elements was not a dict, defaulting to empty dict", logging.WARN)
-        _legacy_mode = cls._parseLegacyMode(unparsed_elements=unparsed_elements)
-        _legacy_perlevel_feats = cls._parsePerLevelFeatures(unparsed_elements=unparsed_elements)
-        _percount_feats = cls._parsePerCountFeatures(unparsed_elements=unparsed_elements)
-        _aggregate_feats = cls._parseAggregateFeatures(unparsed_elements=unparsed_elements)
+        _legacy_mode           : bool                       = cls._parseLegacyMode(unparsed_elements=unparsed_elements)
+        _legacy_perlevel_feats : Dict[str, PerCountConfig]  = cls._parsePerLevelFeatures(unparsed_elements=unparsed_elements)
+        _percount_feats        : Dict[str, PerCountConfig]  = cls._parsePerCountFeatures(unparsed_elements=unparsed_elements)
+        _aggregate_feats       : Dict[str, AggregateConfig] = cls._parseAggregateFeatures(unparsed_elements=unparsed_elements)
 
         _used = {"legacy", "perlevel", "per_count", "aggregate"}
         _leftovers = { key : val for key,val in unparsed_elements.items() if key not in _used }

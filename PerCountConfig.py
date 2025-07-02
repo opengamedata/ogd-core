@@ -70,14 +70,8 @@ class PerCountConfig(FeatureConfig):
         :return: _description_
         :rtype: PerCountConfig
         """
-        _count  : int | str
-        _prefix : str
-
-        if not isinstance(unparsed_elements, dict):
-            unparsed_elements = {}
-            Logger.Log(f"For {name} Per-count Feature config, unparsed_elements was not a dict, defaulting to empty dict", logging.WARN)
-        _count = cls._parseCount(unparsed_elements=unparsed_elements)
-        _prefix = cls._parsePrefix(unparsed_elements=unparsed_elements)
+        _count  : int | str = cls._parseCount(unparsed_elements=unparsed_elements)
+        _prefix : str       = cls._parsePrefix(unparsed_elements=unparsed_elements)
 
         _used = {"count", "prefix"}
         _leftovers = { key : val for key,val in unparsed_elements.items() if key not in _used }
