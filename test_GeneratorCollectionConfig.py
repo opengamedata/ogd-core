@@ -28,7 +28,7 @@ class test_GeneratorCollectionConfig(TestCase):
         cls.test_schema = GeneratorCollectionConfig(
             name="available_building Schema", game_id="FakeGame",
             detector_map=DetectorMapConfig.Default(), extractor_map=FeatureMapConfig.Default(),
-            config={}, subunit_range=range(0,2), other_ranges={}, supported_versions=[],
+            subunit_range=range(0,2), other_ranges={},
             other_elements={ "foo":"bar" }
         )
 
@@ -118,13 +118,6 @@ class test_GeneratorCollectionConfig(TestCase):
 
     @unittest.skip("Not implemented")
     def test_OtherRanges(self):
-        pass
-        # _str = self.test_schema.Description
-        # self.assertIsInstance(_str, str)
-        # self.assertEqual(_str, "The buildings available for the player to construct")
-
-    @unittest.skip("Not implemented")
-    def test_Config(self):
         pass
         # _str = self.test_schema.Description
         # self.assertIsInstance(_str, str)
