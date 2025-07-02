@@ -71,7 +71,7 @@ class test_SubfeatureConfig(TestCase):
         self.assertIsInstance(_schema.Name, str)
         self.assertEqual(_schema.Name, "Seconds")
         self.assertIsInstance(_schema.Description, str)
-        self.assertEqual(_schema.Description, "Active time of a player")
+        self.assertEqual(_schema.Description, "The number of seconds of active time.")
         self.assertIsInstance(_schema.ReturnType, str)
         self.assertEqual(_schema.ReturnType, "int")
         self.assertIsInstance(_schema.NonStandardElements, dict)
