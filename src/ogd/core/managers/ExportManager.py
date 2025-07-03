@@ -193,7 +193,6 @@ class ExportManager:
         time_delta = datetime.now() - start
         Logger.Log(f"Output time for population: {time_delta}", logging.INFO, depth=2)
 
-
     @staticmethod
     def _loadLoaderClass(game_id:str) -> Optional[Type[GeneratorLoader]]:
         _loader_class: Optional[Type[GeneratorLoader]] = None
