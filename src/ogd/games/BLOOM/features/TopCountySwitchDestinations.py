@@ -32,7 +32,8 @@ class TopCountySwitchDestinations(Feature):
         to_county = event.EventData.get("county_name")
 
         if from_county and to_county and from_county != to_county:
-            self.county_switch_pairs[from_county][to_county].append(player_id)
+            if player_id not in self.county_switch_pairs[from_county][to_county]:
+                self.county_switch_pairs[from_county][to_county].append(player_id)
         self.last_county_per_player[player_id] = to_county
 
     def _updateFromFeatureData(self, feature: FeatureData):

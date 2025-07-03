@@ -30,7 +30,7 @@ class PopulationSummary(SessionFeature):
     def _updateFromFeatureData(self, feature: FeatureData):
         player_id = feature.PlayerID
 
-        # print(f"Processing feature: {feature}")
+        print(f"Processing feature: {feature}")
         
         if feature.ExportMode == ExtractionMode.PLAYER:
             if feature.FeatureType == "CountyUnlockCount":

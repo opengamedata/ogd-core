@@ -33,9 +33,8 @@ class PlayerSummary(SessionFeature):
         pass
        
     def _updateFromFeatureData(self, feature: FeatureData):
-        # print(f"Processing feature: {feature}")
+        print(f"Processing feature: {feature}")
         player_id = feature.PlayerID
-
         if feature.ExportMode == ExtractionMode.PLAYER:
             if player_id not in self._summary:
                 self._summary[player_id] = {
@@ -68,7 +67,6 @@ class PlayerSummary(SessionFeature):
                 self._summary[player_id]["sessions"].add(feature.SessionID)
                 self._summary[player_id]["num_sessions"] = len(self._summary[player_id]["sessions"])
 
-       
 
     def _getFeatureValues(self) -> List[Any]:
         return [self._summary]

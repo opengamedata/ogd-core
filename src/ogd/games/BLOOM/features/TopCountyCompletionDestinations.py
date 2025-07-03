@@ -32,10 +32,10 @@ class TopCountyCompletionDestinations(Feature):
         last_county = self.last_unlocked_county.get(player_id)
 
         if last_county and last_county != current_county:
-            self.county_completion_pairs[last_county][current_county].append(player_id)
+            if player_id not in self.county_completion_pairs[last_county][current_county]:
+                self.county_completion_pairs[last_county][current_county].append(player_id)
 
         self.last_unlocked_county[player_id] = current_county
-
 
     def _updateFromFeatureData(self, feature: FeatureData):
         return
