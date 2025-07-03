@@ -8,6 +8,12 @@ from ogd.games.BLOOM.detectors.AlertFollowedByInspect import AlertFollowedByInsp
 from ogd.games.BLOOM.detectors.AlertFollowedByPolicy import AlertFollowedByPolicy
 
 class AlertResponseCount(Feature):
+    """Feature to indicate how often players "responded" to an alert.
+
+    Here, "response" refers to a case where a player opened (i.e. "reviewed") an alert,
+    then "responded" to what they saw by either inspecting the relevant tile from which the alert originated,
+    or changing a policy in a way suggested within the alert (see `AlertFollowedByPolicy` detector for details).
+    """
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.alert_response_counts = {

@@ -8,6 +8,11 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 
 class AlertReviewCount(Feature):
+    """Feature to indicate how often players "reviewed" an alert.
+
+    Here, "review" refers to a case where a player opened an alert,
+    as opposed to a "response" in which they took some additional action based on the alert.
+    """
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.alert_review_counts: Counter = Counter()
