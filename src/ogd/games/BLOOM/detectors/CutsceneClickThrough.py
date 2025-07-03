@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime,timedelta
 from typing import Callable, List, Optional
 
@@ -67,14 +68,16 @@ class CutsceneClickThrough(Detector):
                     if event.EventName == "cutscene_page_displayed":
                         _line = event.EventData.get("page_text")
                     else:
-                        Logger.Log(f"In CutsceneClickThrough, found cutscene with ID {event.EventData.get('cutscene_id')} that had character lines displayed!")
+                        _msg = f"In CutsceneClickThrough, found cutscene with ID {event.EventData.get('cutscene_id')} that had character lines displayed!"
+                        Logger.Log(_msg, logging.DEBUG)
                         _line = event.EventData.get("line_text")
                     self._word_counts.append(len(_line.split(" ")) if _line is not None else 0)
                     self._last_time = event.Timestamp
             case "click_next_character_line" | "click_cutscene_next":
                 if self._in_cutscene:
                     if event.EventName == "click_next_character_line":
-                        Logger.Log(f"In CutsceneClickThrough, found cutscene with ID {event.EventData.get('cutscene_id')} that had character lines clicked!")
+                        _msg = f"In CutsceneClickThrough, found cutscene with ID {event.EventData.get('cutscene_id')} that had character lines clicked!"
+                        Logger.Log(_msg, logging.DEBUG)
                     _delta = timedelta(0)
                     if self._last_time is not None:
                         _delta = event.Timestamp - self._last_time
@@ -87,7 +90,8 @@ class CutsceneClickThrough(Detector):
                     if len(self._word_counts) == len(self._read_times):
                         _rate = sum(self._word_counts) / sum(self._read_times, timedelta(0)).total_seconds() * 60
                     else:
-                        Logger.Log(f"The word count and read times for {self._last_session} do not match! For cutscene with node ID of {self._current_cutscene}, word counts = {len(self._word_counts)}, read times = {len(self._read_times)}")
+                        _msg = f"The number of word counts and read times for {self._last_session} do not match! For cutscene with node ID of {self._current_cutscene}, # word counts = {len(self._word_counts)}, # read times = {len(self._read_times)}"
+                        Logger.Log(_msg, logging.WARNING)
                 # if rate was too high, they clicked through
                 if _rate > self.MAX_RATE:
                     self._triggered = True
