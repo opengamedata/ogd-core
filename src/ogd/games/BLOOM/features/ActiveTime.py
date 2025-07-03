@@ -59,7 +59,6 @@ class ActiveTime(Feature):
 from datetime import datetime, timedelta
 from typing import Any, Final, List, Optional
 # import locals
-from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.common.models.Event import Event, EventSource

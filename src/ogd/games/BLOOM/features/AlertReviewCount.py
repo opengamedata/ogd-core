@@ -1,5 +1,5 @@
 from collections import Counter
-from typing import Any, Dict, List, Optional
+from typing import Any, List, Optional
 
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
