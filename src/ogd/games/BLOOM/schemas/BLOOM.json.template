@@ -1170,7 +1170,7 @@
          "AlertResponseCount": {
             "enabled": true,
             "type": "AlertResponseCount",
-            "description": "Count of alert responses",
+            "description": "Count of alert responses, i.e. when a player opens an alert to view its dialog, and then responds by inspecting the alert source tile or making a related policy change.",
             "return_type": "int",
             "subfeatures" : [
                "EXCESS_RUNOFF",
@@ -1192,7 +1192,7 @@
          "AlertReviewCount": {
             "enabled": true,
             "type": "AlertReviewCount",
-            "description": "Count of alert reviews",
+            "description": "Count of alert reviews, i.e. when the player opened an alert to trigger its dialog.",
             "return_type": "int"
          },
          "AverageActiveTime": {
