@@ -129,12 +129,6 @@ jobs:
         shadowspect_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
         shipwrecks_id:  ${{ secrets.BQ_SHIPWRECKS_PROJECT_ID }}
         shipwrecks_key: ${{ secrets.BQ_SHIPWRECKS_JSON }}
-    - name: Connect to VPN
-      uses: opengamedata/actions-openconnect-vpn@v1.1
-      with:
-        username: ${{ secrets.VPN_USER }}
-        password: ${{ secrets.VPN_PASS }}
-        endpoint: "soe.vpn.wisc.edu"
     - name: Set up Config File
       uses: ./.github/actions/OGD_config
       with:
@@ -184,6 +178,14 @@ jobs:
 
 
     # 4. Cleanup & complete
+    # If uploading file to server, need to get VPN connection in this case.
+    - name: Connect to VPN
+      if: github.event.inputs.upload_to_ogd == 'true'
+      uses: opengamedata/actions-openconnect-vpn@v1.1
+      with:
+        username: ${{ secrets.VPN_USER }}
+        password: ${{ secrets.VPN_PASS }}
+        endpoint: "soe.vpn.wisc.edu"
     - name: Upload files to OpenGameData Website
       if: github.event.inputs.upload_to_ogd == 'true'
       uses: ./.github/actions/upload_export

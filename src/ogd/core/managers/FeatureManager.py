@@ -88,7 +88,7 @@ class FeatureManager:
             self._population.ProcessFeatureData(feature_list=pop_data)
             for player in self._players.values():
                 player.ProcessFeatureData(feature_list=pop_data)
-                
+
             for session_list in self._sessions.values():
                 for session in session_list.values():
                     session.ProcessFeatureData(feature_list=pop_data)
@@ -132,6 +132,7 @@ class FeatureManager:
 
     def GetPlayerFeatureNames(self) -> List[str]:
         return self._players["null"].GeneratorNames if self._players is not None else []
+    
     def GetPlayerFeatures(self, as_str:bool = False) -> List[ExportRow]:
         start   : datetime = datetime.now()
         self._try_update(as_str=as_str)
