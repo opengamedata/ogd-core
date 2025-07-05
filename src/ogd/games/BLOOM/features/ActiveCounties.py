@@ -6,44 +6,39 @@ from ogd.core.generators.extractors.Feature import Feature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
+from collections import defaultdict
 
-class AlertCount(Feature):
+
+class ActiveCounties(Feature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        self.alert_counts: Counter = Counter()
-
-    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
+        self.last_unlocked_county = dict()  
+        self.county_left_off = defaultdict(list) 
+        
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["local_alert_displayed"]
+        return ["county_unlocked"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        alert_type = event.EventData.get("alert_type", "").upper()
-        if alert_type != "GLOBAL":
-            self.alert_counts[alert_type] += 1
+        player_id = event.user_id
+        county_name = event.EventData.get("county_name")
+        self.last_unlocked_county[player_id] = county_name
 
     def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [
-            sum(self.alert_counts.values()),
-            self.alert_counts["DIALOGUE"],
-            self.alert_counts["CRITIMBALANCE"],
-            self.alert_counts["DIEOFF"],
-            self.alert_counts["DECLININGPOP"],
-            self.alert_counts["EXCESSRUNOFF"],
-            self.alert_counts["SELLINGLOSS"],
-        ]
+        for player_id, county_name in self.last_unlocked_county.items():
+            self.county_left_off[county_name].append(player_id)
+        return [self.county_left_off]
 
     def Subfeatures(self) -> List[str]:
-        return ["Dialogue", "CritImbalance", "DieOff", "DecliningPop", "ExcessRunoff", "SellingLoss"]
+        return []
 
-    # *** Optionally override public functions. ***
     @staticmethod
     def MinVersion() -> Optional[str]:
         return "1"
