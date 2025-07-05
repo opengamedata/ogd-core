@@ -88,7 +88,7 @@ class JobsAttempted(Feature):
         return [self.county_index, self.county_name, self.num_starts, self.num_completes, percent_complete, avg_time, std_time, difficulties]
 
     def Subfeatures(self) -> List[str]:
-        return ["county-name", "num-starts", "num-completes", "percent-complete", "avg-time-per-attempt",  "std-dev-per-attempt", "county-difficulties"]
+        return ["job-name", "num-starts", "num-completes", "percent-complete", "avg-time-per-attempt",  "std-dev-per-attempt", "job-difficulties"]
 
     def _is_next_county(self, county_name: str) -> bool:
         if county_name not in self.COUNTY_INDEX_MAP:

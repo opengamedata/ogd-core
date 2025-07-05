@@ -4,7 +4,7 @@ __all__ = [
     "PerCountyFeature",
     "PerPolicyFeature",           
     "ActiveTime",
-    "ActiveCounties",
+    "ActiveJobs",
     "AlertCount",
     "AlertResponseCount",
     "AlertReviewCount",
@@ -37,15 +37,15 @@ __all__ = [
     "QuitOnBloomFail", 
     "QuitOnCityFail",
     "QuitOnBankruptcy",
-    "TopCountySwitchDestinations",
-    "TopCountyCompletionDestinations",
+    "TopJobSwitchDestinations",
+    "TopJobCompletionDestinations",
     "BuildingInspectorTabCount",
     "GoodPolicyCount",
     # "PhosphorusViewTime",
     # "InspectorResponseCount"
 ]
 
-from . import ActiveCounties
+from . import ActiveJobs
 from . import PerCountyFeature
 from . import PerPolicyFeature
 from . import ActiveTime
@@ -81,8 +81,8 @@ from . import CountyUnlockTime
 from . import QuitOnBloomFail
 from . import QuitOnCityFail
 from . import QuitOnBankruptcy
-from . import TopCountySwitchDestinations
-from . import TopCountyCompletionDestinations
+from . import TopJobSwitchDestinations
+from . import TopJobCompletionDestinations
 from . import BuildingInspectorTabCount
 from . import GoodPolicyCount
 # from . import PhosphorusViewTime

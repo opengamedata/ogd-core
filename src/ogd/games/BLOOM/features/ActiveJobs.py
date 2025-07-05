@@ -9,7 +9,7 @@ from ogd.common.models.FeatureData import FeatureData
 from collections import defaultdict
 
 
-class ActiveCounties(Feature):
+class ActiveJobs(Feature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.last_unlocked_county = dict()  

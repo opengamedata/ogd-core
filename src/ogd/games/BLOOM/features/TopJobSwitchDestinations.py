@@ -9,16 +9,16 @@ from ogd.common.models.FeatureData import FeatureData
 from collections import defaultdict
 
 
-class TopCountyCompletionDestinations(Feature):
+class TopJobSwitchDestinations(Feature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        self.last_unlocked_county = {} 
-        self.county_completion_pairs = defaultdict(lambda: defaultdict(list)) 
+        self.last_county_per_player = {}
+        self.county_switch_pairs = defaultdict(lambda: defaultdict(list))
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["county_unlocked"]
+        return ["county_changed"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
@@ -28,21 +28,20 @@ class TopCountyCompletionDestinations(Feature):
         # print(f"Processing event: {event}")
         player_id = event.user_id
 
-        current_county = event.EventData.get("county_name")
-        last_county = self.last_unlocked_county.get(player_id)
+        from_county = self.last_county_per_player.get(player_id)
+        to_county = event.EventData.get("county_name")
 
-        if last_county and last_county != current_county:
-            if player_id not in self.county_completion_pairs[last_county][current_county]:
-                self.county_completion_pairs[last_county][current_county].append(player_id)
-
-        self.last_unlocked_county[player_id] = current_county
+        if from_county and to_county and from_county != to_county:
+            if player_id not in self.county_switch_pairs[from_county][to_county]:
+                self.county_switch_pairs[from_county][to_county].append(player_id)
+        self.last_county_per_player[player_id] = to_county
 
     def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
         ret_val = {}
-        for src, dests in self.county_completion_pairs.items():
+        for src, dests in self.county_switch_pairs.items():
             sorted_dests = sorted(
                 dests.items(),
                 key=lambda item: len(item[1]),
