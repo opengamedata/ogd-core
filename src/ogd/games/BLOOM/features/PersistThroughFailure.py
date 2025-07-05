@@ -18,7 +18,7 @@ class PersistThroughFailure(Feature):
         # List of player action events + lose_game for failure tracking
         return [
             "game_start", "select_policy_card", "click_build", 
-            "click_destroy", "click_undo", "click_execute_build", 
+            "click_destroy", "click_undo", "execute_build_queue", 
             "click_confirm_destroy", "lose_game"
         ]
 
@@ -33,7 +33,7 @@ class PersistThroughFailure(Feature):
             self.ever_failed = True
         elif self.failed and event_type in [
             "game_start", "select_policy_card", "click_build", 
-            "click_destroy", "click_undo", "click_execute_build", 
+            "click_destroy", "click_undo", "execute_build_queue", 
             "click_confirm_destroy"
         ]:
             self.persisted += 1
