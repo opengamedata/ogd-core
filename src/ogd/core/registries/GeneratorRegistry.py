@@ -53,6 +53,7 @@ class GeneratorRegistry(abc.ABC):
 
     @abc.abstractmethod
     def _updateFromFeatureData(self, feature:FeatureData) -> None:
+        print("\n\n\nInside _updateFromFeatureData of GeneratorRegistry")
         pass
 
     # *** BUILT-INS & PROPERTIES ***
@@ -116,6 +117,7 @@ class GeneratorRegistry(abc.ABC):
                              table assiciated with this game is structured.
         :type table_schema: TableSchema
         """
+        # print("\n\n\nInside UpdateFromFeatureData of GeneratorRegistry")
         if isinstance(feature, FeatureData):
             self._updateFromFeatureData(feature=feature)
         else:
