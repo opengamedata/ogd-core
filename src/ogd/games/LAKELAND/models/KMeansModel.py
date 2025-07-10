@@ -472,8 +472,8 @@ class KMeansModel(PopulationModel):
         self._city_inspection_count = []
         self._dairy_inspection_count = []
         self._grain_inspection_count = []
-        self._avg_phosphorus_view_time = []
-        self._avg_economy_view_time = []
+        self._phosphorus_view_count = []
+        self._economy_view_count = []
         self._activity = []
         # Trained model components
         self._scaler = None
@@ -490,8 +490,8 @@ class KMeansModel(PopulationModel):
             'CityInspectionCount',
             'DairyInspectionCount',
             'GrainInspectionCount',
-            'AveragePhosphorusViewTime',
-            'AverageEconomyViewTime'
+            'PhosphorusViewCount',
+            'EconomyViewCount'
         ]
 
     def _updateFromFeatureData(self, feature: FeatureData):
@@ -503,30 +503,28 @@ class KMeansModel(PopulationModel):
                 numeric_value = 0
 
             if feature.Name == "BuildCount":
-                print("  -> NAME CHECK: PASSED. Appending to _build_count.")
+                # print("  -> NAME CHECK: PASSED. Appending to _build_count.")
                 self._build_count.append(numeric_value)
-                print(self._build_count)
-                self._build_count.append(numeric_value)
+                # print(self._build_count)
+                # self._build_count.append(numeric_value)
             elif feature.Name == "CityInspectionCount":
-                print("  -> NAME CHECK: PASSED. Appending to _city_inspection_count.")
-                print(self._city_inspection_count)
+                # print("  -> NAME CHECK: PASSED. Appending to _city_inspection_count.")
+                # print(self._city_inspection_count)
                 self._city_inspection_count.append(numeric_value)
             elif feature.Name == "DairyInspectionCount":
                 self._dairy_inspection_count.append(numeric_value)
-                print("  -> NAME CHECK: PASSED. Appending to _dairy_inspection_count.")
-                print(self._dairy_inspection_count)
+                # print("  -> NAME CHECK: PASSED. Appending to _dairy_inspection_count.")
+                # print(self._dairy_inspection_count)
             elif feature.Name == "GrainInspectionCount":
                 self._grain_inspection_count.append(numeric_value)
-                print("  -> NAME CHECK: PASSED. Appending to _grain_inspection_count.")
-                print(self._grain_inspection_count)
-            elif feature.Name == "AveragePhosphorusViewTime":
-                self._avg_phosphorus_view_time.append(numeric_value)
-                print("  -> NAME CHECK: PASSED. Appending to _avg_phosphorus_view_time.")
-                print(self._avg_phosphorus_view_time)
-            elif feature.Name == "AverageEconomyViewTime":
-                self._avg_economy_view_time.append(numeric_value)
-                print("  -> NAME CHECK: PASSED. Appending to _avg_economy_view_time.")
-                print(self._avg_economy_view_time)
+                # print("  -> NAME CHECK: PASSED. Appending to _grain_inspection_count.")
+                # print(self._grain_inspection_count)
+            elif feature.Name == "PhosphorusViewCount":
+                self._phosphorus_view_count.append(numeric_value)
+                # print("  -> NAME CHECK: PASSED. Appending to _phosphorus_view_count.")
+            elif feature.Name == "EconomyViewCount":
+                # print("  -> NAME CHECK: PASSED. Appending to _economy_view_count.")
+                self._economy_view_count.append(numeric_value)
 
     def _updateFromEvent(self, event):
         pass
@@ -535,26 +533,13 @@ class KMeansModel(PopulationModel):
         print("--- KMEANSMODEL: INSPECTING DATA AT START OF _train ---")
         print(f"Total entries for BuildCount: {len(self._build_count)}")
 
-
-        data_dict = {
-            'BuildCount': self._build_count,
-            'CityInspectionCount': self._city_inspection_count,
-            'DairyInspectionCount': self._dairy_inspection_count,
-            'GrainInspectionCount': self._grain_inspection_count,
-            'AveragePhosphorusViewTime': self._avg_phosphorus_view_time,
-            'AverageEconomyViewTime': self._avg_economy_view_time,
-        }
-
-        print("Data dictionary before trimming:")
-        print(data_dict) 
         min_length = min(
             len(self._build_count),
             len(self._city_inspection_count),
             len(self._dairy_inspection_count),
             len(self._grain_inspection_count),
-            len(self._avg_phosphorus_view_time),
-            len(self._avg_economy_view_time),
-            len(self._activity)
+            len(self._phosphorus_view_count),
+            len(self._economy_view_count)
         )
 
         if min_length == 0:
@@ -562,19 +547,18 @@ class KMeansModel(PopulationModel):
             return
 
         data_dict = {
-            'BuildCount': self._build_count[:min_length],
-            'CityInspectionCount': self._city_inspection_count[:min_length],
-            'DairyInspectionCount': self._dairy_inspection_count[:min_length],
-            'GrainInspectionCount': self._grain_inspection_count[:min_length],
-            'AveragePhosphorusViewTime': self._avg_phosphorus_view_time[:min_length],
-            'AverageEconomyViewTime': self._avg_economy_view_time[:min_length],
-            'Activity': self._activity[:min_length]
+            'BuildCount': self._build_count,
+            'CityInspectionCount': self._city_inspection_count,
+            'DairyInspectionCount': self._dairy_inspection_count,
+            'GrainInspectionCount': self._grain_inspection_count,
+            'PhosphorusViewCount': self._phosphorus_view_count,
+            'EconomyViewCount': self._economy_view_count,
         }
 
         self._processed_data = pd.DataFrame(data_dict)
         features = list(data_dict.keys())
 
-        for col in ['AveragePhosphorusViewTime', 'AverageEconomyViewTime']:
+        for col in ['PhosphorusViewCount', 'EconomyViewCount']:
             if col in self._processed_data.columns:
                 self._processed_data[col] = self._processed_data[col].apply(lambda x: np.log1p(x) if x is not None else 0)
 
@@ -607,7 +591,7 @@ class KMeansModel(PopulationModel):
             raise ValueError(f"Missing required features. Got {list(input_features.keys())}, need {required_features}")
 
         input_df = pd.DataFrame([input_features])
-        for col in ['AveragePhosphorusViewTime', 'AverageEconomyViewTime']:
+        for col in ['PhosphorusViewCount', 'EconomyViewCount']:
             if col in input_df.columns:
                 input_df[col] = input_df[col].apply(lambda x: np.log1p(x))
 
