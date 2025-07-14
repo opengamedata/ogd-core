@@ -352,11 +352,11 @@
             },
             "constellation" : {
                "type" : "str",
-               "description" : "The name of the constellation containing the star. TODO : does each star have a singular constellation?"
+               "description" : "The name of the constellation containing the star."
             },
             "coordinates" : {
                "type" : "str",
-               "description" : "The string containing the coordinates of the star, as displayed to the user in the TODO : what's the name of that tool?"
+               "description" : "The string containing the coordinates of the star, as displayed to the user in the compass tool"
             },
             "distance" : {
                "type" : "float",
@@ -397,6 +397,15 @@
             "identification" : {
                "type" : "Optional[Dict]",
                "description" : "A subdictionary with a 'category' mapped to the identification category assigned on the star, a 'classification' mapped to the specific classification (or null if the player has not made a classification), and a 'correct_classification' mapped to the actual correct classification. The entire 'identification' element is mapped to null if there is no identification assigned to the given star for the current level."
+            }
+         }
+      },
+      "access_level_unlocked": {
+         "description": "When the player unlocks a new access level, which typically corresponds to unlocking one or more tools.",
+         "event_data": {
+            "access_level" : {
+               "type" : "int",
+               "description" : "The access level that was unlocked."
             }
          }
       },
