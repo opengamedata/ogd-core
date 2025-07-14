@@ -59,7 +59,6 @@ class ActiveTime(Feature):
 from datetime import datetime, timedelta
 from typing import Any, Final, List, Optional
 # import locals
-from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.common.models.Event import Event, EventSource
@@ -74,8 +73,10 @@ class ActiveTime(Feature):
         self.IDLE_THRESHOLD     : Final[timedelta] = timedelta(seconds=idle_threshold) if idle_threshold is not None else ActiveTime.DEFAULT_IDLE_THRESHOLD
         self.max_idle           : timedelta = timedelta(0)
         self.previous_time      : Optional[datetime] = None
-        self.idle_time          : timedelta = timedelta(0)
         self.total_session_time : timedelta = timedelta(0)
+        self.idle_time          : timedelta = timedelta(0)
+        self.pause_time         : timedelta = timedelta(0)
+        self.paused             : bool      = False
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -83,13 +84,16 @@ class ActiveTime(Feature):
         return ["session_start", "pause_game", "unpause_game", "all_events"]
 
     def Subfeatures(self) -> List[str]:
-        return ["Total", "Seconds", "ActiveSeconds", "Idle", "IdleSeconds", "MaxIdle"]
+        return ["ActiveSeconds", "Total", "Seconds", "Idle", "IdleSeconds", "MaxIdle", "Pause", "PauseSeconds"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
+        # if a new session is starting, we don't want to count time since last event.
+        if event.EventName == "session_start":
+            self.previous_time = None
         if event.EventSource == EventSource.GAME:
             if self.previous_time is not None:
                 event_duration = event.Timestamp - self.previous_time
@@ -98,12 +102,14 @@ class ActiveTime(Feature):
                     self.idle_time += event_duration
                     if event_duration > self.max_idle:
                         self.max_idle = event_duration
+                if self.paused:
+                    self.pause_time += event_duration
             self.previous_time = event.Timestamp
-
-        if event.EventName == "session_start":
-            self.previous_time = event.Timestamp
-        elif event.EventName in ["pause_game", "unpause_game"]:
-            self.previous_time = event.Timestamp
+        # if player paused game, we want to start counting paused time
+        if event.EventName == "pause_game":
+            self.paused = True
+        elif event.EventName == "unpause_game":
+            self.paused = False
 
     def _updateFromFeatureData(self, feature: FeatureData):
         pass
@@ -112,12 +118,14 @@ class ActiveTime(Feature):
         active_time = self.total_session_time - self.idle_time
         return [
             active_time,
+            active_time.total_seconds(),
             self.total_session_time,
             self.total_session_time.total_seconds(),
-            active_time.total_seconds(),
             self.idle_time,
             self.idle_time.total_seconds(),
-            self.max_idle
+            self.max_idle,
+            self.pause_time,
+            self.pause_time.total_seconds()
         ]
 
     # *** Optionally override public functions ***
