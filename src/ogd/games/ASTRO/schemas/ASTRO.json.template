@@ -1,8 +1,13 @@
 {
+   "TODO" : [
+      "event for unlocking access level"
+   ],
+
    "enums" : {
       "StarIDs" : ["METEOR_AREA", "TODO : Fill in the rest"],
       "DocumentIDs" : ["TODO"],
-      "Tools" : ["PARALAX", "COLOR", "TEMPERATURE", "MAGNITUDE", "SPECTOGRAPH", "RADIO"],
+      "PostItIDs" : ["TODO"],
+      "Tools" : ["PARALLAX", "COLOR", "TEMPERATURE", "MAGNITUDE", "SPECTOGRAPH", "RADIO"],
       "MagnitudeSettings" : ["ABSOLUTE", "RELATIVE"],
       "Wavelengths" : ["VISIBLE", "BLUE", "INFRARED"],
       "Elements" : ["HYDROGEN", "TODO : Fill in the rest"],
@@ -10,7 +15,9 @@
       "ApparentMagnitudes" : ["VERY_BRIGHT", "BRIGHT", "TODO: fill in the rest"],
       "LuminosityClasses" : ["TODO"],
       "SpectralTypes" : ["TODO"],
-      "Directions" : ["UP", "DOWN", "LEFT", "RIGHT"]
+      "Directions" : ["UP", "DOWN", "LEFT", "RIGHT"],
+      "Sides" : ["FRONT", "BACK"],
+      "CameraViews" : ["DOCUMENTS", "INSTRUMENTS", "MAP", "FREE"]
    },
    "structures" : {
       "Star" : {
@@ -136,7 +143,7 @@
          "description" : "The details of the logic puzzle for the current level, or null if the player is not currently in the logic puzzle phase"
       }
    },
-   
+
    "events": {
       "session_start": {
          "description": "When the app is started and the gameplay session is assigned a session ID",
@@ -180,6 +187,15 @@
       "unpause_game": {
          "description": "When the player presses the spacebar or escape key to un-pause the game",
          "event_data": {
+         }
+      },
+      "switch_player_view": {
+         "description": "When the player clicks to set their camera to a new view angle",
+         "event_data": {
+            "view_id" : {
+               "type" : "CameraViews",
+               "description" : "The camera view the player switched to"
+            }
          }
       },
       "click_begin_level": {
@@ -555,7 +571,7 @@
             },
             "classification" : {
                "type" : "ApparentMagnitudes | LuminosityClasses | SpectralTypes",
-               "description" : "The new page of the reference guide that the player turned to."
+               "description" : "The specific classification the player selected."
             }
          }
       },
@@ -577,22 +593,389 @@
          }
       },
       "submit_star_identification": {
-         "description": "When the player .",
+         "description": "When the player clicks to submit their identification of a particular star.",
          "event_data": {
-            "toggled_on" : {
-               "type" : "bool",
-               "description" : "True if the element was selected by the toggle, or false if deselected."
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star that is currently selected, for which the player is submitting a classification."
             },
-            "element" : {
-               "type" : "Elements",
-               "description" : "The specific element that was toggled."
+            "category" : {
+               "type" : "Categories",
+               "description" : "The identification category within which the player selected a classification."
             },
-            "new_spectral_selection" : {
-               "type" : "List[Elements]",
-               "description" : "The updated list of selected spectral elements after the new toggle occurred."
+            "classification" : {
+               "type" : "ApparentMagnitudes | LuminosityClasses | SpectralTypes | List[SpectralElements]",
+               "description" : "The specific classification the player is submitting."
             }
          }
       },
+      "star_identification_accepted": {
+         "description": "When a submitted star identification is accepted.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star whose identification was accepted."
+            },
+            "category" : {
+               "type" : "Categories",
+               "description" : "The identification category of the star identification. The specific classification can be inferred from the star ID, since each star has one correct classification within any given category."
+            },
+            "earned_point" : {
+               "type" : "bool",
+               "description" : "Whether the identification submission & acceptance contributed a point towards the player completing the identification phase of the current level."
+            }
+         }
+      },
+      "star_identification_rejected": {
+         "description": "When the player's submission of a star identification is incorrect.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star whose identification was rejected."
+            },
+            "category" : {
+               "type" : "Categories",
+               "description" : "The identification category of the star identification."
+            },
+            "classification" : {
+               "type" : "ApparentMagnitudes | LuminosityClasses | SpectralTypes | List[SpectralElements]",
+               "description" : "The specific (incorrect) classification of the star that was rejected."
+            },
+            "correct_classification" : {
+               "type" : "ApparentMagnitudes | LuminosityClasses | SpectralTypes | List[SpectralElements]",
+               "description" : "The specific classification that would have been correct (this can be inferred from the star ID, but in this case is included for convenience when analyzing how far off the player's submission was)."
+            }
+         }
+      },
+      "points_needed_displayed": {
+         "description": "When the game displays (or updates) the number of points the player still needs to complete the identification phase.",
+         "event_data": {
+            "points_needed" : {
+               "type" : "int",
+               "description" : "The total number of points the player needs to pass the identification phase."
+            },
+            "points_earned" : {
+               "type" : "int",
+               "description" : "The number of points the player has earned so far. Then the remaining points needed is just the points_needed minus points_earned."
+            }
+         }
+      },
+      "select_wavelength_mode": {
+         "description": "When the changes the mode of the wavelength view.",
+         "event_data": {
+            "new_mode" : {
+               "type" : "Wavelengths",
+               "description" : "The new wavelength the player selected."
+            }
+         }
+      },
+      "toggle_magnitude_mode": {
+         "description": "When the switches the mode of the magnitude tool between absolute and relative.",
+         "event_data": {
+            "new_mode" : {
+               "type" : "MagnitudeSettings",
+               "description" : "Whether the player toggled the mode to ABSOLUTE or RELATIVE."
+            }
+         }
+      },
+      "start_radio_adjust": {
+         "description": "When the player begins to click and drag to adjust the radio frequency.",
+         "event_data": {
+            "radio_frequency" : {
+               "type" : "int",
+               "description" : "The initial frequency when the player started to adjust the frequency."
+            }
+         }
+      },
+      "end_radio_adjust": {
+         "description": "When the player releases the radio dial at a new frequency.",
+         "event_data": {
+            "radio_frequency" : {
+               "type" : "int",
+               "description" : "The new frequency the player set."
+            }
+         }
+      },
+      "radio_secret_found": {
+         "description": "When the player releases the radio dial at one of the preset 'secrets' on the radio dial, which plays a repeated message.",
+         "event_data": {
+            "message_id" : {
+               "type" : "str",
+               "description" : "The ID of the specific secret message the player discovered."
+            },
+            "radio_frequency" : {
+               "type" : "int",
+               "description" : "The frequency where the secret was found."
+            }
+         }
+      },
+      "telescope_stencil_displayed": {
+         "description": "When the game displays a 'stencil' overlay of a particular constellation to highlight the stars of the constellation the player needs to locate. This corresponds to a telescope_view_assigned event when the player is transitioning to the logic puzzle phase of a level.",
+         "event_data": {
+            "constellation_id" : {
+               "type" : "str",
+               "description" : "The ID (name) of the specific constellation."
+            },
+            "constellation" : {
+               "type" : "List[StarID]",
+               "description" : "The list of stars that are contained in the constellation."
+            },
+            "connected_stars" : {
+               "type" : "List[Tuple[StarID, StarID]]",
+               "description" : "A list of star pairs that are connected in the stencil overlay."
+            }
+         }
+      },
+      "logic_puzzle_start": {
+         "description": "When the player is moved into the logic puzzle phase of a level.",
+         "event_data": {
+            "puzzle_id" : {
+               "type" : "str",
+               "description" : "The ID of the specific logic puzzle being introduced."
+            },
+            "puzzle_info" : {
+               "type" : "List[str]",
+               "description" : "The list 'info' bullet points displayed in the interface during the given logic puzzle."
+            },
+            "puzzle_contents" : {
+               "type" : "List[PuzzleRow]",
+               "description" : "A representation of the intial table of puzzle data."
+            }
+         }
+      },
+      "logic_puzzle_complete": {
+         "description": "When the player has completed the full table of puzzle data and finishes the puzzle.",
+         "event_data": {
+            "puzzle_id" : {
+               "type" : "str",
+               "description" : "The ID of the specific logic puzzle the player completed."
+            }
+         }
+      },
+      "select_puzzle_cell": {
+         "description": "When the player selects a cell in the puzzle data table. If a tool value has already been loaded, this will trigger a 'transfer' of the loaded value to the selected cell.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The row name of the selected cell, which corresponds to the name of the star whose details are given in the row."
+            },
+            "tool_id" : {
+               "type" : "Tools",
+               "description" : "The column name of the selected cell, which corresponds to the tool whose value can be transferred into that column."
+            },
+            "value" : {
+               "type" : "Optional[float | str]",
+               "description" : "The value currently in the selected cell, or null if no value has been transferred to that cell yet."
+            }
+         }
+      },
+      "click_tool_load": {
+         "description": "When the player clicks the 'load' button for a given tool. If a puzzle cell is currently selected, this will trigger a 'transfer' of the loaded value to the selected cell.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the currently-selected star, whose value is being loaded."
+            },
+            "tool_id" : {
+               "type" : "Tools",
+               "description" : "The name of the tool whose value is being loaded."
+            },
+            "value" : {
+               "type" : "float | str",
+               "description" : "The current value being loaded from the tool."
+            }
+         }
+      },
+      "transfer_value_to_cell": {
+         "description": "When a tool value is transferred to a specific cell of the logic puzzle. This occurs when the player has both selected a cell and loaded a tool value.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star corresponding to the selected cell. i.e. the name of the star the player (presumably) believes the value comes from"
+            },
+            "source_star" : {
+               "type" : "StarID",
+               "description" : "The actual star whose value is being transferred to the cell. It is possible to transfer a value from a star to an incorrect row."
+            },
+            "tool_id" : {
+               "type" : "Tools",
+               "description" : "The name of the tool whose value is being transferred to the cell. This is, by construction, also the column to which the value is transferred, since players are not able to load values to an incorrect column.."
+            },
+            "value" : {
+               "type" : "float | str",
+               "description" : "The actual value being transferred to the cell."
+            }
+         }
+      },
+      "click_submit_puzzle": {
+         "description": "When the player clicks the submit button to send their completed puzzle data table.",
+         "event_data": {
+            "puzzle_id" : {
+               "type" : "str",
+               "description" : "The ID of the specific logic puzzle being submitted."
+            },
+            "puzzle_contents" : {
+               "type" : "List[PuzzleRow]",
+               "description" : "A representation of the submitted table of puzzle data."
+            }
+         }
+      },
+      "logic_puzzle_accepted": {
+         "description": "When the player has submitted a correct puzzle data table, and the submission is accepted.",
+         "event_data": {
+            "puzzle_id" : {
+               "type" : "str",
+               "description" : "The ID of the specific logic puzzle that was accepted. The content of the accepted submission can be inferred from the actual correct values for the puzzle."
+            }
+         }
+      },
+      "logic_puzzle_rejected": {
+         "description": "When the player has submitted an incorrect table of puzzle data, and their submission is rejected.",
+         "event_data": {
+            "puzzle_id" : {
+               "type" : "str",
+               "description" : "The ID of the specific logic puzzle for which the submission was rejected."
+            },
+            "incorrect_stars" : {
+               "type" : "List[StarID]",
+               "description" : "A list of which rows contained incorrect values. The actual contents can be obtained from the preceding submission event."
+            },
+            "new_puzzle_contents" : {
+               "type" : "List[PuzzleRow]",
+               "description" : "A representation of the puzzle data table after rejection. TODO : make sure this is what that actually means"
+            }
+         }
+      },
+      "new_document_received": {
+         "description": "When the player receives a new document, such as a postcard, in the document board.",
+         "event_data": {
+            "document_id" : {
+               "type" : "DocumentIDs",
+               "description" : "The ID of the specific document the player received."
+            },
+            "text_content" : {
+               "type" : "str",
+               "description" : "The content of the document text."
+            }
+         }
+      },
+      "click_document_flip": {
+         "description": "When the player clicks to flip over the document they are viewing.",
+         "event_data": {
+            "document_id" : {
+               "type" : "DocumentIDs",
+               "description" : "The ID of the specific document the player is viewing."
+            },
+            "to_side" : {
+               "type" : "Sides",
+               "description" : "Whether the player is flipping to the front or back of the document."
+            },
+            "text_content" : {
+               "type" : "str",
+               "description" : "The content of the document text on whichever side the player is flipping to. For most (or all?) documents, the content is an empty string for one side."
+            }
+         }
+      },
+      "click_view_document": {
+         "description": "When the player clicks on a document, such as a postcard, in the document board, bringing it up to view in detail.",
+         "event_data": {
+            "document_id" : {
+               "type" : "DocumentIDs",
+               "description" : "The ID of the specific document the player viewed."
+            },
+            "text_content" : {
+               "type" : "str",
+               "description" : "The content of the document text."
+            }
+         }
+      },
+      "click_dismiss_document": {
+         "description": "When the player clicks the button to dismiss the detail view of a document.",
+         "event_data": {
+            "document_id" : {
+               "type" : "DocumentIDs",
+               "description" : "The ID of the specific document the player finished viewing."
+            }
+         }
+      },
+      "new_postit_received": {
+         "description": "When the player receives a new post-it in the document board.",
+         "event_data": {
+            "postit_id" : {
+               "type" : "PostItIDs",
+               "description" : "The ID of the specific post-it the player received."
+            },
+            "text_content" : {
+               "type" : "str",
+               "description" : "The content of the post-it text."
+            }
+         }
+      },
+      "click_dismiss_postit": {
+         "description": "When the player clicks the button to dismiss the detail view of a post-it they've just received.",
+         "event_data": {
+            "postit_id" : {
+               "type" : "PostItIDs",
+               "description" : "The ID of the specific postit the player finished viewing."
+            }
+         }
+      },
+      "grab_postit": {
+         "description": "When the player clicks to grab and move a post-it around the document board.",
+         "event_data": {
+            "postit_id" : {
+               "type" : "PostItIDs",
+               "description" : "The ID of the specific postit the player is moving."
+            }
+         }
+      },
+      "place_postit": {
+         "description": "When the player clicks to release a post-it at a new position on the document board.",
+         "event_data": {
+            "postit_id" : {
+               "type" : "PostItIDs",
+               "description" : "The ID of the specific postit the player is moving."
+            },
+            "postit_coordinates" : {
+               "type" : "tuple[int, int] TODO : check if these are truly in int, or if they're floats",
+               "description" : "The x, y coordinates of the location where the player placed the post-it."
+            },
+            "target_id" : {
+               "type" : "DocumentIDs | 'BOARD'",
+               "description" : "The ID of the document the player placed the post-it onto, attempting to match the post-it to the relevant document. If the player placed the post-it onto a blank spot on the board, this value is the string 'BOARD', rather than a document ID string."
+            },
+            "correct_target" : {
+               "type" : "DocumentIDs",
+               "description" : "The ID of the document the post-it is intended to match with."
+            }
+         }
+      },
+      "postit_match_accepted": {
+         "description": "When the player has placed the post-it onto a document, and made a correct match.",
+         "event_data": {
+            "postit_id" : {
+               "type" : "PostItIDs",
+               "description" : "The ID of the specific postit the player successfully matched to a document. The document ID can be inferred as the correct document for the given post-it."
+            }
+         }
+      },
+      "postit_match_rejected": {
+         "description": "When the player has placed the post-it onto a document, but it is not the right match for the post-it and the player gets a message indicating the match was incorrect. If the player put the post-it on the board, rather than on a document, there is no rejection.",
+         "event_data": {
+            "postit_id" : {
+               "type" : "PostItIDs",
+               "description" : "The ID of the specific postit the player incorrectly matched to a document."
+            },
+            "target_id" : {
+               "type" : "DocumentIDs",
+               "description" : "The ID of the document the player placed the post-it onto, which was not a correct match for the post-it."
+            },
+            "correct_target" : {
+               "type" : "DocumentIDs",
+               "description" : "The ID of the document the post-it is intended to match with."
+            }
+         }
+      }
    },
    "features": {
       "per_count": {
