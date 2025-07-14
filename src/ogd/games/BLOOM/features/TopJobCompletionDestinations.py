@@ -18,13 +18,37 @@ class TopJobCompletionDestinations(Feature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["county_unlocked"]
+        return ["game_start","county_unlocked"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
+        # player_id = event.user_id
+        # event_name = event.EventName
+        
+        # if event_name == "game_start":
+        #     # print("vent:", event)
+        #     # print("data :",event.EventData)
+        #     county_index = event.EventData.get("county_index")
+        #     if county_index == 0:
+        #         self.last_unlocked_county[player_id] = "Hillside"
+        #         print(f"Game started for player {player_id}, setting last unlocked county to Hillside")
+
+        # elif event_name == "county_unlocked":
+        #     current_county = event.EventData.get("county_name")
+        #     last_county = self.last_unlocked_county.get(player_id)
+           
+
+        #     if last_county and last_county != current_county:
+        #         if player_id not in self.county_completion_pairs[last_county][current_county]:
+        #             self.county_completion_pairs[last_county][current_county].append(player_id)
+
+        #     # update last unlocked county
+        #     self.last_unlocked_county[player_id] = current_county
+
+
         # print(f"Processing event: {event}")
         player_id = event.user_id
 
@@ -41,6 +65,7 @@ class TopJobCompletionDestinations(Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
+        # print("County completion pairs:", dict(self.county_completion_pairs))
         ret_val = {}
         for src, dests in self.county_completion_pairs.items():
             sorted_dests = sorted(
