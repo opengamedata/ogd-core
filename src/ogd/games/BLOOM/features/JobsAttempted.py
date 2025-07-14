@@ -39,31 +39,67 @@ class JobsAttempted(Feature):
         self.county_unlock_time = None
         self.next_county_unlock_time = None
 
+        self.session_new_game = False
+        self.session_resumed = False
+        self.session_started = False
+
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["county_unlocked", "win_game"]
+        return ["click_new_game", "click_resume_game", "game_start", "county_unlocked", "win_game"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        if event.EventName == "county_unlocked":
+
+        if event.EventName == "click_new_game":
+            self.session_new_game = True
+            self.session_resumed = False
+            self.session_started = False
+
+        elif event.EventName == "click_resume_game":
+            self.session_resumed = True
+
+        elif event.EventName == "game_start":
+            if self.session_new_game and not self.session_resumed:
+                if self.county_index == 0:
+                    self.num_starts += 1
+            self.session_started = True  
+
+        elif event.EventName == "county_unlocked":
             county_name = event.EventData.get("county_name")
-            
             if county_name == self.county_name:
-                # print(county_name, self.county_name, self.county_index)
                 self.num_starts += 1
                 self.county_unlock_time = event.Timestamp
-                
             elif self._is_next_county(county_name):
                 self.num_completes += 1
                 self.next_county_unlock_time = event.Timestamp
                 if self.county_unlock_time:
                     time_diff = self.next_county_unlock_time - self.county_unlock_time
                     self.unlock_times.append(time_diff.total_seconds())
+
         elif event.EventName == "win_game":
-            self.player_won = True
+            if self.county_index == 4 or self.county_name == "Urban":
+                self.player_won = True
+
+
+        # if event.EventName == "county_unlocked":
+        #     county_name = event.EventData.get("county_name")
+            
+        #     if county_name == self.county_name:
+        #         # print(county_name, self.county_name, self.county_index)
+        #         self.num_starts += 1
+        #         self.county_unlock_time = event.Timestamp
+                
+        #     elif self._is_next_county(county_name):
+        #         self.num_completes += 1
+        #         self.next_county_unlock_time = event.Timestamp
+        #         if self.county_unlock_time:
+        #             time_diff = self.next_county_unlock_time - self.county_unlock_time
+        #             self.unlock_times.append(time_diff.total_seconds())
+        # elif event.EventName == "win_game":
+        #     self.player_won = True
 
 
     def _updateFromFeatureData(self, feature: FeatureData):
