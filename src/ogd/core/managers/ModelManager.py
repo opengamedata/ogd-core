@@ -153,3 +153,15 @@ class ModelManager:
     # Other required methods
     def ProcessEvent(self, event:Event) -> None:
         pass # Models don't currently process raw events.
+
+    def apply_model_to_players(self, player_feature_lists):
+        model_outputs = {}
+        if self._models and hasattr(self._models._registry, "_models"):
+            for player_id, features in player_feature_lists.items():
+                for model in self._models._registry._models.values():
+                    try:
+                        result = model._apply(features)
+                        model_outputs[player_id] = result
+                    except Exception as e:
+                        model_outputs[player_id] = None
+        return model_outputs

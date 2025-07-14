@@ -175,7 +175,20 @@ class ExportManager:
 
                 if self._model_mgr:
                     self._sess_feats = self._feat_mgr.GetSessionFeatureData()
+                    # print(f"ExportManager passing {len(self._sess_feats)} features to ModelManager for processing...")
+                    # print(self._sess_feats)
                     self._model_mgr.ProcessFeatureData(self._sess_feats)
+
+
+                if self._feat_mgr and self._model_mgr:
+                    self._player_feature_data = self._feat_mgr.GetPlayerFeatureData()
+
+                self.player_features_by_id = {}
+                for fd in self._player_feature_data:
+                    player_id = getattr(fd, 'PlayerID', None) or getattr(fd, 'player_id', None)
+                    if player_id is None:
+                        continue
+                    self.player_features_by_id.setdefault(player_id, []).append(fd)
 
             # 2. Write out the session data and reset for next slice.
                 start = datetime.now()
@@ -225,19 +238,19 @@ class ExportManager:
             #     all_feature_data.extend(feature_list)
 
             # --- ADD THIS DEBUGGING BLOCK ---
-            print(" DEBUGGING: CHECKPOINT 1 (ExportManager)")
-            if self._sess_feats:
-                first_feature = self._sess_feats[0]
-                print(f"Sample FeatureData object retrieved from FeatureManager:")
-                print(f"  -> Name:           {first_feature.Name}")
-                print(f"  -> Values:         {first_feature.FeatureValues}")
-                # This next line is the most important one!
-                print(f"  -> ExtractionMode: {getattr(first_feature, 'ExtractionMode', '!!! ATTRIBUTE NOT FOUND !!!')}")
-            else:
-                print("No feature data was retrieved from FeatureManager.")
+            # print(" DEBUGGING: CHECKPOINT 1 (ExportManager)")
+            # if self._sess_feats:
+            #     first_feature = self._sess_feats[0]
+            #     print(f"Sample FeatureData object retrieved from FeatureManager:")
+            #     print(f"  -> Name:           {first_feature.Name}")
+            #     print(f"  -> Values:         {first_feature.FeatureValues}")
+            #     # This next line is the most important one!
+            #     print(f"  -> ExtractionMode: {getattr(first_feature, 'ExtractionMode', '!!! ATTRIBUTE NOT FOUND !!!')}")
+            # else:
+            #     print("No feature data was retrieved from FeatureManager.")
             # --- END OF DEBUGGING BLOCK ---
 
-            print("type of all_feature_data", type(self._sess_feats))
+            # print("type of all_feature_data", type(self._sess_feats))
             # print(self._sess_feats)
 
             Logger.Log(f"Passing {len(self._sess_feats)} features to the Model Manager...", logging.INFO, depth=2)
@@ -245,7 +258,13 @@ class ExportManager:
             
             Logger.Log("Training models...", logging.INFO, depth=2)
             self._model_mgr.TrainModels()
+
             
+            output = self._model_mgr.apply_model_to_players(self.player_features_by_id)
+
+            print("Model output:")
+            print(output)
+
             # 4. Get the model outputs.
             Logger.Log("Retrieving model outputs...", logging.INFO, depth=2)
             self._model_mgr.GetModelInfo()

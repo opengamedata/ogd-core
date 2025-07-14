@@ -150,20 +150,6 @@ class FeatureManager:
         time_delta = datetime.now() - start
         Logger.Log(f"Time to retrieve Session lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val
-    
-    #new
-    # def GetAllFeatureData(self) -> List[FeatureData]:
-    #     all_features = []
-    #     if self._population is not None:
-    #         all_features.append(self._population.GetFeatureData(order=1))
-    #     if self._players is not None:
-    #         for player in self._players.values():
-    #             all_features.append(player.GetFeatureData(order=1))
-    #     if self._sessions is not None:
-    #         for sess_list in self._sessions.values():
-    #             for session in sess_list.values():
-    #                 all_features.append(session.GetFeatureData(order=1))
-    #     return all_features
 
     def GetPopulationFeatureData(self) -> List[FeatureData]:
         population_data = []
@@ -171,7 +157,15 @@ class FeatureManager:
             population_data += self._population.GetFeatureData(order=1)
         return population_data
     
+    def GetPlayerFeatureData(self) -> List[FeatureData]:
+        player_data = []
+        if self._players is not None:
+            for player in self._players.values():
+                player_data += player.GetFeatureData(order=1)
+        return player_data
+    
     def GetSessionFeatureData(self) -> List[FeatureData]:
+        self._try_update(as_str=False)
         session_data = []
         if self._sessions is not None:
             for sess_list in self._sessions.values():
