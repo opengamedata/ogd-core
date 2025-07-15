@@ -170,7 +170,7 @@ class FeatureManager:
         if self._sessions is not None:
             for sess_list in self._sessions.values():
                 for session in sess_list.values():
-                    session_data += session.GetFeatureData(order=1)
+                    session_data += session.GetFeatureData(order=1) + session.GetFeatureData(order=2)
         return session_data
    
     def ClearPopulationLines(self) -> None:
