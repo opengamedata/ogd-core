@@ -490,12 +490,12 @@ class KMeansModel(PopulationModel):
             'CityInspectionCount',
             'DairyInspectionCount',
             'GrainInspectionCount',
-            'PhosphorusViewCount',
-            'EconomyViewCount'
+            'AveragePhosphorusViewTime',
+            'AverageEconomyViewTime'
         ]
 
     def _updateFromFeatureData(self, feature: FeatureData):
-        if hasattr(feature, 'ExtractionMode') and feature.ExtractionMode == ExtractionMode.SESSION:
+        if feature.ExportMode == ExtractionMode.SESSION:
             try:
                 value_as_string = str(feature.FeatureValues[0])
                 numeric_value = int(value_as_string.split()[-1])
@@ -519,10 +519,12 @@ class KMeansModel(PopulationModel):
                 self._grain_inspection_count.append(numeric_value)
                 # print("  -> NAME CHECK: PASSED. Appending to _grain_inspection_count.")
                 # print(self._grain_inspection_count)
-            elif feature.Name == "PhosphorusViewCount":
+            # elif feature.Name == "PhosphorusViewCount":
+            elif feature.Name == "AveragePhosphorusViewTime":
                 self._phosphorus_view_count.append(numeric_value)
                 # print("  -> NAME CHECK: PASSED. Appending to _phosphorus_view_count.")
-            elif feature.Name == "EconomyViewCount":
+            # elif feature.Name == "EconomyViewCount":
+            elif feature.Name == "AverageEconomyViewTime":
                 # print("  -> NAME CHECK: PASSED. Appending to _economy_view_count.")
                 self._economy_view_count.append(numeric_value)
 
