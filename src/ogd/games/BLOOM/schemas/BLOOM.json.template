@@ -1092,6 +1092,7 @@
                "description": "Detector for cases where the player implements a good combination of policies for a given county, which may be based on the state of the county at the time the policy was implemented",
                "threshold": 150
          }
+        }
       }
    },
    "features": {
@@ -1288,6 +1289,18 @@
             "target": "select_policy_card",
             "return_type": "int"
          },
+         "TopJobSwitchDestinations": {
+          "enabled": true,
+          "type": "TopJobSwitchDestinations",
+          "description": "Top county switch destinations",
+          "return_type": "dict"
+        }, 
+        "TopJobCompletionDestinations": {
+          "enabled": true,
+          "type": "TopJobCompletionDestinations",
+          "description": "Top county completion destinations",
+          "return_type": "dict"
+        }, 
          "EconomyViewCount": {
             "enabled": true,
             "type": "CountEvent",
