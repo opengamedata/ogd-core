@@ -156,12 +156,16 @@ class ModelManager:
 
     def apply_model_to_players(self, player_feature_lists):
         model_outputs = {}
-        if self._models and hasattr(self._models._registry, "_models"):
+        # print("player feature list", player_feature_lists)
+        if self._models:
             for player_id, features in player_feature_lists.items():
                 for model in self._models._registry._models.values():
+                    print(model)
                     try:
+                        # print(f"Applying model {model.Name} to player {player_id} with features: {features}")
                         result = model._apply(features)
                         model_outputs[player_id] = result
                     except Exception as e:
                         model_outputs[player_id] = None
+                        # print(f"Failed to apply model {model.Name} to player {player_id}: {e}")
         return model_outputs

@@ -557,6 +557,7 @@ class KMeansModel(PopulationModel):
             'EconomyViewCount': self._economy_view_count,
         }
 
+        print("Data dictionary keys:", data_dict)
         self._processed_data = pd.DataFrame(data_dict)
         features = list(data_dict.keys())
 
@@ -585,6 +586,7 @@ class KMeansModel(PopulationModel):
 
         input_features = {}
         for feature_data in apply_to:
+            print("feature_data:", feature_data)
             if feature_data.ExportMode == self.ExtractionMode:
                 input_features[feature_data.Name] = feature_data.FeatureValues[0]
 
