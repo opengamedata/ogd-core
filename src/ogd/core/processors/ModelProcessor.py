@@ -138,7 +138,7 @@ class ModelProcessor(ExtractorProcessor):
         return ExtractionMode.POPULATION
 
     def _createRegistry(self) -> ModelRegistry:
-        return ModelRegistry(mode=self._mode)
+        return ModelRegistry(mode=ExtractionMode.PLAYER)
     
     def _getGeneratorNames(self) -> List[str]:
         return self._registry._getGeneratorNames() if self._registry else []

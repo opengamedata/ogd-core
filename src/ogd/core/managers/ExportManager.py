@@ -173,22 +173,27 @@ class ExportManager:
                 time_delta = datetime.now() - start
                 Logger.Log(f"Processing time for slice [{i+1}/{len(slices)}]: {time_delta} to handle {len(_next_slice_data)} events", logging.INFO, depth=2)
 
-                if self._model_mgr:
-                    self._sess_feats = self._feat_mgr.GetSessionFeatureData()
-                    # print(f"ExportManager passing {len(self._sess_feats)} features to ModelManager for processing...")
-                    # print(self._sess_feats)
-                    self._model_mgr.ProcessFeatureData(self._sess_feats)
+                # if self._model_mgr:
+                #     self._sess_feats = self._feat_mgr.GetSessionFeatureData()
+                #     # print(f"ExportManager passing {len(self._sess_feats)} features to ModelManager for processing...")
+                #     # print(self._sess_feats)
+                #     self._model_mgr.ProcessFeatureData(self._sess_feats)
 
 
                 if self._feat_mgr and self._model_mgr:
                     self._player_feature_data = self._feat_mgr.GetPlayerFeatureData()
+                    print(f"ExportManager passing {len(self._player_feature_data)} player features to ModelManager for processing...")
+                    print(self._player_feature_data)
+                    self._model_mgr.ProcessFeatureData(self._player_feature_data)
 
-                self.player_features_by_id = {}
-                for fd in self._player_feature_data:
-                    player_id = getattr(fd, 'PlayerID', None) or getattr(fd, 'player_id', None)
-                    if player_id is None:
-                        continue
-                    self.player_features_by_id.setdefault(player_id, []).append(fd)
+                # self.player_features_by_id = {}
+                # for fd in self._player_feature_data:
+                #     player_id = getattr(fd, 'PlayerID', None) or getattr(fd, 'player_id', None)
+                #     if player_id is None:
+                #         continue
+                #     self.player_features_by_id.setdefault(player_id, []).append(fd)
+
+                # print(self.player_features_by_id)
 
             # 2. Write out the session data and reset for next slice.
                 start = datetime.now()
@@ -253,17 +258,17 @@ class ExportManager:
             # print("type of all_feature_data", type(self._sess_feats))
             # print(self._sess_feats)
 
-            Logger.Log(f"Passing {len(self._sess_feats)} features to the Model Manager...", logging.INFO, depth=2)
+            # Logger.Log(f"Passing {len(self._sess_feats)} features to the Model Manager...", logging.INFO, depth=2)
             # self._model_mgr.ProcessFeatureData(self._sess_feats) 
             
             Logger.Log("Training models...", logging.INFO, depth=2)
             self._model_mgr.TrainModels()
 
             
-            output = self._model_mgr.apply_model_to_players(self.player_features_by_id)
+            # output = self._model_mgr.apply_model_to_players(self.player_features_by_id)
 
-            print("Model output:")
-            print(output)
+            # print("Model output:")
+            # print(output)
 
             # 4. Get the model outputs.
             Logger.Log("Retrieving model outputs...", logging.INFO, depth=2)

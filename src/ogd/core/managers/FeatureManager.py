@@ -158,10 +158,11 @@ class FeatureManager:
         return population_data
     
     def GetPlayerFeatureData(self) -> List[FeatureData]:
+        self._try_update(as_str=False)
         player_data = []
         if self._players is not None:
             for player in self._players.values():
-                player_data += player.GetFeatureData(order=1)
+                player_data += player.GetFeatureData(order=1) + player.GetFeatureData(order=2)
         return player_data
     
     def GetSessionFeatureData(self) -> List[FeatureData]:
