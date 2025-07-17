@@ -12,6 +12,15 @@ from collections import defaultdict
 class TopJobCompletionDestinations(Feature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
+
+        # county_list = ["Hillside","Forest", "Prairie", "Wetland", "Urban"]
+        
+        # if self.CountIndex is not None:
+        #     self.county_index = self.CountIndex
+        #     self.county_name = county_list[self.CountIndex]
+        # else:
+        #     raise ValueError("JobsAttempted was not given a count index!")
+        
         self.last_unlocked_county = {} 
         self.county_completion_pairs = defaultdict(lambda: defaultdict(list)) 
 
@@ -25,41 +34,38 @@ class TopJobCompletionDestinations(Feature):
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        # player_id = event.user_id
-        # event_name = event.EventName
+        player_id = event.user_id
+        event_name = event.EventName
         
-        # if event_name == "game_start":
-        #     # print("vent:", event)
-        #     # print("data :",event.EventData)
-        #     county_index = event.EventData.get("county_index")
-        #     if county_index == 0:
-        #         self.last_unlocked_county[player_id] = "Hillside"
-        #         print(f"Game started for player {player_id}, setting last unlocked county to Hillside")
+        if event_name == "game_start" and self.last_unlocked_county[player_id] == None:
+            # print("vent:", event)
+            # print("data :",event.EventData)
+            # county_name = event.EventData.get("county_name")
+            # if county_name == "Hillside":
+            self.last_unlocked_county[player_id] = "Hillside"
+            print(f"Game started for player {player_id}, setting last unlocked county to Hillside")
 
         # elif event_name == "county_unlocked":
         #     current_county = event.EventData.get("county_name")
-        #     last_county = self.last_unlocked_county.get(player_id)
-           
-
+        #     last_county = self.last_unlocked_county.get(player_id, None)
         #     if last_county and last_county != current_county:
         #         if player_id not in self.county_completion_pairs[last_county][current_county]:
         #             self.county_completion_pairs[last_county][current_county].append(player_id)
 
-        #     # update last unlocked county
         #     self.last_unlocked_county[player_id] = current_county
 
 
         # print(f"Processing event: {event}")
-        player_id = event.user_id
+        # player_id = event.user_id
 
-        current_county = event.EventData.get("county_name")
-        last_county = self.last_unlocked_county.get(player_id)
+        # current_county = event.EventData.get("county_name")
+        # last_county = self.last_unlocked_county.get(player_id)
 
-        if last_county and last_county != current_county:
-            if player_id not in self.county_completion_pairs[last_county][current_county]:
-                self.county_completion_pairs[last_county][current_county].append(player_id)
+        # if last_county and last_county != current_county:
+        #     if player_id not in self.county_completion_pairs[last_county][current_county]:
+        #         self.county_completion_pairs[last_county][current_county].append(player_id)
 
-        self.last_unlocked_county[player_id] = current_county
+        # self.last_unlocked_county[player_id] = current_county
 
     def _updateFromFeatureData(self, feature: FeatureData):
         return
