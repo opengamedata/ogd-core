@@ -219,7 +219,7 @@ class GeneratorCollectionConfig(Config):
         return ret_val
 
     @classmethod
-    def _fromDict(cls, name:str, unparsed_elements:Dict[str, Any])-> "GeneratorCollectionConfig":
+    def _fromDict(cls, name:str, unparsed_elements:Map, key_overrides:Optional[Dict[str, str]]=None)-> "GeneratorCollectionConfig":
         """_summary_
 
         TODO : Need to have parse functions for all the variables, currently only have about half of them.
