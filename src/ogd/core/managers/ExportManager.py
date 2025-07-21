@@ -16,6 +16,7 @@ from ogd import games
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.managers.EventManager import EventManager
 from ogd.core.managers.FeatureManager import FeatureManager
+from ogd.core.managers.ModelManager import ModelManager
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.common.models.enums.IDMode import IDMode
@@ -46,6 +47,7 @@ class ExportManager:
         self._config      : ConfigSchema = config
         self._event_mgr   : Optional[EventManager]   = None
         self._feat_mgr    : Optional[FeatureManager] = None
+        self._model_mgr   : Optional[ModelManager] = None
         self._debug_count : int                      = 0
 
     def __str__(self):
@@ -148,6 +150,9 @@ class ExportManager:
             self._feat_mgr = FeatureManager(game_schema=_game_schema, LoaderClass=load_class, feature_overrides=request._feat_overrides)
         else:
             Logger.Log("Feature data not requested, or extractor loader unavailable, skipping feature manager.", logging.INFO, depth=1)
+
+
+        self._model_mgr = ModelManager(game_schema=_game_schema, LoaderClass=load_class, feature_overrides=request._feat_overrides)
     # 4. Open the outerfaces
         for outerface in request.Outerfaces:
             outerface.Open()
@@ -167,6 +172,19 @@ class ExportManager:
                 self._processSlice(next_slice_data=_next_slice_data, request=request, ids=ids)
                 time_delta = datetime.now() - start
                 Logger.Log(f"Processing time for slice [{i+1}/{len(slices)}]: {time_delta} to handle {len(_next_slice_data)} events", logging.INFO, depth=2)
+
+                # if self._model_mgr:
+                #     self._sess_feats = self._feat_mgr.GetSessionFeatureData()
+                #     # print(f"ExportManager passing {len(self._sess_feats)} features to ModelManager for processing...")
+                #     # print(self._sess_feats)
+                #     self._model_mgr.ProcessFeatureData(self._sess_feats)
+
+
+                if self._feat_mgr and self._model_mgr:
+                    self._player_feature_data = self._feat_mgr.GetPlayerFeatureData()
+                    # print(f"ExportManager passing {len(self._player_feature_data)} player features to ModelManager for processing...")
+                    # print(self._player_feature_data)
+                    self._model_mgr.ProcessFeatureData(self._player_feature_data)
 
             # 2. Write out the session data and reset for next slice.
                 start = datetime.now()
@@ -192,6 +210,15 @@ class ExportManager:
             Logger.Log(f"Skipping feature output for post-process, no FeatureManager exists!", logging.DEBUG, depth=3)
         time_delta = datetime.now() - start
         Logger.Log(f"Output time for population: {time_delta}", logging.INFO, depth=2)
+
+        if self._model_mgr is not None and self._feat_mgr is not None:
+
+            Logger.Log("Training models...", logging.INFO, depth=2)
+            self._model_mgr.TrainModels()
+
+            Logger.Log("Retrieving model outputs...", logging.INFO, depth=2)
+            self._model_mgr.GetModelInfo()
+            self._model_mgr.RenderModels()
 
     @staticmethod
     def _loadLoaderClass(game_id:str) -> Optional[Type[GeneratorLoader]]:
@@ -313,6 +340,8 @@ class ExportManager:
                 self._event_mgr.ProcessEvent(event=next_event)
             if self._feat_mgr is not None:
                 self._feat_mgr.ProcessEvent(event=next_event)
+            if self._model_mgr is not None:
+                self._model_mgr.ProcessEvent(event=next_event)
         except Exception as err:
             if self._config.FailFast:
                 Logger.Log(f"Error while processing event {next_event.EventName}:\n{next_event}", logging.ERROR, depth=2)

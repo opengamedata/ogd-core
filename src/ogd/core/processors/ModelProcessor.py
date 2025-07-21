@@ -131,14 +131,14 @@ class ModelProcessor(ExtractorProcessor):
     def TrainModels(self):
         # self._registry = self._createRegistry()
         if self._registry:
-            self._registry._loadFromSchema(schema=self._game_schema, loader=self._loader, overrides=self._overrides)
+            self._registry.TrainModels()
 
     @property
     def _mode(self) -> ExtractionMode:
         return ExtractionMode.POPULATION
 
     def _createRegistry(self) -> ModelRegistry:
-        return ModelRegistry(mode=self._mode)
+        return ModelRegistry(mode=ExtractionMode.PLAYER)
     
     def _getGeneratorNames(self) -> List[str]:
         return self._registry._getGeneratorNames() if self._registry else []

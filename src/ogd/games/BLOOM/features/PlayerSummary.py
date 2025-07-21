@@ -33,7 +33,7 @@ class PlayerSummary(SessionFeature):
         pass
        
     def _updateFromFeatureData(self, feature: FeatureData):
-        print(f"Processing feature: {feature}")
+        # print(f"Processing feature: {feature}")
         player_id = feature.PlayerID
         if feature.ExportMode == ExtractionMode.PLAYER:
             if player_id not in self._summary:
