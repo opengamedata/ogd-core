@@ -503,29 +503,29 @@ class KMeansModel(PopulationModel):
                 numeric_value = 0
 
             if feature.Name == "BuildCount":
-                print("  -> NAME CHECK: PASSED. Appending to _build_count.")
+                # print("  -> NAME CHECK: PASSED. Appending to _build_count.")
                 self._build_count.append(numeric_value)
                 # print(self._build_count)
                 # self._build_count.append(numeric_value)
             elif feature.Name == "CityInspectionCount":
-                print("  -> NAME CHECK: PASSED. Appending to _city_inspection_count.")
+                # print("  -> NAME CHECK: PASSED. Appending to _city_inspection_count.")
                 # print(self._city_inspection_count)
                 self._city_inspection_count.append(numeric_value)
             elif feature.Name == "DairyInspectionCount":
                 self._dairy_inspection_count.append(numeric_value)
-                print("  -> NAME CHECK: PASSED. Appending to _dairy_inspection_count.")
+                # print("  -> NAME CHECK: PASSED. Appending to _dairy_inspection_count.")
                 # print(self._dairy_inspection_count)
             elif feature.Name == "GrainInspectionCount":
                 self._grain_inspection_count.append(numeric_value)
-                print("  -> NAME CHECK: PASSED. Appending to _grain_inspection_count.")
+                # print("  -> NAME CHECK: PASSED. Appending to _grain_inspection_count.")
                 # print(self._grain_inspection_count)
             # elif feature.Name == "PhosphorusViewCount":
             elif feature.Name == "AveragePhosphorusViewTime":
                 self._phosphorus_view_count.append(feature.FeatureValues[0] if feature.FeatureValues[0] else 0)
-                print("  -> NAME CHECK: PASSED. Appending to _phosphorus_view_count.")
+                # print("  -> NAME CHECK: PASSED. Appending to _phosphorus_view_count.")
             # elif feature.Name == "EconomyViewCount":
             elif feature.Name == "AverageEconomyViewTime":
-                print("  -> NAME CHECK: PASSED. Appending to _economy_view_count.")
+                # print("  -> NAME CHECK: PASSED. Appending to _economy_view_count.")
                 self._economy_view_count.append(feature.FeatureValues[0] if feature.FeatureValues[0] else 0)
 
     def _updateFromEvent(self, event):
