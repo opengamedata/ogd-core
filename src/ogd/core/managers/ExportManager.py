@@ -182,18 +182,9 @@ class ExportManager:
 
                 if self._feat_mgr and self._model_mgr:
                     self._player_feature_data = self._feat_mgr.GetPlayerFeatureData()
-                    print(f"ExportManager passing {len(self._player_feature_data)} player features to ModelManager for processing...")
-                    print(self._player_feature_data)
+                    # print(f"ExportManager passing {len(self._player_feature_data)} player features to ModelManager for processing...")
+                    # print(self._player_feature_data)
                     self._model_mgr.ProcessFeatureData(self._player_feature_data)
-
-                # self.player_features_by_id = {}
-                # for fd in self._player_feature_data:
-                #     player_id = getattr(fd, 'PlayerID', None) or getattr(fd, 'player_id', None)
-                #     if player_id is None:
-                #         continue
-                #     self.player_features_by_id.setdefault(player_id, []).append(fd)
-
-                # print(self.player_features_by_id)
 
             # 2. Write out the session data and reset for next slice.
                 start = datetime.now()
@@ -220,57 +211,11 @@ class ExportManager:
         time_delta = datetime.now() - start
         Logger.Log(f"Output time for population: {time_delta}", logging.INFO, depth=2)
 
-        # if self._model_mgr is not None:
-        #     feature_data_list = self._feat_mgr.GetAllFeatureData()
-        #     print(feature_data_list)
-        #     self._model_mgr.UpdateFromFeatureData(feature_data_list)
-        #     self._model_mgr.TrainModels()
-        #     # model_outputs = self._model_mgr.GetModels(as_str=True)
-        #     # model_info = self._model_mgr.ModelOutputs()
-        #     # for outerface in request.Outerfaces:
-        #     #     outerface.WriteLines(lines=model_outputs["models"], mode=ExportMode.POPULATION)
-
         if self._model_mgr is not None and self._feat_mgr is not None:
-        # 1. Get the list of lists from FeatureManager.
-            Logger.Log("Retrieving all feature data for modeling...", logging.INFO, depth=2)
-            # list_of_feature_lists = self._feat_mgr.GetAllFeatureData()
 
-            # print("type of feature data list", type(list_of_feature_lists))
-            
-            # FIX: Flatten the list of lists into a single, flat list of features.
-            # all_feature_data = []
-            # for feature_list in list_of_feature_lists:
-            #     all_feature_data.extend(feature_list)
-
-            # --- ADD THIS DEBUGGING BLOCK ---
-            # print(" DEBUGGING: CHECKPOINT 1 (ExportManager)")
-            # if self._sess_feats:
-            #     first_feature = self._sess_feats[0]
-            #     print(f"Sample FeatureData object retrieved from FeatureManager:")
-            #     print(f"  -> Name:           {first_feature.Name}")
-            #     print(f"  -> Values:         {first_feature.FeatureValues}")
-            #     # This next line is the most important one!
-            #     print(f"  -> ExtractionMode: {getattr(first_feature, 'ExtractionMode', '!!! ATTRIBUTE NOT FOUND !!!')}")
-            # else:
-            #     print("No feature data was retrieved from FeatureManager.")
-            # --- END OF DEBUGGING BLOCK ---
-
-            # print("type of all_feature_data", type(self._sess_feats))
-            # print(self._sess_feats)
-
-            # Logger.Log(f"Passing {len(self._sess_feats)} features to the Model Manager...", logging.INFO, depth=2)
-            # self._model_mgr.ProcessFeatureData(self._sess_feats) 
-            
             Logger.Log("Training models...", logging.INFO, depth=2)
             self._model_mgr.TrainModels()
 
-            
-            # output = self._model_mgr.apply_model_to_players(self.player_features_by_id)
-
-            # print("Model output:")
-            # print(output)
-
-            # 4. Get the model outputs.
             Logger.Log("Retrieving model outputs...", logging.INFO, depth=2)
             self._model_mgr.GetModelInfo()
             self._model_mgr.RenderModels()
