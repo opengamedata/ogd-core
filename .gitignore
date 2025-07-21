@@ -4,8 +4,8 @@ config/*.json
 config/config.py
 src/ogd/games/*/schemas/*.json
 tests/config/t_config.py
-./*.png
-./*.jpg
+/*.png
+/*.jpg
 # ignore __init__.py in the src/ogd folder.
 # If one goes in there, it will break sibling packages under the ogd namespace.
 # Ignoring it here means no one can add it by accident without seeing this reminder.

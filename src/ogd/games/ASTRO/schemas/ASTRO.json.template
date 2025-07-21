@@ -1,20 +1,28 @@
 {
+   "TODO" : [
+      "event for unlocking access level"
+   ],
+
    "enums" : {
       "StarIDs" : ["METEOR_AREA", "TODO : Fill in the rest"],
       "DocumentIDs" : ["TODO"],
-      "Tools" : ["PARALAX", "COLOR", "TEMPERATURE", "MAGNITUDE", "SPECTOGRAPH", "RADIO"],
+      "PostItIDs" : ["TODO"],
+      "Tools" : ["PARALLAX", "COLOR", "TEMPERATURE", "MAGNITUDE", "SPECTOGRAPH", "RADIO"],
       "MagnitudeSettings" : ["ABSOLUTE", "RELATIVE"],
       "Wavelengths" : ["VISIBLE", "BLUE", "INFRARED"],
       "Elements" : ["HYDROGEN", "TODO : Fill in the rest"],
       "Categories" : ["APPARENT_MAGNITUDE", "LUMINOSITY_CLASS", "SPECTRAL_TYPE", "SPECTRAL_ELEMENTS"],
       "ApparentMagnitudes" : ["VERY_BRIGHT", "BRIGHT", "TODO: fill in the rest"],
       "LuminosityClasses" : ["TODO"],
-      "SpectralTypes" : ["TODO"]
+      "SpectralTypes" : ["TODO"],
+      "Directions" : ["UP", "DOWN", "LEFT", "RIGHT"],
+      "Sides" : ["FRONT", "BACK"],
+      "CameraViews" : ["DOCUMENTS", "INSTRUMENTS", "MAP", "FREE"]
    },
    "structures" : {
       "Star" : {
          "star_id" : {
-            "type" : "str",
+            "type" : "StarID",
             "description" : "The name of the star"
          },
          "constellation" : {
@@ -24,6 +32,10 @@
          "coordinates" : {
             "type" : "str",
             "description" : "The string containing the coordinates of the star, as displayed to the user in the TODO : what's the name of that tool?"
+         },
+         "distance" : {
+            "type" : "float",
+            "description" : "The distance to the star"
          },
          "color" : {
             "type" : "TODO",
@@ -49,7 +61,7 @@
             "type" : "float",
             "description" : "The absolute brightness of the star, derived from the distance and apparent brightnesses."
          },
-         "elements" : {
+         "spectral_elements" : {
             "type" : "List[Elements]",
             "description" : "A list of elements in the star, as observed on the spectrograph."
          },
@@ -57,9 +69,9 @@
             "type" : "bool",
             "description" : "Whether the star is currently highlighted in the UI, particularly if the star's constellation is highlighted"
          },
-         "is_identified" : {
-            "type" : "bool",
-            "description" : "Whether the star is has been identified successfully in the 'identification' phase of the current level. This is indicated by a small UI mark next to the star in the viewport."
+         "identification" : {
+            "type" : "Optional[Dict]",
+            "description" : "A subdictionary with a 'category' mapped to the identification category assigned on the star, a 'classification' mapped to the specific classification (or null if the player has not made a classification), and a 'correct_classification' mapped to the actual correct classification. The entire 'identification' element is mapped to null if there is no identification assigned to the given star for the current level."
          }
       },
       "PuzzleRow" : {
@@ -131,7 +143,7 @@
          "description" : "The details of the logic puzzle for the current level, or null if the player is not currently in the logic puzzle phase"
       }
    },
-   
+
    "events": {
       "session_start": {
          "description": "When the app is started and the gameplay session is assigned a session ID",
@@ -139,64 +151,14 @@
          }
       },
       "game_start": {
-         "description": "When a game is actually loaded/started, showing the player their interface and map.",
+         "description": "When a game is actually loaded/started, showing the player the main interface and tools.",
          "event_data": {
-            "music_volume" : {
-               "type" : "float",
-               "description" : "The volume for the in-game music, set in the new/resume game panel."
-            },
-            "fullscreen_enabled" : {
+            "from_resume" : {
                "type" : "bool",
-               "description" : "True if the player has enabled fullscreen play, or false if not."
-            },
-            "hq_graphics_enabled" : {
-               "type" : "bool",
-               "description" : "True if the player has enabled high-quality graphics, or false if not."
-            },
-            "map_state" : {
-               "type" : "Dict[str, List[Dict]]",
-               "details": {
-                  "index"  : "int",
-                  "height" : "int",
-                  "type"   : "TileType",
-                  "building" : "BuildingType",
-                  "connections" : "List[CardinalDirection]"
-               },
-               "description" : "A collection of individual county maps for the game, in their initial states at load time. Each county map is made up of a list of sub-dictionaries defining individual build tiles, which contain the tile's hex coordinates, elevation, tile type, and objects on the tile. If this event is a 'resume', some of the tiles will contain buildings (a sub-dict with tile ID, building type, and list of road connections on the tile)."
+               "description" : "Indicator for whether the game was a brand new start, or resumed from the menu."
             }
          }
       },
-      "win_game": {
-         "description": "When the player enters the game win state, and is shown the 'you win' cutscene",
-         "event_data": {
-            "map_state" : {
-               "type" : "TODO : BuildMap",
-               "description" : "The state of the build map when the player entered the win state."
-            }
-         }
-      },
-      "lose_game": {
-         "description": "When the player enters the game lose state, and is taken back to a checkpoint to try again.",
-         "event_data": {
-            "county_id" : {
-               "type" : "int",
-               "description" : "The index of the county in the order counties unlock."
-            },
-            "county_name" : {
-               "type" : "str",
-               "description" : "The name of the county in which the loss occurred."
-            },
-            "lose_condition" : {
-               "type" : "LossType",
-               "description" : "The state of the build map when the player entered the win state."
-            },
-            "map_state" : {
-               "type" : "TODO : BuildMap",
-               "description" : "The state of the build map when the player entered the win state."
-            }
-         }
-      },
-
       "click_new_game": {
          "description": "When the player clicks the button for a new game. This should bring the 'new game' menu",
          "event_data": {
@@ -207,8 +169,13 @@
          "event_data": {
          }
       },
-      "click_play_game": {
-         "description": "When the player clicks the button to actually launch the game, whether from the 'new' or 'resume' menu",
+      "click_options_menu": {
+         "description": "When the player clicks the button to open the options menu, from the main menu",
+         "event_data": {
+         }
+      },
+      "click_free_play": {
+         "description": "When the player clicks the button to open the free play menu",
          "event_data": {
          }
       },
@@ -222,69 +189,21 @@
          "event_data": {
          }
       },
-      "click_credits": {
-         "description": "When the player clicks to play the game credits. Not actually sure if this feature still exists...",
+      "switch_player_view": {
+         "description": "When the player clicks to set their camera to a new view angle",
          "event_data": {
-         }
-      },
-      "close_credits": {
-         "description": "When the player exits the credits sequence",
-         "event_data": {
-         }
-      },
-      "click_return_main_menu": {
-         "description": "When the player clicks the button to return to the main menu from the (not sure if this used to be from the game or the new/resume game menu, in either case, it seems like this no longer exists...)",
-         "event_data": {
-         }
-      },
-      "toggle_fullscreen_setting": {
-         "description": "When the player ticks/unticks the fullscreen setting the new/resume game panel",
-         "event_data": {
-            "enabled" : {
-               "type" : "bool",
-               "description" : "True if the click enabled the fullscreen setting, or false if it disabled the setting."
+            "view_id" : {
+               "type" : "CameraViews",
+               "description" : "The camera view the player switched to"
             }
          }
       },
-      "toggle_hq_graphics": {
-         "description": "When the player ticks/unticks the box for the high-quality graphics setting the new/resume game panel",
+      "click_begin_level": {
+         "description": "When the player clicks a level to start",
          "event_data": {
-            "enabled" : {
-               "type" : "bool",
-               "description" : "True if the click enabled the hq graphics setting, or false if it disabled the setting."
-            }
-         }
-      },
-      "set_music_volume": {
-         "description": "When the player clicks or releases the music volume slider, setting a new volume level",
-         "event_data": {
-            "old_volume" : {
-               "type" : "float",
-               "description" : "The initial value of the slider."
-            },
-            "new_volume" : {
-               "type" : "float",
-               "description" : "The initial value of the slider."
-            }
-         }
-      },
-      "county_unlocked": {
-         "description": "When the game unlocks a new county for the player to explore",
-         "event_data": {
-            "county_name" : {
-               "type" : "str",
-               "description" : "The name of the newly-unlocked county."
-            },
-            "county_state" : {
-               "type" : "List[Dict]",
-               "details": {
-                  "index"  : "int",
-                  "height" : "int",
-                  "type"   : "TileType",
-                  "building" : "BuildingType",
-                  "connections" : "List[CardinalDirection]"
-               },
-               "description" : "A collection of sub-dictionaries defining individual build tiles in the county map, which contain the tile's hex coordinates, elevation, tile type, and objects on the tile."
+            "level_id" : {
+               "type" : "int",
+               "description" : "The number of the level the player selected"
             }
          }
       },
@@ -306,790 +225,763 @@
             }
          }
       },
-      "cutscene_page_displayed": {
-         "description": "When a new page of the cutscene is displayed for the player to read",
+      "dialogue_audio_start": {
+         "description": "When an in-game dialog voiceover clip starts",
          "event_data": {
-            "cutscene_id" : {
+            "line_id" : {
                "type" : "str",
-               "description" : "The ID for the specific cutscene."
+               "description" : "The ID of the line, which can be matched against the text display events."
             },
-            "page_id" : {
+            "line_content" : {
                "type" : "str",
-               "description" : "The ID for the specific page of the cutscene, which can be cross-referenced with game metadata."
+               "description" : "The actual text content of the line being spoken."
             },
-            "frame_ids" : {
+            "speaker_id" : {
+               "type" : "str",
+               "description" : "The name of the speaking character."
+            }
+         }
+      },
+      "dialogue_audio_end": {
+         "description": "When an in-game dialog voiceover clip ends",
+         "event_data": {
+            "line_id" : {
+               "type" : "str",
+               "description" : "The ID of the line, which can be matched against the text display events."
+            },
+            "speaker_id" : {
+               "type" : "str",
+               "description" : "The name of the speaking character."
+            }
+         }
+      },
+      "dialog_text_displayed": {
+         "description": "When an in-game dialog line is displayed to the player.",
+         "event_data": {
+            "line_id" : {
+               "type" : "str",
+               "description" : "The ID of the line, which can be matched against the audio playback events."
+            },
+            "line_content" : {
+               "type" : "str",
+               "description" : "The actual text content of the line being spoken."
+            },
+            "speaker_id" : {
+               "type" : "str",
+               "description" : "The name of the speaking character."
+            }
+         }
+      },
+      "skip_dialog_line": {
+         "description": "When the player hits the key to skip the current dialog line",
+         "event_data": {
+            "line_id" : {
+               "type" : "str",
+               "description" : "The ID of the line, which can be matched against the audio playback and text display events."
+            },
+            "speaker_id" : {
+               "type" : "str",
+               "description" : "The name of the speaking character."
+            }
+         }
+      },
+      "hint_displayed": {
+         "description": "When a hint is displayed to the user, such as instruction on how to use a particular tool.",
+         "event_data": {
+            "hint_id" : {
+               "type" : "str",
+               "description" : "The ID of the hint."
+            },
+            "text_content" : {
+               "type" : "str",
+               "description" : "The actual text content of the hint."
+            }
+         }
+      },
+      "hint_hidden": {
+         "description": "When a hint is hidden.",
+         "event_data": {
+            "hint_id" : {
+               "type" : "str",
+               "description" : "The ID of the hint."
+            }
+         }
+      },
+      "star_assigned": {
+         "description": "When a star is assigned for identification or part of a logic puzzle. These typically come in bunches, as constellations are generally assigned together.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star that was assigned."
+            }
+         }
+      },
+      "star_highlighted": {
+         "description": "When a star is highlighted, typically because it was assigned to a player, but sometimes due to a mouse hover.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star that was highlighted."
+            }
+         }
+      },
+      "star_unhighlighted": {
+         "description": "When a highlighted star's highlight goes away.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star that was highlighted."
+            }
+         }
+      },
+      "hover_star": {
+         "description": "When a player hovers their mouse over a star, and the mouse pointer switches to indicate the player can select the star.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star that was highlighted."
+            }
+         }
+      },
+      "click_select_star": {
+         "description": "When a player clicks to select a specific star. The event_data contains the same elements as are defined for the 'Star' structure above.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star"
+            },
+            "constellation" : {
+               "type" : "str",
+               "description" : "The name of the constellation containing the star."
+            },
+            "coordinates" : {
+               "type" : "str",
+               "description" : "The string containing the coordinates of the star, as displayed to the user in the compass tool"
+            },
+            "distance" : {
+               "type" : "float",
+               "description" : "The distance to the star"
+            },
+            "color" : {
+               "type" : "TODO",
+               "description" : "The color of the star"
+            },
+            "temperature" : {
+               "type" : "float",
+               "description" : "The temperature of the star"
+            },
+            "visible_magnitude" : {
+               "type" : "float",
+               "description" : "The apparent brightness of the star, in the visible spectrum, as observed from earth"
+            },
+            "blue_magnitude" : {
+               "type" : "float",
+               "description" : "The apparent brightness of the star, in the blue spectrum, as observed from earth"
+            },
+            "infrared_magnitude" : {
+               "type" : "float",
+               "description" : "The apparent brightness of the star, in the infrared spectrum, as observed from earth"
+            },
+            "absolute_magnitude" : {
+               "type" : "float",
+               "description" : "The absolute brightness of the star, derived from the distance and apparent brightnesses."
+            },
+            "spectral_elements" : {
+               "type" : "List[Elements]",
+               "description" : "A list of elements in the star, as observed on the spectrograph."
+            },
+            "is_highlighted" : {
+               "type" : "bool",
+               "description" : "Whether the star is currently highlighted in the UI, particularly if the star's constellation is highlighted"
+            },
+            "identification" : {
+               "type" : "Optional[Dict]",
+               "description" : "A subdictionary with a 'category' mapped to the identification category assigned on the star, a 'classification' mapped to the specific classification (or null if the player has not made a classification), and a 'correct_classification' mapped to the actual correct classification. The entire 'identification' element is mapped to null if there is no identification assigned to the given star for the current level."
+            }
+         }
+      },
+      "access_level_unlocked": {
+         "description": "When the player unlocks a new access level, which typically corresponds to unlocking one or more tools.",
+         "event_data": {
+            "access_level" : {
+               "type" : "int",
+               "description" : "The access level that was unlocked."
+            }
+         }
+      },
+      "tool_unlocked": {
+         "description": "When a new tool is unlocked for the player to use.",
+         "event_data": {
+            "tool_id" : {
+               "type" : "Tools",
+               "description" : "The name of the tool that was unlocked."
+            }
+         }
+      },
+      "wavelength_filter_unlocked": {
+         "description": "When a new wavelength filter setting is unlocked.",
+         "event_data": {
+            "tool_id" : {
+               "type" : "Wavelength",
+               "description" : "The type of wavelength that was unlocked."
+            }
+         }
+      },
+      "turn_telescope": {
+         "description": "When the player rotates the telescope view to a new orientation. The event occurs when the rotation completes.",
+         "event_data": {
+            "direction" : {
+               "type" : "Directions",
+               "description" : "The direction in which the player rotated the view"
+            },
+            "new_orientation" : {
+               "type" : "Tuple[float, 4]",
+               "description" : "The new orientation of the telescope within the current skydome area. The initial orientation when the rotation began is captured by the orientation in game_state."
+            }
+         }
+      },
+      "telescope_view_assigned": {
+         "description": "When the game assigns a new telescope view containing a constellation the player is meant to locate.",
+         "event_data": {
+            "constellation_id" : {
+               "type" : "str",
+               "description" : "The name of the constellation that was assigned for the player to find."
+            },
+            "goal_orientation" : {
+               "type" : "Tuple[float, 4]",
+               "description" : "The telescope orientation that the player must reach to 'locate' the constellation."
+            }
+         }
+      },
+      "locator_closer": {
+         "description": "When the locator indicator activates a new light to show the telescope view has gotten closer to the target.",
+         "event_data": {
+            "new_proximity" : {
+               "type" : "int",
+               "description" : "The proximity level, which is the number of locator lights that are active after the new light activated (out of 4)."
+            }
+         }
+      },
+      "locator_further": {
+         "description": "When the locator indicator deactivates a light to show the telescope view has gotten further from the target.",
+         "event_data": {
+            "new_proximity" : {
+               "type" : "int",
+               "description" : "The proximity level, which is the number of locator lights that are active after the light deactivated (out of 4)."
+            }
+         }
+      },
+      "found_telescope_view": {
+         "description": "When the player successfully locates the constellation by reaching the correct telescope orientation.",
+         "event_data": {
+            "constellation_id" : {
+               "type" : "str",
+               "description" : "The name of the constellation that was assigned for the player to find."
+            },
+            "constellation_stars" : {
                "type" : "List[str]",
-               "description" : "The list, in order, of IDs for each frame within the given cutscene page."
-            },
-            "page_text" : {
-               "type" : "str",
-               "description" : "The text content of the cutscene page."
+               "description" : "The names of the stars (i.e. the star IDs) in the constellation."
             }
          }
       },
-      "click_cutscene_next": {
-         "description": "When the player has finished reading the current cutscene page, and clicks to advance to the next one.",
+      "constellation_identification_assigned": {
+         "description": "When the system assigns the player a new identification task for a constellation.",
          "event_data": {
-            "cutscene_id" : {
+            "constellation_id" : {
                "type" : "str",
-               "description" : "The ID for the specific cutscene."
+               "description" : "The name of the constellation that was assigned for the player to find."
             },
+            "constellation_stars" : {
+               "type" : "List[str]",
+               "description" : "The names of the stars (i.e. the star IDs) in the constellation."
+            },
+            "points_needed" : {
+               "type" : "int",
+               "description" : "The number of correct identifications the player needs to make to complete the identification task."
+            },
+            "identification_category" : {
+               "type" : "Categories",
+               "description" : "The category of identification task."
+            }
+         }
+      },
+      "click_open_reference_guide": {
+         "description": "When the player clicks on the reference guide notebook to open the reference view.",
+         "event_data": {
             "page_id" : {
-               "type" : "str",
-               "description" : "The ID for the specific cutscene page that was just finished, which can be cross-referenced with game metadata."
+               "type" : "TODO",
+               "description" : "The initial page of the reference guide when it opens."
             }
          }
       },
-      "dialogue_start": {
-         "description": "When an in-game dialog scene begins, whether a part of a tutorial, the result of the player clicking a dialog notification, or clicking a warning notification",
+      "click_dismiss_reference_guide": {
+         "description": "When the player clicks on the 'x' button to close the guide notebook view.",
          "event_data": {
-            "node_id" : {
+            "page_id" : {
+               "type" : "TODO",
+               "description" : "The page of the reference guide when the player closed it."
+            }
+         }
+      },
+      "zoom_reference_guide": {
+         "description": "When the player clicks to switch to the zoomed-in, 'full-screen' view of the guide notebook.",
+         "event_data": {
+            "page_id" : {
+               "type" : "TODO",
+               "description" : "The page of the reference guide the player zoomed on."
+            }
+         }
+      },
+      "unzoom_reference_guide": {
+         "description": "When the player clicks to switch to the zoomed-out, 'regular' view of the guide notebook.",
+         "event_data": {
+            "page_id" : {
+               "type" : "TODO",
+               "description" : "The page of the reference guide the player zoomed out from."
+            }
+         }
+      },
+      "select_reference_guide_tab": {
+         "description": "When the player clicks on a tab of the reference guide to switch to the first page of the tabbed section.",
+         "event_data": {
+            "tab_id" : {
                "type" : "str",
-               "description" : "The ID for the specific dialog node, which can be cross-referenced with game metadata to recover the contents of the dialog."
+               "description" : "The name of the tab the player switched to."
             },
-            "skippable" : {
+            "new_page_id" : {
+               "type" : "TODO",
+               "description" : "The new page of the reference guide that the player turned to."
+            }
+         }
+      },
+      "turn_reference_guide_page": {
+         "description": "When the player clicks to navigate to either the next or previous guide page.",
+         "event_data": {
+            "direction" : {
+               "type" : "Directions",
+               "description" : "Whether the player turned the page left or right (up and down are not options here)."
+            },
+            "new_page_id" : {
+               "type" : "TODO",
+               "description" : "The new page of the reference guide that the player turned to."
+            }
+         }
+      },
+      "select_classification": {
+         "description": "When the selects a classification for the currently-selected star on one of the classification category pages of the reference guide.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star that is currently selected, for which the player is selecting a classification."
+            },
+            "category" : {
+               "type" : "Categories",
+               "description" : "The identification category within which the player is selecting a classification. Note, the spectral elements category will not appear here, because selections of elements is captured by the `toggle_spectral_element` event."
+            },
+            "classification" : {
+               "type" : "ApparentMagnitudes | LuminosityClasses | SpectralTypes",
+               "description" : "The specific classification the player selected."
+            }
+         }
+      },
+      "toggle_spectral_element": {
+         "description": "When the player clicks to select or deselect a spectral element in the spectral element page of the reference guide.",
+         "event_data": {
+            "toggled_on" : {
                "type" : "bool",
-               "description" : "Whether this particular dialog can be skipped/ignored, or must be viewed before resuming the game."
+               "description" : "True if the element was selected by the toggle, or false if deselected."
+            },
+            "element" : {
+               "type" : "Elements",
+               "description" : "The specific element that was toggled."
+            },
+            "new_spectral_selection" : {
+               "type" : "List[Elements]",
+               "description" : "The updated list of selected spectral elements after the new toggle occurred."
             }
          }
       },
-      "dialogue_end": {
-         "description": "When an in-game dialog scene completes, whether it was triggered as a part of a tutorial, the result of the player clicking a dialog notification, or clicking a warning notification",
+      "submit_star_identification": {
+         "description": "When the player clicks to submit their identification of a particular star.",
          "event_data": {
-            "node_id" : {
-               "type" : "str",
-               "description" : "The ID for the specific dialog node, which can be cross-referenced with game metadata to recover the contents of the dialog."
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star that is currently selected, for which the player is submitting a classification."
             },
-            "skippable" : {
+            "category" : {
+               "type" : "Categories",
+               "description" : "The identification category within which the player selected a classification."
+            },
+            "classification" : {
+               "type" : "ApparentMagnitudes | LuminosityClasses | SpectralTypes | List[SpectralElements]",
+               "description" : "The specific classification the player is submitting."
+            }
+         }
+      },
+      "star_identification_accepted": {
+         "description": "When a submitted star identification is accepted.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star whose identification was accepted."
+            },
+            "category" : {
+               "type" : "Categories",
+               "description" : "The identification category of the star identification. The specific classification can be inferred from the star ID, since each star has one correct classification within any given category."
+            },
+            "earned_point" : {
                "type" : "bool",
-               "description" : "Whether this particular dialog can be skipped/ignored, or must be viewed before resuming the game."
+               "description" : "Whether the identification submission & acceptance contributed a point towards the player completing the identification phase of the current level."
             }
          }
       },
-      "character_line_displayed": {
-         "description": "When a character has a line displayed during in-game dialog",
+      "star_identification_rejected": {
+         "description": "When the player's submission of a star identification is incorrect.",
          "event_data": {
-            "character_name" : {
-               "type" : "str",
-               "description" : "The specific name of the character 'speaking' the line of dialog."
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star whose identification was rejected."
             },
-            "character_type" : {
-               "type" : "CharacterType",
-               "description" : "The kind of character who is 'speaking,' such as an advisor or farmer."
+            "category" : {
+               "type" : "Categories",
+               "description" : "The identification category of the star identification."
             },
-            "line_text" : {
-               "type" : "str",
-               "description" : "The actual content of the line of dialog."
-            }
-         }
-      },
-      "click_next_character_line": {
-         "description": "When the player finishes reading the current line of dialog, and clicks to advance to the next",
-         "event_data": {
-            "character_name" : {
-               "type" : "str",
-               "description" : "The specific name of the character 'speaking' the line of dialog."
+            "classification" : {
+               "type" : "ApparentMagnitudes | LuminosityClasses | SpectralTypes | List[SpectralElements]",
+               "description" : "The specific (incorrect) classification of the star that was rejected."
             },
-            "character_type" : {
-               "type" : "CharacterType",
-               "description" : "The kind of character who is 'speaking,' such as an advisor or farmer."
+            "correct_classification" : {
+               "type" : "ApparentMagnitudes | LuminosityClasses | SpectralTypes | List[SpectralElements]",
+               "description" : "The specific classification that would have been correct (this can be inferred from the star ID, but in this case is included for convenience when analyzing how far off the player's submission was)."
+            }
+         }
+      },
+      "points_needed_displayed": {
+         "description": "When the game displays (or updates) the number of points the player still needs to complete the identification phase.",
+         "event_data": {
+            "points_needed" : {
+               "type" : "int",
+               "description" : "The total number of points the player needs to pass the identification phase."
             },
-            "line_text" : {
-               "type" : "str",
-               "description" : "The actual content of the line of dialog that was just completed (not the line that will be shown next)."
+            "points_earned" : {
+               "type" : "int",
+               "description" : "The number of points the player has earned so far. Then the remaining points needed is just the points_needed minus points_earned."
             }
          }
       },
-      "leave_county": {
-         "description": "When player leaves from one county to another.",
-         "event_data": {
-            "to_county" : {
-               "type" : "str",
-               "description" : "The new county the player is entering as they leave the current county."
-            }
-         }
-      },
-      "enter_county": {
-         "description": "When player has crossed into a county from another, and the interface updates to show the new county's money, policies, etc.",
-         "event_data": {
-            "from_county" : {
-               "type" : "str",
-               "description" : "The county the player left to enter the current one."
-            }
-         }
-      },
-      "open_economy_view": {
-         "description": "When the player clicks to open the economy breakdown view",
-         "event_data": {
-         }
-      },
-      "close_economy_view": {
-         "description": "When the player exits the economy breakdown view",
-         "event_data": {
-         }
-      },
-      "toggle_map_mode": {
-         "description": "When the player toggles between view and build mode for the map.",
+      "select_wavelength_mode": {
+         "description": "When the changes the mode of the wavelength view.",
          "event_data": {
             "new_mode" : {
-               "type" : "MapMode",
-               "description" : "The mode the player toggled into, should only be able to go into VIEW or BUILD modes"
+               "type" : "Wavelengths",
+               "description" : "The new wavelength the player selected."
             }
          }
       },
-      "build_menu_displayed": {
-         "description": "When the game displays the build menu, in response to the player entering build mode.",
+      "toggle_magnitude_mode": {
+         "description": "When the switches the mode of the magnitude tool between absolute and relative.",
          "event_data": {
-            "available_buildings" : {
-               "type" : "List[Dict]",
-               "details": {
-                  "name":"str",
-                  "price":"int"
-               },
-               "description" : "The buildings available for the player to construct"
+            "new_mode" : {
+               "type" : "MagnitudeSettings",
+               "description" : "Whether the player toggled the mode to ABSOLUTE or RELATIVE."
             }
          }
       },
-      "enter_destroy_mode": {
-         "description": "When the player is in build mode, and clicks the 'destroy' button to go into destroy mode",
+      "start_radio_adjust": {
+         "description": "When the player begins to click and drag to adjust the radio frequency.",
          "event_data": {
-         }
-      },
-      "exit_destroy_mode": {
-         "description": "When the player is in destroy mode, and clicks to return to normal build mode",
-         "event_data": {
-         }
-      },
-      "global_alert_displayed": {
-         "description": "When game displays a 'global' alert pop-up, which pauses game time until the player clicks the alert.",
-         "event_data": {
-            "alert_type" : {
-               "type" : "AlertType",
-               "description" : "The kind of alert that was displayed."
+            "radio_frequency" : {
+               "type" : "int",
+               "description" : "The initial frequency when the player started to adjust the frequency."
             }
          }
       },
-      "click_global_alert": {
-         "description": "When the player clicks on a 'global' in-game alert pop-up, which will in turn trigger a dialog to begin.",
+      "end_radio_adjust": {
+         "description": "When the player releases the radio dial at a new frequency.",
          "event_data": {
-            "alert_type" : {
-               "type" : "AlertType",
-               "description" : "The kind of alert the player clicked."
-            },
-            "node_id" : {
+            "radio_frequency" : {
+               "type" : "int",
+               "description" : "The new frequency the player set."
+            }
+         }
+      },
+      "radio_secret_found": {
+         "description": "When the player releases the radio dial at one of the preset 'secrets' on the radio dial, which plays a repeated message.",
+         "event_data": {
+            "message_id" : {
                "type" : "str",
-               "description" : "The ID of the node displayed when the alert is clicked"
+               "description" : "The ID of the specific secret message the player discovered."
+            },
+            "radio_frequency" : {
+               "type" : "int",
+               "description" : "The frequency where the secret was found."
             }
          }
       },
-      "local_alert_displayed": {
-         "description": "When game displays a 'local' alert pop-up, which appears above the building tile for which the alert occurred, and does not pause game time.",
+      "telescope_stencil_displayed": {
+         "description": "When the game displays a 'stencil' overlay of a particular constellation to highlight the stars of the constellation the player needs to locate. This corresponds to a telescope_view_assigned event when the player is transitioning to the logic puzzle phase of a level.",
          "event_data": {
-            "alert_type" : {
-               "type" : "AlertType",
-               "description" : "The kind of alert that was displayed."
-            },
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the global map, of the tile containing the building with the alert."
-            }
-         }
-      },
-      "click_local_alert": {
-         "description": "When the player clicks on a 'local' in-game alert pop-up, which will in turn trigger a dialog to begin.",
-         "event_data": {
-            "alert_type" : {
-               "type" : "AlertType",
-               "description" : "The kind of alert the player clicked."
-            },
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the global map, of the tile containing the building with the alert."
-            },
-            "node_id" : {
+            "constellation_id" : {
                "type" : "str",
-               "description" : "The ID of the node displayed when the alert is clicked"
+               "description" : "The ID (name) of the specific constellation."
+            },
+            "constellation" : {
+               "type" : "List[StarID]",
+               "description" : "The list of stars that are contained in the constellation."
+            },
+            "connected_stars" : {
+               "type" : "List[Tuple[StarID, StarID]]",
+               "description" : "A list of star pairs that are connected in the stencil overlay."
             }
          }
       },
-      "bloom_alert": {
-         "description": "When game displays a 'bloom' alert pop-up, which appears above a newly-formed bloom, and does not pause game time.",
+      "logic_puzzle_start": {
+         "description": "When the player is moved into the logic puzzle phase of a level.",
          "event_data": {
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the global map, of the tile containing the bloom."
-            },
-            "phosphorus_value" : {
-               "type" : "int",
-               "description" : "The amount of phosphorus on the tile."
-            }
-         }
-      },
-      "click_bloom_alert": {
-         "description": "When the player clicks on a 'bloom' in-game alert pop-up, which will in turn trigger a dialog to begin.",
-         "event_data": {
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the global map, of the tile containing the building with the alert."
-            },
-            "phosphorus_value" : {
-               "type" : "int",
-               "description" : "The amount of phosphorus on the tile."
-            },
-            "node_id" : {
+            "puzzle_id" : {
                "type" : "str",
-               "description" : "The ID of the node displayed when the alert is clicked"
+               "description" : "The ID of the specific logic puzzle being introduced."
+            },
+            "puzzle_info" : {
+               "type" : "List[str]",
+               "description" : "The list 'info' bullet points displayed in the interface during the given logic puzzle."
+            },
+            "puzzle_contents" : {
+               "type" : "List[PuzzleRow]",
+               "description" : "A representation of the intial table of puzzle data."
             }
          }
       },
-      "change_zoom": {
-         "description": "When the player clicks on an in-game notification/alert pop-up, such as a bloom warning, a farm losing money, or an optional dialog.",
+      "logic_puzzle_complete": {
+         "description": "When the player has completed the full table of puzzle data and finishes the puzzle.",
          "event_data": {
-            "zoom_type" : {
-               "type" : "ZoomType",
-               "description" : "Whether the player zoomed with the zoom buttons or a mouse/trackpad scroll."
-            },
-            "start_zoom" : {
-               "type" : "float",
-               "description" : "The initial zoom level, before the button click/scroll"
-            },
-            "end_zoom" : {
-               "type" : "float",
-               "description" : "The final zoom level, after the button click/scroll"
-            }
-         }
-      },
-      "click_open_policy_category": {
-         "description": "When the player clicks to pop up the list of policies within the economy or ecology policy category.",
-         "event_data": {
-            "category" : {
-               "type" : "PolicyCategory",
-               "description" : "Whether the player opened up the economic or ecologic category."
-            }
-         }
-      },
-      "click_open_policy": {
-         "description": "When the player clicks to open the policy card choices for a specific policy type.",
-         "event_data": {
-            "policy" : {
-               "type" : "PolicyType",
-               "description" : "The specific policy that was clicked, i.e. sales tax, import subsidy, runoff fine, or cleanup initiative."
-            },
-            "from_taskbar" : {
-               "type" : "bool",
-               "description" : "Whether the player opened the policy from the county taskbar. If false, the policy was opened from the 'category' open as in a click_open_policy_category event."
-            }
-         }
-      },
-      "hover_policy_card": {
-         "description": "When the player moves their mouse over a new policy card.",
-         "event_data": {
-            "policy" : {
-               "type" : "PolicyType",
-               "description" : "The specific policy whose cards are displayed, i.e. sales tax, import subsidy, runoff fine, or cleanup initiative."
-            },
-            "choice_number" : {
-               "type" : "int",
-               "description" : "The index, among all cards for the given policy, of the hovered policy."
-            },
-            "choice_name" : {
-               "type" : "SalesPolicy | ImportPolicy | RunoffPolicy | CleanupPolicy",
-               "description" : "The enum-ified name of the hovered policy."
-            },
-            "choice_text" : {
+            "puzzle_id" : {
                "type" : "str",
-               "description" : "The text content of the hovered card."
+               "description" : "The ID of the specific logic puzzle the player completed."
             }
          }
       },
-      "select_policy_card": {
-         "description": "When the player clicks a policy card, selecting it as the new setting for the given policy in the current county.",
+      "select_puzzle_cell": {
+         "description": "When the player selects a cell in the puzzle data table. If a tool value has already been loaded, this will trigger a 'transfer' of the loaded value to the selected cell.",
          "event_data": {
-            "policy" : {
-               "type" : "PolicyType",
-               "description" : "The specific policy whose card was selected."
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The row name of the selected cell, which corresponds to the name of the star whose details are given in the row."
             },
-            "choice_number" : {
-               "type" : "int",
-               "description" : "The index, among all cards for the given policy, of the selected policy."
+            "tool_id" : {
+               "type" : "Tools",
+               "description" : "The column name of the selected cell, which corresponds to the tool whose value can be transferred into that column."
             },
-            "choice_name" : {
-               "type" : "SalesPolicy | ImportPolicy | RunoffPolicy | CleanupPolicy",
-               "description" : "The enum-ified name of the selected policy."
+            "value" : {
+               "type" : "Optional[float | str]",
+               "description" : "The value currently in the selected cell, or null if no value has been transferred to that cell yet."
+            }
+         }
+      },
+      "click_tool_load": {
+         "description": "When the player clicks the 'load' button for a given tool. If a puzzle cell is currently selected, this will trigger a 'transfer' of the loaded value to the selected cell.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the currently-selected star, whose value is being loaded."
             },
-            "choice_text" : {
+            "tool_id" : {
+               "type" : "Tools",
+               "description" : "The name of the tool whose value is being loaded."
+            },
+            "value" : {
+               "type" : "float | str",
+               "description" : "The current value being loaded from the tool."
+            }
+         }
+      },
+      "transfer_value_to_cell": {
+         "description": "When a tool value is transferred to a specific cell of the logic puzzle. This occurs when the player has both selected a cell and loaded a tool value.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star corresponding to the selected cell. i.e. the name of the star the player (presumably) believes the value comes from"
+            },
+            "source_star" : {
+               "type" : "StarID",
+               "description" : "The actual star whose value is being transferred to the cell. It is possible to transfer a value from a star to an incorrect row."
+            },
+            "tool_id" : {
+               "type" : "Tools",
+               "description" : "The name of the tool whose value is being transferred to the cell. This is, by construction, also the column to which the value is transferred, since players are not able to load values to an incorrect column.."
+            },
+            "value" : {
+               "type" : "float | str",
+               "description" : "The actual value being transferred to the cell."
+            }
+         }
+      },
+      "click_submit_puzzle": {
+         "description": "When the player clicks the submit button to send their completed puzzle data table.",
+         "event_data": {
+            "puzzle_id" : {
                "type" : "str",
-               "description" : "The text content of the selected card."
+               "description" : "The ID of the specific logic puzzle being submitted."
+            },
+            "puzzle_contents" : {
+               "type" : "List[PuzzleRow]",
+               "description" : "A representation of the submitted table of puzzle data."
             }
          }
       },
-      "click_inspect_building": {
-         "description": "When the player clicks a building on the map, to review its current state.",
+      "logic_puzzle_accepted": {
+         "description": "When the player has submitted a correct puzzle data table, and the submission is accepted.",
          "event_data": {
-            "building_type" : {
-               "type" : "BuildingType",
-               "description" : "The specific type of building selected for inspection."
-            },
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the county map, of the tile containing the building being inspected."
-            },
-            "connections" : {
-               "type" : "List[CardinalDirection]",
-               "description" : "The directions on the tile containing road connections."
-            }
-         }
-      },
-      "building_inspector_displayed": {
-         "description": "When the inspector panel for a building is displayed to the user, for any building that does not have a more-specific `*_inspector_displayed` event.",
-         "event_data": {
-            "building_type" : {
-               "type" : "BuildingType",
-               "description" : "The specific type of building selected for inspection."
-            },
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the county map, of the tile containing the building being inspected."
-            },
-            "connections" : {
-               "type" : "List[CardinalDirection]",
-               "description" : "The directions on the tile containing road connections."
-            }
-         }
-      },
-      "storage_inspector_displayed": {
-         "description": "When the inspector panel for a manure storage building is displayed to the user.",
-         "event_data": {
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the county map, of the tile containing the building being inspected."
-            },
-            "connections" : {
-               "type" : "List[CardinalDirection]",
-               "description" : "The directions on the tile containing road connections."
-            },
-            "units_filled" : {
-               "type" : "int",
-               "description" : "The number of storage units filled within the storage building, as displayed in the panel."
-            }
-         }
-      },
-      "city_inspector_displayed": {
-         "description": "When the inspector panel for a city is displayed to the user.",
-         "event_data": {
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the county map, of the tile containing the building being inspected."
-            },
-            "connections" : {
-               "type" : "List[CardinalDirection]",
-               "description" : "The directions on the tile containing road connections."
-            },
-            "city_name" : {
+            "puzzle_id" : {
                "type" : "str",
-               "description" : "The display name of the city/town being inspected."
-            },
-            "population" : {
-               "type" : "AttributeStatus",
-               "description" : "Whether the population is growing (GOOD), stable (OK), or falling (BAD)."
-            },
-            "water" : {
-               "type" : "AttributeStatus",
-               "description" : "Whether the local water quality is good, ok, or bad."
-            },
-            "milk" : {
-               "type" : "AttributeStatus",
-               "description" : "Whether the available quantity of milk is plenty (GOOD), enough (OK), or not enough (BAD)."
+               "description" : "The ID of the specific logic puzzle that was accepted. The content of the accepted submission can be inferred from the actual correct values for the puzzle."
             }
          }
       },
-      "grain_inspector_displayed": {
-         "description": "When the inspector panel for a grain farm is displayed to the user.",
+      "logic_puzzle_rejected": {
+         "description": "When the player has submitted an incorrect table of puzzle data, and their submission is rejected.",
          "event_data": {
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the county map, of the tile containing the building being inspected."
-            },
-            "farm_name" : {
+            "puzzle_id" : {
                "type" : "str",
-               "description" : "The name of the specific farm being displayed."
+               "description" : "The ID of the specific logic puzzle for which the submission was rejected."
             },
-            "connections" : {
-               "type" : "List[CardinalDirection]",
-               "description" : "The directions on the tile containing road connections."
+            "incorrect_stars" : {
+               "type" : "List[StarID]",
+               "description" : "A list of which rows contained incorrect values. The actual contents can be obtained from the preceding submission event."
             },
-            "grain_tab" : {
-               "type" : "Dict[str, bool | str | int]",
-               "details": {
-                  "is_active_tab" : "bool",
-                  "buyer_name"    : "str",
-                  "buyer_county"  : "str",
-                  "base_price"    : "int",
-                  "shipping_cost" : "int",
-                  "total_profit"  : "int"
-               },
-               "description" : "A data displayed in the grain tab of the grain farm inspector."
-            },
-            "fertilizer_tab" : {
-               "type" : "Dict[str, bool | str | int]",
-               "details": {
-                  "is_active_tab" : "bool",
-                  "seller_name"   : "str",
-                  "seller_county" : "str",
-                  "base_price"    : "int",
-                  "shipping_cost" : "int",
-                  "sales_policy"  : "int",
-                  "import_policy" : "int",
-                  "total_profit"  : "int"
-               },
-               "description" : "A data displayed in the grain tab of the grain farm inspector."
+            "new_puzzle_contents" : {
+               "type" : "List[PuzzleRow]",
+               "description" : "A representation of the puzzle data table after rejection. TODO : make sure this is what that actually means"
             }
          }
       },
-      "dairy_inspector_displayed": {
-         "description": "When the inspector panel for a dairy farm is displayed to the user.",
+      "new_document_received": {
+         "description": "When the player receives a new document, such as a postcard, in the document board.",
          "event_data": {
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the county map, of the tile containing the building being inspected."
+            "document_id" : {
+               "type" : "DocumentIDs",
+               "description" : "The ID of the specific document the player received."
             },
-            "farm_name" : {
+            "text_content" : {
                "type" : "str",
-               "description" : "The name of the specific farm being displayed."
-            },
-            "connections" : {
-               "type" : "List[CardinalDirection]",
-               "description" : "The directions on the tile containing road connections."
-            },
-            "grain_tab" : {
-               "type" : "Dict[str, bool | str | int]",
-               "details": {
-                  "is_active_tab" : "bool",
-                  "seller_name"    : "str",
-                  "seller_county"  : "str",
-                  "base_price"    : "int",
-                  "shipping_cost" : "int",
-                  "sales_policy"  : "int",
-                  "import_policy" : "int",
-                  "total_profit"  : "int"
-               },
-               "description" : "A data displayed in the grain tab of the grain farm inspector."
-            },
-            "dairy_tab" : {
-               "type" : "Dict[str, bool | str | int]",
-               "details": {
-                  "is_active_tab" : "bool",
-                  "buyer_name"    : "str",
-                  "buyer_county"  : "str",
-                  "base_price"    : "int",
-                  "total_profit"  : "int"
-               },
-               "description" : "A data displayed in the grain tab of the grain farm inspector."
-            },
-            "fertilizer_tab" : {
-               "type" : "Dict[str, bool | str | int]",
-               "details": {
-                  "is_active_tab" : "bool",
-                  "buyer_name"    : "str",
-                  "buyer_county"  : "str",
-                  "base_price"    : "int",
-                  "shipping_cost" : "int",
-                  "runoff_fine"   : "int",
-                  "total_profit"  : "int"
-               },
-               "description" : "A data displayed in the grain tab of the grain farm inspector."
+               "description" : "The content of the document text."
             }
          }
       },
-      "dismiss_building_inspector": {
-         "description": "When the player clicks away from a building inspector.",
+      "click_document_flip": {
+         "description": "When the player clicks to flip over the document they are viewing.",
          "event_data": {
-            "building_type" : {
-               "type" : "BuildingType",
-               "description" : "The specific type of building that was inspected."
+            "document_id" : {
+               "type" : "DocumentIDs",
+               "description" : "The ID of the specific document the player is viewing."
             },
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, among all cards for the given policy, of the selected policy."
+            "to_side" : {
+               "type" : "Sides",
+               "description" : "Whether the player is flipping to the front or back of the document."
             },
-            "connections" : {
-               "type" : "List[CardinalDirection]",
-               "description" : "The text content of the selected card."
-            }
-         }
-      },
-      "click_inspector_tab": {
-         "description": "When the player clicks to switch to a particular tab of the inspector panel.",
-         "event_data": {
-            "tab_name" : {
+            "text_content" : {
                "type" : "str",
-               "description" : "Whether the tab is grain, dairy, or fertilizer"
+               "description" : "The content of the document text on whichever side the player is flipping to. For most (or all?) documents, the content is an empty string for one side."
             }
          }
       },
-      "building_queued": {
-         "description": "When the player clicks a map point, adding a new building to the build queue. Note that a road may be 'queued' as the result of undo-ing a road destroy.",
+      "click_view_document": {
+         "description": "When the player clicks on a document, such as a postcard, in the document board, bringing it up to view in detail.",
          "event_data": {
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the global map, of the tile where the building was placed. For roads, this is the 'start' tile, where the player started their click-drag to define the road."
+            "document_id" : {
+               "type" : "DocumentIDs",
+               "description" : "The ID of the specific document the player viewed."
             },
-            "building_type" : {
-               "type" : "BuildingType",
-               "description" : "The specific type of building added to the queue."
-            },
-            "total_cost" : {
-               "type" : "int",
-               "description" : "The new running total cost in the build queue."
-            },
-            "funds_remaining" : {
-               "type" : "int",
-               "description" : "The remaining county funds, if the current queue is built (including the new building)."
+            "text_content" : {
+               "type" : "str",
+               "description" : "The content of the document text."
             }
          }
       },
-      "building_dequeued": {
-         "description": "When the player clicks a map point in destroy mode, removing a building to the build queue.",
+      "click_dismiss_document": {
+         "description": "When the player clicks the button to dismiss the detail view of a document.",
          "event_data": {
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the global map, of the tile where the player removed the building. For roads, this is the 'start' tile, where the player started their click-drag to define the road."
-            },
-            "building_type" : {
-               "type" : "BuildingType",
-               "description" : "The specific type of building removed from the queue."
-            },
-            "total_cost" : {
-               "type" : "int",
-               "description" : "The new running total cost in the build queue."
-            },
-            "funds_remaining" : {
-               "type" : "int",
-               "description" : "The remaining county funds, if the current queue is built (after the building is removed from the queue)."
+            "document_id" : {
+               "type" : "DocumentIDs",
+               "description" : "The ID of the specific document the player finished viewing."
             }
          }
       },
-      "click_build": {
-         "description": "When the player clicks a map point, attempting to place a new building in the build queue.",
+      "new_postit_received": {
+         "description": "When the player receives a new post-it in the document board.",
          "event_data": {
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the global map, of the tile where the player tried to add the building. For roads, this is the 'start' tile, where the player started their click-drag to define the road."
+            "postit_id" : {
+               "type" : "PostItIDs",
+               "description" : "The ID of the specific post-it the player received."
             },
-            "building_type" : {
-               "type" : "BuildingType",
-               "description" : "The specific type of building added to the queue."
+            "text_content" : {
+               "type" : "str",
+               "description" : "The content of the post-it text."
             }
          }
       },
-      "click_destroy": {
-         "description": "When the player clicks a map point, attempting to destroy a building on the tile",
+      "click_dismiss_postit": {
+         "description": "When the player clicks the button to dismiss the detail view of a post-it they've just received.",
          "event_data": {
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the global map, of the tile where the player tried to destroy a building."
-            },
-            "building_type" : {
-               "type" : "BuildingType",
-               "description" : "The specific type of building, if any, on the tile."
+            "postit_id" : {
+               "type" : "PostItIDs",
+               "description" : "The ID of the specific postit the player finished viewing."
             }
          }
       },
-      "click_undo": {
-         "description": "When the player clicks a map point, attempting to destroy a building on the tile",
+      "grab_postit": {
+         "description": "When the player clicks to grab and move a post-it around the document board.",
          "event_data": {
-         }
-      },
-      "click_build_invalid": {
-         "description": "When the player clicks a map point, attempting to place a new building in the build queue, but the selected tile is not a valid option.",
-         "event_data": {
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the global map, of the tile where the player tried to add the building. For roads, this is the 'start' tile, where the player started their click-drag to define the road."
-            },
-            "building_type" : {
-               "type" : "BuildingType",
-               "description" : "The specific type of building added to the queue."
+            "postit_id" : {
+               "type" : "PostItIDs",
+               "description" : "The ID of the specific postit the player is moving."
             }
          }
       },
-      "click_destroy_invalid": {
-         "description": "When the player clicks a map point, attempting to destroy a building on the tile, but the tile does not contain a valid building to be destroyed",
+      "place_postit": {
+         "description": "When the player clicks to release a post-it at a new position on the document board.",
          "event_data": {
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the global map, of the tile where the player tried to destroy a building."
+            "postit_id" : {
+               "type" : "PostItIDs",
+               "description" : "The ID of the specific postit the player is moving."
             },
-            "building_type" : {
-               "type" : "BuildingType",
-               "description" : "The specific type of building, if any, on the tile."
+            "postit_coordinates" : {
+               "type" : "tuple[int, int] TODO : check if these are truly in int, or if they're floats",
+               "description" : "The x, y coordinates of the location where the player placed the post-it."
+            },
+            "target_id" : {
+               "type" : "DocumentIDs | 'BOARD'",
+               "description" : "The ID of the document the player placed the post-it onto, attempting to match the post-it to the relevant document. If the player placed the post-it onto a blank spot on the board, this value is the string 'BOARD', rather than a document ID string."
+            },
+            "correct_target" : {
+               "type" : "DocumentIDs",
+               "description" : "The ID of the document the post-it is intended to match with."
             }
          }
       },
-      "click_execute_build": {
-         "description": "When the player clicks to complete the building of all buildings in the build queue.",
+      "postit_match_accepted": {
+         "description": "When the player has placed the post-it onto a document, and made a correct match.",
          "event_data": {
-            "built_items" : {
-               "type" : "List[BuildingType]",
-               "description" : "The specific buildings in the build queue."
-            },
-            "total_cost" : {
-               "type" : "int",
-               "description" : "The total cost of the buildings in the build queue."
-            },
-            "funds_remaining" : {
-               "type" : "int",
-               "description" : "The remaining county funds, after building all buildings in the queue."
+            "postit_id" : {
+               "type" : "PostItIDs",
+               "description" : "The ID of the specific postit the player successfully matched to a document. The document ID can be inferred as the correct document for the given post-it."
             }
          }
       },
-      "click_destroy_mode": {
-         "description": "When the player clicks to enter destroy mode.",
+      "postit_match_rejected": {
+         "description": "When the player has placed the post-it onto a document, but it is not the right match for the post-it and the player gets a message indicating the match was incorrect. If the player put the post-it on the board, rather than on a document, there is no rejection.",
          "event_data": {
-         }
-      },
-      "click_confirm_destroy": {
-         "description": "When the player clicks to confirm destruction of the selected... things to be destroyed. TODO: need to confirm this, like do we actually destroy existing buildings? And is there a queue-ing mechanism?",
-         "event_data": {
-         }
-      },
-      "click_exit_destroy": {
-         "description": "When the player clicks to leave destroy mode, without performing any destructions.",
-         "event_data": {
-         }
-      },
-      "select_building_type": {
-         "description": "When the player selects a new type of building from the list of options to build",
-         "event_data": {
-            "building_type" : {
-               "type" : "BuildingType",
-               "description" : "The specific type of building removed from the queue."
+            "postit_id" : {
+               "type" : "PostItIDs",
+               "description" : "The ID of the specific postit the player incorrectly matched to a document."
             },
-            "cost" : {
-               "type" : "int",
-               "description" : "The cost to build the given building."
-            }
-         }
-      },
-      "hover_build_tile": {
-         "description": "When the player hovers the mouse over a candidate tile for adding a new building",
-         "event_data": {
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the global map, of the tile being hovered."
+            "target_id" : {
+               "type" : "DocumentIDs",
+               "description" : "The ID of the document the player placed the post-it onto, which was not a correct match for the post-it."
             },
-            "is_valid" : {
-               "type" : "bool",
-               "description" : "Whether the given building type can be placed on the given tile."
-            }
-         }
-      },
-      "hover_destroy_tile": {
-         "description": "When the player hovers the mouse over a candidate tile for destroying a building",
-         "event_data": {
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the global map, of the tile being hovered."
-            },
-            "is_valid" : {
-               "type" : "bool",
-               "description" : "Whether the hovered tile has a building that can be destroyed."
-            }
-         }
-      },
-      "building_type_unlocked": {
-         "description": "When a new building type is unlocked in the build list.",
-         "event_data": {
-            "building_type" : {
-               "type" : "BuildingType",
-               "description" : "The specific type of building that was unlocked."
-            }
-         }
-      },
-      "policy_unlocked": {
-         "description": "When a new policy type is unlocked for the player's counties.",
-         "event_data": {
-            "building_type" : {
-               "type" : "PolicyType",
-               "description" : "The specific type of building that was unlocked."
-            }
-         }
-      },
-      "view_unlocked": {
-         "description": "When a new view type is unlocked.",
-         "event_data": {
-            "building_type" : {
-               "type" : "ViewType",
-               "description" : "Which type of view was unlocked."
-            }
-         }
-      },
-      "algae_growth_begin": {
-         "description": "When a new bloom begins to grow on a map tile",
-         "event_data": {
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the global map, of the tile where the algae grew."
-            },
-            "algae_percent" : {
-               "type" : "float",
-               "description" : "The proportion of algae that already existed on the tile, at the time it began to grow."
-            },
-            "phosphorus_value" : {
-               "type" : "int",
-               "description" : "The amount of phosphorus on the tile, at the time it began to grow."
-            }
-         }
-      },
-      "algae_growth_end": {
-         "description": "When a new bloom stops growing on a map tile, whether because it grew to its maximum or because the growth was stopped through good water management.",
-         "event_data": {
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the global map, of the tile where the algae grew."
-            },
-            "algae_percent" : {
-               "type" : "float",
-               "description" : "The proportion of algae that existed on the tile, at the time it stopped growing."
-            },
-            "phosphorus_value" : {
-               "type" : "int",
-               "description" : "The amount of phosphorus on the tile, at the time it stopped growing."
-            }
-         }
-      },
-      "skimmer_appeared": {
-         "description": "When a new skimmer appears on a lake tile, as a result of policy funding for skimmers/dredgers.",
-         "event_data": {
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the global map, of the tile where the skimmer appeared."
-            },
-            "is_dredger" : {
-               "type" : "bool",
-               "description" : "Whether the skimmer that appeared is a dredger, or a regular skimmer."
-            }
-         }
-      },
-      "skimmer_disappeared": {
-         "description": "When a skimmer leaves a lake tile, as a result of revoked policy funding for skimmers/dredgers.",
-         "event_data": {
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the global map, of the tile where the skimmer disappeared."
-            },
-            "is_dredger" : {
-               "type" : "bool",
-               "description" : "Whether the skimmer that disappeared was a dredger, or a regular skimmer."
-            }
-         }
-      },
-      "export_depot_spawned": {
-         "description": "When the export depot spawns in the map.",
-         "event_data": {
-            "tile_index" : {
-               "type" : "int",
-               "description" : "The index, within the global map, of the tile where the export depot appeared."
+            "correct_target" : {
+               "type" : "DocumentIDs",
+               "description" : "The ID of the document the post-it is intended to match with."
             }
          }
       }
