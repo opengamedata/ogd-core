@@ -5,7 +5,11 @@ from typing import Dict, List, Optional
 from ogd.core.generators.Generator import Generator, GeneratorParameters
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.games.LAKELAND.models.KMeansModel import KMeansModel
+from ogd.games.BLOOM.models.LogisticRegressionModel import LogisticRegressionModel
 from ogd.core.registries.GeneratorRegistry import GeneratorRegistry
+
+from ogd.core.generators.models.PopulationModel import PopulationModel
+
 from ogd.common.models.Event import Event
 from ogd.common.models.FeatureData import FeatureData
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
@@ -19,29 +23,51 @@ class ModelRegistry(GeneratorRegistry):
         self._models: OrderedDict[str, KMeansModel] = OrderedDict()
         self._feature_registry: Dict[str, List[GeneratorRegistry.Listener]] = {}
 
-    def _register(self, model: Generator, iter_mode: IterationMode):
-        if isinstance(model, KMeansModel):
-            _listener = GeneratorRegistry.Listener(name=model.Name, mode=iter_mode)
-            _feature_deps = model.FeatureFilter(mode=self._mode)
-            self._models[model.Name] = model
+    # def _register(self, model: Generator, iter_mode: IterationMode):
+    #     if isinstance(model, KMeansModel):
+    #         _listener = GeneratorRegistry.Listener(name=model.Name, mode=iter_mode)
+    #         _feature_deps = model.FeatureFilter(mode=self._mode)
+    #         self._models[model.Name] = model
 
-            for _feature_dep in _feature_deps:
-                if _feature_dep not in self._feature_registry:
-                    self._feature_registry[_feature_dep] = []
-                self._feature_registry[_feature_dep].append(_listener)
-        else:
-            raise TypeError("ModelRegistry was given a Generator which was not a KMeansModel!")
+    #         for _feature_dep in _feature_deps:
+    #             if _feature_dep not in self._feature_registry:
+    #                 self._feature_registry[_feature_dep] = []
+    #             self._feature_registry[_feature_dep].append(_listener)
+    #     else:
+    #         raise TypeError("ModelRegistry was given a Generator which was not a KMeansModel!")
+
+
+    def _register(self, model: PopulationModel, iter_mode: IterationMode):
+        if not isinstance(model, PopulationModel):
+            raise TypeError("ModelRegistry can only register PopulationModel subclasses!")
+
+        listener = GeneratorRegistry.Listener(name=model.Name, mode=iter_mode)
+
+        for feat in model.FeatureFilter(mode=self._mode):
+            self._feature_registry.setdefault(feat, []).append(listener)
+        self._models[model.Name] = model
+
 
     def _loadFromSchema(self, schema: GameSchema, loader: GeneratorLoader, overrides: Optional[List[str]] = None):
-        model_name = "KMeansModel"
+        # model_name = "KMeansModel"
+        # try:
+        #     model_params = GeneratorParameters(name=model_name, mode=self._mode, description="Hardcoded KMeansModel", count_index=0)
+        #     kmeans_model = KMeansModel(params=model_params)
+        #     if self._mode in kmeans_model.AvailableModes():
+        #         self._register(model=kmeans_model, iter_mode=IterationMode.AGGREGATE)
+        #         Logger.Log(f"Loaded and registered hardcoded KMeansModel: {model_name}", logging.INFO)
+        # except Exception as e:
+        #     Logger.Log(f"Failed to create hardcoded KMeansModel: {e}", logging.ERROR)
+
         try:
-            model_params = GeneratorParameters(name=model_name, mode=self._mode, description="Hardcoded KMeansModel", count_index=0)
-            kmeans_model = KMeansModel(params=model_params)
-            if self._mode in kmeans_model.AvailableModes():
-                self._register(model=kmeans_model, iter_mode=IterationMode.AGGREGATE)
-                Logger.Log(f"Loaded and registered hardcoded KMeansModel: {model_name}", logging.INFO)
+            lr_params = GeneratorParameters(name="LogisticRegressionModel", mode=self._mode, 
+                                            description="Hard-coded LogisticRegressionModel", count_index=0)
+            logreg = LogisticRegressionModel(params=lr_params)
+            if self._mode in logreg.AvailableModes():
+                self._register(model=logreg, iter_mode=IterationMode.AGGREGATE)
+                Logger.Log("Loaded LogisticRegressionModel", logging.INFO)
         except Exception as e:
-            Logger.Log(f"Failed to create hardcoded KMeansModel: {e}", logging.ERROR)
+            Logger.Log(f"Failed to create LogisticRegressionModel: {e}", logging.ERROR)
 
     def _updateFromFeatureData(self, feature: FeatureData) -> None:
         Logger.Log(f"Updating models with feature data: {feature.Name}", logging.DEBUG)
