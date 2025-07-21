@@ -82,8 +82,8 @@ class FeatureManager:
         if self._population is not None and self._players is not None and self._sessions is not None:
             pop_data = self._population.GetFeatureData(order=1)
 
-            print("\n\n\nInside ProcessFeatureData of FeatureManager")
-            print(f"Population 1st-order data: {pop_data}, {type(pop_data)}")
+            # print("\n\n\nInside ProcessFeatureData of FeatureManager")
+            # print(f"Population 1st-order data: {pop_data}, {type(pop_data)}")
             # 2. Distribute population 1st-order data
             self._population.ProcessFeatureData(feature_list=pop_data)
             for player in self._players.values():
