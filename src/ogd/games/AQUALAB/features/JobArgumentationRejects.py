@@ -1,4 +1,5 @@
 # import libraries
+import logging
 from typing import Any, List, Optional
 # import locals
 from ogd.common.utils.Logger import Logger
@@ -39,11 +40,10 @@ class JobArgumentationRejects(PerJobFeature):
 
     def _getFeatureValues(self) -> List[Any]:
         if self._fact_rejected_total != self._fact_rejected_inside_argument:
-            Logger.Warn(
-                f"JobArgumentationRejects Mismatch: "
+            _msg = "\n".join([f"JobArgumentationRejects Mismatch: "
                 f"total fact_rejected={self._fact_rejected_total}, "
-                f"inside_argument fact_rejected={self._fact_rejected_inside_argument}"
-            )
+                f"inside_argument fact_rejected={self._fact_rejected_inside_argument}"])
+            Logger.Log(message=_msg, level=logging.WARNING)
         return [self._fact_rejected_inside_argument]
 
     # *** Optionally override public functions. ***
