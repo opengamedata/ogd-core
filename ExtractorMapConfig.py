@@ -78,7 +78,7 @@ class ExtractorMapConfig(Config):
         unparsed_elements : Map = other_elements or {}
 
         self._legacy_mode           : bool                       = legacy_mode           or self._parseLegacyMode(unparsed_elements=unparsed_elements)
-        self._legacy_perlevel_feats : Dict[str, IteratedConfig]  = legacy_perlevel_feats or self._parsePerLevelExtractors(unparsed_elements=unparsed_elements)
+        self._legacy_extractors     : Dict[str, IteratedConfig]  = legacy_perlevel_feats or self._parsePerLevelExtractors(unparsed_elements=unparsed_elements)
         self._iterated_extractors   : Dict[str, IteratedConfig]  = iterated_feats        or self._parseIteratedExtractors(unparsed_elements=unparsed_elements)
         self._aggregate_feats       : Dict[str, AggregateConfig] = aggregate_feats       or self._parseAggregateExtractors(unparsed_elements=unparsed_elements)
 
@@ -90,7 +90,7 @@ class ExtractorMapConfig(Config):
 
     @property
     def LegacyPerLevelFeatures(self) -> Dict[str, IteratedConfig]:
-        return self._legacy_perlevel_feats
+        return self._legacy_extractors
 
     @property
     def IteratedExtractors(self) -> Dict[str, IteratedConfig]:
