@@ -30,7 +30,7 @@ class GeneratorCollectionConfig(Config):
     _DEFAULT_LEGACY_PERCOUNTS = {}
     _DEFAULT_LEGACY_MODE = False
     _DEFAULT_FEATURE_MAP = ExtractorMapConfig(name="DefaultFeatureMap", legacy_mode=_DEFAULT_LEGACY_MODE, legacy_perlevel_feats=_DEFAULT_LEGACY_PERCOUNTS,
-                                            percount_feats=_DEFAULT_FEAT_PERCOUNTS, aggregate_feats=_DEFAULT_FEAT_AGGREGATES, other_elements={})
+                                            iterated_feats=_DEFAULT_FEAT_PERCOUNTS, aggregate_feats=_DEFAULT_FEAT_AGGREGATES, other_elements={})
     _DEFAULT_LEVEL_RANGE = None
     _DEFAULT_OTHER_RANGES = {}
     _DEFAULT_GAME_FOLDER = Path("./") / "ogd" / "games"
@@ -176,7 +176,7 @@ class GeneratorCollectionConfig(Config):
         """Property for the compiled list of all feature names.
         """
         ret_val : List[str] = []
-        ret_val = [extractor.Name for extractor in self.Extractors.AggregateFeatures.values()] \
+        ret_val = [extractor.Name for extractor in self.Extractors.AggregateExtractors.values()] \
                 + [extractor.Name for extractor in self.Extractors.PerCountFeatures.values()] \
                 + [extractor.Name for extractor in self.Extractors.LegacyPerLevelFeatures.values()]
         return ret_val
@@ -197,7 +197,7 @@ class GeneratorCollectionConfig(Config):
     def AggregateFeatures(self) -> Dict[str,AggregateConfig]:
         """Property for the dictionary of aggregate features.
         """
-        return self.Extractors.AggregateFeatures
+        return self.Extractors.AggregateExtractors
 
     @property
     def SubunitRange(self) -> Optional[range]:
@@ -234,7 +234,7 @@ class GeneratorCollectionConfig(Config):
         feature_summary = ["## Processed Features",
                            "The features/metrics calculated from this game's event logs by OpenGameData when an 'export' is run."
                           ]
-        feature_list = [feature.AsMarkdown for feature in self.Features.AggregateFeatures.values()] \
+        feature_list = [feature.AsMarkdown for feature in self.Features.AggregateExtractors.values()] \
                      + [feature.AsMarkdown for feature in self.Features.PerCountFeatures.values()] \
 
         feature_list = feature_list + [feature.AsMarkdown for feature in self.Features.LegacyPerLevelFeatures.values()] if self.Features.LegacyMode else feature_list
