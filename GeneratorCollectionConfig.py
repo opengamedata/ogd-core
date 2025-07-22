@@ -8,7 +8,6 @@ from ogd.common.configs.generators.DetectorMapConfig import DetectorMapConfig
 from ogd.common.configs.generators.FeatureMapConfig import FeatureMapConfig
 from ogd.common.configs.generators.AggregateConfig import AggregateConfig
 from ogd.common.configs.generators.DetectorConfig import DetectorConfig
-from ogd.common.configs.generators.DetectorMapConfig import DetectorMapConfig
 from ogd.common.configs.generators.PerCountConfig import PerCountConfig
 from ogd.common.configs.generators.FeatureConfig import FeatureConfig
 from ogd.common.models.enums.IterationMode import IterationMode
@@ -42,7 +41,7 @@ class GeneratorCollectionConfig(Config):
     # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, name:str, game_id:str,
-                 detector_map:DetectorMapConfig, extractor_map:FeatureMapConfig,
+                 detector_map:Optional[DetectorMapConfig], extractor_map:Optional[FeatureMapConfig],
                  subunit_range:Optional[range], other_ranges:Dict[str, range],
                  other_elements:Optional[Map]=None):
         """Constructor for the GeneratorCollectionConfig class.
@@ -65,9 +64,9 @@ class GeneratorCollectionConfig(Config):
         unparsed_elements : Map = other_elements or {}
 
     # 1. define instance vars
-        self._game_id            : str               = game_id
-        self._detector_map       : DetectorMapConfig = detector_map
-        self._extractor_map      : FeatureMapConfig  = extractor_map
+        self._game_id            : str               = game_id or name
+        self._detector_map       : DetectorMapConfig = detector_map  or self._parseDetectorMap(unparsed_elements=unparsed_elements)
+        self._extractor_map      : FeatureMapConfig  = extractor_map or self._parseFeatureMap(unparsed_elements=unparsed_elements)
         self._subunit_range      : Optional[range]   = subunit_range
         self._other_ranges       : Dict[str, range]  = other_ranges
 
@@ -161,7 +160,7 @@ class GeneratorCollectionConfig(Config):
         if self._subunit_range:
             ret_val = self._subunit_range
         else:
-            Logger.Log(f"Could not get game sub-unit (or per-level) feature range, there was no range configured!", logging.ERROR)
+            Logger.Log("Could not get game sub-unit (or per-level) feature range, there was no range configured!", logging.ERROR)
         return ret_val
     @property
     def LevelRange(self) -> Optional[range]:
@@ -238,16 +237,14 @@ class GeneratorCollectionConfig(Config):
         :rtype: GeneratorCollectionConfig
         """
     # 1. define local vars
-        _game_id        : str               = name
-        _detector_map   : DetectorMapConfig = cls._parseDetectorMap(unparsed_elements=unparsed_elements)
-        _feature_map    : FeatureMapConfig  = cls._parseFeatureMap(unparsed_elements=unparsed_elements)
-        _level_range    : Optional[range]   = cls._parseLevelRange(unparsed_elements=unparsed_elements)
-        _other_ranges   : Dict[str, range]  = {key : range(val.get('min', 0), val.get('max', 1)) for key,val in unparsed_elements.items() if key.endswith("_range")}
+        _game_id      : str              = name
+        _level_range  : Optional[range]  = cls._parseLevelRange(unparsed_elements=unparsed_elements)
+        _other_ranges : Dict[str, range] = cls._parseOtherRanges(unparsed_elements=unparsed_elements)
 
         _used = {'enums', 'game_state', 'user_data', 'events', 'detectors', 'features', 'level_range', 'config'}.union(_other_ranges.keys())
         _leftovers = { key:val for key,val in unparsed_elements.items() if key not in _used }
         return GeneratorCollectionConfig(name=name, game_id=_game_id,
-                          detector_map=_detector_map, extractor_map=_feature_map,
+                          detector_map=None, extractor_map=None,
                           subunit_range=_level_range, other_ranges=_other_ranges,
                           other_elements=_leftovers)
 
@@ -266,7 +263,7 @@ class GeneratorCollectionConfig(Config):
     # *** PUBLIC STATICS ***
 
     @classmethod
-    def FromFile(cls, game_id:str, schema_path:Optional[Path] = None, search_templates:bool=True) -> "GeneratorCollectionConfig":
+    def FromFile(cls, schema_name:str, schema_path:Optional[Path] = None, search_templates:bool=True) -> "GeneratorCollectionConfig":
         """Function to get a GeneratorCollectionConfig from a file
 
         :param game_id: _description_
@@ -280,7 +277,8 @@ class GeneratorCollectionConfig(Config):
         :rtype: GeneratorCollectionConfig
         """
         ret_val : Config
-        # Give schema_path a default, don't think we can use game_id to construct it directly in the function header (so do it here if None)
+
+        game_id = schema_name.split('.')[0] # the 'schema name' is meant to match the game ID. We do want to strip off any file types, so only take string up to first '.'
         schema_path = schema_path or cls._DEFAULT_GAME_FOLDER / game_id / "schemas"
         ret_val = cls._fromFile(schema_name=game_id, schema_path=schema_path, search_templates=search_templates)
         if isinstance(ret_val, GeneratorCollectionConfig):
@@ -442,5 +440,9 @@ class GeneratorCollectionConfig(Config):
         else:
             Logger.Log(f"level_range was unexpected type {type(level_range)}, defaulting to {ret_val}.", logging.WARN)
         return ret_val
+
+    @staticmethod
+    def _parseOtherRanges(unparsed_elements:Map) -> Dict[str, range]:
+        return {key : range(val.get('min', 0), val.get('max', 1)) for key,val in unparsed_elements.items() if key.endswith("_range")}
 
     # *** PRIVATE METHODS ***
