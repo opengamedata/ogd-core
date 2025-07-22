@@ -181,9 +181,9 @@ class GeneratorCollectionConfig(Config):
         """Property for the compiled list of all feature names.
         """
         ret_val : List[str] = []
-        ret_val = [extractor.Name for extractor in self.Extractors.AggregateExtractors.values()] \
-                + [extractor.Name for extractor in self.Extractors.IteratedExtractors.values()] \
-                + [extractor.Name for extractor in self.Extractors.LegacyPerLevelFeatures.values()]
+        ret_val = [extractor.Name for extractor in self.AggregateExtractors.values()] \
+                + [extractor.Name for extractor in self.IteratedExtractors.values()] \
+                + [extractor.Name for extractor in self.LegacyPerLevelFeatures.values()]
         return ret_val
     @property
     def FeatureNames(self) -> List[str]:
