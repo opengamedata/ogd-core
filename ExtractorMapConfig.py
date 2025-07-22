@@ -39,7 +39,7 @@ class ExtractorMapConfig(Config):
                     "type": "ExtractorClass",
                     "count": "level_range",
                     "prefix": "lvl",
-                    "description": "Info about the per-count extractor; the per-count is generally optional.",
+                    "description": "Info about the iterated extractor.",
                     "return_type": "str"
                 },
                 "ExtractorName2": {
@@ -140,7 +140,7 @@ class ExtractorMapConfig(Config):
                 "example" : {
                     "type":"ExampleDetectorClass",
                     "enabled":true,
-                    "description":"Info about the per-count detector; the per-count is generally optional."
+                    "description":"Info about the iterated detector."
                 }
             },
             "aggregate" : {
@@ -247,7 +247,7 @@ class ExtractorMapConfig(Config):
             ret_val = { key : IteratedConfig.FromDict(name=key, unparsed_elements=val) for key,val in percounts.items() }
         else:
             ret_val = {}
-            Logger.Log("Per-count features map was not a dict, defaulting to empty dict", logging.WARN)
+            Logger.Log("Iterated features map was not a dict, defaulting to empty dict", logging.WARN)
         return ret_val
 
     @staticmethod

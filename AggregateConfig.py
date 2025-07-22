@@ -1,4 +1,4 @@
-"""Aggregate Feature Config Module
+"""Aggregate Extractor Config Module
 """
 # import standard libraries
 from typing import Dict, Optional, Set

@@ -37,7 +37,7 @@ class ExtractorConfig(GeneratorConfig):
         ```
         {
             "enabled": true,
-            "type": "FeatureType",
+            "type": "ExtractorType",
             "description": "Human-readable description of the feature this module extracts.",
             "return_type": "int",
             "subfeatures" : [

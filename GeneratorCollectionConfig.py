@@ -29,7 +29,7 @@ class GeneratorCollectionConfig(Config):
     _DEFAULT_XTOR_ITERATED = {}
     _DEFAULT_LEGACY_PERCOUNTS = {}
     _DEFAULT_LEGACY_MODE = False
-    _DEFAULT_EXTRACTOR_MAP = ExtractorMapConfig(name="DefaultFeatureMap", legacy_mode=_DEFAULT_LEGACY_MODE, legacy_perlevel_extractors=_DEFAULT_LEGACY_PERCOUNTS,
+    _DEFAULT_EXTRACTOR_MAP = ExtractorMapConfig(name="DefaultExtractorMap", legacy_mode=_DEFAULT_LEGACY_MODE, legacy_perlevel_extractors=_DEFAULT_LEGACY_PERCOUNTS,
                                             iterated_extractors=_DEFAULT_XTOR_ITERATED, aggregate_extractors=_DEFAULT_XTOR_AGGREGATES, other_elements={})
     _DEFAULT_LEVEL_RANGE = None
     _DEFAULT_OTHER_RANGES = {}
@@ -111,11 +111,11 @@ class GeneratorCollectionConfig(Config):
         unparsed_elements : Map = other_elements or {}
 
     # 1. define instance vars
-        self._game_id            : str               = game_id or name
-        self._detector_map       : DetectorMapConfig = detector_map  or self._parseDetectorMap(unparsed_elements=unparsed_elements)
-        self._extractor_map      : ExtractorMapConfig  = extractor_map or self._parseFeatureMap(unparsed_elements=unparsed_elements)
-        self._subunit_range      : Optional[range]   = subunit_range
-        self._other_ranges       : Dict[str, range]  = other_ranges
+        self._game_id            : str                = game_id or name
+        self._detector_map       : DetectorMapConfig  = detector_map  or self._parseDetectorMap(unparsed_elements=unparsed_elements)
+        self._extractor_map      : ExtractorMapConfig = extractor_map or self._parseExtractorMap(unparsed_elements=unparsed_elements)
+        self._subunit_range      : Optional[range]    = subunit_range
+        self._other_ranges       : Dict[str, range]   = other_ranges
 
         super().__init__(name=name, other_elements=unparsed_elements)
 
@@ -177,7 +177,7 @@ class GeneratorCollectionConfig(Config):
         return self.Extractors
 
     @property
-    def FeatureNames(self) -> List[str]:
+    def ExtractorNames(self) -> List[str]:
         """Property for the compiled list of all feature names.
         """
         ret_val : List[str] = []
@@ -185,6 +185,11 @@ class GeneratorCollectionConfig(Config):
                 + [extractor.Name for extractor in self.Extractors.IteratedExtractors.values()] \
                 + [extractor.Name for extractor in self.Extractors.LegacyPerLevelFeatures.values()]
         return ret_val
+    @property
+    def FeatureNames(self) -> List[str]:
+        """Legacy alias of ExtractorNames, although technicallly this is also the list of names of extracted features
+        """
+        return self.ExtractorNames
 
     @property
     def LegacyPerLevelFeatures(self) -> Dict[str,IteratedConfig]:
@@ -244,11 +249,11 @@ class GeneratorCollectionConfig(Config):
         feature_summary = ["## Processed Features",
                            "The features/metrics calculated from this game's event logs by OpenGameData when an 'export' is run."
                           ]
-        feature_list = [feature.AsMarkdown for feature in self.Features.AggregateExtractors.values()] \
-                     + [feature.AsMarkdown for feature in self.Features.IteratedExtractors.values()] \
+        extractor_list = [feature.AsMarkdown for feature in self.AggregateExtractors.values()] \
+                     + [feature.AsMarkdown for feature in self.IteratedExtractors.values()] \
 
-        feature_list = feature_list + [feature.AsMarkdown for feature in self.Features.LegacyPerLevelFeatures.values()] if self.Features.LegacyMode else feature_list
-        feature_list = feature_list if len(feature_list) > 0 else ["None"]
+        extractor_list = extractor_list + [extractor.AsMarkdown for extractor in self.LegacyPerLevelFeatures.values()] if self.Extractors.LegacyMode else extractor_list
+        extractor_list = extractor_list if len(extractor_list) > 0 else ["None"]
         # Include other elements
         other_summary = [
             "## Other Elements",
@@ -267,7 +272,7 @@ class GeneratorCollectionConfig(Config):
         other_range_list = [ f"{key} : {self.OtherRanges[key]}" for key in self.OtherRanges ]
 
         ret_val = "  \n\n".join(detector_summary + detector_list
-                              + feature_summary + feature_list
+                              + feature_summary + extractor_list
                               + other_summary + other_element_list
                               + level_range_summary + level_range_list
                               + other_range_summary + other_range_list)
@@ -398,7 +403,7 @@ class GeneratorCollectionConfig(Config):
             ret_val = False
         return ret_val
 
-    def FeatureEnabled(self, feature_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
+    def ExtractorEnabled(self, feature_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
         if self.Extractors.LegacyMode:
             return feature_name == "legacy"
         ret_val : bool
@@ -418,6 +423,20 @@ class GeneratorCollectionConfig(Config):
             ret_val = False
         return ret_val
 
+    def FeatureEnabled(self, feature_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
+        """Legacy alias for ExtractorEnabled
+
+        :param feature_name: _description_
+        :type feature_name: str
+        :param iter_mode: _description_
+        :type iter_mode: IterationMode
+        :param extract_mode: _description_
+        :type extract_mode: ExtractionMode
+        :return: _description_
+        :rtype: bool
+        """
+        return self.ExtractorEnabled(feature_name=feature_name, iter_mode=iter_mode, extract_mode=extract_mode)
+
     def EnabledDetectors(self, iter_modes:Set[IterationMode], extract_modes:Set[ExtractionMode]=set()) -> Dict[str, DetectorConfig]:
         if self.Extractors.LegacyMode:
             return {}
@@ -429,7 +448,7 @@ class GeneratorCollectionConfig(Config):
             ret_val.update({key:val for key,val in self.IteratedExtractors.items() if val.Enabled.issuperset(extract_modes)})
         return ret_val
 
-    def EnabledFeatures(self, iter_modes:Set[IterationMode]={IterationMode.AGGREGATE, IterationMode.ITERATED}, extract_modes:Set[ExtractionMode]=set()) -> Dict[str, ExtractorConfig]:
+    def EnabledExtractors(self, iter_modes:Set[IterationMode]={IterationMode.AGGREGATE, IterationMode.ITERATED}, extract_modes:Set[ExtractionMode]=set()) -> Dict[str, ExtractorConfig]:
         if self.Extractors.LegacyMode:
             return {"legacy" : self._DEFAULT_LEGACY_CONFIG} if IterationMode.AGGREGATE in iter_modes else {}
         ret_val : Dict[str, ExtractorConfig] = {}
@@ -439,6 +458,9 @@ class GeneratorCollectionConfig(Config):
         if IterationMode.ITERATED in iter_modes:
             ret_val.update({key:val for key,val in self.IteratedExtractors.items() if val.Enabled.issuperset(extract_modes)})
         return ret_val
+
+    def EnabledFeatures(self, iter_modes:Set[IterationMode]={IterationMode.AGGREGATE, IterationMode.ITERATED}, extract_modes:Set[ExtractionMode]=set()) -> Dict[str, ExtractorConfig]:
+        return self.EnabledExtractors(iter_modes=iter_modes, extract_modes=extract_modes)
 
     # *** PRIVATE STATICS ***
 
@@ -458,17 +480,17 @@ class GeneratorCollectionConfig(Config):
         return ret_val
 
     @staticmethod
-    def _parseFeatureMap(unparsed_elements:Map) -> ExtractorMapConfig:
+    def _parseExtractorMap(unparsed_elements:Map) -> ExtractorMapConfig:
         ret_val : ExtractorMapConfig
 
         feature_map = GeneratorCollectionConfig.ParseElement(
             unparsed_elements=unparsed_elements,
-            valid_keys=["features"],
+            valid_keys=["extractors", "features"],
             to_type=dict,
             default_value=GeneratorCollectionConfig._DEFAULT_EXTRACTOR_MAP,
             remove_target=True
         )
-        ret_val = ExtractorMapConfig.FromDict(name="FeatureMap", unparsed_elements=feature_map)
+        ret_val = ExtractorMapConfig.FromDict(name="ExtractorMap", unparsed_elements=feature_map)
         return ret_val
 
     @staticmethod
