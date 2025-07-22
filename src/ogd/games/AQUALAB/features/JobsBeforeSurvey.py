@@ -1,9 +1,13 @@
+# Global imports
+import logging
 from typing import Any, List, Optional
+# OGD imports
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
+from ogd.common.utils.Logger import Logger
 
 class JobsBeforeSurvey(Feature):
 
@@ -26,9 +30,12 @@ class JobsBeforeSurvey(Feature):
             return 
 
         if event.EventName == "complete_job":
-            job_name = event.EventData.get("job_name")
-            if job_name:
-                self._job_names.append(job_name)
+            if not self._survey_found:
+                job_name = event.EventData.get("job_name")
+                if job_name:
+                    self._job_names.append(job_name)
+                else:
+                    Logger.Log("Could not find job_name in the event data for complete_job event!", level=logging.WARNING)
         elif event.EventName == "survey_submitted":
             survey_id = event.EventData.get("survey_id")
             if survey_id == self.survey_ID:
