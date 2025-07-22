@@ -6,11 +6,11 @@ from unittest import TestCase
 from ogd.common.configs.TestConfig import TestConfig
 from ogd.common.utils.Logger import Logger
 # import locals
-from src.ogd.common.configs.generators.FeatureConfig import FeatureConfig
+from src.ogd.common.configs.generators.ExtractorConfig import ExtractorConfig
 from tests.config.t_config import settings
 
 @unittest.skip("Not implemented")
-class test_FeatureConfig(TestCase):
+class test_ExtractorConfig(TestCase):
     """Testbed for the DetectorConfig class.
 
         TODO : Implement tests
@@ -37,7 +37,7 @@ class test_FeatureConfig(TestCase):
                 }
             }
         }
-        # cls.test_schema = FeatureConfig(
+        # cls.test_schema = ExtractorConfig(
         #     name="ActiveTime Schema",
         #     unparsed_elements=_elems
         # )
