@@ -37,6 +37,16 @@ class JobTasksCompleted(PerJobFeature):
                 self._completed_tasks.append(_task)
             case _:
                 raise ValueError(f"JobTasksCompleted was given an invalid extraction mode of {self.ExtractionMode}!")
+        _task = event.EventData.get("task_id", "TASK NAME NOT FOUND")
+        if _task in self._completed_tasks:
+            Logger.Log(f"Player {event.UserID} repeated task {_task} in job {event.GameState.get("job_name")}!", logging.WARN)
+        match self.ExtractionMode:
+            case ExtractionMode.POPULATION:
+                self._task_counter[_task] += 1
+            case ExtractionMode.PLAYER | ExtractionMode.SESSION:
+                self._completed_tasks.append(_task)
+            case _:
+                raise ValueError(f"JobTasksCompleted was given an invalid extraction mode of {self.ExtractionMode}!")
 
     def _updateFromFeatureData(self, feature:FeatureData):
         return
