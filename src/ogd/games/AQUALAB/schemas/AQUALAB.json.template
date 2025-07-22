@@ -522,6 +522,27 @@
             "description": "N/A",
             "event_data": {
             }
+        },
+        "survey_submitted": {
+            "description": "When the player completes an in-game survey and submits their response to the server",
+            "event_data": {
+                "display_event_id": {
+                    "type": "str",
+                    "description": "An ID/name for the survey that was submitted"
+                },
+                "package_config_id": {
+                    "type": "str",
+                    "description": "An ID/name for the package of surveys that the submitted survey came from"
+                },
+                "responses": {
+                    "type": "List[Dict]",
+                    "description": "A list of individual response objects",
+                    "details": {
+                        "prompt" : "str",
+                        "response" : "int"
+                    }
+                }
+            }
         }
     },
     "detectors": {
