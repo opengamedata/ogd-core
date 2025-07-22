@@ -3,7 +3,7 @@ __all__ = [
     "DetectorConfig",
     "ExtractorConfig",
     "AggregateConfig",
-    "IteratedConfig",
+    "IteratedConfig"
 ]
 
 from . import GeneratorConfig
