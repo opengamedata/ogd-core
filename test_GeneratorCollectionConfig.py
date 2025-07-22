@@ -8,7 +8,7 @@ from ogd.common.utils.Logger import Logger
 # import locals
 from src.ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from src.ogd.common.configs.generators.DetectorMapConfig import DetectorMapConfig
-from src.ogd.common.configs.generators.FeatureMapConfig import FeatureMapConfig
+from src.ogd.common.configs.generators.ExtractorMapConfig import ExtractorMapConfig
 from tests.config.t_config import settings
 
 class test_GeneratorCollectionConfig(TestCase):

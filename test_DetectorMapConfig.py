@@ -26,7 +26,6 @@ class test_DetectorMapConfig(TestCase):
         # 2. Set up local instance of testing class
         cls.test_schema = DetectorMapConfig(
             name="available_building Schema",
-            perlevel_detectors={},
             percount_detectors={},
             aggregate_detectors={},
             other_elements={ "foo":"bar" }
