@@ -8,7 +8,7 @@ from ogd.common.configs.generators.PerCountConfig import PerCountConfig
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import conversions, Map
 
-class FeatureMapConfig(Config):
+class ExtractorMapConfig(Config):
     """
     Dumb struct to contain the specification and config of a set of features for a game.
 
@@ -112,7 +112,7 @@ class FeatureMapConfig(Config):
         return "  \n\n".join(feature_summary + feature_list)
 
     @classmethod
-    def _fromDict(cls, name:str, unparsed_elements:Map, key_overrides:Optional[Dict[str, str]]=None)-> "FeatureMapConfig":
+    def _fromDict(cls, name:str, unparsed_elements:Map, key_overrides:Optional[Dict[str, str]]=None)-> "ExtractorMapConfig":
         """Function to generate a DetectorMapConfig from a JSON-formatted dictionary.
 
         Expected structure is:
@@ -151,13 +151,13 @@ class FeatureMapConfig(Config):
         :return: A DetectorMapConfig based on the given collection of elements.
         :rtype: DetectorMapConfig
         """
-        return FeatureMapConfig(name=name, legacy_mode=None, legacy_perlevel_feats=None,
+        return ExtractorMapConfig(name=name, legacy_mode=None, legacy_perlevel_feats=None,
                                 percount_feats=None, aggregate_feats=None,
                                 other_elements=unparsed_elements)
 
     @classmethod
-    def Default(cls) -> "FeatureMapConfig":
-        return FeatureMapConfig(
+    def Default(cls) -> "ExtractorMapConfig":
+        return ExtractorMapConfig(
             name="DefaultFeatureMapConfig",
             legacy_mode=cls._DEFAULT_LEGACY_MODE,
             legacy_perlevel_feats=cls._DEFAULT_LEGACY_FEATS,
@@ -197,11 +197,11 @@ class FeatureMapConfig(Config):
         legacy_element = unparsed_elements.get("legacy", None)
         if legacy_element:
             if isinstance(legacy_element, dict):
-                ret_val = FeatureMapConfig.ParseElement(
+                ret_val = ExtractorMapConfig.ParseElement(
                     unparsed_elements=legacy_element,
                     valid_keys=["enabled"],
                     to_type=bool,
-                    default_value=FeatureMapConfig._DEFAULT_LEGACY_MODE,
+                    default_value=ExtractorMapConfig._DEFAULT_LEGACY_MODE,
                 )
             else:
                 ret_val = conversions.ConvertToType(value=legacy_element, to_type=bool, name="legacy_element")
@@ -212,11 +212,11 @@ class FeatureMapConfig(Config):
     def _parsePerLevelFeatures(unparsed_elements:Map) -> Dict[str, PerCountConfig]:
         ret_val : Dict[str, PerCountConfig]
 
-        perlevels = FeatureMapConfig.ParseElement(
+        perlevels = ExtractorMapConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=["perlevel", "per_level"],
             to_type=dict,
-            default_value=FeatureMapConfig._DEFAULT_LEGACY_FEATS
+            default_value=ExtractorMapConfig._DEFAULT_LEGACY_FEATS
         )
         if isinstance(perlevels, dict):
             ret_val = { key : PerCountConfig.FromDict(name=key, unparsed_elements=val) for key,val in perlevels.items() }
@@ -229,11 +229,11 @@ class FeatureMapConfig(Config):
     def _parsePerCountFeatures(unparsed_elements:Map) -> Dict[str, PerCountConfig]:
         ret_val : Dict[str, PerCountConfig]
 
-        percounts = FeatureMapConfig.ParseElement(
+        percounts = ExtractorMapConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=["per_count", "percount"],
             to_type=dict,
-            default_value=FeatureMapConfig._DEFAULT_PERCOUNT_FEATS
+            default_value=ExtractorMapConfig._DEFAULT_PERCOUNT_FEATS
         )
         if isinstance(percounts, dict):
             ret_val = { key : PerCountConfig.FromDict(name=key, unparsed_elements=val) for key,val in percounts.items() }
@@ -246,11 +246,11 @@ class FeatureMapConfig(Config):
     def _parseAggregateFeatures(unparsed_elements:Map) -> Dict[str, AggregateConfig]:
         ret_val : Dict[str, AggregateConfig]
 
-        aggregates = FeatureMapConfig.ParseElement(
+        aggregates = ExtractorMapConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=["aggregate"],
             to_type=dict,
-            default_value=FeatureMapConfig._DEFAULT_AGGREGATE_FEATS
+            default_value=ExtractorMapConfig._DEFAULT_AGGREGATE_FEATS
         )
         if isinstance(aggregates, dict):
             ret_val = {key : AggregateConfig.FromDict(name=key, unparsed_elements=val) for key,val in aggregates.items()}
