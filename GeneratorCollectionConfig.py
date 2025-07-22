@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional, Set
 # import local files
 from ogd.common.configs.Config import Config
 from ogd.common.configs.generators.DetectorMapConfig import DetectorMapConfig
-from ogd.common.configs.generators.FeatureMapConfig import FeatureMapConfig
+from ogd.common.configs.generators.ExtractorMapConfig import ExtractorMapConfig
 from ogd.common.configs.generators.AggregateConfig import AggregateConfig
 from ogd.common.configs.generators.DetectorConfig import DetectorConfig
 from ogd.common.configs.generators.PerCountConfig import PerCountConfig
@@ -29,7 +29,7 @@ class GeneratorCollectionConfig(Config):
     _DEFAULT_FEAT_PERCOUNTS = {}
     _DEFAULT_LEGACY_PERCOUNTS = {}
     _DEFAULT_LEGACY_MODE = False
-    _DEFAULT_FEATURE_MAP = FeatureMapConfig(name="DefaultFeatureMap", legacy_mode=_DEFAULT_LEGACY_MODE, legacy_perlevel_feats=_DEFAULT_LEGACY_PERCOUNTS,
+    _DEFAULT_FEATURE_MAP = ExtractorMapConfig(name="DefaultFeatureMap", legacy_mode=_DEFAULT_LEGACY_MODE, legacy_perlevel_feats=_DEFAULT_LEGACY_PERCOUNTS,
                                             percount_feats=_DEFAULT_FEAT_PERCOUNTS, aggregate_feats=_DEFAULT_FEAT_AGGREGATES, other_elements={})
     _DEFAULT_LEVEL_RANGE = None
     _DEFAULT_OTHER_RANGES = {}
@@ -41,7 +41,7 @@ class GeneratorCollectionConfig(Config):
     # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, name:str, game_id:str,
-                 detector_map:Optional[DetectorMapConfig], extractor_map:Optional[FeatureMapConfig],
+                 detector_map:Optional[DetectorMapConfig], extractor_map:Optional[ExtractorMapConfig],
                  subunit_range:Optional[range], other_ranges:Dict[str, range],
                  other_elements:Optional[Map]=None):
         """Constructor for the GeneratorCollectionConfig class.
@@ -100,7 +100,7 @@ class GeneratorCollectionConfig(Config):
         :param detector_map: _description_
         :type detector_map: DetectorMapConfig
         :param extractor_map: _description_
-        :type extractor_map: FeatureMapConfig
+        :type extractor_map: ExtractorMapConfig
         :param subunit_range: _description_
         :type subunit_range: Optional[range]
         :param other_ranges: _description_
@@ -113,7 +113,7 @@ class GeneratorCollectionConfig(Config):
     # 1. define instance vars
         self._game_id            : str               = game_id or name
         self._detector_map       : DetectorMapConfig = detector_map  or self._parseDetectorMap(unparsed_elements=unparsed_elements)
-        self._extractor_map      : FeatureMapConfig  = extractor_map or self._parseFeatureMap(unparsed_elements=unparsed_elements)
+        self._extractor_map      : ExtractorMapConfig  = extractor_map or self._parseFeatureMap(unparsed_elements=unparsed_elements)
         self._subunit_range      : Optional[range]   = subunit_range
         self._other_ranges       : Dict[str, range]  = other_ranges
 
@@ -158,16 +158,16 @@ class GeneratorCollectionConfig(Config):
         return self.Detectors.AggregateDetectors
 
     @property
-    def Extractors(self) -> FeatureMapConfig:
+    def Extractors(self) -> ExtractorMapConfig:
         """Property for the dictionary of categorized features to extract.
         """
         return self._extractor_map
     @property
-    def Features(self) -> FeatureMapConfig:
+    def Features(self) -> ExtractorMapConfig:
         """Alias for Extractors property
 
         :return: _description_
-        :rtype: FeatureMapConfig
+        :rtype: ExtractorMapConfig
         """
         return self.Extractors
 
@@ -448,8 +448,8 @@ class GeneratorCollectionConfig(Config):
         return ret_val
 
     @staticmethod
-    def _parseFeatureMap(unparsed_elements:Map) -> FeatureMapConfig:
-        ret_val : FeatureMapConfig
+    def _parseFeatureMap(unparsed_elements:Map) -> ExtractorMapConfig:
+        ret_val : ExtractorMapConfig
 
         feature_map = GeneratorCollectionConfig.ParseElement(
             unparsed_elements=unparsed_elements,
@@ -458,7 +458,7 @@ class GeneratorCollectionConfig(Config):
             default_value=GeneratorCollectionConfig._DEFAULT_FEATURE_MAP,
             remove_target=True
         )
-        ret_val = FeatureMapConfig.FromDict(name="FeatureMap", unparsed_elements=feature_map)
+        ret_val = ExtractorMapConfig.FromDict(name="FeatureMap", unparsed_elements=feature_map)
         return ret_val
 
     @staticmethod

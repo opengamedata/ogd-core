@@ -25,7 +25,7 @@ class ExtractorMapConfig(Config):
     def __init__(self, name:str, legacy_mode:Optional[bool],        legacy_perlevel_feats:Optional[Dict[str, PerCountConfig]],
                  percount_feats:Optional[Dict[str, PerCountConfig]], aggregate_feats:Optional[Dict[str, AggregateConfig]],
                  other_elements:Optional[Map]=None):
-        """Constructor for the `FeatureMapConfig` class.
+        """Constructor for the `ExtractorMapConfig` class.
         
         If optional params are not given, data is searched for in `other_elements`.
 
@@ -158,7 +158,7 @@ class ExtractorMapConfig(Config):
     @classmethod
     def Default(cls) -> "ExtractorMapConfig":
         return ExtractorMapConfig(
-            name="DefaultFeatureMapConfig",
+            name="DefaultExtractorMapConfig",
             legacy_mode=cls._DEFAULT_LEGACY_MODE,
             legacy_perlevel_feats=cls._DEFAULT_LEGACY_FEATS,
             percount_feats=cls._DEFAULT_PERCOUNT_FEATS,
