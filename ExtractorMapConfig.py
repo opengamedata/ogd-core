@@ -33,7 +33,7 @@ class ExtractorMapConfig(Config):
 
         ```
         {
-            "per_count" : {
+            "iterated" : {
                 "ExtractorName1": {
                     "enabled": true,
                     "type": "ExtractorClass",
@@ -136,7 +136,7 @@ class ExtractorMapConfig(Config):
                     "description":"Info about the per-level detector; the perlevel is a legacy sub-dict and should not be included."
                 }
             },
-            "per_count" : {
+            "iterated" : {
                 "example" : {
                     "type":"ExampleDetectorClass",
                     "enabled":true,
@@ -239,7 +239,7 @@ class ExtractorMapConfig(Config):
 
         percounts = ExtractorMapConfig.ParseElement(
             unparsed_elements=unparsed_elements,
-            valid_keys=["per_count", "percount"],
+            valid_keys=["iterated", "per_count", "percount"],
             to_type=dict,
             default_value=ExtractorMapConfig._DEFAULT_ITERATED_EXTORS
         )

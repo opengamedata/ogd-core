@@ -23,14 +23,14 @@ class GeneratorCollectionConfig(Config):
     this schema data.
     """
     _DEFAULT_DET_AGGREGATES = {}
-    _DEFAULT_DET_PERCOUNTS = {}
-    _DEFAULT_DETECTOR_MAP = DetectorMapConfig(name="DefaultDetectorMap", percount_detectors=_DEFAULT_DET_PERCOUNTS, aggregate_detectors=_DEFAULT_DET_AGGREGATES, other_elements={})
-    _DEFAULT_FEAT_AGGREGATES = {}
-    _DEFAULT_FEAT_PERCOUNTS = {}
+    _DEFAULT_DET_ITERATED = {}
+    _DEFAULT_DETECTOR_MAP = DetectorMapConfig(name="DefaultDetectorMap", percount_detectors=_DEFAULT_DET_ITERATED, aggregate_detectors=_DEFAULT_DET_AGGREGATES, other_elements={})
+    _DEFAULT_XTOR_AGGREGATES = {}
+    _DEFAULT_XTOR_ITERATED = {}
     _DEFAULT_LEGACY_PERCOUNTS = {}
     _DEFAULT_LEGACY_MODE = False
-    _DEFAULT_FEATURE_MAP = ExtractorMapConfig(name="DefaultFeatureMap", legacy_mode=_DEFAULT_LEGACY_MODE, legacy_perlevel_extractors=_DEFAULT_LEGACY_PERCOUNTS,
-                                            iterated_extractors=_DEFAULT_FEAT_PERCOUNTS, aggregate_extractors=_DEFAULT_FEAT_AGGREGATES, other_elements={})
+    _DEFAULT_EXTRACTOR_MAP = ExtractorMapConfig(name="DefaultFeatureMap", legacy_mode=_DEFAULT_LEGACY_MODE, legacy_perlevel_extractors=_DEFAULT_LEGACY_PERCOUNTS,
+                                            iterated_extractors=_DEFAULT_XTOR_ITERATED, aggregate_extractors=_DEFAULT_XTOR_AGGREGATES, other_elements={})
     _DEFAULT_LEVEL_RANGE = None
     _DEFAULT_OTHER_RANGES = {}
     _DEFAULT_GAME_FOLDER = Path("./") / "ogd" / "games"
@@ -309,7 +309,7 @@ class GeneratorCollectionConfig(Config):
             name="DefaultGeneratorCollectionConfig",
             game_id="DEFAULT_GAME",
             detector_map=cls._DEFAULT_DETECTOR_MAP,
-            extractor_map=cls._DEFAULT_FEATURE_MAP,
+            extractor_map=cls._DEFAULT_EXTRACTOR_MAP,
             subunit_range=cls._DEFAULT_LEVEL_RANGE,
             other_ranges=cls._DEFAULT_OTHER_RANGES,
             other_elements={}
@@ -387,7 +387,7 @@ class GeneratorCollectionConfig(Config):
         match iter_mode:
             case IterationMode.AGGREGATE:
                 _detector_schema = self.Detectors.AggregateDetectors.get(detector_name)
-            case IterationMode.PERCOUNT:
+            case IterationMode.ITERATED:
                 _detector_schema = self.Detectors.IteratedDetectors.get(detector_name)
             case _:
                 raise ValueError(f"In GeneratorCollectionConfig, DetectorEnabled was given an unrecognized iteration mode of {iter_mode.name}")
@@ -407,7 +407,7 @@ class GeneratorCollectionConfig(Config):
         match iter_mode:
             case IterationMode.AGGREGATE:
                 _feature_schema = self.AggregateExtractors.get(feature_name)
-            case IterationMode.PERCOUNT:
+            case IterationMode.ITERATED:
                 _feature_schema = self.IteratedExtractors.get(feature_name)
             case _:
                 raise ValueError(f"In GeneratorCollectionConfig, FeatureEnabled was given an unrecognized iteration mode of {iter_mode.name}")
@@ -425,18 +425,18 @@ class GeneratorCollectionConfig(Config):
 
         if IterationMode.AGGREGATE in iter_modes:
             ret_val.update({key:val for key,val in self.AggregateDetectors.items() if val.Enabled.issuperset(extract_modes)})
-        if IterationMode.PERCOUNT in iter_modes:
+        if IterationMode.ITERATED in iter_modes:
             ret_val.update({key:val for key,val in self.IteratedExtractors.items() if val.Enabled.issuperset(extract_modes)})
         return ret_val
 
-    def EnabledFeatures(self, iter_modes:Set[IterationMode]={IterationMode.AGGREGATE, IterationMode.PERCOUNT}, extract_modes:Set[ExtractionMode]=set()) -> Dict[str, ExtractorConfig]:
+    def EnabledFeatures(self, iter_modes:Set[IterationMode]={IterationMode.AGGREGATE, IterationMode.ITERATED}, extract_modes:Set[ExtractionMode]=set()) -> Dict[str, ExtractorConfig]:
         if self.Extractors.LegacyMode:
             return {"legacy" : self._DEFAULT_LEGACY_CONFIG} if IterationMode.AGGREGATE in iter_modes else {}
         ret_val : Dict[str, ExtractorConfig] = {}
 
         if IterationMode.AGGREGATE in iter_modes:
             ret_val.update({key:val for key,val in self.AggregateExtractors.items() if val.Enabled.issuperset(extract_modes)})
-        if IterationMode.PERCOUNT in iter_modes:
+        if IterationMode.ITERATED in iter_modes:
             ret_val.update({key:val for key,val in self.IteratedExtractors.items() if val.Enabled.issuperset(extract_modes)})
         return ret_val
 
@@ -465,7 +465,7 @@ class GeneratorCollectionConfig(Config):
             unparsed_elements=unparsed_elements,
             valid_keys=["features"],
             to_type=dict,
-            default_value=GeneratorCollectionConfig._DEFAULT_FEATURE_MAP,
+            default_value=GeneratorCollectionConfig._DEFAULT_EXTRACTOR_MAP,
             remove_target=True
         )
         ret_val = ExtractorMapConfig.FromDict(name="FeatureMap", unparsed_elements=feature_map)
