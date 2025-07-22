@@ -141,7 +141,7 @@ class GeneratorCollectionConfig(Config):
         ret_val : List[str] = []
 
         ret_val = [detector.Name for detector in self.Detectors.AggregateDetectors.values()] \
-                + [detector.Name for detector in self.Detectors.PerCountDetectors.values()]
+                + [detector.Name for detector in self.Detectors.IteratedDetectors.values()]
 
         return ret_val
 
@@ -149,7 +149,7 @@ class GeneratorCollectionConfig(Config):
     def PerCountDetectors(self) -> Dict[str, DetectorConfig]:
         """Property for the dictionary of per-custom-count detectors.
         """
-        return self.Detectors.PerCountDetectors
+        return self.Detectors.IteratedDetectors
 
     @property
     def AggregateDetectors(self) -> Dict[str, DetectorConfig]:
@@ -228,7 +228,7 @@ class GeneratorCollectionConfig(Config):
                             "The custom, data-driven Events calculated from this game's logged events by OpenGameData when an 'export' is run."
                            ]
         detector_list = [detector.AsMarkdown for detector in self.Detectors.AggregateDetectors.values()] \
-                      + [detector.AsMarkdown for detector in self.Detectors.PerCountDetectors.values()]
+                      + [detector.AsMarkdown for detector in self.Detectors.IteratedDetectors.values()]
         detector_list = detector_list if len(detector_list) > 0 else ["None"]
         # Set up list of features
         feature_summary = ["## Processed Features",
@@ -378,7 +378,7 @@ class GeneratorCollectionConfig(Config):
             case IterationMode.AGGREGATE:
                 _detector_schema = self.Detectors.AggregateDetectors.get(detector_name)
             case IterationMode.PERCOUNT:
-                _detector_schema = self.Detectors.PerCountDetectors.get(detector_name)
+                _detector_schema = self.Detectors.IteratedDetectors.get(detector_name)
             case _:
                 raise ValueError(f"In GeneratorCollectionConfig, DetectorEnabled was given an unrecognized iteration mode of {iter_mode.name}")
         if _detector_schema is not None:
