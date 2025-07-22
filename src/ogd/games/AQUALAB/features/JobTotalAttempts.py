@@ -8,38 +8,40 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 
-class LeftJob(PerJobFeature):
+class JobTotalAttempts(PerJobFeature):
+    _checked_alive = False
     def __init__(self, params:GeneratorParameters, job_map:dict):
         super().__init__(params=params, job_map=job_map)
-        self._left_job = False
-        self._job_started = False
+        self._count = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
-        return ["start_job", "switch_job", "complete_job"]
+        return []
 
     @classmethod
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
-        return []
+        return ["JobAttempted"]
 
     def _updateFromEvent(self, event:Event) -> None:
-        if event.EventName == "start_job":
-            self._job_started = True
-            self._left_job = False 
-        
-        elif event.EventName == "switch_job":
-            new_job = event.GameState.get("job_name")
-            if new_job != "no-active-job":
-                self._left_job = True
-
-    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
+    def _updateFromFeatureData(self, feature:FeatureData):
+        if feature.ExportMode == ExtractionMode.PLAYER and feature.CountIndex == self.CountIndex:
+            if not self._checked_alive:
+                Logger.Log(f"JobTotalAttempts for job {self.CountIndex} got a feature at player level with same count index")
+                self._checked_alive = True
+            if feature.FeatureValues[0] == True:
+                self._count += 1
+
     def _getFeatureValues(self) -> List[Any]:
-        return [int(self._left_job)]
+        return [self._count]
 
     # *** Optionally override public functions. ***
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
+        return [ExtractionMode.POPULATION]
+
     @staticmethod
     def MinVersion() -> Optional[str]:
         return "1"

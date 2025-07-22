@@ -602,6 +602,22 @@
                     }
                 }
             },
+            "JobAttempted": {
+                "enabled": true,
+                "type": "JobAttempted",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Indicator for whether the player ever entered into the given job",
+                "return_type": "bool"
+            },
+            "JobTotalAttempts": {
+                "enabled": true,
+                "type": "JobTotalAttempts",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "The total number of players who attempted the job.",
+                "return_type": "int"
+            },
             "JobCompletionTime": {
                 "enabled": true,
                 "type": "JobCompletionTime",
@@ -786,8 +802,14 @@
                 "type": "JobTasksCompleted",
                 "count": "level_range",
                 "prefix": "job",
-                "description": "Number of tasks completed for a given job",
-                "return_type": "int"
+                "description": "List of tasks completed for a given job",
+                "return_type": "List[str]",
+                "subfeatures": {
+                    "Count": {
+                        "description": "Number of tasks completed for the given job",
+                        "return_type": "int"
+                    }
+                }
             },
             "JobsAttempted": {
                 "type": "JobsAttempted",
@@ -1177,17 +1199,24 @@
             "ExperimentalCondition": {
                 "enabled": true,
                 "type": "ExperimentalCondition",
-                "count": "level_range",
-                "prefix": "job",
                 "description": "Returns the first event branch",
+                "return_type": "str"
+            },
+            "PlayedNonexperimentalVersion": {
+                "enabled": true,
+                "type": "PlayedNonexperimentalVersion",
+                "description": "True if the player ever had an event in a non-experimental branch.",
                 "return_type": "str"
             },
             "TotalJobRecommendationReceived": {
                 "enabled": true,
-                "type": "CountEvent",
+                "type": "TotalJobRecommendationReceived",
                 "description": "Count of total recommendations received",
                 "target": "recommended_job",
-                "return_type": "int"
+                "return_type": "int",
+                "subfeatures": [
+                    "SpecificRecommendations"
+                ]
             },
             "ActiveJobs": {
                 "enabled": true,
@@ -1220,13 +1249,13 @@
                 "return_type": "list[str]"
             },
             "PlayerSummary": {
-                "enabled": false,
+                "enabled": true,
                 "type": "PlayerSummary",
                 "description": "Summary of player statistics (active session time, jobs completed, number of sessions)",
                 "return_type": "dict"
             },
             "PlayLocations": {
-                "enabled": false,
+                "enabled": true,
                 "type": "PlayLocations",
                 "description": "Play Locations",
                 "return_type": "List[bool]",
@@ -1238,7 +1267,7 @@
                 }
             },
             "PopulationSummary": {
-                "enabled": false,
+                "enabled": true,
                 "type": "PopulationSummary",
                 "description": "Summary of population statistics (active session time, average jobs completed count, average session count)",
                 "return_type": "dict"
