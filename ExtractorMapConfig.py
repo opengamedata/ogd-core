@@ -16,14 +16,14 @@ class ExtractorMapConfig(Config):
     """
 
     _DEFAULT_LEGACY_MODE = False
-    _DEFAULT_LEGACY_FEATS = {}
-    _DEFAULT_PERCOUNT_FEATS = {}
-    _DEFAULT_AGGREGATE_FEATS = {}
+    _DEFAULT_LEGACY_EXTORS = {}
+    _DEFAULT_ITERATED_EXTORS = {}
+    _DEFAULT_AGGREGATE_EXTORS = {}
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, name:str, legacy_mode:Optional[bool],        legacy_perlevel_feats:Optional[Dict[str, IteratedConfig]],
-                 iterated_feats:Optional[Dict[str, IteratedConfig]], aggregate_feats:Optional[Dict[str, AggregateConfig]],
+    def __init__(self, name:str, legacy_mode:Optional[bool],        legacy_perlevel_extractors:Optional[Dict[str, IteratedConfig]],
+                 iterated_extractors:Optional[Dict[str, IteratedConfig]], aggregate_extractors:Optional[Dict[str, AggregateConfig]],
                  other_elements:Optional[Map]=None):
         """Constructor for the `ExtractorMapConfig` class.
         
@@ -78,9 +78,9 @@ class ExtractorMapConfig(Config):
         unparsed_elements : Map = other_elements or {}
 
         self._legacy_mode           : bool                       = legacy_mode           or self._parseLegacyMode(unparsed_elements=unparsed_elements)
-        self._legacy_extractors     : Dict[str, IteratedConfig]  = legacy_perlevel_feats or self._parsePerLevelExtractors(unparsed_elements=unparsed_elements)
-        self._iterated_extractors   : Dict[str, IteratedConfig]  = iterated_feats        or self._parseIteratedExtractors(unparsed_elements=unparsed_elements)
-        self._aggregate_feats       : Dict[str, AggregateConfig] = aggregate_feats       or self._parseAggregateExtractors(unparsed_elements=unparsed_elements)
+        self._legacy_extractors     : Dict[str, IteratedConfig]  = legacy_perlevel_extractors or self._parsePerLevelExtractors(unparsed_elements=unparsed_elements)
+        self._iterated_extractors   : Dict[str, IteratedConfig]  = iterated_extractors        or self._parseIteratedExtractors(unparsed_elements=unparsed_elements)
+        self._aggregate_feats       : Dict[str, AggregateConfig] = aggregate_extractors       or self._parseAggregateExtractors(unparsed_elements=unparsed_elements)
 
         super().__init__(name=name, other_elements=other_elements)
 
@@ -159,8 +159,8 @@ class ExtractorMapConfig(Config):
         :return: A DetectorMapConfig based on the given collection of elements.
         :rtype: DetectorMapConfig
         """
-        return ExtractorMapConfig(name=name, legacy_mode=None, legacy_perlevel_feats=None,
-                                iterated_feats=None, aggregate_feats=None,
+        return ExtractorMapConfig(name=name, legacy_mode=None, legacy_perlevel_extractors=None,
+                                iterated_extractors=None, aggregate_extractors=None,
                                 other_elements=unparsed_elements)
 
     @classmethod
@@ -168,9 +168,9 @@ class ExtractorMapConfig(Config):
         return ExtractorMapConfig(
             name="DefaultExtractorMapConfig",
             legacy_mode=cls._DEFAULT_LEGACY_MODE,
-            legacy_perlevel_feats=cls._DEFAULT_LEGACY_FEATS,
-            iterated_feats=cls._DEFAULT_PERCOUNT_FEATS,
-            aggregate_feats=cls._DEFAULT_AGGREGATE_FEATS,
+            legacy_perlevel_extractors=cls._DEFAULT_LEGACY_EXTORS,
+            iterated_extractors=cls._DEFAULT_ITERATED_EXTORS,
+            aggregate_extractors=cls._DEFAULT_AGGREGATE_EXTORS,
             other_elements={}
         )
 
@@ -224,7 +224,7 @@ class ExtractorMapConfig(Config):
             unparsed_elements=unparsed_elements,
             valid_keys=["perlevel", "per_level"],
             to_type=dict,
-            default_value=ExtractorMapConfig._DEFAULT_LEGACY_FEATS
+            default_value=ExtractorMapConfig._DEFAULT_LEGACY_EXTORS
         )
         if isinstance(perlevels, dict):
             ret_val = { key : IteratedConfig.FromDict(name=key, unparsed_elements=val) for key,val in perlevels.items() }
@@ -241,7 +241,7 @@ class ExtractorMapConfig(Config):
             unparsed_elements=unparsed_elements,
             valid_keys=["per_count", "percount"],
             to_type=dict,
-            default_value=ExtractorMapConfig._DEFAULT_PERCOUNT_FEATS
+            default_value=ExtractorMapConfig._DEFAULT_ITERATED_EXTORS
         )
         if isinstance(percounts, dict):
             ret_val = { key : IteratedConfig.FromDict(name=key, unparsed_elements=val) for key,val in percounts.items() }
@@ -258,7 +258,7 @@ class ExtractorMapConfig(Config):
             unparsed_elements=unparsed_elements,
             valid_keys=["aggregate"],
             to_type=dict,
-            default_value=ExtractorMapConfig._DEFAULT_AGGREGATE_FEATS
+            default_value=ExtractorMapConfig._DEFAULT_AGGREGATE_EXTORS
         )
         if isinstance(aggregates, dict):
             ret_val = {key : AggregateConfig.FromDict(name=key, unparsed_elements=val) for key,val in aggregates.items()}

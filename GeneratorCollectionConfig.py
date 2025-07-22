@@ -29,8 +29,8 @@ class GeneratorCollectionConfig(Config):
     _DEFAULT_FEAT_PERCOUNTS = {}
     _DEFAULT_LEGACY_PERCOUNTS = {}
     _DEFAULT_LEGACY_MODE = False
-    _DEFAULT_FEATURE_MAP = ExtractorMapConfig(name="DefaultFeatureMap", legacy_mode=_DEFAULT_LEGACY_MODE, legacy_perlevel_feats=_DEFAULT_LEGACY_PERCOUNTS,
-                                            iterated_feats=_DEFAULT_FEAT_PERCOUNTS, aggregate_feats=_DEFAULT_FEAT_AGGREGATES, other_elements={})
+    _DEFAULT_FEATURE_MAP = ExtractorMapConfig(name="DefaultFeatureMap", legacy_mode=_DEFAULT_LEGACY_MODE, legacy_perlevel_extractors=_DEFAULT_LEGACY_PERCOUNTS,
+                                            iterated_extractors=_DEFAULT_FEAT_PERCOUNTS, aggregate_extractors=_DEFAULT_FEAT_AGGREGATES, other_elements={})
     _DEFAULT_LEVEL_RANGE = None
     _DEFAULT_OTHER_RANGES = {}
     _DEFAULT_GAME_FOLDER = Path("./") / "ogd" / "games"
@@ -63,7 +63,7 @@ class GeneratorCollectionConfig(Config):
                 "max": 10
             },
             "detectors" : {
-                "per_count" : {
+                "iterated" : {
                     "DetectorName1": {
                         ...
                     },
@@ -77,7 +77,7 @@ class GeneratorCollectionConfig(Config):
                 }
             },
             "extractors" : {
-                "per_count" : {
+                "iterated" : {
                     "ExtractorName1": {
                         ...
                     },
@@ -146,8 +146,13 @@ class GeneratorCollectionConfig(Config):
         return ret_val
 
     @property
+    def IteratedDetectors(self) -> Dict[str, DetectorConfig]:
+        """Property for the dictionary of iterated (per-custom-count) detectors.
+        """
+        return self.Detectors.IteratedDetectors
+    @property
     def PerCountDetectors(self) -> Dict[str, DetectorConfig]:
-        """Property for the dictionary of per-custom-count detectors.
+        """Legacy alias for IteratedDetectors property
         """
         return self.Detectors.IteratedDetectors
 
@@ -177,7 +182,7 @@ class GeneratorCollectionConfig(Config):
         """
         ret_val : List[str] = []
         ret_val = [extractor.Name for extractor in self.Extractors.AggregateExtractors.values()] \
-                + [extractor.Name for extractor in self.Extractors.PerCountFeatures.values()] \
+                + [extractor.Name for extractor in self.Extractors.IteratedExtractors.values()] \
                 + [extractor.Name for extractor in self.Extractors.LegacyPerLevelFeatures.values()]
         return ret_val
 
@@ -188,20 +193,25 @@ class GeneratorCollectionConfig(Config):
         return self.Extractors.LegacyPerLevelFeatures
 
     @property
-    def PerCountFeatures(self) -> Dict[str,IteratedConfig]:
+    def IteratedExtractors(self) -> Dict[str,IteratedConfig]:
         """Property for the dictionary of per-custom-count features.
         """
-        return self.Extractors.PerCountFeatures
+        return self.Extractors.IteratedExtractors
+    @property
+    def PerCountFeatures(self) -> Dict[str,IteratedConfig]:
+        """Legacy alias for IteratedExtractors
+        """
+        return self.IteratedExtractors
 
     @property
-    def AggregateFeatures(self) -> Dict[str,AggregateConfig]:
+    def AggregateExtractors(self) -> Dict[str,AggregateConfig]:
         """Property for the dictionary of aggregate features.
         """
         return self.Extractors.AggregateExtractors
 
     @property
     def SubunitRange(self) -> Optional[range]:
-        """Property for the range of levels or other game sub-units that are the primary per-count property for the given game.
+        """Property for the range of levels or other game sub-units that are the primary segmenting property for the given game.
         """
         ret_val = None
         if self._subunit_range:
@@ -235,7 +245,7 @@ class GeneratorCollectionConfig(Config):
                            "The features/metrics calculated from this game's event logs by OpenGameData when an 'export' is run."
                           ]
         feature_list = [feature.AsMarkdown for feature in self.Features.AggregateExtractors.values()] \
-                     + [feature.AsMarkdown for feature in self.Features.PerCountFeatures.values()] \
+                     + [feature.AsMarkdown for feature in self.Features.IteratedExtractors.values()] \
 
         feature_list = feature_list + [feature.AsMarkdown for feature in self.Features.LegacyPerLevelFeatures.values()] if self.Features.LegacyMode else feature_list
         feature_list = feature_list if len(feature_list) > 0 else ["None"]
@@ -334,7 +344,7 @@ class GeneratorCollectionConfig(Config):
     # *** PUBLIC METHODS ***
 
     def GetCountRange(self, count:Any) -> range:
-        """Function to get a predefined range for per-count features, or to generate a range up to given count.
+        """Function to get a predefined range for iterated features, or to generate a range up to given count.
         Typically, this would be used to retrieve the `level_range` for the game.
         However, any other ranges defined in the game's schema can be retrieved here, or a custom range object generated (using `int(count)`).
 
@@ -363,7 +373,7 @@ class GeneratorCollectionConfig(Config):
 
         :param detector_name: The base name of the detector class to check
         :type detector_name: str
-        :param iter_mode: The "iteration" mode of the detector class (aggregate or per-count)
+        :param iter_mode: The "iteration" mode of the detector class (aggregate or iterated)
         :type iter_mode: IterationMode
         :param extract_mode: The extraction mode of the detector (which... should always be detector?)
         :type extract_mode: ExtractionMode
@@ -396,9 +406,9 @@ class GeneratorCollectionConfig(Config):
         _feature_schema : Optional[ExtractorConfig]
         match iter_mode:
             case IterationMode.AGGREGATE:
-                _feature_schema = self.AggregateFeatures.get(feature_name)
+                _feature_schema = self.AggregateExtractors.get(feature_name)
             case IterationMode.PERCOUNT:
-                _feature_schema = self.PerCountFeatures.get(feature_name)
+                _feature_schema = self.IteratedExtractors.get(feature_name)
             case _:
                 raise ValueError(f"In GeneratorCollectionConfig, FeatureEnabled was given an unrecognized iteration mode of {iter_mode.name}")
         if _feature_schema is not None:
@@ -416,7 +426,7 @@ class GeneratorCollectionConfig(Config):
         if IterationMode.AGGREGATE in iter_modes:
             ret_val.update({key:val for key,val in self.AggregateDetectors.items() if val.Enabled.issuperset(extract_modes)})
         if IterationMode.PERCOUNT in iter_modes:
-            ret_val.update({key:val for key,val in self.PerCountDetectors.items() if val.Enabled.issuperset(extract_modes)})
+            ret_val.update({key:val for key,val in self.IteratedExtractors.items() if val.Enabled.issuperset(extract_modes)})
         return ret_val
 
     def EnabledFeatures(self, iter_modes:Set[IterationMode]={IterationMode.AGGREGATE, IterationMode.PERCOUNT}, extract_modes:Set[ExtractionMode]=set()) -> Dict[str, ExtractorConfig]:
@@ -425,9 +435,9 @@ class GeneratorCollectionConfig(Config):
         ret_val : Dict[str, ExtractorConfig] = {}
 
         if IterationMode.AGGREGATE in iter_modes:
-            ret_val.update({key:val for key,val in self.AggregateFeatures.items() if val.Enabled.issuperset(extract_modes)})
+            ret_val.update({key:val for key,val in self.AggregateExtractors.items() if val.Enabled.issuperset(extract_modes)})
         if IterationMode.PERCOUNT in iter_modes:
-            ret_val.update({key:val for key,val in self.PerCountFeatures.items() if val.Enabled.issuperset(extract_modes)})
+            ret_val.update({key:val for key,val in self.IteratedExtractors.items() if val.Enabled.issuperset(extract_modes)})
         return ret_val
 
     # *** PRIVATE STATICS ***
