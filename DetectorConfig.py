@@ -1,15 +1,14 @@
 """Detector Config Module
 """
 # import standard libraries
-from typing import Any, Dict, Optional, Set
+from typing import Dict, Optional, Set
 # import local files
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.configs.generators.GeneratorConfig import GeneratorConfig
 from ogd.common.utils.typing import Map
 
 class DetectorConfig(GeneratorConfig):
-    """Schema for tracking the configuration of a detector.
-    """
+    """Schema for tracking the configuration of a detector."""
     def __init__(self, name:str,
                  # params for class
                  # params for parent
@@ -17,6 +16,31 @@ class DetectorConfig(GeneratorConfig):
                  # dict of leftovers
                  other_elements:Optional[Map]=None
         ):
+        """Constructor for the `DetectorConfig` class.
+        
+        If optional params are not given, data is searched for in `other_elements`.
+
+        Expected format:
+
+        ```
+        {
+            "type": "DetectorClass",
+            "enabled": true,
+            "description": "Description of the detected event",
+        },
+        ```
+
+        :param name: _description_
+        :type name: str
+        :param enabled: _description_, defaults to None
+        :type enabled: Optional[Set[ExtractionMode]], optional
+        :param type_name: _description_, defaults to None
+        :type type_name: Optional[str], optional
+        :param description: _description_, defaults to None
+        :type description: Optional[str], optional
+        :param other_elements: _description_, defaults to None
+        :type other_elements: Optional[Map], optional
+        """
         unparsed_elements : Map = other_elements or {}
 
         super().__init__(name=name, enabled=enabled, type_name=type_name, description=description, other_elements=unparsed_elements)
@@ -32,15 +56,25 @@ class DetectorConfig(GeneratorConfig):
 
     @classmethod
     def _fromDict(cls, name:str, unparsed_elements:Map, key_overrides:Optional[Dict[str, str]]=None)-> "DetectorConfig":
-        """_summary_
+        """Function to parse an AggregateConfig from a dictionary.
 
-        TODO : Add example of what format unparsed_elements is expected to have.
+        Expected format:
 
-        :param name: _description_
+        ```
+        {
+            "type": "DetectorClass",
+            "enabled": true,
+            "description": "Description of the detected event",
+        },
+        ```
+
+        :param name: The name associated with the detector, typically but not always equal to the `"type"` value.
         :type name: str
-        :param unparsed_elements: _description_
-        :type unparsed_elements: Dict[str, Any]
-        :return: _description_
+        :param unparsed_elements: The dictionary containing the contents for the `DetectorConfig`
+        :type unparsed_elements: Map
+        :param key_overrides: (_Ignored_) A dictionary of overrides for keys to look for, defaults to None
+        :type key_overrides: Optional[Dict[str, str]], optional
+        :return: A `DetectorConfig` with data from the given `unparsed_elements`
         :rtype: DetectorConfig
         """
         return DetectorConfig(name=name, other_elements=unparsed_elements)
