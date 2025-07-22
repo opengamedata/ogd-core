@@ -9,7 +9,7 @@ from ogd.common.configs.generators.FeatureMapConfig import FeatureMapConfig
 from ogd.common.configs.generators.AggregateConfig import AggregateConfig
 from ogd.common.configs.generators.DetectorConfig import DetectorConfig
 from ogd.common.configs.generators.PerCountConfig import PerCountConfig
-from ogd.common.configs.generators.FeatureConfig import FeatureConfig
+from ogd.common.configs.generators.ExtractorConfig import ExtractorConfig
 from ogd.common.models.enums.IterationMode import IterationMode
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.utils.Logger import Logger
@@ -393,7 +393,7 @@ class GeneratorCollectionConfig(Config):
             return feature_name == "legacy"
         ret_val : bool
 
-        _feature_schema : Optional[FeatureConfig]
+        _feature_schema : Optional[ExtractorConfig]
         match iter_mode:
             case IterationMode.AGGREGATE:
                 _feature_schema = self.AggregateFeatures.get(feature_name)
@@ -419,10 +419,10 @@ class GeneratorCollectionConfig(Config):
             ret_val.update({key:val for key,val in self.PerCountDetectors.items() if val.Enabled.issuperset(extract_modes)})
         return ret_val
 
-    def EnabledFeatures(self, iter_modes:Set[IterationMode]={IterationMode.AGGREGATE, IterationMode.PERCOUNT}, extract_modes:Set[ExtractionMode]=set()) -> Dict[str, FeatureConfig]:
+    def EnabledFeatures(self, iter_modes:Set[IterationMode]={IterationMode.AGGREGATE, IterationMode.PERCOUNT}, extract_modes:Set[ExtractionMode]=set()) -> Dict[str, ExtractorConfig]:
         if self.Extractors.LegacyMode:
             return {"legacy" : self._DEFAULT_LEGACY_CONFIG} if IterationMode.AGGREGATE in iter_modes else {}
-        ret_val : Dict[str, FeatureConfig] = {}
+        ret_val : Dict[str, ExtractorConfig] = {}
 
         if IterationMode.AGGREGATE in iter_modes:
             ret_val.update({key:val for key,val in self.AggregateFeatures.items() if val.Enabled.issuperset(extract_modes)})

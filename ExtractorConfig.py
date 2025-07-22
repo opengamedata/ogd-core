@@ -24,11 +24,11 @@ class ExtractorConfig(GeneratorConfig):
                  # dict of leftovers
                  other_elements:Optional[Map]=None
         ):
-        """Constructor for the `FeatureConfig` class.
+        """Constructor for the `ExtractorConfig` class.
         
         If optional params are not given, data is searched for in `other_elements`.
-        Because `FeatureConfig` is just a base class for other specific feature configuration classes,
-        the sample format below includes keys not used by `FeatureConfig`.
+        Because `ExtractorConfig` is just a base class for other specific feature configuration classes,
+        the sample format below includes keys not used by `ExtractorConfig`.
         The actual keys used are `subfeatures` and `return_type`.
         `subfeatures` is an optional key.
 

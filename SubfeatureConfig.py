@@ -88,7 +88,7 @@ class SubfeatureConfig(Schema):
     @classmethod
     def Default(cls) -> "SubfeatureConfig":
         return SubfeatureConfig(
-            name="DefaultSubFeatureConfig",
+            name="DefaultSubExtractorConfig",
             return_type=cls._DEFAULT_RETURN_TYPE,
             description=cls._DEFAULT_DESCRIPTION,
             other_elements={}

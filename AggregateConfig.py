@@ -3,12 +3,12 @@
 # import standard libraries
 from typing import Dict, Optional, Set
 # import local files
-from ogd.common.configs.generators.FeatureConfig import FeatureConfig
+from ogd.common.configs.generators.ExtractorConfig import ExtractorConfig
 from ogd.common.configs.generators.SubfeatureConfig import SubfeatureConfig
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.utils.typing import Map
 
-class AggregateConfig(FeatureConfig):
+class AggregateConfig(ExtractorConfig):
     """Schema for tracking the configuration of an aggregate feature."""
 
     def __init__(self, name:str,

@@ -1,12 +1,12 @@
 # import standard libraries
 from typing import Dict, Optional, Set
 # import local files
-from ogd.common.configs.generators.FeatureConfig import FeatureConfig
+from ogd.common.configs.generators.ExtractorConfig import ExtractorConfig
 from ogd.common.configs.generators.SubfeatureConfig import SubfeatureConfig
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.utils.typing import Map
 
-class PerCountConfig(FeatureConfig):
+class PerCountConfig(ExtractorConfig):
 
     _DEFAULT_COUNT = 1
     _DEFAULT_PREFIX = "pre"
