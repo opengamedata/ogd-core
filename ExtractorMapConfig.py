@@ -113,7 +113,7 @@ class ExtractorMapConfig(Config):
     @property
     def AsMarkdown(self) -> str:
         feature_summary = ["## Processed Features",
-                           "The features/metrics calculated from this game's event logs by OpenGameData when an 'export' is run."
+                           "The features/metrics extracted from this game's event logs by OpenGameData when an 'export' is run."
                           ]
         feature_list = [feature.AsMarkdown for feature in self._aggregate_feats.values()] + [feature.AsMarkdown for feature in self._iterated_extractors.values()]
         feature_list = feature_list if len(feature_list) > 0 else ["None"]

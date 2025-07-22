@@ -87,12 +87,12 @@ class DetectorMapConfig(Config):
 
     @property
     def AsMarkdown(self) -> str:
-        feature_summary = ["## Processed Features",
-                           "The features/metrics calculated from this game's event logs by OpenGameData when an 'export' is run."
+        detector_summary = ["## Detected Events",
+                           "The new events generated from this game's event logs by OpenGameData when an 'export' is run."
                           ]
-        feature_list = [feature.AsMarkdown for feature in self._aggregate_detectors.values()] + [feature.AsMarkdown for feature in self._iterated_detectors.values()]
-        feature_list = feature_list if len(feature_list) > 0 else ["None"]
-        return "  \n\n".join(feature_summary + feature_list)
+        detector_list = [detector.AsMarkdown for detector in self.AggregateDetectors.values()] + [detector.AsMarkdown for detector in self.IteratedDetectors.values()]
+        detector_list = detector_list if len(detector_list) > 0 else ["None"]
+        return "  \n\n".join(detector_summary + detector_list)
 
     @property
     def AsDict(self) -> Dict[str, Dict[str, DetectorConfig]]:
