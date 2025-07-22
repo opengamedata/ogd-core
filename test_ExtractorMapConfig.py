@@ -27,9 +27,9 @@ class test_ExtractorMapConfig(TestCase):
         cls.test_schema = ExtractorMapConfig(
             name="available_building Schema",
             legacy_mode=True,
-            legacy_perlevel_feats={},
-            percount_feats={},
-            aggregate_feats={},
+            legacy_perlevel_extractors={},
+            iterated_extractors={},
+            aggregate_extractors={},
             other_elements={ "foo":"bar" }
         )
 
