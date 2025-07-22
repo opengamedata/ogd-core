@@ -25,7 +25,7 @@ class SubfeatureConfig(Schema):
 
         ```
         {
-            "description": "Description of the feature that is etracted",
+            "description": "Description of the feature that is extracted",
             "return_type": "int"
         },
         ```
@@ -88,7 +88,7 @@ class SubfeatureConfig(Schema):
     @classmethod
     def Default(cls) -> "SubfeatureConfig":
         return SubfeatureConfig(
-            name="DefaultSubExtractorConfig",
+            name="DefaultSubFeatureConfig",
             return_type=cls._DEFAULT_RETURN_TYPE,
             description=cls._DEFAULT_DESCRIPTION,
             other_elements={}
