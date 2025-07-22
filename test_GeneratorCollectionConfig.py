@@ -8,7 +8,7 @@ from ogd.common.utils.Logger import Logger
 # import locals
 from src.ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from src.ogd.common.configs.generators.DetectorMapConfig import DetectorMapConfig
-from src.ogd.common.configs.generators.FeatureMapConfig import FeatureMapConfig
+from src.ogd.common.configs.generators.ExtractorMapConfig import ExtractorMapConfig
 from tests.config.t_config import settings
 
 class test_GeneratorCollectionConfig(TestCase):
@@ -27,7 +27,7 @@ class test_GeneratorCollectionConfig(TestCase):
         # 2. Set up local instance of testing class
         cls.test_schema = GeneratorCollectionConfig(
             name="available_building Schema", game_id="FakeGame",
-            detector_map=DetectorMapConfig.Default(), extractor_map=FeatureMapConfig.Default(),
+            detector_map=DetectorMapConfig.Default(), extractor_map=ExtractorMapConfig.Default(),
             subunit_range=range(0,2), other_ranges={},
             other_elements={ "foo":"bar" }
         )
