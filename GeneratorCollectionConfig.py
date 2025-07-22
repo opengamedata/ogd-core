@@ -8,7 +8,7 @@ from ogd.common.configs.generators.DetectorMapConfig import DetectorMapConfig
 from ogd.common.configs.generators.ExtractorMapConfig import ExtractorMapConfig
 from ogd.common.configs.generators.AggregateConfig import AggregateConfig
 from ogd.common.configs.generators.DetectorConfig import DetectorConfig
-from ogd.common.configs.generators.PerCountConfig import PerCountConfig
+from ogd.common.configs.generators.IteratedConfig import IteratedConfig
 from ogd.common.configs.generators.ExtractorConfig import ExtractorConfig
 from ogd.common.models.enums.IterationMode import IterationMode
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
@@ -182,13 +182,13 @@ class GeneratorCollectionConfig(Config):
         return ret_val
 
     @property
-    def LegacyPerLevelFeatures(self) -> Dict[str,PerCountConfig]:
+    def LegacyPerLevelFeatures(self) -> Dict[str,IteratedConfig]:
         """Property for the dictionary of legacy per-level features
         """
         return self.Extractors.LegacyPerLevelFeatures
 
     @property
-    def PerCountFeatures(self) -> Dict[str,PerCountConfig]:
+    def PerCountFeatures(self) -> Dict[str,IteratedConfig]:
         """Property for the dictionary of per-custom-count features.
         """
         return self.Extractors.PerCountFeatures

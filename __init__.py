@@ -3,11 +3,11 @@ __all__ = [
     "DetectorConfig",
     "ExtractorConfig",
     "AggregateConfig",
-    "PerCountConfig",
+    "IteratedConfig",
 ]
 
 from . import GeneratorConfig
 from . import DetectorConfig
 from . import ExtractorConfig
 from . import AggregateConfig
-from . import PerCountConfig
+from . import IteratedConfig

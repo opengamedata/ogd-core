@@ -4,7 +4,7 @@ from typing import Dict, Optional
 # import local files
 from ogd.common.configs.Config import Config
 from ogd.common.configs.generators.AggregateConfig import AggregateConfig
-from ogd.common.configs.generators.PerCountConfig import PerCountConfig
+from ogd.common.configs.generators.IteratedConfig import IteratedConfig
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import conversions, Map
 
@@ -22,8 +22,8 @@ class ExtractorMapConfig(Config):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, name:str, legacy_mode:Optional[bool],        legacy_perlevel_feats:Optional[Dict[str, PerCountConfig]],
-                 percount_feats:Optional[Dict[str, PerCountConfig]], aggregate_feats:Optional[Dict[str, AggregateConfig]],
+    def __init__(self, name:str, legacy_mode:Optional[bool],        legacy_perlevel_feats:Optional[Dict[str, IteratedConfig]],
+                 percount_feats:Optional[Dict[str, IteratedConfig]], aggregate_feats:Optional[Dict[str, AggregateConfig]],
                  other_elements:Optional[Map]=None):
         """Constructor for the `ExtractorMapConfig` class.
         
@@ -67,9 +67,9 @@ class ExtractorMapConfig(Config):
         :param legacy_mode: _description_
         :type legacy_mode: Optional[bool]
         :param legacy_perlevel_feats: _description_
-        :type legacy_perlevel_feats: Optional[Dict[str, PerCountConfig]]
+        :type legacy_perlevel_feats: Optional[Dict[str, IteratedConfig]]
         :param percount_feats: _description_
-        :type percount_feats: Optional[Dict[str, PerCountConfig]]
+        :type percount_feats: Optional[Dict[str, IteratedConfig]]
         :param aggregate_feats: _description_
         :type aggregate_feats: Optional[Dict[str, AggregateConfig]]
         :param other_elements: _description_, defaults to None
@@ -78,8 +78,8 @@ class ExtractorMapConfig(Config):
         unparsed_elements : Map = other_elements or {}
 
         self._legacy_mode           : bool                       = legacy_mode           or self._parseLegacyMode(unparsed_elements=unparsed_elements)
-        self._legacy_perlevel_feats : Dict[str, PerCountConfig]  = legacy_perlevel_feats or self._parsePerLevelFeatures(unparsed_elements=unparsed_elements)
-        self._percount_feats        : Dict[str, PerCountConfig]  = percount_feats        or self._parsePerCountFeatures(unparsed_elements=unparsed_elements)
+        self._legacy_perlevel_feats : Dict[str, IteratedConfig]  = legacy_perlevel_feats or self._parsePerLevelFeatures(unparsed_elements=unparsed_elements)
+        self._percount_feats        : Dict[str, IteratedConfig]  = percount_feats        or self._parsePerCountFeatures(unparsed_elements=unparsed_elements)
         self._aggregate_feats       : Dict[str, AggregateConfig] = aggregate_feats       or self._parseAggregateFeatures(unparsed_elements=unparsed_elements)
 
         super().__init__(name=name, other_elements=other_elements)
@@ -89,11 +89,11 @@ class ExtractorMapConfig(Config):
         return self._legacy_mode
 
     @property
-    def LegacyPerLevelFeatures(self) -> Dict[str, PerCountConfig]:
+    def LegacyPerLevelFeatures(self) -> Dict[str, IteratedConfig]:
         return self._legacy_perlevel_feats
 
     @property
-    def PerCountFeatures(self) -> Dict[str, PerCountConfig]:
+    def PerCountFeatures(self) -> Dict[str, IteratedConfig]:
         return self._percount_feats
 
     @property
@@ -209,8 +209,8 @@ class ExtractorMapConfig(Config):
         return ret_val
 
     @staticmethod
-    def _parsePerLevelFeatures(unparsed_elements:Map) -> Dict[str, PerCountConfig]:
-        ret_val : Dict[str, PerCountConfig]
+    def _parsePerLevelFeatures(unparsed_elements:Map) -> Dict[str, IteratedConfig]:
+        ret_val : Dict[str, IteratedConfig]
 
         perlevels = ExtractorMapConfig.ParseElement(
             unparsed_elements=unparsed_elements,
@@ -219,15 +219,15 @@ class ExtractorMapConfig(Config):
             default_value=ExtractorMapConfig._DEFAULT_LEGACY_FEATS
         )
         if isinstance(perlevels, dict):
-            ret_val = { key : PerCountConfig.FromDict(name=key, unparsed_elements=val) for key,val in perlevels.items() }
+            ret_val = { key : IteratedConfig.FromDict(name=key, unparsed_elements=val) for key,val in perlevels.items() }
         else:
             ret_val = {}
             Logger.Log("Per-level features map was not a dict, defaulting to empty dict", logging.WARN)
         return ret_val
 
     @staticmethod
-    def _parsePerCountFeatures(unparsed_elements:Map) -> Dict[str, PerCountConfig]:
-        ret_val : Dict[str, PerCountConfig]
+    def _parsePerCountFeatures(unparsed_elements:Map) -> Dict[str, IteratedConfig]:
+        ret_val : Dict[str, IteratedConfig]
 
         percounts = ExtractorMapConfig.ParseElement(
             unparsed_elements=unparsed_elements,
@@ -236,7 +236,7 @@ class ExtractorMapConfig(Config):
             default_value=ExtractorMapConfig._DEFAULT_PERCOUNT_FEATS
         )
         if isinstance(percounts, dict):
-            ret_val = { key : PerCountConfig.FromDict(name=key, unparsed_elements=val) for key,val in percounts.items() }
+            ret_val = { key : IteratedConfig.FromDict(name=key, unparsed_elements=val) for key,val in percounts.items() }
         else:
             ret_val = {}
             Logger.Log("Per-count features map was not a dict, defaulting to empty dict", logging.WARN)

@@ -6,7 +6,7 @@ from ogd.common.configs.generators.SubfeatureConfig import SubfeatureConfig
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.utils.typing import Map
 
-class PerCountConfig(ExtractorConfig):
+class IteratedConfig(ExtractorConfig):
 
     _DEFAULT_COUNT = 1
     _DEFAULT_PREFIX = "pre"
@@ -22,7 +22,7 @@ class PerCountConfig(ExtractorConfig):
                  # dict of leftovers
                  other_elements:Optional[Map]=None
         ):
-        """Constructor for the `PerCountConfig` class.
+        """Constructor for the `IteratedConfig` class.
         
         If optional params are not given, data is searched for in `other_elements`.
 
@@ -92,7 +92,7 @@ class PerCountConfig(ExtractorConfig):
         return ret_val
 
     @classmethod
-    def _fromDict(cls, name:str, unparsed_elements:Map, key_overrides:Optional[Dict[str, str]]=None)-> "PerCountConfig":
+    def _fromDict(cls, name:str, unparsed_elements:Map, key_overrides:Optional[Dict[str, str]]=None)-> "IteratedConfig":
         """_summary_
 
         TODO : Add example of what format unparsed_elements is expected to have.
@@ -102,14 +102,14 @@ class PerCountConfig(ExtractorConfig):
         :param unparsed_elements: _description_
         :type unparsed_elements: Dict[str, Any]
         :return: _description_
-        :rtype: PerCountConfig
+        :rtype: IteratedConfig
         """
-        return PerCountConfig(name=name, count=None, prefix=None, other_elements=unparsed_elements)
+        return IteratedConfig(name=name, count=None, prefix=None, other_elements=unparsed_elements)
 
     @classmethod
-    def Default(cls) -> "PerCountConfig":
-        return PerCountConfig(
-            name="DefaultPerCountConfig",
+    def Default(cls) -> "IteratedConfig":
+        return IteratedConfig(
+            name="DefaultIteratedConfig",
             count=cls._DEFAULT_COUNT,
             prefix=cls._DEFAULT_PREFIX,
             other_elements={}
@@ -123,21 +123,21 @@ class PerCountConfig(ExtractorConfig):
 
     @staticmethod
     def _parseCount(unparsed_elements:Map) -> int | str:
-        return PerCountConfig.ParseElement(
+        return IteratedConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=["count"],
             to_type=[int, str],
-            default_value=PerCountConfig._DEFAULT_COUNT,
+            default_value=IteratedConfig._DEFAULT_COUNT,
             remove_target=True
         )
 
     @staticmethod
     def _parsePrefix(unparsed_elements:Map) -> str:
-        return PerCountConfig.ParseElement(
+        return IteratedConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=["prefix"],
             to_type=str,
-            default_value=PerCountConfig._DEFAULT_PREFIX,
+            default_value=IteratedConfig._DEFAULT_PREFIX,
             remove_target=True
         )
 
