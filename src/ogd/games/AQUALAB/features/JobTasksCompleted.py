@@ -1,7 +1,7 @@
 # import libraries
 import logging
 from collections import Counter
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional
 # import locals
 from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
@@ -44,7 +44,7 @@ class JobTasksCompleted(PerJobFeature):
     def _getFeatureValues(self) -> List[Any]:
         _base_val = self._task_counter         if self.ExtractionMode == ExtractionMode.POPULATION else self._completed_tasks
         _count    = self._task_counter.total() if self.ExtractionMode == ExtractionMode.POPULATION else len(self._completed_tasks)
-        return [_base_val, len(self._completed_tasks)]
+        return [_base_val, _count]
 
     def Subfeatures(self) -> List[str]:
         return ["Count"]
