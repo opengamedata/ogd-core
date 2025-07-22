@@ -1,6 +1,6 @@
 # import standard libraries
 import logging
-from typing import Any, Dict, Optional
+from typing import Dict, Optional
 # import local files
 from ogd.common.configs.Config import Config
 from ogd.common.configs.generators.AggregateConfig import AggregateConfig
@@ -22,8 +22,8 @@ class FeatureMapConfig(Config):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, name:str, legacy_mode: bool,        legacy_perlevel_feats:Dict[str, PerCountConfig],
-                 percount_feats:Dict[str, PerCountConfig], aggregate_feats:Dict[str, AggregateConfig],
+    def __init__(self, name:str, legacy_mode:Optional[bool],        legacy_perlevel_feats:Optional[Dict[str, PerCountConfig]],
+                 percount_feats:Optional[Dict[str, PerCountConfig]], aggregate_feats:Optional[Dict[str, AggregateConfig]],
                  other_elements:Optional[Map]=None):
         unparsed_elements : Map = other_elements or {}
 
@@ -101,16 +101,9 @@ class FeatureMapConfig(Config):
         :return: A DetectorMapConfig based on the given collection of elements.
         :rtype: DetectorMapConfig
         """
-        _legacy_mode           : bool                       = cls._parseLegacyMode(unparsed_elements=unparsed_elements)
-        _legacy_perlevel_feats : Dict[str, PerCountConfig]  = cls._parsePerLevelFeatures(unparsed_elements=unparsed_elements)
-        _percount_feats        : Dict[str, PerCountConfig]  = cls._parsePerCountFeatures(unparsed_elements=unparsed_elements)
-        _aggregate_feats       : Dict[str, AggregateConfig] = cls._parseAggregateFeatures(unparsed_elements=unparsed_elements)
-
-        _used = {"legacy", "perlevel", "per_count", "aggregate"}
-        _leftovers = { key : val for key,val in unparsed_elements.items() if key not in _used }
-        return FeatureMapConfig(name=name, legacy_mode=_legacy_mode, legacy_perlevel_feats=_legacy_perlevel_feats,
-                                percount_feats=_percount_feats, aggregate_feats=_aggregate_feats,
-                                other_elements=_leftovers)
+        return FeatureMapConfig(name=name, legacy_mode=None, legacy_perlevel_feats=None,
+                                percount_feats=None, aggregate_feats=None,
+                                other_elements=unparsed_elements)
 
     @classmethod
     def Default(cls) -> "FeatureMapConfig":
