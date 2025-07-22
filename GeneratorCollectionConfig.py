@@ -140,8 +140,8 @@ class GeneratorCollectionConfig(Config):
         """
         ret_val : List[str] = []
 
-        ret_val = [detector.Name for detector in self.Detectors.AggregateDetectors.values()] \
-                + [detector.Name for detector in self.Detectors.IteratedDetectors.values()]
+        ret_val = [detector.Name for detector in self.AggregateDetectors.values()] \
+                + [detector.Name for detector in self.IteratedDetectors.values()]
 
         return ret_val
 
@@ -242,8 +242,8 @@ class GeneratorCollectionConfig(Config):
         detector_summary = ["## Detected Events",
                             "The custom, data-driven Events calculated from this game's logged events by OpenGameData when an 'export' is run."
                            ]
-        detector_list = [detector.AsMarkdown for detector in self.Detectors.AggregateDetectors.values()] \
-                      + [detector.AsMarkdown for detector in self.Detectors.IteratedDetectors.values()]
+        detector_list = [detector.AsMarkdown for detector in self.AggregateDetectors.values()] \
+                      + [detector.AsMarkdown for detector in self.IteratedDetectors.values()]
         detector_list = detector_list if len(detector_list) > 0 else ["None"]
         # Set up list of features
         feature_summary = ["## Processed Features",
@@ -391,9 +391,9 @@ class GeneratorCollectionConfig(Config):
         _detector_schema : Optional[DetectorConfig]
         match iter_mode:
             case IterationMode.AGGREGATE:
-                _detector_schema = self.Detectors.AggregateDetectors.get(detector_name)
+                _detector_schema = self.AggregateDetectors.get(detector_name)
             case IterationMode.ITERATED:
-                _detector_schema = self.Detectors.IteratedDetectors.get(detector_name)
+                _detector_schema = self.IteratedDetectors.get(detector_name)
             case _:
                 raise ValueError(f"In GeneratorCollectionConfig, DetectorEnabled was given an unrecognized iteration mode of {iter_mode.name}")
         if _detector_schema is not None:
@@ -445,7 +445,7 @@ class GeneratorCollectionConfig(Config):
         if IterationMode.AGGREGATE in iter_modes:
             ret_val.update({key:val for key,val in self.AggregateDetectors.items() if val.Enabled.issuperset(extract_modes)})
         if IterationMode.ITERATED in iter_modes:
-            ret_val.update({key:val for key,val in self.IteratedExtractors.items() if val.Enabled.issuperset(extract_modes)})
+            ret_val.update({key:val for key,val in self.IteratedDetectors.items() if val.Enabled.issuperset(extract_modes)})
         return ret_val
 
     def EnabledExtractors(self, iter_modes:Set[IterationMode]={IterationMode.AGGREGATE, IterationMode.ITERATED}, extract_modes:Set[ExtractionMode]=set()) -> Dict[str, ExtractorConfig]:
