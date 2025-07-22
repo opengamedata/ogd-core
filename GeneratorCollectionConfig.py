@@ -288,12 +288,10 @@ class GeneratorCollectionConfig(Config):
         _level_range  : Optional[range]  = cls._parseLevelRange(unparsed_elements=unparsed_elements)
         _other_ranges : Dict[str, range] = cls._parseOtherRanges(unparsed_elements=unparsed_elements)
 
-        _used = {'enums', 'game_state', 'user_data', 'events', 'detectors', 'features', 'level_range', 'config'}.union(_other_ranges.keys())
-        _leftovers = { key:val for key,val in unparsed_elements.items() if key not in _used }
         return GeneratorCollectionConfig(name=name, game_id=_game_id,
                           detector_map=None, extractor_map=None,
                           subunit_range=_level_range, other_ranges=_other_ranges,
-                          other_elements=_leftovers)
+                          other_elements=unparsed_elements)
 
     @classmethod
     def Default(cls) -> "GeneratorCollectionConfig":
