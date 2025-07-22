@@ -27,7 +27,7 @@ class test_GeneratorCollectionConfig(TestCase):
         # 2. Set up local instance of testing class
         cls.test_schema = GeneratorCollectionConfig(
             name="available_building Schema", game_id="FakeGame",
-            detector_map=DetectorMapConfig.Default(), extractor_map=FeatureMapConfig.Default(),
+            detector_map=DetectorMapConfig.Default(), extractor_map=ExtractorMapConfig.Default(),
             subunit_range=range(0,2), other_ranges={},
             other_elements={ "foo":"bar" }
         )
