@@ -25,6 +25,56 @@ class FeatureMapConfig(Config):
     def __init__(self, name:str, legacy_mode:Optional[bool],        legacy_perlevel_feats:Optional[Dict[str, PerCountConfig]],
                  percount_feats:Optional[Dict[str, PerCountConfig]], aggregate_feats:Optional[Dict[str, AggregateConfig]],
                  other_elements:Optional[Map]=None):
+        """Constructor for the `FeatureMapConfig` class.
+        
+        If optional params are not given, data is searched for in `other_elements`.
+
+        Expected format:
+
+        ```
+        {
+            "per_count" : {
+                "ExtractorName1": {
+                    "enabled": true,
+                    "type": "ExtractorClass",
+                    "count": "level_range",
+                    "prefix": "lvl",
+                    "description": "Info about the per-count extractor; the per-count is generally optional.",
+                    "return_type": "str"
+                },
+                "ExtractorName2": {
+                    ...
+                },
+                ...
+            },
+            "aggregate" : {
+                "ExtractorName1": {
+                    "enabled": true,
+                    "type": "ExtractorClass",
+                    "description": "Info about the aggregate (session-level) extractor.",
+                    "return_type": "str"
+                },
+                "ExtractorName2": {
+                    ...
+                },
+                ...
+            }
+        }
+        ```
+
+        :param name: _description_
+        :type name: str
+        :param legacy_mode: _description_
+        :type legacy_mode: Optional[bool]
+        :param legacy_perlevel_feats: _description_
+        :type legacy_perlevel_feats: Optional[Dict[str, PerCountConfig]]
+        :param percount_feats: _description_
+        :type percount_feats: Optional[Dict[str, PerCountConfig]]
+        :param aggregate_feats: _description_
+        :type aggregate_feats: Optional[Dict[str, AggregateConfig]]
+        :param other_elements: _description_, defaults to None
+        :type other_elements: Optional[Map], optional
+        """
         unparsed_elements : Map = other_elements or {}
 
         self._legacy_mode           : bool                       = legacy_mode           or self._parseLegacyMode(unparsed_elements=unparsed_elements)

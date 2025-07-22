@@ -45,6 +45,53 @@ class GeneratorCollectionConfig(Config):
                  subunit_range:Optional[range], other_ranges:Dict[str, range],
                  other_elements:Optional[Map]=None):
         """Constructor for the GeneratorCollectionConfig class.
+        
+        If optional params are not given, data is searched for in `other_elements`.
+
+        `level_range` is explicitly searched for; any other elements with a suffix of `_range` are placed into the `OtherRanges` property.
+
+        Expected format:
+
+        ```
+        {
+            "level_range": {
+                "min": 0,
+                "max": 25
+            },
+            "questionnaire_range": {
+                "min": 0,
+                "max": 10
+            },
+            "detectors" : {
+                "per_count" : {
+                    "DetectorName1": {
+                        ...
+                    },
+                    ...
+                },
+                "aggregate" : {
+                    "DetectorName1": {
+                        ...
+                    },
+                    ...
+                }
+            },
+            "extractors" : {
+                "per_count" : {
+                    "ExtractorName1": {
+                        ...
+                    },
+                    ...
+                },
+                "aggregate" : {
+                    "ExtractorName1": {
+                        ...
+                    },
+                    ...
+                }
+            }
+        }
+        ```
 
         :param name: _description_
         :type name: str

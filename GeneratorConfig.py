@@ -14,6 +14,36 @@ class GeneratorConfig(Config):
     _DEFAULT_DESCRIPTION = "Default Generator schema object. Does not correspond to any actual data."
 
     def __init__(self, name:str, enabled:Optional[Set[ExtractionMode]], type_name:Optional[str], description:Optional[str], other_elements:Optional[Map]=None):
+        """Constructor for the `GeneratorConfig` class.
+        
+        If optional params are not given, data is searched for in `other_elements`.
+        Because `GeneratorConfig` is just a base class for other specific generator configuration classes,
+        the sample format below includes keys not used by `GeneratorConfig`.
+        The actual keys used are `enabled`, `type`, and `description`.
+        `subfeatures` is an optional key.
+
+        Expected format:
+
+        ```
+        {
+            "enabled": true,
+            "type": "ExtractorType",
+            "description": "Human-readable description of the feature this module extracts.",
+            "return_type": "str"
+        }
+        ```
+
+        :param name: _description_
+        :type name: str
+        :param enabled: _description_
+        :type enabled: Optional[Set[ExtractionMode]]
+        :param type_name: _description_
+        :type type_name: Optional[str]
+        :param description: _description_
+        :type description: Optional[str]
+        :param other_elements: _description_, defaults to None
+        :type other_elements: Optional[Map], optional
+        """
         unparsed_elements : Map = other_elements or {}
 
         self._enabled     : Set[ExtractionMode]

@@ -1,11 +1,9 @@
 # import standard libraries
-import logging
-from typing import Any, Dict, Optional, Set
+from typing import Dict, Optional, Set
 # import local files
 from ogd.common.configs.generators.FeatureConfig import FeatureConfig
 from ogd.common.configs.generators.SubfeatureConfig import SubfeatureConfig
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import Map
 
 class PerCountConfig(FeatureConfig):
@@ -17,13 +15,49 @@ class PerCountConfig(FeatureConfig):
 
     def __init__(self, name:str,
                  # params for class
-                 count:int|str, prefix:str,
+                 count:Optional[int|str], prefix:Optional[str],
                  # params for parent
                  return_type:Optional[str]=None, subfeatures:Optional[Dict[str, SubfeatureConfig]]=None,
                  enabled:Optional[Set[ExtractionMode]]=None, type_name:Optional[str]=None, description:Optional[str]=None,
                  # dict of leftovers
                  other_elements:Optional[Map]=None
         ):
+        """Constructor for the `PerCountConfig` class.
+        
+        If optional params are not given, data is searched for in `other_elements`.
+
+        Expected format:
+
+        ```
+        {
+            "enabled": true,
+            "type": "ExtractorClass",
+            "count": "level_range",
+            "prefix": "lvl",
+            "description": "Info about the per-count extractor; the per-count is generally optional.",
+            "return_type": "str"
+        },
+        ```
+
+        :param name: _description_
+        :type name: str
+        :param count: _description_
+        :type count: Optional[int | str]
+        :param prefix: _description_
+        :type prefix: Optional[str]
+        :param return_type: _description_, defaults to None
+        :type return_type: Optional[str], optional
+        :param subfeatures: _description_, defaults to None
+        :type subfeatures: Optional[Dict[str, SubfeatureConfig]], optional
+        :param enabled: _description_, defaults to None
+        :type enabled: Optional[Set[ExtractionMode]], optional
+        :param type_name: _description_, defaults to None
+        :type type_name: Optional[str], optional
+        :param description: _description_, defaults to None
+        :type description: Optional[str], optional
+        :param other_elements: _description_, defaults to None
+        :type other_elements: Optional[Map], optional
+        """
         unparsed_elements : Map = other_elements or {}
 
         self._count  : int | str = count  or self._parseCount(unparsed_elements=unparsed_elements)
@@ -70,12 +104,7 @@ class PerCountConfig(FeatureConfig):
         :return: _description_
         :rtype: PerCountConfig
         """
-        _count  : int | str = cls._parseCount(unparsed_elements=unparsed_elements)
-        _prefix : str       = cls._parsePrefix(unparsed_elements=unparsed_elements)
-
-        _used = {"count", "prefix"}
-        _leftovers = { key : val for key,val in unparsed_elements.items() if key not in _used }
-        return PerCountConfig(name=name, count=_count, prefix=_prefix, other_elements=_leftovers)
+        return PerCountConfig(name=name, count=None, prefix=None, other_elements=unparsed_elements)
 
     @classmethod
     def Default(cls) -> "PerCountConfig":
