@@ -50,7 +50,7 @@ class test_DetectorMapConfig(TestCase):
         # self.assertEqual(_str, "List[Dict]")
 
     @unittest.skip("Not implemented")
-    def test_PerCountDetectors(self):
+    def test_IteratedDetectors(self):
         pass
         # _str = self.test_schema.Description
         # self.assertIsInstance(_str, str)

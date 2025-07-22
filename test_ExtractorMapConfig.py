@@ -58,14 +58,14 @@ class test_ExtractorMapConfig(TestCase):
         # self.assertEqual(_str, "List[Dict]")
 
     @unittest.skip("Not implemented")
-    def test_PerCountFeatures(self):
+    def test_IteratedExtractors(self):
         pass
         # _str = self.test_schema.Description
         # self.assertIsInstance(_str, str)
         # self.assertEqual(_str, "The buildings available for the player to construct")
 
     @unittest.skip("Not implemented")
-    def test_AggregateFeatures(self):
+    def test_AggregateExtractors(self):
         pass
         # _details = self.test_schema.Details
         # self.assertIsInstance(_details, dict)

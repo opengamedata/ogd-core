@@ -8,7 +8,7 @@ from ogd.common.utils.Logger import Logger
 # import locals
 from src.ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from src.ogd.common.configs.generators.DetectorMapConfig import DetectorMapConfig
-from src.ogd.common.configs.generators.ExtractorMapConfig import ExtractorMapConfig
+from src.ogd.common.configs.generators.FeatureMapConfig import FeatureMapConfig
 from tests.config.t_config import settings
 
 class test_GeneratorCollectionConfig(TestCase):
@@ -27,7 +27,7 @@ class test_GeneratorCollectionConfig(TestCase):
         # 2. Set up local instance of testing class
         cls.test_schema = GeneratorCollectionConfig(
             name="available_building Schema", game_id="FakeGame",
-            detector_map=DetectorMapConfig.Default(), extractor_map=ExtractorMapConfig.Default(),
+            detector_map=DetectorMapConfig.Default(), extractor_map=FeatureMapConfig.Default(),
             subunit_range=range(0,2), other_ranges={},
             other_elements={ "foo":"bar" }
         )
@@ -61,7 +61,7 @@ class test_GeneratorCollectionConfig(TestCase):
         # self.assertEqual(_str, "The buildings available for the player to construct")
 
     @unittest.skip("Not implemented")
-    def test_PerCountDetectors(self):
+    def test_IteratedDetectors(self):
         pass
         # _str = self.test_schema.Description
         # self.assertIsInstance(_str, str)
@@ -96,14 +96,14 @@ class test_GeneratorCollectionConfig(TestCase):
         # self.assertEqual(_str, "The buildings available for the player to construct")
 
     @unittest.skip("Not implemented")
-    def test_PerCountFeatures(self):
+    def test_IteratedExtractors(self):
         pass
         # _str = self.test_schema.Description
         # self.assertIsInstance(_str, str)
         # self.assertEqual(_str, "The buildings available for the player to construct")
 
     @unittest.skip("Not implemented")
-    def test_AggregateFeatures(self):
+    def test_AggregateExtractors(self):
         pass
         # _str = self.test_schema.Description
         # self.assertIsInstance(_str, str)
@@ -143,7 +143,7 @@ class test_GeneratorCollectionConfig(TestCase):
         """
         _dict = {
             "features": {
-                "per_count": {
+                "iterated": {
                     "MoveShapeCount": {
                         "type": "MoveShapeCount",
                         "enabled": True,
