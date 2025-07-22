@@ -7,11 +7,11 @@ from ogd.common.configs.TestConfig import TestConfig
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.utils.Logger import Logger
 # import locals
-from src.ogd.common.configs.generators.PerCountConfig import PerCountConfig
+from src.ogd.common.configs.generators.IteratedConfig import IteratedConfig
 from tests.config.t_config import settings
 
-class test_PerCountConfig(TestCase):
-    """Testbed for the PerCountConfig class.
+class test_IteratedConfig(TestCase):
+    """Testbed for the IteratedConfig class.
 
         TODO : Test more 'enabled' options/combinations.
         TODO : Tests with certain elements skipped
@@ -38,7 +38,7 @@ class test_PerCountConfig(TestCase):
                 }
             }
         }
-        cls.test_schema = PerCountConfig(
+        cls.test_schema = IteratedConfig(
             name="ActiveTime Schema",
             count=5,
             prefix="lvl",
@@ -116,7 +116,7 @@ class test_PerCountConfig(TestCase):
             }
         }
         _modes = { ExtractionMode.SESSION, ExtractionMode.PLAYER, ExtractionMode.POPULATION, ExtractionMode.DETECTOR }
-        _schema = PerCountConfig.FromDict(name="ActiveTime Schema", unparsed_elements=_dict)
+        _schema = IteratedConfig.FromDict(name="ActiveTime Schema", unparsed_elements=_dict)
         self.assertIsInstance(_schema.Name, str)
         self.assertEqual(_schema.Name, "ActiveTime Schema")
         self.assertIsInstance(_schema.TypeName, str)
