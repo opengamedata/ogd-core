@@ -17,6 +17,28 @@ class SubfeatureConfig(Schema):
                  # dict of leftovers
                  other_elements:Optional[Map]=None
         ):
+        """Constructor for the `SubfeatureConfig` class.
+        
+        If optional params are not given, data is searched for in `other_elements`.
+
+        Expected format:
+
+        ```
+        {
+            "description": "Description of the feature that is etracted",
+            "return_type": "int"
+        },
+        ```
+
+        :param name: _description_
+        :type name: str
+        :param return_type: _description_
+        :type return_type: Optional[str]
+        :param description: _description_
+        :type description: Optional[str]
+        :param other_elements: _description_, defaults to None
+        :type other_elements: Optional[Map], optional
+        """
         unparsed_elements : Map = other_elements or {}
         
         self._return_type : str = return_type or self._parseReturnType(unparsed_elements=unparsed_elements)
