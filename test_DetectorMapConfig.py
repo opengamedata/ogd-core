@@ -11,7 +11,7 @@ from tests.config.t_config import settings
 
 @unittest.skip("Not implemented")
 class test_DetectorMapConfig(TestCase):
-    """Testbed for the GameSourceSchema class.
+    """Testbed for the GameStoreConfig class.
 
         TODO : Implement and enable tests.
     """

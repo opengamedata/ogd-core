@@ -11,7 +11,7 @@ from src.ogd.common.configs.generators.AggregateConfig import AggregateConfig
 from tests.config.t_config import settings
 
 class test_AggregateConfig(TestCase):
-    """Testbed for the GameSourceSchema class.
+    """Testbed for the GameStoreConfig class.
 
         TODO : Test more 'enabled' options/combinations.
     """
