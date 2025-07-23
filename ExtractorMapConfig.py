@@ -1,6 +1,6 @@
 # import standard libraries
 import logging
-from typing import Dict, Optional
+from typing import Dict, Optional, Self
 # import local files
 from ogd.common.configs.Config import Config
 from ogd.common.configs.generators.AggregateConfig import AggregateConfig
@@ -120,7 +120,7 @@ class ExtractorMapConfig(Config):
         return "  \n\n".join(feature_summary + feature_list)
 
     @classmethod
-    def _fromDict(cls, name:str, unparsed_elements:Map, key_overrides:Optional[Dict[str, str]]=None)-> "ExtractorMapConfig":
+    def _fromDict(cls, name:str, unparsed_elements:Map, key_overrides:Optional[Dict[str, str]]=None, default_override:Optional[Self]=None)-> "ExtractorMapConfig":
         """Function to generate a DetectorMapConfig from a JSON-formatted dictionary.
 
         Expected structure is:

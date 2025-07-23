@@ -1,7 +1,7 @@
 """Detector Config Module
 """
 # import standard libraries
-from typing import Dict, Optional, Set
+from typing import Dict, Optional, Self, Set
 # import local files
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.configs.generators.GeneratorConfig import GeneratorConfig
@@ -55,7 +55,7 @@ class DetectorConfig(GeneratorConfig):
         return ret_val
 
     @classmethod
-    def _fromDict(cls, name:str, unparsed_elements:Map, key_overrides:Optional[Dict[str, str]]=None)-> "DetectorConfig":
+    def _fromDict(cls, name:str, unparsed_elements:Map, key_overrides:Optional[Dict[str, str]]=None, default_override:Optional[Self]=None)-> "DetectorConfig":
         """Function to parse an AggregateConfig from a dictionary.
 
         Expected format:
