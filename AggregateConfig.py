@@ -1,7 +1,7 @@
 """Aggregate Extractor Config Module
 """
 # import standard libraries
-from typing import Dict, Optional, Set
+from typing import Dict, Optional, Self, Set
 # import local files
 from ogd.common.configs.generators.ExtractorConfig import ExtractorConfig
 from ogd.common.configs.generators.SubfeatureConfig import SubfeatureConfig
@@ -64,7 +64,7 @@ class AggregateConfig(ExtractorConfig):
         return ret_val
 
     @classmethod
-    def _fromDict(cls, name:str, unparsed_elements:Map, key_overrides:Optional[Dict[str, str]]=None)-> "AggregateConfig":
+    def _fromDict(cls, name:str, unparsed_elements:Map, key_overrides:Optional[Dict[str, str]]=None, default_override:Optional[Self]=None)-> "AggregateConfig":
         """Function to parse an AggregateConfig from a dictionary.
 
         Expected format:

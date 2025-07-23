@@ -1,5 +1,5 @@
 # import standard libraries
-from typing import Dict, Optional, Set
+from typing import Dict, Optional, Self, Set
 # import local files
 from ogd.common.configs.generators.ExtractorConfig import ExtractorConfig
 from ogd.common.configs.generators.SubfeatureConfig import SubfeatureConfig
@@ -92,7 +92,7 @@ class IteratedConfig(ExtractorConfig):
         return ret_val
 
     @classmethod
-    def _fromDict(cls, name:str, unparsed_elements:Map, key_overrides:Optional[Dict[str, str]]=None)-> "IteratedConfig":
+    def _fromDict(cls, name:str, unparsed_elements:Map, key_overrides:Optional[Dict[str, str]]=None, default_override:Optional[Self]=None)-> "IteratedConfig":
         """_summary_
 
         TODO : Add example of what format unparsed_elements is expected to have.

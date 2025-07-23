@@ -1,7 +1,7 @@
 # import standard libraries
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Self, Set
 # import local files
 from ogd.common.configs.Config import Config
 from ogd.common.configs.generators.DetectorMapConfig import DetectorMapConfig
@@ -280,7 +280,7 @@ class GeneratorCollectionConfig(Config):
         return ret_val
 
     @classmethod
-    def _fromDict(cls, name:str, unparsed_elements:Map, key_overrides:Optional[Dict[str, str]]=None)-> "GeneratorCollectionConfig":
+    def _fromDict(cls, name:str, unparsed_elements:Map, key_overrides:Optional[Dict[str, str]]=None, default_override:Optional[Self]=None)-> "GeneratorCollectionConfig":
         """_summary_
 
         TODO : Need to have parse functions for all the variables, currently only have about half of them.
