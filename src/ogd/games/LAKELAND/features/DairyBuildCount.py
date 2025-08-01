@@ -9,7 +9,7 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
 
-class DairyBuildCount(Feature):
+class DairyBuildCount(Extractor):
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self.build_dairy_count = 0

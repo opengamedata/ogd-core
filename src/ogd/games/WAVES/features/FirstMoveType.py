@@ -9,7 +9,7 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 
 
-class FirstMoveType(Feature):
+class FirstMoveType(Extractor):
     def __init__(self, params:GeneratorParameters):
         Feature.__init__(self, params=params)
         self._first_move = None

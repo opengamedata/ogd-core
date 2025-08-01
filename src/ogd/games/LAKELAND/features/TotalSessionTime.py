@@ -8,7 +8,7 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
 
-class TotalSessionTime(Feature):
+class TotalSessionTime(Extractor):
     def __init__(self, params: GeneratorParameters, threshold: float):
         super().__init__(params=params)
         self.threshold = threshold 

@@ -9,7 +9,7 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
 
-class TotalEventsPerSession(Feature):
+class TotalEventsPerSession(Extractor):
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self.total_events_count = 0

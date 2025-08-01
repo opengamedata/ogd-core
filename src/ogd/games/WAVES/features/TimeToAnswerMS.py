@@ -9,7 +9,7 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 
-class TimeToAnswerMS(Feature):
+class TimeToAnswerMS(Extractor):
     def __init__(self, params:GeneratorParameters):
         Feature.__init__(self, params=params)
         self._latest_complete_lvl8  = None

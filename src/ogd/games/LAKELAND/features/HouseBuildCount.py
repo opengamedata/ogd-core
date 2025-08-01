@@ -9,7 +9,7 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
 
-class HouseBuildCount(Feature):
+class HouseBuildCount(Extractor):
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self.build_house_count = 0

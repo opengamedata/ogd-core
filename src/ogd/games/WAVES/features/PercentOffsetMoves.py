@@ -9,7 +9,7 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 
 
-class PercentOffsetMoves(Feature):
+class PercentOffsetMoves(Extractor):
     def __init__(self, params:GeneratorParameters):
         Feature.__init__(self, params=params)
         self._offset_count = 0
