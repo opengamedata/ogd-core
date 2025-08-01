@@ -7,7 +7,7 @@ from . import features
 from ogd.games.JOURNALISM.features import *
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.games.JOURNALISM.features import StoryScoreSequence
 from ogd.common.models.Event import Event

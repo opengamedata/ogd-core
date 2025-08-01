@@ -4,7 +4,7 @@ from typing import Any, Final, List, Optional
 import json
 from datetime  import timedelta, datetime
 # import local files
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode

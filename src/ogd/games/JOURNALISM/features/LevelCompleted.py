@@ -2,7 +2,7 @@
 import json
 from typing import Any, List, Optional
 # import local files
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
