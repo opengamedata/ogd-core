@@ -61,7 +61,7 @@ class AqualabLoader(GeneratorLoader):
                 task_num += 1
 
         # Update level count
-        self._generator_config._max_level = len(self._job_map) - 1
+        # self._generator_config._max_level = len(self._job_map) - 1
 
     @property
     def JobMap(self) -> Dict:
