@@ -9,7 +9,7 @@ from ogd.common.models.Feature import Feature
 from collections import defaultdict
 
 
-class ActiveCounties(Feature):
+class ActiveCounties(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.last_unlocked_county = dict()  

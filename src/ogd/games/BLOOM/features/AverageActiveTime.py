@@ -7,7 +7,7 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
-class AverageActiveTime(Feature):
+class AverageActiveTime(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.active_time_per_session: Dict[str, timedelta] = {} 
@@ -63,7 +63,7 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
-class AverageActiveTime(Feature):
+class AverageActiveTime(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.active_time_per_session: Dict[str, timedelta] = {}

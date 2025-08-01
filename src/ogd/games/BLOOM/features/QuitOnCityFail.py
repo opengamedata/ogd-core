@@ -8,7 +8,7 @@ from ogd.common.models.Feature import Feature
 # import PerCountyFeature
 from ogd.core.generators.extractors.Extractor import Extractor
 
-class QuitOnCityFail(Feature):
+class QuitOnCityFail(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.last_fail_type: Optional[str] = None

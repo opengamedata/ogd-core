@@ -11,7 +11,7 @@ from ogd.common.utils.Logger import Logger
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 
-class TotalCoralTime(Feature):
+class TotalCoralTime(Extractor):
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self.prev_time = timedelta(0)

@@ -7,7 +7,7 @@ from ogd.common.models.Feature import Feature
 from ogd.games.BLOOM.detectors.AlertFollowedByInspect import AlertFollowedByInspect
 from ogd.games.BLOOM.detectors.AlertFollowedByPolicy import AlertFollowedByPolicy
 
-class AlertResponseCount(Feature):
+class AlertResponseCount(Extractor):
     """Feature to indicate how often players "responded" to an alert.
 
     Here, "response" refers to a case where a player opened (i.e. "reviewed") an alert,

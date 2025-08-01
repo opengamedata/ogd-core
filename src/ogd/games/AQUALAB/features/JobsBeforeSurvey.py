@@ -9,7 +9,7 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 from ogd.common.utils.Logger import Logger
 
-class JobsBeforeSurvey(Feature):
+class JobsBeforeSurvey(Extractor):
 
     def __init__(self, params: GeneratorParameters, survey_ID: str):
         super().__init__(params=params)

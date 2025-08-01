@@ -7,7 +7,7 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
-class ExperimentalCondition(Feature):
+class ExperimentalCondition(Extractor):
     def __init__(self, params: GeneratorParameters, job_map: dict):
         super().__init__(params=params)
         self.app_branch = None  

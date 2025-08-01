@@ -7,7 +7,7 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 import time
 
-class PersistenceTime(Feature):
+class PersistenceTime(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.has_lost: bool = False

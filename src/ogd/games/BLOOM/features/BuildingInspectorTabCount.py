@@ -7,7 +7,7 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 from ogd.core.generators.extractors.Extractor import Extractor
 
-class BuildingInspectorTabCount(Feature):
+class BuildingInspectorTabCount(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self._counter: Counter = Counter()

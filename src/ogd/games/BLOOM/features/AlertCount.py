@@ -7,7 +7,7 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
-class AlertCount(Feature):
+class AlertCount(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.alert_counts: Counter = Counter()

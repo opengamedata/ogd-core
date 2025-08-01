@@ -10,7 +10,7 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
 
-class JobsAttempted(Feature):
+class JobsAttempted(Extractor):
     
     COUNTY_INDEX_MAP = {
         "Hillside": 0,

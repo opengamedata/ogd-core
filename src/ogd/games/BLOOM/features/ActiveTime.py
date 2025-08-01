@@ -11,7 +11,7 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
-class ActiveTime(Feature):
+class ActiveTime(Extractor):
     IDLE_LEVEL: Final[int] = 30
 
     def __init__(self, params: GeneratorParameters, active_threads: Optional[float] = None):
@@ -65,7 +65,7 @@ from ogd.common.models.Event import Event, EventSource
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
-class ActiveTime(Feature):
+class ActiveTime(Extractor):
     DEFAULT_IDLE_THRESHOLD: Final[timedelta] = timedelta(seconds=30)
 
     def __init__(self, params: GeneratorParameters, idle_threshold: Optional[int]):

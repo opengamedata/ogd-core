@@ -9,7 +9,7 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
-class EventList(Feature):
+class EventList(Extractor):
 
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)

@@ -11,7 +11,7 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 
 
-class TopJobSwitchDestinations(Feature):
+class TopJobSwitchDestinations(Extractor):
 
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)

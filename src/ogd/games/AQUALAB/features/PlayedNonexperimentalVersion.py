@@ -7,7 +7,7 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
-class PlayedNonexperimentalVersion(Feature):
+class PlayedNonexperimentalVersion(Extractor):
     EXPERIMENTAL_BRANCHES = [
         "production-has-failure-prediction-original-job-graph",
         "production-no-failure-prediction-alt-job-graph",

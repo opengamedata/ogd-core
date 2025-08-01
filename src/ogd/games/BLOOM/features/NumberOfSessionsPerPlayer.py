@@ -6,7 +6,7 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
-class NumberOfSessionsPerPlayer(Feature):
+class NumberOfSessionsPerPlayer(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.session_count: Dict[str, int] = {}

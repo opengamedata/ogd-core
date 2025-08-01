@@ -7,7 +7,7 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 from ogd.games.BLOOM.detectors.GoodPolicyCombo import GoodPolicyCombo
 
-class GoodPolicyCount(Feature):
+class GoodPolicyCount(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.good_policy_count = {

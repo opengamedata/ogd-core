@@ -7,7 +7,7 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
-class AlertReviewCount(Feature):
+class AlertReviewCount(Extractor):
     """Feature to indicate how often players "reviewed" an alert.
 
     Here, "review" refers to a case where a player opened an alert,

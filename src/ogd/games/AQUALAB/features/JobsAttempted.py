@@ -12,7 +12,7 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
-class JobsAttempted(Feature):
+class JobsAttempted(Extractor):
 
     def __init__(self, params:GeneratorParameters, job_map:dict, diff_map: dict):
         self._player_id = None

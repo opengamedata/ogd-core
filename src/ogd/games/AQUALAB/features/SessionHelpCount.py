@@ -6,7 +6,7 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
-class SessionHelpCount(Feature):
+class SessionHelpCount(Extractor):
     """_summary_
 
     :param Feature: _description_

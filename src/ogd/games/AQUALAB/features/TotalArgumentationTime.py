@@ -8,7 +8,7 @@ from ogd.common.models.Event import Event, EventSource
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
-class TotalArgumentationTime(Feature):
+class TotalArgumentationTime(Extractor):
     
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)

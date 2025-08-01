@@ -10,7 +10,7 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 
 
-class JobsAttempted(Feature):
+class JobsAttempted(Extractor):
 
     def __init__(self, params:GeneratorParameters, mission_map:dict):
         self._mission_map = mission_map

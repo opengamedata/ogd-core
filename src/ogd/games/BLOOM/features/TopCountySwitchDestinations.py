@@ -9,7 +9,7 @@ from ogd.common.models.Feature import Feature
 from collections import defaultdict
 
 
-class TopCountySwitchDestinations(Feature):
+class TopCountySwitchDestinations(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.last_county_per_player = {}

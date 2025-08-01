@@ -11,7 +11,7 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
 # TODO : Almost certainly want to rewrite or remove this, doesn't appear to do anything remotely close to what it should do.
-class JobPlayTime(Feature):
+class JobPlayTime(Extractor):
     IDLE_LEVEL : Final[int] = 30
 
     def __init__(self, params:GeneratorParameters, job_map:dict, active_threads:Optional[float] = None):

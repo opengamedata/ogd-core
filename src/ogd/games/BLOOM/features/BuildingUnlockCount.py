@@ -5,7 +5,7 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
-class BuildingUnlockCount(Feature):
+class BuildingUnlockCount(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.building_unlocks: Dict[str, int] = {}

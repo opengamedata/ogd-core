@@ -10,7 +10,7 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
-class ActiveTime(Feature):
+class ActiveTime(Extractor):
     IDLE_LEVEL : Final[int] = 30
 
     def __init__(self, params:GeneratorParameters, job_map:dict, active_threads:Optional[float] = None):

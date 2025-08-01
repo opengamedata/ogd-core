@@ -9,7 +9,7 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 
 
-class MissionSonarTimeToComplete(Feature):
+class MissionSonarTimeToComplete(Extractor):
     
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def __init__(self, params:GeneratorParameters):
