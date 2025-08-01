@@ -41,7 +41,7 @@ class JobsBeforeSurvey(Extractor):
             if survey_id == self.survey_ID:
                 self._survey_found = True
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

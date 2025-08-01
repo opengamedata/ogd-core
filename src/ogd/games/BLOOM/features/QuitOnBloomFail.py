@@ -46,7 +46,7 @@ class QuitOnBloomFail(Extractor):
             case _:
                 self.won = False
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

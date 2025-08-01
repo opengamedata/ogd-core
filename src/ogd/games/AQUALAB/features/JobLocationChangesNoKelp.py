@@ -50,7 +50,7 @@ class JobLocationChangesNoKelp(PerJobFeature):
             self._by_task[task_id] = self._current_count
             self._current_count = 0
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -32,7 +32,7 @@ class CountyUnlockCount(Extractor):
            
             self.county_set.add(county_name)
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

@@ -54,7 +54,7 @@ class SuccessfulAdvice(PerJobFeature):
         elif event.EventName == "complete_job" and self._received_recommendation and not self._waiting_to_leave and not self._waiting_to_return:
             self._successful_advice = True
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

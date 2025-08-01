@@ -40,7 +40,7 @@ class JobPriorComplete(PerCountFeature):
     def _validateEventCountIndex(self, event:Event) -> bool:
         return not self._completed
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

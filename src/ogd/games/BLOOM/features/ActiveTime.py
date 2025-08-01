@@ -39,7 +39,7 @@ class ActiveTime(Extractor):
         elif event.EventName == "unpause_game":
             self._client_start_time = event.Timestamp
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
@@ -111,7 +111,7 @@ class ActiveTime(Extractor):
         elif event.EventName == "unpause_game":
             self.paused = False
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

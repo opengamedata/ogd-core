@@ -36,7 +36,7 @@ class CountyPolicyChangeCount(PerCountyFeature):
             else:
                 self.WarningMessage(f"Got a select_policy_card with unexpected policy type {policy_name}")
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

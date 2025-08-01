@@ -36,7 +36,7 @@ class AlertResponseCount(Extractor):
         if alert_response is not None:
             self.alert_response_counts[alert_response] += 1
 
-    def _updateFromFeatureData(self, feature: FeatureData) -> None:
+    def _updateFromFeature(self, feature: Feature) -> None:
         return
 
     def _getFeatureValues(self) -> List[Any]:

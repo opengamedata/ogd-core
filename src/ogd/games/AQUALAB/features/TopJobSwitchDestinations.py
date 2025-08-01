@@ -53,7 +53,7 @@ class TopJobSwitchDestinations(Extractor):
             # once we process the event, we know we're looking at data for this event's user next time.
             self._current_user_code = user_code
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

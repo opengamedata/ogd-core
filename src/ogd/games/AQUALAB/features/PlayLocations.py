@@ -26,7 +26,7 @@ class PlayLocations(SessionFeature):
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
     
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _updateFromEvent(self, event: Event) -> None:

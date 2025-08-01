@@ -89,7 +89,7 @@ class JobActiveTime(PerJobFeature):
             self._last_event_name = event.UserID
             self._last_event_index = event.EventSequenceIndex
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
         # if self.ExtractionMode == ExtractionMode.PLAYER \
         # or self.ExtractionMode == ExtractionMode.SESSION:
@@ -176,7 +176,7 @@ class JobActiveTime(PerJobFeature):
         elif self.ExtractionMode == ExtractionMode.PLAYER:
             self.WarningMessage(f"JobActiveTime could not update total time for player {self._player_id}, session {self._session_id} missing start time!")
 
-    # def _handle_population(self, feature:FeatureData):
+    # def _handle_population(self, feature:Feature):
     #     if feature.ExportMode == ExtractionMode.PLAYER:
     #         _val = feature.FeatureValues[0]
     #         if type(_val) == timedelta:

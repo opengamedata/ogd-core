@@ -30,7 +30,7 @@ class PlayerSummary(SessionFeature):
     def _updateFromEvent(self, event:Event) -> None:
         return
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         user_id = feature.PlayerID
         
         if feature.ExportMode == ExtractionMode.PLAYER:

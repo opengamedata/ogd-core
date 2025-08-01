@@ -28,7 +28,7 @@ class BloomAlertCount(Extractor):
             else:
                 self.bloom_alert_counts[current_county] += 1
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

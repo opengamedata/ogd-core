@@ -26,7 +26,7 @@ class GameCompletionStatus(Extractor):
         elif event.EventName == "lose_game":
             self.status = "LOSS"
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

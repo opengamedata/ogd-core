@@ -32,7 +32,7 @@ class JobQuitsPerComplete(Extractor):
     def _updateFromEvent(self, event:Event) -> None:
         return 
     
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         if feature.ExportMode == self.ExtractionMode:
             if feature.Name == "TotalJobQuits":
                 self._total_job_quits = feature.FeatureValues[0]

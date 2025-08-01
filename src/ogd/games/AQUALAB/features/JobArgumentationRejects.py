@@ -35,7 +35,7 @@ class JobArgumentationRejects(PerJobFeature):
             if self._inside_argument:
                 self._fact_rejected_inside_argument += 1
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

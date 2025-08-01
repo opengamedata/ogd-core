@@ -25,7 +25,7 @@ class CountyBloomAlertCount(PerCountyFeature):
     def _updateFromEvent(self, event: Event) -> None:
         self._count += 1
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

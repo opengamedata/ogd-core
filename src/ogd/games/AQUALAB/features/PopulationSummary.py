@@ -28,7 +28,7 @@ class PopulationSummary(SessionFeature):
     def _updateFromEvent(self, event: Event) -> None:
         return
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         if feature.FeatureType == "JobsCompleted":
             self._user_completions[feature.PlayerID].append(feature.FeatureValues[0])
         elif feature.FeatureType == "SessionID" and feature.SessionID not in self._user_sessions[feature.PlayerID]:

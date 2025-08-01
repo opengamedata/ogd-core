@@ -27,7 +27,7 @@ class NumberOfSessionsPerPlayer(Extractor):
         else:
             self.session_count[player_id] += 1
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

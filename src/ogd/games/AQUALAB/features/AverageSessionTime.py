@@ -27,7 +27,7 @@ class AverageSessionTime(Extractor):
     def _updateFromEvent(self, event:Event) -> None:
         pass
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         if feature.ExportMode == ExtractionMode.SESSION:
             try:
                 self._play_time += feature.FeatureValues[0]

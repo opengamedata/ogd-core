@@ -35,7 +35,7 @@ class AverageActiveTime(Extractor):
             self.active_time_per_session[player_id] = self.active_time_per_session.get(player_id, timedelta())
             self.active_time_per_session[player_id] += event.Timestamp
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         if feature.Name == "ActiveTime":
             self.active_time_per_session = feature.Value 
         elif feature.Name == "NumberOfSessionsPerPlayer":
@@ -89,7 +89,7 @@ class AverageActiveTime(Extractor):
         elif event.EventName == "unpause_game":
             self.session_start_time[session_id] = event
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

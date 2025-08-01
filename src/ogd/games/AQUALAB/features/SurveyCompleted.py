@@ -57,7 +57,7 @@ class SurveyCompleted(PerCountFeature):
         self._completed = True
         self._responses = event.EventData.get("responses", {})
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

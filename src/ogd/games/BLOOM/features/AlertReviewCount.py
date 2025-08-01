@@ -31,7 +31,7 @@ class AlertReviewCount(Extractor):
         if alert_type != "GLOBAL":
             self.alert_review_counts[alert_type] += 1
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

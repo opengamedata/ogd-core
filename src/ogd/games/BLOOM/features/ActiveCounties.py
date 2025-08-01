@@ -28,7 +28,7 @@ class ActiveCounties(Extractor):
         county_name = event.EventData.get("county_name")
         self.last_unlocked_county[player_id] = county_name
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

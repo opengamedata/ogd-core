@@ -50,7 +50,7 @@ class JobPlayTime(Extractor):
         self._Idle_time += event.EventData.get("time")
         
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

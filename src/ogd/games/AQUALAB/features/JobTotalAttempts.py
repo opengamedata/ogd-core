@@ -26,7 +26,7 @@ class JobTotalAttempts(PerJobFeature):
     def _updateFromEvent(self, event:Event) -> None:
         return
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         if feature.ExportMode == ExtractionMode.PLAYER and feature.CountIndex == self.CountIndex:
             if not self._checked_alive:
                 Logger.Log(f"JobTotalAttempts for job {self.CountIndex} got a feature at player level with same count index")

@@ -27,7 +27,7 @@ class JobAttempted(PerJobFeature):
         if job == self.TargetJobName:
             self._job_attempted = True
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

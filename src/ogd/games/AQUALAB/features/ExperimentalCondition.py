@@ -24,7 +24,7 @@ class ExperimentalCondition(Extractor):
         if self.app_branch is None:
             self.app_branch = event.AppBranch  
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

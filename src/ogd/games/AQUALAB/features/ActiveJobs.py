@@ -44,7 +44,7 @@ class ActiveJobs(Extractor):
             self._current_user_code = user_code # in either case, set latest user as "current"
             self._last_started_id = _current_job # In either case, set latest job name as "current".
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

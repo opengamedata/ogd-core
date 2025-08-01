@@ -28,7 +28,7 @@ class SessionDiveSitesCount(Extractor):
             self._count += 1
             self._visited_sites.append(event.EventData["site_id"])
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -27,7 +27,7 @@ class SucceededThroughFailure(Extractor):
         elif event_type == "win_game" and self.failure_count > 0:
             self.win_after_failure = True
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

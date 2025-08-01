@@ -25,7 +25,7 @@ class EconomyViewUnlocked(Extractor):
         if _view == "ECONOMY_VIEW":
             self.unlock_count += 1
 
-    def _updateFromFeatureData(self, feature: FeatureData) -> None:
+    def _updateFromFeature(self, feature: Feature) -> None:
         return
 
     def _getFeatureValues(self) -> List[Any]:

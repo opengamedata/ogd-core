@@ -86,7 +86,7 @@ class JobsAttempted(Extractor):
 
         # self._prev_timestamp = event.Timestamp
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         if feature.FeatureType == "JobActiveTime":
             if feature.CountIndex == self.CountIndex:
                 _active_time = feature.FeatureValues[0]

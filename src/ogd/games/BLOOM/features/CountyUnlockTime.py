@@ -54,7 +54,7 @@ class CountyUnlockTime(PerCountFeature):
         # No matter what, update last timestamp
         self.last_time = event.Timestamp
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

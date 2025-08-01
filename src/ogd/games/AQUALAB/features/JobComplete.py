@@ -27,7 +27,7 @@ class JobComplete(PerJobFeature):
         if completed_job == self.TargetJobName:
             self._job_completed = True
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

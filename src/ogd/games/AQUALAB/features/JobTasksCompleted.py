@@ -48,7 +48,7 @@ class JobTasksCompleted(PerJobFeature):
             case _:
                 raise ValueError(f"JobTasksCompleted was given an invalid extraction mode of {self.ExtractionMode}!")
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

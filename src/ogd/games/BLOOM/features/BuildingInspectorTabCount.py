@@ -30,7 +30,7 @@ class BuildingInspectorTabCount(Extractor):
             # Increment the counter for the current building type on tab click
             self._counter[self._building_type] += 1
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

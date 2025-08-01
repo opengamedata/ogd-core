@@ -41,7 +41,7 @@ class FollowedAdvice(PerJobFeature):
                 self._followed_advice = True
                 self._waiting_for_switch = False
    
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
     
     def _getFeatureValues(self) -> List[Any]:

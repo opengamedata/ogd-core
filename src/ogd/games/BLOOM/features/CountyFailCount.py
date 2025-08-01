@@ -34,7 +34,7 @@ class CountyFailCount(PerCountyFeature):
             if fail_type in self.county_fail_counts:
                 self.county_fail_counts[fail_type] += 1
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -27,7 +27,7 @@ class PopulationSummary(SessionFeature):
     def _updateFromEvent(self, event: Event) -> None:
         return
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         player_id = feature.PlayerID
 
         print(f"Processing feature: {feature}")

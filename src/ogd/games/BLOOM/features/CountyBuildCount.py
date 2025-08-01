@@ -28,7 +28,7 @@ class CountyBuildCount(Extractor):
             else:
                 self.build_counts[county_name] += 1
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:
@@ -80,7 +80,7 @@ class CountyBuildCount(PerCountyFeature):
         if county_name and county_name in self.build_counts:
             self.build_counts[county_name] += 1
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:
@@ -121,7 +121,7 @@ class CountyBuildCount(PerCountyFeature):
     def _updateFromEvent(self, event: Event) -> None:
         self.count += 1
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

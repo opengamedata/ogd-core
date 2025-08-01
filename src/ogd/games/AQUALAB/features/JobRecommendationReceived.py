@@ -32,7 +32,7 @@ class JobRecommendationReceived(PerJobFeature):
             if recommended_job_name != "":
                 self.specific_recommendation_received += 1
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

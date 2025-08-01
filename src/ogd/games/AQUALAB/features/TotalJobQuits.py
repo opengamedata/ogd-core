@@ -36,7 +36,7 @@ class TotalJobQuits(Extractor):
             if leaving_job != "arctic-missing-whale":
                 self._non_whale_count += 1
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

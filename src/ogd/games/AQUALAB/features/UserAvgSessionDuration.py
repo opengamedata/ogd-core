@@ -26,7 +26,7 @@ class UserAvgSessionDuration(SessionFeature):
     def _updateFromEvent(self, event:Event) -> None:
         return
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         if feature.PlayerID == self._player_id:
             if feature.FeatureValues[0] == "No events":
                 pass

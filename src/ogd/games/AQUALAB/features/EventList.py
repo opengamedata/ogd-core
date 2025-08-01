@@ -98,7 +98,7 @@ class EventList(Extractor):
 
             self._event_list.append(next_event)
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

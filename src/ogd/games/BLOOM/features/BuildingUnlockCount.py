@@ -27,7 +27,7 @@ class BuildingUnlockCount(Extractor):
             else:
                 self.building_unlocks[building_type] += 1
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

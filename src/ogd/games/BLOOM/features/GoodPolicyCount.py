@@ -31,7 +31,7 @@ class GoodPolicyCount(Extractor):
         else:
             print(f"Bad policy combo list, got value {policy_combos} of type {type(policy_combos)}")
 
-    def _updateFromFeatureData(self, feature: FeatureData) -> None:
+    def _updateFromFeature(self, feature: Feature) -> None:
         return
 
     def _getFeatureValues(self) -> List[Any]:

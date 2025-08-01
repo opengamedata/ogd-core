@@ -28,7 +28,7 @@ class CountyLatestMoney(PerCountyFeature):
         current_money = event.GameState.get("current_money", None)
         self.latest_money = current_money
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

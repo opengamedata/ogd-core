@@ -47,7 +47,7 @@ class TotalSessionTime(SessionFeature):
             # Update previous_time for the next event
             self.previous_time = event.Timestamp
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
     
     def _getFeatureValues(self) -> List[Any]:

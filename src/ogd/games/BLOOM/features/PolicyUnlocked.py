@@ -26,7 +26,7 @@ class PolicyUnlocked(Extractor):
         if _policy:
             self.policies_unlocked[_policy.upper()] += 1
 
-    def _updateFromFeatureData(self, feature: FeatureData) -> None:
+    def _updateFromFeature(self, feature: Feature) -> None:
         return
 
     def _getFeatureValues(self) -> List[Any]:
