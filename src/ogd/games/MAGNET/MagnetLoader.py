@@ -4,7 +4,7 @@ from typing import Any, Callable, Dict, List, Optional
 from . import features
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.core.generators.legacy.LegacyLoader import LegacyLoader
 from ogd.games.MAGNET.features.MagnetExtractor import MagnetExtractor
 from ogd.common.models.Event import Event
