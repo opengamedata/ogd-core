@@ -46,7 +46,7 @@ class FunnelByUser(SessionFeature):
             elif event.EventName == "puzzle_complete":
                 self._userFunnelDict[self._level]["completed"] = 1
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

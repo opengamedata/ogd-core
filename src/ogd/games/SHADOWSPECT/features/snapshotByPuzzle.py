@@ -25,7 +25,7 @@ class SnapshotByPuzzle(PerLevelFeature):
     def _updateFromEvent(self, event:Event) -> None:
         self._num_Snapshots += 1
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

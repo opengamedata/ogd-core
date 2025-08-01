@@ -70,7 +70,7 @@ class SequenceBetweenPuzzles(SessionFeature):
                 self._currentPuzzle = {}
                 self._numPuzzles += 1
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

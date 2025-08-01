@@ -105,7 +105,7 @@ class LevelsOfDifficulty(SessionFeature):
                     self._numberAttempts = 0
                     self._numberActions = 0
             
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
