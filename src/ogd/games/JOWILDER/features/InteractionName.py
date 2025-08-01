@@ -10,7 +10,7 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 from ogd.common.models.Event import Event
 from ogd.games.JOWILDER import Jowilder_Enumerators as je
-from ogd.common.utils.utils import loadJSONFile
+from ogd.common.utils.fileio import loadJSONFile
 from ogd.common.utils.Logger import Logger
 
 interaction_path = Path('.') / "ogd" / "games" / "JOWILDER"

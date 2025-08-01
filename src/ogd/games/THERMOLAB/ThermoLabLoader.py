@@ -7,7 +7,7 @@ from typing import Any, Callable, Dict, List, Optional
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
-from ogd.common.utils.utils import loadJSONFile
+from ogd.common.utils.fileio import loadJSONFile
 from ogd.common.utils.Logger import Logger
 # import local files
 from ogd.core.generators.detectors.Detector import Detector
