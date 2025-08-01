@@ -8,7 +8,7 @@ from ogd.core.generators.extractors.Feature import Feature
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class JobQuitsPerComplete(Feature):
 
