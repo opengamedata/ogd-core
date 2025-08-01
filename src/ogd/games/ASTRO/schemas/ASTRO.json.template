@@ -38,8 +38,8 @@
             "description" : "The distance to the star"
          },
          "color" : {
-            "type" : "TODO",
-            "description" : "The color of the star"
+            "type" : "float",
+            "description" : "The color index of the star. This corresponds to an astronomical measurement derived from magnitude in blue and visible light.  Color index is represented as a floating point number from about -1 to +10"
          },
          "temperature" : {
             "type" : "float",
@@ -363,8 +363,8 @@
                "description" : "The distance to the star"
             },
             "color" : {
-               "type" : "TODO",
-               "description" : "The color of the star"
+               "type" : "float",
+               "description" : "The color index of the star. This corresponds to an astronomical measurement derived from magnitude in blue and visible light.  Color index is represented as a floating point number from about -1 to +10"
             },
             "temperature" : {
                "type" : "float",
@@ -509,7 +509,7 @@
          "description": "When the player clicks on the reference guide notebook to open the reference view.",
          "event_data": {
             "page_id" : {
-               "type" : "TODO",
+               "type" : "str",
                "description" : "The initial page of the reference guide when it opens."
             }
          }
@@ -518,7 +518,7 @@
          "description": "When the player clicks on the 'x' button to close the guide notebook view.",
          "event_data": {
             "page_id" : {
-               "type" : "TODO",
+               "type" : "str",
                "description" : "The page of the reference guide when the player closed it."
             }
          }
@@ -527,7 +527,7 @@
          "description": "When the player clicks to switch to the zoomed-in, 'full-screen' view of the guide notebook.",
          "event_data": {
             "page_id" : {
-               "type" : "TODO",
+               "type" : "str",
                "description" : "The page of the reference guide the player zoomed on."
             }
          }
@@ -536,7 +536,7 @@
          "description": "When the player clicks to switch to the zoomed-out, 'regular' view of the guide notebook.",
          "event_data": {
             "page_id" : {
-               "type" : "TODO",
+               "type" : "str",
                "description" : "The page of the reference guide the player zoomed out from."
             }
          }
@@ -549,7 +549,7 @@
                "description" : "The name of the tab the player switched to."
             },
             "new_page_id" : {
-               "type" : "TODO",
+               "type" : "str",
                "description" : "The new page of the reference guide that the player turned to."
             }
          }
@@ -562,7 +562,7 @@
                "description" : "Whether the player turned the page left or right (up and down are not options here)."
             },
             "new_page_id" : {
-               "type" : "TODO",
+               "type" : "str",
                "description" : "The new page of the reference guide that the player turned to."
             }
          }
@@ -851,7 +851,7 @@
             },
             "new_puzzle_contents" : {
                "type" : "List[PuzzleRow]",
-               "description" : "A representation of the puzzle data table after rejection. TODO : make sure this is what that actually means"
+               "description" : "A representation of the puzzle data table after rejection. Any rows that had incorrect entries are cleared."
             }
          }
       },
@@ -946,7 +946,7 @@
                "description" : "The ID of the specific postit the player is moving."
             },
             "postit_coordinates" : {
-               "type" : "tuple[int, int] TODO : check if these are truly in int, or if they're floats",
+               "type" : "tuple[float, float]",
                "description" : "The x, y coordinates of the location where the player placed the post-it."
             },
             "target_id" : {
