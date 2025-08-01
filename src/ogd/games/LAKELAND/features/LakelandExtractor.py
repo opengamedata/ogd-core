@@ -1,7 +1,7 @@
 """ Lakeland Feature Extractor
 Note that a separate file unique to the lakeland extractor is necessary to run this script.
 The file is Lakeland Enumerators.json, and is required for the line:
-_STR_TO_ENUM = utils.loadJSONFile("games/LAKELAND/Lakeland Enumerators.json")
+_STR_TO_ENUM = fileio.loadJSONFile("games/LAKELAND/Lakeland Enumerators.json")
 
 This json file is created from the fielddaylab/lakeland README on github via
 "produce_lakeland_enumerators.py". Please run that script with the appropriate inpath and outpath before running this
@@ -26,7 +26,7 @@ from ogd.core.generators.legacy.LegacyFeature import LegacyFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.schemas.games.GameSchema import GameSchema
-from ogd.common.utils import utils
+from ogd.common.utils import fileio
 from ogd.common.utils.Logger import Logger
 
 # temp comment
@@ -47,7 +47,7 @@ class LakelandExtractor(LegacyFeature):
     ]
     try:
         # TODO: someday, change directory to the directory of current file first, and fix this path, so we don't have indirection issues.
-        _STR_TO_ENUM = utils.loadJSONFile(filename="LakelandEnumerators.json", path=Path(".") / "ogd" / "games" / "LAKELAND" / "features" )
+        _STR_TO_ENUM = fileio.loadJSONFile(filename="LakelandEnumerators.json", path=Path(".") / "ogd" / "games" / "LAKELAND" / "features" )
     except FileNotFoundError as err:
         Logger.Log(message=f"Could not load Lakeland Enumerators", level=logging.WARNING)
         _STR_TO_ENUM = {}

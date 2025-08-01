@@ -15,7 +15,7 @@ from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.schemas.games.GameSchema import GameSchema
-from ogd.common.utils import utils
+from ogd.common.utils import fileio
 from ogd.common.utils.Logger import Logger
 from . import features
 
@@ -286,7 +286,7 @@ class AqualabLoader(GeneratorLoader):
         :rtype: int
         """
         ret_val : int
-        db_export = utils.loadJSONFile(filename="DBExport.json", path=db_export_path)
+        db_export = fileio.loadJSONFile(filename="DBExport.json", path=db_export_path)
         ret_val = len(db_export.get("jobs", []))
         return ret_val
 
@@ -299,7 +299,7 @@ class AqualabLoader(GeneratorLoader):
         :return: The total number of tasks in the current DBExport
         :rtype: int
         """
-        db_export = utils.loadJSONFile(filename="DBExport.json", path=db_export_path)
+        db_export = fileio.loadJSONFile(filename="DBExport.json", path=db_export_path)
         list_o_lists = [job.get('tasks', []) for job in db_export.get('jobs', [])]
         all_tasks    = list(itertools.chain.from_iterable(list_o_lists))
         return len(all_tasks)
