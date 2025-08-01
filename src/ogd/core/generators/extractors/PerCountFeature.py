@@ -3,7 +3,7 @@ import abc
 from multiprocessing.sharedctypes import Value
 # import locals
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 
 ## @class PerLevelFeature

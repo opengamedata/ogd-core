@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional, Union
 ## import local files
 from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
