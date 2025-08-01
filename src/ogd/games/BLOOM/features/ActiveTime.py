@@ -9,7 +9,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class ActiveTime(Feature):
     IDLE_LEVEL: Final[int] = 30
@@ -63,7 +63,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.common.models.Event import Event, EventSource
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class ActiveTime(Feature):
     DEFAULT_IDLE_THRESHOLD: Final[timedelta] = timedelta(seconds=30)
