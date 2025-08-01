@@ -3,8 +3,8 @@ import logging
 from typing import Dict, Optional, Self
 # import local files
 from ogd.common.configs.Config import Config
-from ogd.common.configs.generators.AggregateConfig import AggregateConfig
-from ogd.common.configs.generators.IteratedConfig import IteratedConfig
+from ogd.core.configs.generators.AggregateConfig import AggregateConfig
+from ogd.core.configs.generators.IteratedConfig import IteratedConfig
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import conversions, Map
 
