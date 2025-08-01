@@ -23,8 +23,8 @@ class ShadowspectLoader(GeneratorLoader):
     def _getFeaturesModule():
         return features
 
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
-        ret_val : Optional[Feature] = None
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Extractor]:
+        ret_val : Optional[Extractor] = None
         if extractor_params._count_index is None:
         # Put all aggregate-level features here
         # The will sanity-check that we haven't configured a per-count to run at aggregate level.

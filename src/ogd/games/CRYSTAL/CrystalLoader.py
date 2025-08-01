@@ -20,7 +20,7 @@ class CrystalLoader(LegacyLoader):
     def _getFeaturesModule():
         return ogd.games.CRYSTAL.features
 
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Extractor]:
         return CrystalExtractor(params=extractor_params, game_schema=self._game_schema, session_id=self._session_id)
 
     def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Optional[Detector]:
