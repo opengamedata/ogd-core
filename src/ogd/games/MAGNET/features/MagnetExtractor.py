@@ -41,8 +41,9 @@ class MagnetExtractor(LegacyFeature):
     def _updateFromEvent(self, event:Event):
         # put some data in local vars, for readability later.
         level = event.GameState['level']
-        if level > self._generator_config._max_level:
-            Logger.Log(f"Got an event with level too high, full data:\n{str(event)}")
+        max_level = self._generator_config.LevelRange.stop - 1 if self._generator_config.LevelRange else -1
+        if level > max_level:
+            Logger.Log(f"Got an event with level too high ({level} > max level of {max_level})!\nFull data:\n{str(event)}")
         # Check for invalid row.
         if self.ExtractionMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
             Logger.Log(f"Got an event with incorrect session id! Expected {self._session_id}, got {event.SessionID}!",

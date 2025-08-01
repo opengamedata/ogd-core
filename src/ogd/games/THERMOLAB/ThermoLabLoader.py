@@ -58,7 +58,7 @@ class ThermoLabLoader(GeneratorLoader):
             #         task_num += 1
 
         # Update level count
-        self._generator_config._max_level = len(self._lab_map) - 1
+        # self._generator_config._max_level = len(self._lab_map) - 1
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
