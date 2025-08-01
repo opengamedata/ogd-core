@@ -18,8 +18,8 @@ from ogd.common.models.Event import Event
 class InteractionTextBoxesPerSecond(PerCountFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
-    :param Feature: Base class for a Custom Feature class.
-    :type Feature: _type_
+    :param Extractor: Base class for a Custom Feature class.
+    :type Extractor: _type_
     """
 
     def __init__(self, params: GeneratorParameters):

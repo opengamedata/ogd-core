@@ -10,8 +10,8 @@ from ogd.common.models.Event import Event
 class GameScript(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
-    :param Feature: Base class for a Custom Feature class.
-    :type Feature: _type_
+    :param Extractor: Base class for a Custom Feature class.
+    :type Extractor: _type_
     """
 
     TYPE : Final[Dict[int, str]] = {0: 'Dry', 1: 'No Humor', 2: 'No Snark', 3: 'Normal'}

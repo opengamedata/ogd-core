@@ -17,8 +17,8 @@ from datetime  import timedelta, datetime
 class MeanSnippetTime(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
-    :param Feature: Base class for a Custom Feature class.
-    :type Feature: _type_
+    :param Extractor: Base class for a Custom Feature class.
+    :type Extractor: _type_
     """
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)

@@ -10,8 +10,8 @@ from ogd.common.models.Feature import Feature
 class UserTotalSessionDuration(SessionFeature):
     """_summary_
 
-    :param SessionFeature: _description_
-    :type SessionFeature: _type_
+    :param SessionExtractor: _description_
+    :type SessionExtractor: _type_
     """
     def __init__(self, params:GeneratorParameters, player_id:str):
         super().__init__(params=params)

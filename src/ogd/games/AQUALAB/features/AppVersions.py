@@ -9,8 +9,8 @@ from ogd.common.models.Feature import Feature
 class AppVersions(SessionFeature):
     """_summary_
 
-    :param SessionFeature: _description_
-    :type SessionFeature: _type_
+    :param SessionExtractor: _description_
+    :type SessionExtractor: _type_
     """
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)

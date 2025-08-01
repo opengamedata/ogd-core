@@ -25,8 +25,8 @@ QUIZ_INDEXES : Final[Dict[int, Dict[int, int]]] = {
 class SurveyItem(PerCountFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
-    :param Feature: Base class for a Custom Feature class.
-    :type Feature: _type_
+    :param Extractor: Base class for a Custom Feature class.
+    :type Extractor: _type_
     """
     
     

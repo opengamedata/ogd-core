@@ -10,8 +10,8 @@ from ogd.common.models.Feature import Feature
 class Session_Language(SessionFeature):
     """_summary_
 
-    :param SessionFeature: _description_
-    :type SessionFeature: _type_
+    :param SessionExtractor: _description_
+    :type SessionExtractor: _type_
     """
     def __init__(self, params:GeneratorParameters):
         self._session_language = None

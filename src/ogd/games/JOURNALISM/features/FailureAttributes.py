@@ -16,8 +16,8 @@ from ogd.core.generators.extractors.SessionFeature import SessionFeature
 class FailureAttributes(PerLevelFeature):
     """Per-level feature to generate a list of failures, where each failure in the list is the set of player attributes
 
-    :param PerLevelFeature: Base class for a Custom Feature class.
-    :type PerLevelFeature: _type_
+    :param PerLevelExtractor: Base class for a Custom Feature class.
+    :type PerLevelExtractor: _type_
     """
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)

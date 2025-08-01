@@ -10,8 +10,8 @@ from ogd.common.models.Event import Event
 class UsedContinue(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
-    :param Feature: Base class for a Custom Feature class.
-    :type Feature: _type_
+    :param Extractor: Base class for a Custom Feature class.
+    :type Extractor: _type_
     """
 
     START_SIGN : Final[str] = "tunic.historicalsociety.closet.gramps.intro_0_cs_0"

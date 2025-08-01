@@ -19,8 +19,8 @@ from ogd.core.generators.extractors.SessionFeature import SessionFeature
 class StoryEditorTime(PerLevelFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
-    :param Feature: Base class for a Custom Feature class.
-    :type Feature: _type_
+    :param Extractor: Base class for a Custom Feature class.
+    :type Extractor: _type_
     """
     IDLE_TIME_THRESHOLD : Final[timedelta] = timedelta(seconds=60)
 

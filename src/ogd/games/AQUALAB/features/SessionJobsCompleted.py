@@ -9,8 +9,8 @@ from ogd.common.models.Feature import Feature
 class SessionJobsCompleted(Extractor):
     """_summary_
 
-    :param Feature: _description_
-    :type Feature: _type_
+    :param Extractor: _description_
+    :type Extractor: _type_
     """
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)

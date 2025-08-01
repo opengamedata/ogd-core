@@ -11,8 +11,8 @@ from ogd.common.models.Event import Event
 class FirstInteraction(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
-    :param Feature: Base class for a Custom Feature class.
-    :type Feature: _type_
+    :param Extractor: Base class for a Custom Feature class.
+    :type Extractor: _type_
     """
     NO_SENSE : Final[str] = 'tunic.historicalsociety.closet.intro'
 

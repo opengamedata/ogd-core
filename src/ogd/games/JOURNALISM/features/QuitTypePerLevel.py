@@ -18,8 +18,8 @@ from ogd.core.generators.Generator import GeneratorParameters
 class QuitTypePerLevel(PerLevelFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
-    :param Feature: Base class for a Custom Feature class.
-    :type Feature: _type_
+    :param Extractor: Base class for a Custom Feature class.
+    :type Extractor: _type_
     """
 
     def __init__(self, params:GeneratorParameters):
