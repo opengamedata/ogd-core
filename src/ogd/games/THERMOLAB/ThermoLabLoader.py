@@ -13,7 +13,7 @@ from ogd.common.utils.Logger import Logger
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.games import THERMOLAB
 from ogd.games.THERMOLAB.detectors import *
 from ogd.games.THERMOLAB.features import *

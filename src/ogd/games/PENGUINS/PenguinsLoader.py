@@ -8,7 +8,7 @@ from ogd.games import PENGUINS
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.games.PENGUINS.detectors import *
 from ogd.games.PENGUINS.features import *
 # from ogd.games.PENGUINS.DBExport import scene_map
