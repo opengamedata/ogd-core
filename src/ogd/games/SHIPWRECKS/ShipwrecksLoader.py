@@ -10,7 +10,7 @@ from ogd.games.SHIPWRECKS.features import *
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.common.utils.Logger import Logger
 
 ## @class ShipwrecksLoader
@@ -18,7 +18,7 @@ class ShipwrecksLoader(GeneratorLoader):
     """
     Extractor subclass for extracting features from Shipwrecks game data.
     """
-    def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
+    def __init__(self, player_id:str, session_id:str, game_schema: GeneratorCollectionConfig, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
 
     @staticmethod

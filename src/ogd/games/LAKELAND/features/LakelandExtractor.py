@@ -25,7 +25,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.legacy.LegacyFeature import LegacyFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.common.utils import fileio
 from ogd.common.utils.Logger import Logger
 
@@ -101,7 +101,7 @@ class LakelandExtractor(LegacyFeature):
     #                    table associated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, params:GeneratorParameters, game_schema:GameSchema, session_id:str):
+    def __init__(self, params:GeneratorParameters, game_schema:GeneratorCollectionConfig, session_id:str):
         # Initialize superclass
         super().__init__(params=params, game_schema=game_schema, session_id=session_id)
         # Set window and overlap size

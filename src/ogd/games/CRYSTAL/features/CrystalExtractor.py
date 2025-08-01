@@ -10,7 +10,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.legacy.LegacyFeature import LegacyFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 
 # temp comment
 
@@ -29,7 +29,7 @@ class CrystalExtractor(LegacyFeature):
     #                    table assiciated with this game is structured. 
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, params:GeneratorParameters, game_schema:GameSchema, session_id:str):
+    def __init__(self, params:GeneratorParameters, game_schema:GeneratorCollectionConfig, session_id:str):
         super().__init__(params=params, game_schema=game_schema, session_id=session_id)
         # Define custom private data.
         self._start_times: typing.Dict       = {}

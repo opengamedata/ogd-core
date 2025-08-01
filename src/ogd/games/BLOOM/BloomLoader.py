@@ -13,7 +13,7 @@ from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.common.utils.utils import loadJSONFile
 from ogd.games.BLOOM.features import PersistThroughFailure
 from . import features
@@ -28,7 +28,7 @@ class BloomLoader(GeneratorLoader):
     # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the BloomlabLoader class.
-    def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
+    def __init__(self, player_id:str, session_id:str, game_schema: GeneratorCollectionConfig, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
         """Constructor for the BloomlabLoader class.
 
         :param player_id: _description_
@@ -36,7 +36,7 @@ class BloomLoader(GeneratorLoader):
         :param session_id: The id number for the session whose data is being processed by this instance
         :type session_id: str
         :param game_schema: A data structure containing information on how the game events and other data are structured
-        :type game_schema: GameSchema
+        :type game_schema: GeneratorCollectionConfig
         :param feature_overrides: A list of features to export, overriding the default of exporting all enabled features.
         :type feature_overrides: Optional[List[str]]
         """

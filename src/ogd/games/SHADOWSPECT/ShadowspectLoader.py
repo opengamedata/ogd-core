@@ -10,7 +10,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.games.SHADOWSPECT.features import *
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.common.utils.Logger import Logger
 
 ## @class ShadowspectExtractor
@@ -55,7 +55,7 @@ class ShadowspectLoader(GeneratorLoader):
         return None
 
     ## Constructor for the ShadowspectExtractor class.
-    def __init__(self, player_id:str, session_id: str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]=None):
+    def __init__(self, player_id:str, session_id: str, game_schema: GeneratorCollectionConfig, mode:ExtractionMode, feature_overrides:Optional[List[str]]=None):
         """Constructor for the CrystalLoader class.
 
         :param player_id: _description_
@@ -63,7 +63,7 @@ class ShadowspectLoader(GeneratorLoader):
         :param session_id: The id number for the session whose data is being processed by this instance
         :type session_id: str
         :param game_schema: A data structure containing information on how the game events and other data are structured
-        :type game_schema: GameSchema
+        :type game_schema: GeneratorCollectionConfig
         :param feature_overrides: A list of features to export, overriding the default of exporting all enabled features.
         :type feature_overrides: Optional[List[str]]
         """
