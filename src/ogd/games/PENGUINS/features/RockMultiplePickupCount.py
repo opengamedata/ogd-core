@@ -36,7 +36,7 @@ class RockMultiplePickupCount(SessionFeature):
             self._current_count += 1
         
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

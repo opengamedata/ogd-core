@@ -22,7 +22,7 @@ class LabCompleteCount(SessionFeature):
         if event is not None and event.EventData.get("percent_complete", 0) >= 100:
             self.complete_labs[lab] += 1
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

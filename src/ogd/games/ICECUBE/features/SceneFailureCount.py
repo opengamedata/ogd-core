@@ -41,7 +41,7 @@ class SceneFailureCount(SessionFeature):
         self._game_state.append(event.game_state)
         # return
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -40,7 +40,7 @@ class ActivityCompleted(SessionFeature):
         #else:
             #self._activ_dict[self._object_id]+=1
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

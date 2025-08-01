@@ -29,7 +29,7 @@ class LogVersion(SessionFeature):
         self._current_log = event.LogVersion
 
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

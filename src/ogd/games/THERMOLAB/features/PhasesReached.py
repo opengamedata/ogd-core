@@ -24,7 +24,7 @@ class PhasesReached(SessionFeature):
         if region:
             self.phases_reached.add(region)
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

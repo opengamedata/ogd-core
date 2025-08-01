@@ -38,7 +38,7 @@ class ToolNudgeCount(SessionFeature):
                     tool = Thermotool(tool_name)
                     self._tool_nudge_count[tool] += 1
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

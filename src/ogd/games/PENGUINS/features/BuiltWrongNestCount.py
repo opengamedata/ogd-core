@@ -34,7 +34,7 @@ class BuiltWrongNestCount(SessionFeature):
             # if (event.log_version) < 11 and (event.game_state.get("has_rock", False)):
             self._current_count += 1
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

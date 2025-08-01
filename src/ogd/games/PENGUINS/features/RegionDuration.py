@@ -38,7 +38,7 @@ class RegionDuration(PerRegionFeature):
                 self._time += (event.Timestamp - self._region_start_time)
                 self._region_start_time = None
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

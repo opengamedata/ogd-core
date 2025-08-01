@@ -30,7 +30,7 @@ class TotalPlayTime(SessionFeature):
             self.total_time += event.Timestamp - self.session_start_time
             self.session_start_time = None
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

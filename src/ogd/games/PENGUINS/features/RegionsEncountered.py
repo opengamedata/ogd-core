@@ -30,7 +30,7 @@ class RegionsEncountered(SessionFeature):
         self._object_id = event.event_data.get("region")
         self._cnt_list.append(self._object_id)
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

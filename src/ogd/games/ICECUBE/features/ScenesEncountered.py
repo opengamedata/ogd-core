@@ -30,7 +30,7 @@ class ScenesEncountered(SessionFeature):
         self._scene_name = event.EventData.get("scene_name")
         self._cnt_list.append(self._scene_name)
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

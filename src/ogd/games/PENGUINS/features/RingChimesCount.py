@@ -33,7 +33,7 @@ class RingChimesCount(SessionFeature):
         self._object_id = event.event_data.get("note_played", "unknown chime")
         self._chime_dict[self._object_id] += 1
         
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

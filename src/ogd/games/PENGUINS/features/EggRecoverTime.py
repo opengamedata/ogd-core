@@ -40,7 +40,7 @@ class EggRecoverTime(SessionFeature):
             else: 
                 Logger.Log("Got an 'egg_recovered' with no preceding 'egg_lost' event!", logging.WARN)
     
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -73,7 +73,7 @@ class CorrectAnswerOnFirstGuess(PerCountFeature):
             prompt = quiz_task.get("prompts", [""])[0] 
             self.quiz_prompts[quiz_id] = prompt
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -36,7 +36,7 @@ class GazeCount(SessionFeature):
         
         self._gaze_dict[self._object_id]+=1
         
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

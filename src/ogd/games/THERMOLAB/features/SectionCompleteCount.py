@@ -26,7 +26,7 @@ class SectionCompleteCount(SessionFeature):
                 section_id = f"{section.get('lab_name')}_{section.get('section_number')}"
                 self.completed_sections.add(section_id)
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

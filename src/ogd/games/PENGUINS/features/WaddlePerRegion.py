@@ -37,7 +37,7 @@ class WaddlePerRegion(PerRegionFeature):
             # Logger.Log(f"region lst is {self._region_list}")
             # self._cnt_dict[self._curr_region] += 1
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

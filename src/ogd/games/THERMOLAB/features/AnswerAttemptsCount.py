@@ -32,7 +32,7 @@ class AnswerAttemptsCount(SessionFeature):
                 task_id = f"{quiz_task.get('lab_name')}_{quiz_task.get('section_number')}_{quiz_task.get('task_number')}"
                 self.correct_answers[task_id] = True
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

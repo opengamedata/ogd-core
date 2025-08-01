@@ -37,7 +37,7 @@ class ViewportCountPerScene(SessionFeature):
             self._curr_scene = self._scene_list[-1]
             self._cnt_dict[self._curr_scene] += 1
         return
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

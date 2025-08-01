@@ -50,7 +50,7 @@ class SessionDuration(SessionFeature):
             self._latest_event = event
         # self._session_duration = (event.Timestamp - self._client_start_time).total_seconds()
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

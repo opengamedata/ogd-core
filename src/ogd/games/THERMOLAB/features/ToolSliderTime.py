@@ -36,7 +36,7 @@ class ToolSliderTime(SessionFeature):
                 else:
                     self._slider_times[tool_name] = [slider_time]
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

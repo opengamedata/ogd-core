@@ -34,7 +34,7 @@ class LeftHandMovesCount(SessionFeature):
                 self._left_hand_move_count += 1
             self._last_hand_action = action
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

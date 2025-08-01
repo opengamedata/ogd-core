@@ -29,7 +29,7 @@ class Session_Language(SessionFeature):
     def _updateFromEvent(self, event:Event) -> None:
         self._session_language = event.EventData.get("language")
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
