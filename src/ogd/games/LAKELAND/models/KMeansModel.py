@@ -10,7 +10,7 @@
 
 # from typing import List
 # from ogd.common.models.enums.ExtractionMode import ExtractionMode
-# from ogd.common.models.FeatureData import FeatureData
+# from ogd.common.models.Feature import Feature
 # from ogd.core.generators.Generator import GeneratorParameters
 # from ogd.core.generators.models.PopulationModel import PopulationModel
 # from ogd.common.utils.Logger import Logger
@@ -218,7 +218,7 @@ from sklearn.metrics import silhouette_score
 import logging
 
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.models.PopulationModel import PopulationModel
 from ogd.common.utils.Logger import Logger

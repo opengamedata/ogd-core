@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.models.Event import Event
 from ogd.games.JOWILDER import Jowilder_Enumerators as je
 from ogd.common.utils.utils import loadJSONFile

@@ -5,7 +5,7 @@ from datetime import date, datetime, time
 # import local files
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.models.Event import Event
 
 class SessionStart(SessionFeature):

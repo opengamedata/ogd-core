@@ -6,7 +6,7 @@ import json
 from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.core.generators.Generator import GeneratorParameters
 
 
