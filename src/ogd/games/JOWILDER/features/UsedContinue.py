@@ -33,7 +33,7 @@ class UsedContinue(SessionFeature):
     def _updateFromEvent(self, event:Event) -> None:
         return
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         if feature.FeatureType == "UsedSaveCode":
             self._save_code = feature.FeatureValues[0]
         elif feature.FeatureType == "FirstInteraction":

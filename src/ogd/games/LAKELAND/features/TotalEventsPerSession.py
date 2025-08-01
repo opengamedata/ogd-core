@@ -26,7 +26,7 @@ class TotalEventsPerSession(Extractor):
     def _updateFromEvent(self, event:Event) -> None:
         self.total_events_count += 1
             
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

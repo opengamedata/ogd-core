@@ -27,7 +27,7 @@ class HouseBuildCount(Extractor):
         if buy_value == 1:
             self.build_house_count += 1
             
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

@@ -27,7 +27,7 @@ class DairyBuildCount(Extractor):
         if buy_value == 5:
             self.build_dairy_count += 1
             
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

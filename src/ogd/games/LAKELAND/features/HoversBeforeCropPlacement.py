@@ -29,7 +29,7 @@ class HoversBeforeCropPlacement(Extractor):
             if buy_hovers is not None:
                 self.hover_count += len(buy_hovers)
                 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

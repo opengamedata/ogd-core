@@ -6,7 +6,7 @@ from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 
 class FirstMoveType(Extractor):
@@ -27,7 +27,7 @@ class FirstMoveType(Extractor):
     def _updateFromEvent(self, event:Event) -> None:
         self._first_move = event.EventData['slider'][0]
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -35,8 +35,8 @@
 #             'TotalBuildCount'
 #         ]
     
-#     def _updateFromFeatureData(self, feature:FeatureData):
-#         print("\n\n\nInside _updateFromFeatureData of KMeansModel")
+#     def _updateFromFeature(self, feature:Feature):
+#         print("\n\n\nInside _updateFromFeature of KMeansModel")
 #         if hasattr(feature, 'ExtractionMode') and feature.ExtractionMode == ExtractionMode.SESSION:
 #             if feature.Name == "CropBuildCount":
 #                 self._crop_build_count.append(feature.FeatureValues[0])
@@ -57,7 +57,7 @@
     
 #     def _train(self):
 #         print("\n\n\nInside _train of KMeansModel")
-#         # self._updateFromFeatureData(feature)
+#         # self._updateFromFeature(feature)
 #         min_length = min(
 #             len(self._crop_build_count),
 #             len(self._dairy_build_count), 
@@ -112,7 +112,7 @@
 #         print(f"Training completed. Silhouette Score: {self._silhouette_score}")
 
 
-#     def _apply(self, apply_to:List[FeatureData]) -> FeatureData:
+#     def _apply(self, apply_to:List[Feature]) -> Feature:
 #         if self._kmeans is None:
 #             raise ValueError("Model must be trained before applying")
         
@@ -253,9 +253,9 @@ class KMeansModel(PopulationModel):
             'TotalBuildCount'
         ]
     
-# In KMeansModel.py, replace your _updateFromFeatureData with this detailed version:
+# In KMeansModel.py, replace your _updateFromFeature with this detailed version:
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         # --- ADD THIS DETAILED DEBUGGING BLOCK ---
         print(" DEBUGGING: CHECKPOINT 2 (KMeansModel) ")
         print(f"Received feature: {feature.Name} with value {feature.FeatureValues[0]}")
@@ -354,7 +354,7 @@ class KMeansModel(PopulationModel):
 
 
 
-    def _apply(self, apply_to:List[FeatureData]) -> FeatureData:
+    def _apply(self, apply_to:List[Feature]) -> Feature:
         if self._kmeans is None:
             raise ValueError("Model must be trained before applying")
         

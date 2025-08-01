@@ -27,7 +27,7 @@ class TotalBuildCount(Extractor):
         if buy_value in [1,3,5]:
             self.total_build_count += 1
             
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

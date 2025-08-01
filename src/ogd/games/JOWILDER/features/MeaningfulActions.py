@@ -37,7 +37,7 @@ class MeaningfulActions(SessionFeature):
             self._click_count += 1
         return
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

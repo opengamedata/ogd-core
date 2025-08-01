@@ -27,7 +27,7 @@ class CropBuildCount(Extractor):
         if buy_value == 3:
             self.build_crop_count += 1
             
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

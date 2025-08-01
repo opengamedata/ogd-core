@@ -87,7 +87,7 @@ class InteractionWordsPerSecond(PerCountFeature):
         
         return
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         if len(self._interaction_time) == 0:
             return
         if feature.CountIndex != self.CountIndex:

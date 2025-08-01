@@ -6,7 +6,7 @@ from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 
 class PercentOffsetMoves(Extractor):
@@ -30,7 +30,7 @@ class PercentOffsetMoves(Extractor):
         if event.EventData['slider'].upper() == 'OFFSET':
             self._offset_count += 1
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

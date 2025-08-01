@@ -6,7 +6,7 @@ from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 
 class QuestionAnswered(Extractor):
@@ -28,7 +28,7 @@ class QuestionAnswered(Extractor):
         if event.EventData['question'] == self.CountIndex:
             self._answer = event.EventData['answered']
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

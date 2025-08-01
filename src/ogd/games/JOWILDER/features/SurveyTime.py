@@ -50,7 +50,7 @@ class SurveyTime(PerCountFeature):
         raise(NotImplementedError("Haven't implemented the function due to bugs"))
         return
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         
         return
 

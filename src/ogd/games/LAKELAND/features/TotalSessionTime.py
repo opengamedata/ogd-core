@@ -42,7 +42,7 @@ class TotalSessionTime(Extractor):
         self.previous_timestamp = current_timestamp
 
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:
