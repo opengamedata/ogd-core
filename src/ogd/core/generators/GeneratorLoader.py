@@ -53,11 +53,11 @@ class GeneratorLoader(abc.ABC):
         :type feature_overrides: Optional[List[str]]
         """
         # TODO : seems like Loader shouldn't really need player ID,  session ID, or overrides, consider removing.
-        self._player_id        : str            = player_id
-        self._session_id       : str            = session_id
-        self._generator_config : GeneratorCollectionConfig     = generator_config
-        self._mode             : ExtractionMode = mode
-        self._overrides        : Optional[List[str]] = feature_overrides
+        self._player_id        : str                       = player_id
+        self._session_id       : str                       = session_id
+        self._generator_config : GeneratorCollectionConfig = generator_config
+        self._mode             : ExtractionMode            = mode
+        self._overrides        : Optional[List[str]]       = feature_overrides
 
     # *** PUBLIC STATICS ***
 
