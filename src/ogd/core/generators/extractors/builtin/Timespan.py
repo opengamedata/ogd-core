@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional, Type
 # import local files
 from ogd.core.generators.extractors.builtin.BuiltinExtractor import BuiltinExtractor
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.models.Event import Event
 
 class Timespan(BuiltinExtractor):
@@ -73,11 +73,11 @@ class Timespan(BuiltinExtractor):
                 pass
         return
 
-    def _updateFromFeature(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         """_summary_
 
         :param feature: _description_
-        :type feature: FeatureData
+        :type feature: Feature
         """
         return
 

@@ -71,8 +71,8 @@ class Extractor(Generator):
 
     # *** PUBLIC METHODS ***
 
-    def ToFeatureData(self, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> FeatureData:
-        return FeatureData(
+    def ToFeature(self, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> Feature:
+        return Feature(
             name=self.Name,
             feature_type=type(self).__name__,
             count_index=self.CountIndex,
@@ -129,8 +129,8 @@ class Extractor(Generator):
             self._updateFromEvent(event=event)
             self._up_to_date = False
 
-    def UpdateFromFeatureData(self, feature:FeatureData):
-        # TODO: add validation for FeatureData, if applicable/possible.
+    def UpdateFromFeature(self, feature:Feature):
+        # TODO: add validation for Feature, if applicable/possible.
         # TODO: figure out a way to invalidate/reset if more events are given to features on which the given feature depends.
         self._updateFromFeature(feature=feature)
         self._up_to_date = False

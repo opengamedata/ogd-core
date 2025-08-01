@@ -20,7 +20,7 @@ LegacyFeatureType = Union[int,float,timedelta,Dict[int,Dict[str,Any]]]
 #  Abstract base class for game feature extractors.
 #  Gives a few static functions to be used across all extractor classes,
 #  and defines an interface that the SessionProcessor can use.
-class LegacyFeature(Feature):
+class LegacyFeature(Extractor):
 
     # *** ABSTRACTS ***
 
@@ -62,7 +62,7 @@ class LegacyFeature(Feature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _updateFromFeature(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

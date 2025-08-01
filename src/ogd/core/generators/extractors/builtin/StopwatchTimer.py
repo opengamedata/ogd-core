@@ -7,7 +7,7 @@ from ogd.core.generators.extractors.builtin.BuiltinExtractor import BuiltinExtra
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event, EventSource
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class StopwatchTimer(BuiltinExtractor):
     """Built-in feature to count time between occurrences of 'start' and 'stop' events.
@@ -73,7 +73,7 @@ class StopwatchTimer(BuiltinExtractor):
         elif event.EventName == self._end_event:
             self.counting = False
 
-    def _updateFromFeature(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

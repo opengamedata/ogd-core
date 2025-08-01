@@ -5,7 +5,7 @@ from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.utils.Logger import Logger
 
-class SessionFeature(Feature):
+class SessionFeature(Extractor):
 
     # *** BUILT-INS & PROPERTIES ***
 
