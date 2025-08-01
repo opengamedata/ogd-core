@@ -39,7 +39,7 @@ class ContinuesOnFail(SessionFeature):
         pass
 
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         if(feature._name =="QuitType"):
             self._quit_type = feature._vals
         elif(feature._name == "TotalFails"):

@@ -6,7 +6,7 @@ from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class TotalDiveTime(SessionFeature):
 
@@ -31,7 +31,7 @@ class TotalDiveTime(SessionFeature):
                 self._time += (event.Timestamp - self._dive_start_time).total_seconds()
                 self._dive_start_time = None
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

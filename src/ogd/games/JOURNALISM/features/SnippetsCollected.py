@@ -33,11 +33,11 @@ class SnippetsCollected(PerLevelFeature):
             self._snippet_quals.append(event.EventData.get("snippet_quality", "SNIPPET QUALITY NOT FOUND"))
             self._snippet_types.append(event.EventData.get("snippet_type", "SNIPPET TYPE NOT FOUND"))
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         """_summary_
 
         :param feature: _description_
-        :type feature: FeatureData
+        :type feature: Feature
         """
         return
 

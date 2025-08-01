@@ -28,7 +28,7 @@ class StoryAlignment(PerLevelFeature):
     def _updateFromEvent(self, event:Event) -> None:
         self._story_alignment = event.EventData["story_alignment"]
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         print("extracting!")
         return []
 

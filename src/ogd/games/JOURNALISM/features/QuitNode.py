@@ -63,11 +63,11 @@ class QuitNode(SessionFeature):
         
         return
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         """_summary_
 
         :param feature: _description_
-        :type feature: FeatureData
+        :type feature: Feature
         """
         QNODE_INDEX : Final[int]    = 2 # The "Node" subfeature of the "QuitLevel" feature should be at index 2.
         quit_node   : Optional[str] = None

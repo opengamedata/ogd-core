@@ -40,7 +40,7 @@ class TopPlayerAttribute(PerCountFeature):
         pass
 
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         #add logic to make sure that MODE is session, not player so we don't get duplicates
         if(feature._mode == ExtractionMode.SESSION):
             attribute_list = feature._vals[1]

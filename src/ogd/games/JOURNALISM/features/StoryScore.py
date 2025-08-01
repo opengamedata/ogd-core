@@ -25,7 +25,7 @@ class StoryScore(PerLevelFeature):
         if event.EventName == "display_feedback_dialog":
             self._story_score = event.EventData["story_score"]
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return []
 
     def _getFeatureValues(self) -> List[Any]:

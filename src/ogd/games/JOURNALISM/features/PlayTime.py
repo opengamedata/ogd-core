@@ -91,11 +91,11 @@ class PlayTime(SessionFeature):
 
         return
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         """_summary_
 
         :param feature: _description_
-        :type feature: FeatureData
+        :type feature: Feature
         """
         return
 

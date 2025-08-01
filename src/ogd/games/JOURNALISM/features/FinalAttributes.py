@@ -32,7 +32,7 @@ class FinalAttributes(PerLevelFeature):
         _stats = json.loads(event.GameState.get("current_stats", _default))
         self._last_attribs = dict(zip(self._ATTRIBUTE_ENUM, _stats))
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         #add logic to make sure that MODE is session, not player so we don't get duplicates
         return
 

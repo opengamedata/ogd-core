@@ -122,11 +122,11 @@ class QuitTypePerLevel(PerLevelFeature):
 
         return
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         """_summary_
 
         :param feature: _description_
-        :type feature: FeatureData
+        :type feature: Feature
         """
         # >>> use data in the Feature Data object to update state variables as needed. <<<
         # Note: This function runs on data from each Feature whose name matches one of the strings returned by _featureFilter().

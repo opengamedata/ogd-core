@@ -36,7 +36,7 @@ class SnippetsSubmitted(PerLevelFeature):
                 #     SnippetsSubmitted.has_printed = True
                 self._snippet_ids.append(snippet.get("SnippetId", "NOT FOUND"))
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

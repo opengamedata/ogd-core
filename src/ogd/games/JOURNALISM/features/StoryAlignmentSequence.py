@@ -24,7 +24,7 @@ class StoryAlignmentSequence(PerLevelFeature):
     def _updateFromEvent(self, event: Event) -> None:
         self._story_alignment_sequence.append(event.event_data["story_alignment"])
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return []
 
     def _getFeatureValues(self) -> List[Any]:
@@ -56,7 +56,7 @@ class StoryAlignmentSequence(PerLevelFeature):
     def _updateFromEvent(self, event: Event) -> None:
         self._story_alignment_sequence.append(event.event_data["story_alignment"])
 
-    def _updateFromFeatureData(self, feature: FeatureData) -> None:
+    def _updateFromFeature(self, feature: Feature) -> None:
         return
 
     def _getFeatureValues(self) -> List[Any]:

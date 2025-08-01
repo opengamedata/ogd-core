@@ -40,7 +40,7 @@ class TopPlayerQuitType(PerCountFeature):
         pass
 
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         print(feature._vals)
         #add logic to make sure that MODE is session, not player so we don't get duplicates
         if(feature._mode == ExtractionMode.SESSION):

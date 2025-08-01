@@ -42,7 +42,7 @@ class LevelTime(PerLevelFeature):
         else:
             Logger.Log(f"LevelTime received an event which was not a BEGIN or a COMPLETE!", logging.WARN)
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         IDLE_TIME_INDEX : Final[int] = 2 # Idle time should be at index 2 for the PlayTime feature
         if feature.FeatureType == "PlayTime":
             self._idle_time = feature.FeatureValues[IDLE_TIME_INDEX]

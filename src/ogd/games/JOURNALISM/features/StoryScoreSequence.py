@@ -24,7 +24,7 @@ from ogd.common.models.Feature import Feature
     def _updateFromEvent(self, event: Event) -> None:
         self._story_alignment_sequence.append(event.EventData["story_alignment"])
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return []
 
     def _getFeatureValues(self) -> List[Any]:
@@ -54,7 +54,7 @@ class StoryScoreSequence(PerLevelFeature):
     def _updateFromEvent(self, event: Event) -> None:
         self._story_score_sequence.append(event.event_data["story_score"])
 
-    def _updateFromFeatureData(self, feature: FeatureData) -> None:
+    def _updateFromFeature(self, feature: Feature) -> None:
         return
 
     def _getFeatureValues(self) -> List[Any]:

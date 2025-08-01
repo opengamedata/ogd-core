@@ -61,13 +61,13 @@ class TotalFails(SessionFeature):
         
         return
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         """_summary_
 
         :param feature: _description_
-        :type feature: FeatureData
+        :type feature: Feature
         """
-        # >>> use data in the FeatureData object to update state variables as needed. <<<
+        # >>> use data in the Feature object to update state variables as needed. <<<
         # Note: This function runs on data from each Feature whose name matches one of the strings returned by _featureFilter().
         #       The number of instances of each Feature may vary, depending on the configuration and the unit of analysis at which this CustomFeature is run.
         return
