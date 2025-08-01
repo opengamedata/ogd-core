@@ -4,12 +4,12 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Self, Set
 # import local files
 from ogd.common.configs.Config import Config
-from ogd.common.configs.generators.DetectorMapConfig import DetectorMapConfig
-from ogd.common.configs.generators.ExtractorMapConfig import ExtractorMapConfig
-from ogd.common.configs.generators.AggregateConfig import AggregateConfig
-from ogd.common.configs.generators.DetectorConfig import DetectorConfig
-from ogd.common.configs.generators.IteratedConfig import IteratedConfig
-from ogd.common.configs.generators.ExtractorConfig import ExtractorConfig
+from ogd.core.configs.generators.DetectorMapConfig import DetectorMapConfig
+from ogd.core.configs.generators.ExtractorMapConfig import ExtractorMapConfig
+from ogd.core.configs.generators.AggregateConfig import AggregateConfig
+from ogd.core.configs.generators.DetectorConfig import DetectorConfig
+from ogd.core.configs.generators.IteratedConfig import IteratedConfig
+from ogd.core.configs.generators.ExtractorConfig import ExtractorConfig
 from ogd.common.models.enums.IterationMode import IterationMode
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.utils.Logger import Logger

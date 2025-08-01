@@ -1,8 +1,8 @@
 # import standard libraries
 from typing import Dict, Optional, Self, Set
 # import local files
-from ogd.common.configs.generators.ExtractorConfig import ExtractorConfig
-from ogd.common.configs.generators.SubfeatureConfig import SubfeatureConfig
+from ogd.core.configs.generators.ExtractorConfig import ExtractorConfig
+from ogd.core.configs.generators.SubfeatureConfig import SubfeatureConfig
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.utils.typing import Map
 
