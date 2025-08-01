@@ -8,7 +8,7 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 
-class RangeR2(Feature):
+class RangeR2(Extractor):
     def __init__(self, params:GeneratorParameters):
         Feature.__init__(self, params=params)
 
