@@ -6,7 +6,7 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
 # import PerCountyFeature
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 
 class QuitOnCityFail(Feature):
     def __init__(self, params: GeneratorParameters):
