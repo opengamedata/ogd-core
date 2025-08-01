@@ -122,16 +122,16 @@ class JournalismLoader(GeneratorLoader):
     # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the JournalismExtractor class.
-    def __init__(self, player_id:str, session_id:str, game_schema: GeneratorCollectionConfig, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
+    def __init__(self, player_id:str, session_id:str, generator_config: GeneratorCollectionConfig, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
         """Constructor for the CrystalLoader class.
 
         :param player_id: _description_
         :type player_id: str
         :param session_id: The id number for the session whose data is being processed by this instance
         :type session_id: str
-        :param game_schema: A data structure containing information on how the game events and other data are structured
-        :type game_schema: GeneratorCollectionConfig
+        :param generator_config: A data structure containing information on how the game events and other data are structured
+        :type generator_config: GeneratorCollectionConfig
         :param feature_overrides: A list of features to export, overriding the default of exporting all enabled features.
         :type feature_overrides: Optional[List[str]]
         """
-        super().__init__(player_id=player_id, session_id=session_id, generator_config=game_schema, mode=mode, feature_overrides=feature_overrides)
+        super().__init__(player_id=player_id, session_id=session_id, generator_config=generator_config, mode=mode, feature_overrides=feature_overrides)

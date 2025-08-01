@@ -99,17 +99,17 @@ class LakelandExtractor(LegacyFeature):
     #                    by this extractor instance.
     #  @param game_table A data structure containing information on how the db
     #                    table associated with this game is structured.
-    #  @param game_schema A dictionary that defines how the game data itself is
+    #  @param generator_config A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, params:GeneratorParameters, game_schema:GeneratorCollectionConfig, session_id:str):
+    def __init__(self, params:GeneratorParameters, generator_config:GeneratorCollectionConfig, session_id:str):
         # Initialize superclass
-        super().__init__(params=params, game_schema=game_schema, session_id=session_id)
+        super().__init__(params=params, generator_config=generator_config, session_id=session_id)
         # Set window and overlap size
-        self._NUM_SECONDS_PER_WINDOW = game_schema.Config[LakelandExtractor._WINDOW_PREFIX+'WINDOW_SIZE_SECONDS']
-        self._NUM_SECONDS_PER_WINDOW_OVERLAP = game_schema.Config["WINDOW_OVERLAP_SECONDS"]
-        self._GAME_SCHEMA = game_schema
-        self._IDLE_THRESH_SECONDS = game_schema.Config['IDLE_THRESH_SECONDS']
-        self.WINDOW_RANGE = range(game_schema.LevelRange.stop)
+        self._NUM_SECONDS_PER_WINDOW = generator_config.Config[LakelandExtractor._WINDOW_PREFIX+'WINDOW_SIZE_SECONDS']
+        self._NUM_SECONDS_PER_WINDOW_OVERLAP = generator_config.Config["WINDOW_OVERLAP_SECONDS"]
+        self._GAME_SCHEMA = generator_config
+        self._IDLE_THRESH_SECONDS = generator_config.Config['IDLE_THRESH_SECONDS']
+        self.WINDOW_RANGE = range(generator_config.LevelRange.stop)
         self._WINDOW_RANGES = self._get_window_ranges()
         self._cur_gameplay = 1
         self._startgame_count = 0
@@ -1462,7 +1462,7 @@ class LakelandExtractor(LegacyFeature):
     def reset(self):
         self.levels:           List[int]       = []
         self.last_adjust_type: Optional[str] = None
-        self.features:         LegacyFeature.LegacySessionFeatures = LegacyFeature.LegacySessionFeatures(game_schema=self._GAME_SCHEMA)
+        self.features:         LegacyFeature.LegacySessionFeatures = LegacyFeature.LegacySessionFeatures(generator_config=self._GAME_SCHEMA)
         self.setValByName('sessID', new_value=self._session_id)
 
         # Initialize Lakeland Variables

@@ -17,7 +17,7 @@ class MagnetLoader(LegacyLoader):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Extractor]:
-        return MagnetExtractor(params=extractor_params, game_schema=self._generator_config, session_id=self._session_id)
+        return MagnetExtractor(params=extractor_params, generator_config=self._generator_config, session_id=self._session_id)
 
     def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Optional[Detector]:
         Logger.Log(f"'{detector_type}' is not a valid feature for Lakeland.")
@@ -30,19 +30,19 @@ class MagnetLoader(LegacyLoader):
     # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the WaveExtractor class.
-    def __init__(self, player_id:str, session_id:str, game_schema:GeneratorCollectionConfig, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
+    def __init__(self, player_id:str, session_id:str, generator_config:GeneratorCollectionConfig, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
         """Constructor for the CrystalLoader class.
 
         :param player_id: _description_
         :type player_id: str
         :param session_id: The id number for the session whose data is being processed by this instance
         :type session_id: str
-        :param game_schema: A data structure containing information on how the game events and other data are structured
-        :type game_schema: GeneratorCollectionConfig
+        :param generator_config: A data structure containing information on how the game events and other data are structured
+        :type generator_config: GeneratorCollectionConfig
         :param feature_overrides: A list of features to export, overriding the default of exporting all enabled features.
         :type feature_overrides: Optional[List[str]]
         """
-        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
+        super().__init__(player_id=player_id, session_id=session_id, generator_config=generator_config, mode=mode, feature_overrides=feature_overrides)
 
     # *** PUBLIC STATICS ***
 

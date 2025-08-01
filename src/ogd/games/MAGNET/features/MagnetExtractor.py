@@ -24,12 +24,12 @@ class MagnetExtractor(LegacyFeature):
     #                    by this extractor instance.
     #  @param game_table A data structure containing information on how the db
     #                    table assiciated with this game is structured.
-    #  @param game_schema A dictionary that defines how the game data itself is
+    #  @param generator_config A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, params:GeneratorParameters, game_schema:GeneratorCollectionConfig, session_id:str):
-        super().__init__(params=params, game_schema=game_schema, session_id=session_id)
+    def __init__(self, params:GeneratorParameters, generator_config:GeneratorCollectionConfig, session_id:str):
+        super().__init__(params=params, generator_config=generator_config, session_id=session_id)
         # Define custom private data.
-        self._game_schema : GeneratorCollectionConfig = game_schema
+        self._generator_config : GeneratorCollectionConfig = generator_config
         self._features.setValByName(feature_name="sessionID", new_value=session_id)
 
     ## Function to perform extraction of features from a row.
@@ -41,7 +41,7 @@ class MagnetExtractor(LegacyFeature):
     def _updateFromEvent(self, event:Event):
         # put some data in local vars, for readability later.
         level = event.GameState['level']
-        if level > self._game_schema._max_level:
+        if level > self._generator_config._max_level:
             Logger.Log(f"Got an event with level too high, full data:\n{str(event)}")
         # Check for invalid row.
         if self.ExtractionMode == ExtractionMode.SESSION and event.SessionID != self._session_id:

@@ -27,10 +27,10 @@ class CrystalExtractor(LegacyFeature):
     #                    by this extractor instance.
     #  @param game_table A data structure containing information on how the db
     #                    table assiciated with this game is structured. 
-    #  @param game_schema A dictionary that defines how the game data itself is
+    #  @param generator_config A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, params:GeneratorParameters, game_schema:GeneratorCollectionConfig, session_id:str):
-        super().__init__(params=params, game_schema=game_schema, session_id=session_id)
+    def __init__(self, params:GeneratorParameters, generator_config:GeneratorCollectionConfig, session_id:str):
+        super().__init__(params=params, generator_config=generator_config, session_id=session_id)
         # Define custom private data.
         self._start_times: typing.Dict       = {}
         self._end_times:   typing.Dict       = {}
