@@ -6,7 +6,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.games.ICECUBE.DBExport import scene_map
 from ogd.games.ICECUBE.features.PerSceneFeature import PerSceneFeature
 from ogd.games.ICECUBE.DBExport import scenes_list
