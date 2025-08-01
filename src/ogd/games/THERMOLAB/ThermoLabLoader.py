@@ -17,6 +17,7 @@ from ogd.core.generators.extractors.Feature import Feature
 from ogd.games import THERMOLAB
 from ogd.games.THERMOLAB.detectors import *
 from ogd.games.THERMOLAB.features import *
+from . import features
 
 EXPORT_PATH = "games/THERMOLAB/DBExport.json"
 
