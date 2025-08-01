@@ -73,7 +73,7 @@ class StopwatchTimer(BuiltinExtractor):
         elif event.EventName == self._end_event:
             self.counting = False
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: FeatureData):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

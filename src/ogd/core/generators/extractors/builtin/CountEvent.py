@@ -66,7 +66,7 @@ class CountEvent(BuiltinExtractor):
             self._count += 1
         return
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: FeatureData):
         """_summary_
 
         :param feature: _description_
