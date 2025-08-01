@@ -40,7 +40,7 @@ class AqualabLoader(GeneratorLoader):
         :param feature_overrides: A list of features to export, overriding the default of exporting all enabled features.
         :type feature_overrides: Optional[List[str]]
         """
-        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
+        super().__init__(player_id=player_id, session_id=session_id, generator_config=game_schema, mode=mode, feature_overrides=feature_overrides)
         self._job_map = {"no-active-job": 0}
         self._diff_map = {0: {"experimentation": 0, "modeling": 0, "argumentation": 0} }
         self._task_map = {}
@@ -61,7 +61,7 @@ class AqualabLoader(GeneratorLoader):
                 task_num += 1
 
         # Update level count
-        self._game_schema._max_level = len(self._job_map) - 1
+        self._generator_config._max_level = len(self._job_map) - 1
 
     @property
     def JobMap(self) -> Dict:

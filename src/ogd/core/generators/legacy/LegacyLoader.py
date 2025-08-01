@@ -8,7 +8,7 @@ from ogd.common.schemas.games.GameSchema import GameSchema
 
 class LegacyLoader(GeneratorLoader):
     def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
-        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
+        super().__init__(player_id=player_id, session_id=session_id, generator_config=game_schema, mode=mode, feature_overrides=feature_overrides)
 
     def GetFeatureClass(self, feature_type:str) -> Optional[Type[Feature]]:
         return None

@@ -19,7 +19,7 @@ class ShipwrecksLoader(GeneratorLoader):
     Extractor subclass for extracting features from Shipwrecks game data.
     """
     def __init__(self, player_id:str, session_id:str, game_schema: GeneratorCollectionConfig, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
-        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
+        super().__init__(player_id=player_id, session_id=session_id, generator_config=game_schema, mode=mode, feature_overrides=feature_overrides)
 
     @staticmethod
     def _getFeaturesModule():
@@ -58,7 +58,7 @@ class ShipwrecksLoader(GeneratorLoader):
                 case "MissionDiveTime":
                     ret_val = MissionDiveTime.MissionDiveTime(params=extractor_params)
                 case "JobsAttempted":
-                    ret_val = JobsAttempted.JobsAttempted(params=extractor_params, mission_map=self._game_schema.NonStandardElements["mission_map"])
+                    ret_val = JobsAttempted.JobsAttempted(params=extractor_params, mission_map=self._generator_config.NonStandardElements["mission_map"])
                 case "MissionSonarTimeToComplete":
                     ret_val = MissionSonarTimeToComplete.MissionSonarTimeToComplete(params=extractor_params)
                 case _:

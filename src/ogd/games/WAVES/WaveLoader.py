@@ -151,7 +151,7 @@ class WaveLoader(GeneratorLoader):
         :param feature_overrides: A list of features to export, overriding the default of exporting all enabled features.
         :type feature_overrides: Optional[List[str]]
         """
-        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
+        super().__init__(player_id=player_id, session_id=session_id, generator_config=game_schema, mode=mode, feature_overrides=feature_overrides)
         # self._last_adjust_type : Optional[str] = None
         # self.start_times: Dict       = {}
         # self.end_times:   Dict       = {}

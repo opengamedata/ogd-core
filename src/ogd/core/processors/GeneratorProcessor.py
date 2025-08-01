@@ -46,7 +46,7 @@ class GeneratorProcessor(Processor):
     def __init__(self, game_schema: GameSchema, LoaderClass:Type[GeneratorLoader], feature_overrides:Optional[List[str]]=None):
         super().__init__(game_schema=game_schema)
         self._overrides   : Optional[List[str]]   = feature_overrides
-        self._loader      : GeneratorLoader       = LoaderClass(player_id=self._playerID, session_id=self._sessionID, game_schema=self._game_schema,
+        self._loader      : GeneratorLoader       = LoaderClass(player_id=self._playerID, session_id=self._sessionID, generator_config=self._game_schema,
                                                                 mode=self._mode, feature_overrides=self._overrides)
         self._registry    : Optional[GeneratorRegistry] = None # Set to 0, let subclasses create own instances.
 

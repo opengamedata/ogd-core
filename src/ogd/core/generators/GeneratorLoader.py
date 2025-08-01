@@ -13,7 +13,7 @@ from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.common.utils.Logger import Logger
 
 class GeneratorLoader(abc.ABC):
@@ -36,7 +36,7 @@ class GeneratorLoader(abc.ABC):
     # *** BUILT-INS & PROPERTIES ***
 
     _derived_builtins : Dict[str, Type[BuiltinExtractor]] = {}
-    def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
+    def __init__(self, player_id:str, session_id:str, generator_config:GeneratorCollectionConfig, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
         """Base constructor for Loader classes.
         Sets the player and session identifiers, as well as the mode in which to load generators.
         Also sets the schema, which contains config info, and any overrides.
@@ -53,11 +53,11 @@ class GeneratorLoader(abc.ABC):
         :type feature_overrides: Optional[List[str]]
         """
         # TODO : seems like Loader shouldn't really need player ID,  session ID, or overrides, consider removing.
-        self._player_id   : str            = player_id
-        self._session_id  : str            = session_id
-        self._game_schema : GameSchema     = game_schema
-        self._mode        : ExtractionMode = mode
-        self._overrides   : Optional[List[str]] = feature_overrides
+        self._player_id        : str            = player_id
+        self._session_id       : str            = session_id
+        self._generator_config : GeneratorCollectionConfig     = generator_config
+        self._mode             : ExtractionMode = mode
+        self._overrides        : Optional[List[str]] = feature_overrides
 
     # *** PUBLIC STATICS ***
 

@@ -40,7 +40,7 @@ class ThermoLabLoader(GeneratorLoader):
         :param feature_overrides: A list of features to export, overriding the default of exporting all enabled features.
         :type feature_overrides: Optional[List[str]]
         """
-        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
+        super().__init__(player_id=player_id, session_id=session_id, generator_config=game_schema, mode=mode, feature_overrides=feature_overrides)
         self._lab_map = {}
         data = None
 
@@ -58,7 +58,7 @@ class ThermoLabLoader(GeneratorLoader):
             #         task_num += 1
 
         # Update level count
-        self._game_schema._max_level = len(self._lab_map) - 1
+        self._generator_config._max_level = len(self._lab_map) - 1
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
