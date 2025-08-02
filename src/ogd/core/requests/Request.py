@@ -3,10 +3,10 @@ import abc
 from datetime import datetime
 from typing import Dict, List, Optional, Set
 # import local files
-from ogd.common.interfaces.EventInterface import EventInterface
-from ogd.common.interfaces.outerfaces.DataOuterface import DataOuterface
 from ogd.common.models.enums.IDMode import IDMode
 from ogd.common.models.enums.ExportMode import ExportMode
+from ogd.common.storage.interfaces.Interface import Interface
+from ogd.common.storage.outerfaces.Outerface import Outerface
 from ogd.common.utils.Logger import Logger
 
 class ExporterRange:
@@ -21,12 +21,12 @@ class ExporterRange:
         self._versions : Optional[List[int]] = versions
 
     @staticmethod
-    def FromDateRange(source:EventInterface, date_min:datetime, date_max:datetime, versions:Optional[List[int]]=None):
+    def FromDateRange(source:Interface, date_min:datetime, date_max:datetime, versions:Optional[List[int]]=None):
         ids = source.IDsFromDates(date_min, date_max, versions=versions)
         return ExporterRange(date_min=date_min, date_max=date_max, ids=ids, id_mode=IDMode.SESSION, versions=versions)
 
     @staticmethod
-    def FromIDs(source:EventInterface, ids:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None):
+    def FromIDs(source:Interface, ids:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None):
         date_range = source.DatesFromIDs(id_list=ids, id_mode=id_mode, versions=versions)
         return ExporterRange(date_min=date_range['min'], date_max=date_range['max'], ids=ids, id_mode=id_mode, versions=versions)
 
@@ -55,15 +55,15 @@ class Request(abc.ABC):
     #  @param start_date   The starting date for our range of data to process.
     #  @param end_date     The ending date for our range of data to process.
     def __init__(self, range:ExporterRange, exporter_modes:Set[ExportMode],
-                interface:EventInterface,    outerfaces:Set[DataOuterface],
+                interface:Interface,    outerfaces:Set[Outerface],
                 feature_overrides:Optional[List[str]]=None):
         # TODO: kind of a hack to just get id from interface, figure out later how this should be handled.
-        self._game_id        : str                    = str(interface._game_id)
-        self._interface      : EventInterface          = interface
-        self._range          : ExporterRange          = range
-        self._exports        : Set[ExportMode]        = exporter_modes
-        self._outerfaces     : Set[DataOuterface]     = outerfaces
-        self._feat_overrides : Optional[List[str]]    = feature_overrides
+        self._game_id        : str                = str(interface._game_id)
+        self._interface      : Interface          = interface
+        self._range          : ExporterRange      = range
+        self._exports        : Set[ExportMode]    = exporter_modes
+        self._outerfaces     : Set[Outerface]      = outerfaces
+        self._feat_overrides : Optional[List[str]] = feature_overrides
 
     ## String representation of a request. Just gives game id, and date range.
     def __str__(self):
@@ -84,12 +84,16 @@ class Request(abc.ABC):
         return self._game_id
 
     @property
-    def Interface(self) -> EventInterface:
+    def Interface(self) -> Interface:
         return self._interface
 
     @property
     def Range(self) -> ExporterRange:
         return self._range
+
+    @property
+    def Overrides(self) -> Optional[List[str]]:
+        return self._feat_overrides
 
     @property
     def ExportRawEvents(self) -> bool:
@@ -108,7 +112,7 @@ class Request(abc.ABC):
         return ExportMode.POPULATION in self._exports
 
     @property
-    def Outerfaces(self) -> Set[DataOuterface]:
+    def Outerfaces(self) -> Set[Outerface]:
         return self._outerfaces
 
     def RemoveExportMode(self, mode:ExportMode):
