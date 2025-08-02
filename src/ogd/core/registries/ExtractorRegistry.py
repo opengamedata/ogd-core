@@ -6,6 +6,8 @@ from collections import OrderedDict
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Set
 ## import local files
+from ogd.core.configs.generators.AggregateConfig import AggregateConfig
+from ogd.core.configs.generators.IteratedConfig import IteratedConfig
 from ogd.core.generators.Generator import Generator
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
@@ -13,11 +15,9 @@ from ogd.core.registries.GeneratorRegistry import GeneratorRegistry
 from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.models.enums.IterationMode import IterationMode
-from ogd.common.schemas.games.AggregateSchema import AggregateSchema
-from ogd.common.schemas.games.PerCountSchema import PerCountSchema
 from ogd.common.utils.Logger import Logger
 
 ## @class Extractor
@@ -136,14 +136,14 @@ class ExtractorRegistry(GeneratorRegistry):
         # first, get list of what should actually be loaded.
         # TODO : move this logic as high up as possible, so that we only need to do it once for each kind of processor.
         # 1. Start with overrides, else list of enabled features in schema.
-        agg_load_set : Set[AggregateSchema]
-        per_load_set : Set[PerCountSchema]
+        agg_load_set : Set[AggregateConfig]
+        per_load_set : Set[IteratedConfig]
         if overrides is not None:
             agg_load_set = {schema.AggregateFeatures[name] for name in overrides if name in schema.AggregateFeatures.keys()}
             per_load_set = {schema.PerCountFeatures[name]  for name in overrides if name in schema.PerCountFeatures.keys()}
         else:
-            agg_load_set = {val for val in schema.EnabledFeatures(iter_modes={IterationMode.AGGREGATE}, extract_modes={self._mode}).values() if isinstance(val, AggregateSchema)}
-            per_load_set = {val for val in schema.EnabledFeatures(iter_modes={IterationMode.PERCOUNT}, extract_modes={self._mode}).values() if isinstance(val, PerCountSchema)}
+            agg_load_set = {val for val in schema.EnabledFeatures(iter_modes={IterationMode.AGGREGATE}, extract_modes={self._mode}).values() if isinstance(val, AggregateConfig)}
+            per_load_set = {val for val in schema.EnabledFeatures(iter_modes={IterationMode.PERCOUNT}, extract_modes={self._mode}).values() if isinstance(val, IteratedConfig)}
         # 2. For each, grab the list of feature dependencies, and add to the list of features we want to load.
         _agg_deps = set()
         for agg in agg_load_set:
@@ -193,7 +193,7 @@ class ExtractorRegistry(GeneratorRegistry):
         except KeyError as err:
             Logger.Log(f"{listener.name} found event {event} missing expected key: {err}", logging.ERROR)
 
-    def _updateFromFeatureData(self, feature:FeatureData) -> None:
+    def _updateFromFeature(self, feature:Feature) -> None:
         """Perform extraction of features from a row.
 
         :param event: [description]
@@ -209,7 +209,7 @@ class ExtractorRegistry(GeneratorRegistry):
                 if listener.name in self._features[order_key].keys():
                     _extractor = self._features[order_key][listener.name]
                     if feature.ExportMode in _extractor.FeatureDependencyModes():
-                        self._features[order_key][listener.name].UpdateFromFeatureData(feature)
+                        self._features[order_key][listener.name].UpdateFromFeature(feature)
 
 
     # *** PUBLIC STATICS ***
@@ -225,11 +225,11 @@ class ExtractorRegistry(GeneratorRegistry):
         """
         return len(self._features)
 
-    def GetFeatureData(self, order:int, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> List[FeatureData]:
+    def GetFeature(self, order:int, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> List[Feature]:
         order_index = order - 1 # orders are counted from 1, so need to adjust to index from 0.
-        ret_val : List[FeatureData] = []
+        ret_val : List[Feature] = []
         for feature in self._features[order_index].values():
-            ret_val.append(feature.ToFeatureData(player_id=player_id, sess_id=sess_id))
+            ret_val.append(feature.ToFeature(player_id=player_id, sess_id=sess_id))
         return ret_val
 
     def GetFeatureValues(self) -> List[Any]:
