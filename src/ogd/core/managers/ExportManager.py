@@ -141,12 +141,12 @@ class ExportManager:
     # 2. Set up EventManager, assuming it was requested.
         if request.ExportRawEvents or request.ExportProcessedEvents:
             self._event_mgr = EventManager(game_schema=generator_config, LoaderClass=load_class,
-                                           trigger_callback=self._receiveEventTrigger, feature_overrides=request._feat_overrides)
+                                           trigger_callback=self._receiveEventTrigger, feature_overrides=request.Overrides)
         else:
             Logger.Log("Event data not requested, skipping event manager.", logging.INFO, depth=1)
     # 3. Set up FeatureManager, assuming it was requested.
         if request.ExportSessions or request.ExportPlayers or request.ExportPopulation:
-            self._feat_mgr = FeatureManager(generator_config=generator_config, LoaderClass=load_class, feature_overrides=request._feat_overrides)
+            self._feat_mgr = FeatureManager(generator_config=generator_config, LoaderClass=load_class, feature_overrides=request.Overrides)
         else:
             Logger.Log("Feature data not requested, or extractor loader unavailable, skipping feature manager.", logging.INFO, depth=1)
     # 4. Open the outerfaces
@@ -190,7 +190,7 @@ class ExportManager:
                     outerface.WriteLines(lines=_player_feats, mode=ExportMode.PLAYER)
                 self._feat_mgr.ClearPlayerLines()
         else:
-            Logger.Log(f"Skipping feature output for post-process, no FeatureManager exists!", logging.DEBUG, depth=3)
+            Logger.Log("Skipping feature output for post-process, no FeatureManager exists!", logging.DEBUG, depth=3)
         time_delta = datetime.now() - start
         Logger.Log(f"Output time for population: {time_delta}", logging.INFO, depth=2)
 
@@ -294,8 +294,8 @@ class ExportManager:
             if not _sampled_an_event:
                 Logger.Log(f"First event of slice is:\n{event}", logging.DEBUG, depth=2)
                 _sampled_an_event = True
-            if (request._range._id_mode==IDMode.SESSION and event.SessionID in ids) \
-            or (request._range._id_mode==IDMode.USER    and event.UserID    in ids):
+            if (request.Range.IDMode==IDMode.SESSION and event.SessionID in ids) \
+            or (request.Range.IDMode==IDMode.USER    and event.UserID    in ids):
                 self._processEvent(next_event=event)
             elif event.SessionID is not None and event.SessionID.upper() != "NONE":
                 Logger.Log(f"Found a session ({event.SessionID}, type {type(event.SessionID)}) which was in the slice but not in the list of sessions for processing ({ids[:5]}..., type {type(ids[0])}).", logging.WARNING, depth=2)
