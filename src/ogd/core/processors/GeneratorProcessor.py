@@ -5,7 +5,7 @@ from typing import Dict, List, Type, Optional, Set
 # import locals
 from ogd.core.registries.GeneratorRegistry import GeneratorRegistry
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.processors.Processor import Processor
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
@@ -62,12 +62,12 @@ class GeneratorProcessor(Processor):
 
     # *** PUBLIC METHODS ***
 
-    def ProcessFeatureData(self, feature_list:List[FeatureData]) -> None:
+    def ProcessFeature(self, feature_list:List[Feature]) -> None:
         if self._registry is not None:
             for feature in feature_list:
-                self._registry.UpdateFromFeatureData(feature=feature)
+                self._registry.UpdateFromFeature(feature=feature)
         else:
-            Logger.Log(f"Processor has no registry, skipping FeatureData.", logging.WARN)
+            Logger.Log(f"Processor has no registry, skipping Feature.", logging.WARN)
 
     # *** PRIVATE STATICS ***
 

@@ -2,7 +2,7 @@
 import logging
 from typing import List, Type, Optional, Set
 # import local files
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
@@ -83,8 +83,8 @@ class PopulationProcessor(ExtractorProcessor):
         ret_val = [len(self._players), len(self._sessions)] + self._registry.GetFeatureValues()
         return [ret_val]
 
-    def _getFeatureData(self, order:int) -> List[FeatureData]:
-        return self._registry.GetFeatureData(order=order)
+    def _getFeature(self, order:int) -> List[Feature]:
+        return self._registry.GetFeature(order=order)
 
     ##  Function to empty the list of lines stored by the PopulationProcessor.
     #   This is helpful if we're processing a lot of data and want to avoid

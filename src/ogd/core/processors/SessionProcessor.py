@@ -3,7 +3,7 @@ import logging
 import traceback
 from typing import List, Dict, Type, Optional, Set
 # import local files
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
@@ -89,8 +89,8 @@ class SessionProcessor(ExtractorProcessor):
         ret_val = [self._playerID, self._sessionID] + self._registry.GetFeatureValues()
         return [ret_val]
 
-    def _getFeatureData(self, order:int) -> List[FeatureData]:
-        return self._registry.GetFeatureData(order=order, player_id=self._player_id, sess_id=self._session_id)
+    def _getFeature(self, order:int) -> List[Feature]:
+        return self._registry.GetFeature(order=order, player_id=self._player_id, sess_id=self._session_id)
 
     def _clearLines(self) -> None:
         Logger.Log(f"Clearing features from SessionProcessor for player {self._player_id}, session {self._session_id}.", logging.DEBUG, depth=2)
