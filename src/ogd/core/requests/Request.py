@@ -5,8 +5,10 @@ from typing import Dict, List, Optional, Set
 # import local files
 from ogd.common.models.enums.IDMode import IDMode
 from ogd.common.models.enums.ExportMode import ExportMode
-from ogd.common.storage.interfaces.Interface import Interface
-from ogd.common.storage.outerfaces.Outerface import Outerface
+# from ogd.common.storage.interfaces import Interface
+# from ogd.common.storage.outerfaces.Outerface import Outerface
+from ogd.common.configs.GameStoreConfig import GameStoreConfig
+from ogd.common.configs.storage.
 from ogd.common.utils.Logger import Logger
 
 class ExporterRange:
@@ -14,19 +16,19 @@ class ExporterRange:
     Simple class to define a range of data for export.
     """
     def __init__(self, date_min:Optional[datetime], date_max:Optional[datetime], ids:Optional[List[str]], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None):
-        self._date_min : Optional[datetime] = date_min
-        self._date_max : Optional[datetime] = date_max
+        self._date_min : Optional[datetime]  = date_min
+        self._date_max : Optional[datetime]  = date_max
         self._ids      : Optional[List[str]] = ids
-        self._id_mode  : IDMode                = id_mode
+        self._id_mode  : IDMode              = id_mode
         self._versions : Optional[List[int]] = versions
 
     @staticmethod
-    def FromDateRange(source:Interface, date_min:datetime, date_max:datetime, versions:Optional[List[int]]=None):
+    def FromDateRange(source:Interface.Interface, date_min:datetime, date_max:datetime, versions:Optional[List[int]]=None):
         ids = source.IDsFromDates(date_min, date_max, versions=versions)
         return ExporterRange(date_min=date_min, date_max=date_max, ids=ids, id_mode=IDMode.SESSION, versions=versions)
 
     @staticmethod
-    def FromIDs(source:Interface, ids:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None):
+    def FromIDs(source:Interface.Interface, ids:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None):
         date_range = source.DatesFromIDs(id_list=ids, id_mode=id_mode, versions=versions)
         return ExporterRange(date_min=date_range['min'], date_max=date_range['max'], ids=ids, id_mode=id_mode, versions=versions)
 
@@ -55,11 +57,11 @@ class Request(abc.ABC):
     #  @param start_date   The starting date for our range of data to process.
     #  @param end_date     The ending date for our range of data to process.
     def __init__(self, range:ExporterRange, exporter_modes:Set[ExportMode],
-                interface:Interface,    outerfaces:Set[Outerface],
+                interface:Interface.Interface,    outerfaces:Set[Outerface],
                 feature_overrides:Optional[List[str]]=None):
         # TODO: kind of a hack to just get id from interface, figure out later how this should be handled.
         self._game_id        : str                = str(interface._game_id)
-        self._interface      : Interface          = interface
+        self._interface      : Interface.Interface          = interface
         self._range          : ExporterRange      = range
         self._exports        : Set[ExportMode]    = exporter_modes
         self._outerfaces     : Set[Outerface]      = outerfaces
@@ -84,7 +86,7 @@ class Request(abc.ABC):
         return self._game_id
 
     @property
-    def Interface(self) -> Interface:
+    def Interface(self) -> Interface.Interface:
         return self._interface
 
     @property
