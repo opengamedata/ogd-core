@@ -5,7 +5,7 @@ from typing import Dict, List, Type, Optional, Set
 # import locals
 from ogd.core.registries.GeneratorRegistry import GeneratorRegistry
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.processors.Processor import Processor
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
@@ -46,7 +46,7 @@ class GeneratorProcessor(Processor):
     def __init__(self, game_schema: GameSchema, LoaderClass:Type[GeneratorLoader], feature_overrides:Optional[List[str]]=None):
         super().__init__(game_schema=game_schema)
         self._overrides   : Optional[List[str]]   = feature_overrides
-        self._loader      : GeneratorLoader       = LoaderClass(player_id=self._playerID, session_id=self._sessionID, game_schema=self._game_schema,
+        self._loader      : GeneratorLoader       = LoaderClass(player_id=self._playerID, session_id=self._sessionID, generator_config=self._game_schema,
                                                                 mode=self._mode, feature_overrides=self._overrides)
         self._registry    : Optional[GeneratorRegistry] = None # Set to 0, let subclasses create own instances.
 
@@ -62,13 +62,12 @@ class GeneratorProcessor(Processor):
 
     # *** PUBLIC METHODS ***
 
-    def ProcessFeatureData(self, feature_list:List[FeatureData]) -> None:
-        # print("\n\n\nInside ProcessFeatureData of GeneratorProcessor")
+    def ProcessFeature(self, feature_list:List[Feature]) -> None:
         if self._registry is not None:
             for feature in feature_list:
-                self._registry.UpdateFromFeatureData(feature=feature)
+                self._registry.UpdateFromFeature(feature=feature)
         else:
-            Logger.Log(f"Processor has no registry, skipping FeatureData.", logging.WARN)
+            Logger.Log(f"Processor has no registry, skipping Feature.", logging.WARN)
 
     # *** PRIVATE STATICS ***
 

@@ -5,13 +5,13 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class UserTotalSessionDuration(SessionFeature):
     """_summary_
 
-    :param SessionFeature: _description_
-    :type SessionFeature: _type_
+    :param SessionExtractor: _description_
+    :type SessionExtractor: _type_
     """
     def __init__(self, params:GeneratorParameters, player_id:str):
         super().__init__(params=params)
@@ -30,7 +30,7 @@ class UserTotalSessionDuration(SessionFeature):
     def _updateFromEvent(self, event:Event) -> None:
         return
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         if feature.PlayerID == self._player_id:
             if type(feature.FeatureValues[0]) == str and feature.FeatureValues[0] == "No events":
                 pass

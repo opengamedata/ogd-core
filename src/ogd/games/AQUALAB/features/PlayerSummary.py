@@ -7,7 +7,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.utils.Logger import Logger
 from time import sleep
@@ -30,7 +30,7 @@ class PlayerSummary(SessionFeature):
     def _updateFromEvent(self, event:Event) -> None:
         return
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         user_id = feature.PlayerID
         
         if feature.ExportMode == ExtractionMode.PLAYER:

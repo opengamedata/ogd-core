@@ -4,11 +4,11 @@ import logging
 from collections import Counter
 from typing import Any, Final, List, Optional
 # import local files
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.utils.Logger import Logger
@@ -19,8 +19,8 @@ from ogd.common.utils.Logger import Logger
 class QuitNode(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
-    :param Feature: Base class for a Custom Feature class.
-    :type Feature: _type_
+    :param Extractor: Base class for a Custom Feature class.
+    :type Extractor: _type_
     """
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
@@ -63,11 +63,11 @@ class QuitNode(SessionFeature):
         
         return
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         """_summary_
 
         :param feature: _description_
-        :type feature: FeatureData
+        :type feature: Feature
         """
         QNODE_INDEX : Final[int]    = 2 # The "Node" subfeature of the "QuitLevel" feature should be at index 2.
         quit_node   : Optional[str] = None

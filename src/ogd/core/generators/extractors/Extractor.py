@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import Generator, GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class Extractor(Generator):
     """
@@ -21,7 +21,7 @@ class Extractor(Generator):
 
     ## Abstract declaration of a function to perform update of a feature from a row.
     @abc.abstractmethod
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         """Abstract declaration of a function to perform update of a feature from a row.
 
         :param event: An event, used to update the feature's data.
@@ -71,8 +71,8 @@ class Extractor(Generator):
 
     # *** PUBLIC METHODS ***
 
-    def ToFeatureData(self,  mode:ExtractionMode, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> FeatureData:
-        return FeatureData(
+    def ToFeature(self, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> Feature:
+        return Feature(
             name=self.Name,
             feature_type=type(self).__name__,
             count_index=self.CountIndex,
@@ -129,10 +129,10 @@ class Extractor(Generator):
             self._updateFromEvent(event=event)
             self._up_to_date = False
 
-    def UpdateFromFeatureData(self, feature:FeatureData):
-        # TODO: add validation for FeatureData, if applicable/possible.
+    def UpdateFromFeature(self, feature:Feature):
+        # TODO: add validation for Feature, if applicable/possible.
         # TODO: figure out a way to invalidate/reset if more events are given to features on which the given feature depends.
-        self._updateFromFeatureData(feature=feature)
+        self._updateFromFeature(feature=feature)
         self._up_to_date = False
 
     def GetFeatureValues(self) -> List[Any]:

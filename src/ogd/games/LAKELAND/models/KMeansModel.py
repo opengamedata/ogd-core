@@ -9,7 +9,7 @@
 
 # from typing import List
 # from ogd.common.models.enums.ExtractionMode import ExtractionMode
-# from ogd.common.models.FeatureData import FeatureData
+# from ogd.common.models.Feature import Feature
 # from ogd.core.generators.Generator import GeneratorParameters
 # from ogd.core.generators.models.PopulationModel import PopulationModel
 # from ogd.common.utils.Logger import Logger
@@ -34,8 +34,8 @@
 #             'TotalBuildCount'
 #         ]
     
-#     def _updateFromFeatureData(self, feature:FeatureData):
-#         print("\n\n\nInside _updateFromFeatureData of KMeansModel")
+#     def _updateFromFeature(self, feature:Feature):
+#         print("\n\n\nInside _updateFromFeature of KMeansModel")
 #         if hasattr(feature, 'ExtractionMode') and feature.ExtractionMode == ExtractionMode.SESSION:
 #             if feature.Name == "CropBuildCount":
 #                 self._crop_build_count.append(feature.FeatureValues[0])
@@ -56,7 +56,7 @@
     
 #     def _train(self):
 #         print("\n\n\nInside _train of KMeansModel")
-#         # self._updateFromFeatureData(feature)
+#         # self._updateFromFeature(feature)
 #         min_length = min(
 #             len(self._crop_build_count),
 #             len(self._dairy_build_count), 
@@ -111,7 +111,7 @@
 #         print(f"Training completed. Silhouette Score: {self._silhouette_score}")
 
 
-#     def _apply(self, apply_to:List[FeatureData]) -> FeatureData:
+#     def _apply(self, apply_to:List[Feature]) -> Feature:
 #         if self._kmeans is None:
 #             raise ValueError("Model must be trained before applying")
         
@@ -456,7 +456,7 @@ from sklearn.metrics import silhouette_score
 import logging
 
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.models.PopulationModel import PopulationModel
 from ogd.common.utils.Logger import Logger
@@ -494,7 +494,7 @@ class KMeansModel(PopulationModel):
             'AverageEconomyViewTime'
         ]
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: Feature):
         if feature.ExportMode == self.ExtractionMode:
             try:
                 value_as_string = str(feature.FeatureValues[0])
@@ -594,7 +594,9 @@ class KMeansModel(PopulationModel):
 
         Logger.Log(f"KMeansModel training completed. Silhouette Score: {self._silhouette_score}", logging.INFO)
 
-    def _apply(self, apply_to: List[FeatureData]) -> FeatureData:
+
+
+    def _apply(self, apply_to:List[Feature]) -> Feature:
         if self._kmeans is None:
             raise ValueError("Model must be trained before applying")
 

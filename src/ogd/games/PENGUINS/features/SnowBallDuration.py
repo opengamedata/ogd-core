@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
 class SnowBallDuration(SessionFeature):
@@ -42,7 +42,7 @@ class SnowBallDuration(SessionFeature):
             return
         self._prev_timestamp = event.Timestamp
     
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

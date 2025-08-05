@@ -4,7 +4,7 @@ from typing import Any, List, Optional
 from ogd.core.generators.extractors.Extractor import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 
 class RegionName(PerCountFeature):
@@ -28,7 +28,7 @@ class RegionName(PerCountFeature):
     def _updateFromEvent(self, event:Event) -> None:
         pass
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

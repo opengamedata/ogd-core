@@ -5,7 +5,7 @@ import logging
 from datetime import datetime
 from typing import Any, Dict, List, Type, Optional
 # import locals
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.models.Event import Event
 from ogd.common.utils.typing import ExportRow

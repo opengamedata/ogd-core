@@ -6,7 +6,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class PopulationSummary(SessionFeature):
 
@@ -27,7 +27,7 @@ class PopulationSummary(SessionFeature):
     def _updateFromEvent(self, event: Event) -> None:
         return
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         player_id = feature.PlayerID
 
         # print(f"Processing feature: {feature}")

@@ -7,7 +7,7 @@ from ogd.core.generators.extractors.Extractor import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class JobPriorComplete(PerCountFeature):
 
@@ -40,7 +40,7 @@ class JobPriorComplete(PerCountFeature):
     def _validateEventCountIndex(self, event:Event) -> bool:
         return not self._completed
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

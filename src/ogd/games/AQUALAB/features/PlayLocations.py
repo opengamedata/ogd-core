@@ -6,7 +6,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 
 class PlayLocations(SessionFeature):
@@ -26,7 +26,7 @@ class PlayLocations(SessionFeature):
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
     
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _updateFromEvent(self, event: Event) -> None:

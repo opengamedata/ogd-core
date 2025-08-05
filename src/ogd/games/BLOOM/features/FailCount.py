@@ -1,12 +1,12 @@
 # import necessary libraries
 from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
-class FailCount(Feature):
+class FailCount(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.fail_type_counts: Dict[str, int] = {
@@ -31,7 +31,7 @@ class FailCount(Feature):
         else: 
             print("No fail type matched")
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

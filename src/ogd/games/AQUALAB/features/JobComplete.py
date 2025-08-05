@@ -6,7 +6,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class JobComplete(PerJobFeature):
     def __init__(self, params:GeneratorParameters, job_map:dict):
@@ -27,7 +27,7 @@ class JobComplete(PerJobFeature):
         if completed_job == self.TargetJobName:
             self._job_completed = True
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

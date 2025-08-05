@@ -6,14 +6,14 @@ from typing import Any, Callable, Dict, List, Optional
 # OGD imports
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.schemas.games.GameSchema import GameSchema
-from ogd.common.utils.utils import loadJSONFile
+from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
+from ogd.common.utils.fileio import loadJSONFile
 from ogd.common.utils.Logger import Logger
 # import local files
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.games import THERMOLAB
 from ogd.games.THERMOLAB.detectors import *
 from ogd.games.THERMOLAB.features import *
@@ -28,19 +28,19 @@ class ThermoLabLoader(GeneratorLoader):
     # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the ThermoLabLoader class.
-    def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
+    def __init__(self, player_id:str, session_id:str, generator_config: GeneratorCollectionConfig, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
         """Constructor for the ThermoLabLoader class.
 
         :param player_id: _description_
         :type player_id: str
         :param session_id: The id number for the session whose data is being processed by this instance
         :type session_id: str
-        :param game_schema: A data structure containing information on how the game events and other data are structured
-        :type game_schema: GameSchema
+        :param generator_config: A data structure containing information on how the game events and other data are structured
+        :type generator_config: GeneratorCollectionConfig
         :param feature_overrides: A list of features to export, overriding the default of exporting all enabled features.
         :type feature_overrides: Optional[List[str]]
         """
-        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
+        super().__init__(player_id=player_id, session_id=session_id, generator_config=generator_config, mode=mode, feature_overrides=feature_overrides)
         self._lab_map = {}
         data = None
 
@@ -58,7 +58,7 @@ class ThermoLabLoader(GeneratorLoader):
             #         task_num += 1
 
         # Update level count
-        self._game_schema._max_level = len(self._lab_map) - 1
+        # self._generator_config._max_level = len(self._lab_map) - 1
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
@@ -66,8 +66,8 @@ class ThermoLabLoader(GeneratorLoader):
     def _getFeaturesModule():
         return features
 
-    def _loadFeature(self, feature_type: str, extractor_params: GeneratorParameters, schema_args: Dict[str, Any]) -> Optional[Feature]:
-        ret_val: Optional[Feature] = None
+    def _loadFeature(self, feature_type: str, extractor_params: GeneratorParameters, schema_args: Dict[str, Any]) -> Optional[Extractor]:
+        ret_val: Optional[Extractor] = None
         # First run through aggregate features
         if extractor_params._count_index is None:
             match feature_type:

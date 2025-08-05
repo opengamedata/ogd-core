@@ -2,12 +2,12 @@ from typing import Any, List, Optional
 # Import locals
 from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
-class PlayedNonexperimentalVersion(Feature):
+class PlayedNonexperimentalVersion(Extractor):
     EXPERIMENTAL_BRANCHES = [
         "production-has-failure-prediction-original-job-graph",
         "production-no-failure-prediction-alt-job-graph",
@@ -30,7 +30,7 @@ class PlayedNonexperimentalVersion(Feature):
             if event.AppBranch not in PlayedNonexperimentalVersion.EXPERIMENTAL_BRANCHES:
                 self.played_nonexperiment = True
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

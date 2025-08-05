@@ -5,12 +5,12 @@ from . import features
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.games.SHIPWRECKS.features import *
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.common.utils.Logger import Logger
 
 ## @class ShipwrecksLoader
@@ -18,15 +18,15 @@ class ShipwrecksLoader(GeneratorLoader):
     """
     Extractor subclass for extracting features from Shipwrecks game data.
     """
-    def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
-        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
+    def __init__(self, player_id:str, session_id:str, generator_config: GeneratorCollectionConfig, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
+        super().__init__(player_id=player_id, session_id=session_id, generator_config=generator_config, mode=mode, feature_overrides=feature_overrides)
 
     @staticmethod
     def _getFeaturesModule():
         return features
 
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
-        ret_val : Optional[Feature] = None
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Extractor]:
+        ret_val : Optional[Extractor] = None
         if extractor_params._count_index is None:
             match feature_type:
                 case "ActiveJobs":
@@ -58,7 +58,7 @@ class ShipwrecksLoader(GeneratorLoader):
                 case "MissionDiveTime":
                     ret_val = MissionDiveTime.MissionDiveTime(params=extractor_params)
                 case "JobsAttempted":
-                    ret_val = JobsAttempted.JobsAttempted(params=extractor_params, mission_map=self._game_schema.NonStandardElements["mission_map"])
+                    ret_val = JobsAttempted.JobsAttempted(params=extractor_params, mission_map=self._generator_config.NonStandardElements["mission_map"])
                 case "MissionSonarTimeToComplete":
                     ret_val = MissionSonarTimeToComplete.MissionSonarTimeToComplete(params=extractor_params)
                 case _:

@@ -1,13 +1,13 @@
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event, EventSource
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 import time
 
-class PersistenceTime(Feature):
+class PersistenceTime(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.has_lost: bool = False
@@ -43,7 +43,7 @@ class PersistenceTime(Feature):
                 self.running_time = timedelta(0)
             self.last_time = event.Timestamp
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

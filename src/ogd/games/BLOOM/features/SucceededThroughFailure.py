@@ -1,11 +1,11 @@
 from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
-class SucceededThroughFailure(Feature):
+class SucceededThroughFailure(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.failure_count: int = 0
@@ -27,7 +27,7 @@ class SucceededThroughFailure(Feature):
         elif event_type == "win_game" and self.failure_count > 0:
             self.win_after_failure = True
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

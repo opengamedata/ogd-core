@@ -5,7 +5,7 @@ from ogd.core.registries.DetectorRegistry import DetectorRegistry
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.processors.GeneratorProcessor import GeneratorProcessor
 from ogd.common.models.Event import Event
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.utils.typing import ExportRow
@@ -35,7 +35,7 @@ class DetectorProcessor(GeneratorProcessor):
     def _sessionID(self) -> str:
         return "detectors"
 
-    def _getGeneratorNames(self, order:int) -> Dict[str,List[FeatureData]]:
+    def _getGeneratorNames(self, order:int) -> Dict[str,List[Feature]]:
         raise NotImplementedError("Function stub! Haven't written name getter for detector processor.")
 
     def _processEvent(self, event:Event):

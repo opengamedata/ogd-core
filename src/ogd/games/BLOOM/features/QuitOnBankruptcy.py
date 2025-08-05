@@ -3,12 +3,12 @@ from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 # import PerCountyFeature
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 
-class QuitOnBankruptcy(Feature):
+class QuitOnBankruptcy(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.last_fail_type: Optional[str] = None
@@ -37,7 +37,7 @@ class QuitOnBankruptcy(Feature):
         else:
             self.won = False
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

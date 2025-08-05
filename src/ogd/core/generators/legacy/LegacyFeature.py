@@ -9,10 +9,10 @@ from typing import Any, Dict, List, Optional, Union
 ## import local files
 from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
-from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.models.Feature import Feature
+from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 
 LegacyFeatureType = Union[int,float,timedelta,Dict[int,Dict[str,Any]]]
 
@@ -20,7 +20,7 @@ LegacyFeatureType = Union[int,float,timedelta,Dict[int,Dict[str,Any]]]
 #  Abstract base class for game feature extractors.
 #  Gives a few static functions to be used across all extractor classes,
 #  and defines an interface that the SessionProcessor can use.
-class LegacyFeature(Feature):
+class LegacyFeature(Extractor):
 
     # *** ABSTRACTS ***
 
@@ -35,7 +35,7 @@ class LegacyFeature(Feature):
     # *** BUILT-INS & PROPERTIES ***
 
     # Base constructor for LegacyFeature classes.
-    def __init__(self, params:GeneratorParameters, game_schema:GameSchema, session_id:str):
+    def __init__(self, params:GeneratorParameters, generator_config:GeneratorCollectionConfig, session_id:str):
         """Base constructor for LegacyFeature classes.
         The constructor sets an extractor's session id and range of levels,
         as well as initializing the features dictionary and list of played levels.
@@ -46,10 +46,10 @@ class LegacyFeature(Feature):
         :type game_schema: GameSchema
         """
         self._session_id  : str         = session_id
-        self._game_schema : GameSchema  = game_schema
+        self._generator_config : GeneratorCollectionConfig  = generator_config
         self._levels      : List[int]   = []
         self._sequences   : List        = []
-        self._features    : LegacyFeature.LegacySessionFeatures = LegacyFeature.LegacySessionFeatures(game_schema=game_schema)
+        self._features    : LegacyFeature.LegacySessionFeatures = LegacyFeature.LegacySessionFeatures(game_schema=generator_config)
         super().__init__(params=params)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -62,7 +62,7 @@ class LegacyFeature(Feature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -3,7 +3,7 @@
 # import traceback
 # from typing import List, Dict, Type, Optional, Set
 # # import local files
-# from ogd.common.models.FeatureData import FeatureData
+# from ogd.common.models.Feature import Feature
 # from ogd.core.generators.GeneratorLoader import GeneratorLoader
 # from ogd.core.registries.ModelRegistry import ModelRegistry
 # from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
@@ -63,8 +63,8 @@
 #         ret_val = [self._playerID, self._sessionID] + self._registry.GetFeatureValues()
 #         return [ret_val]
 
-#     def _getFeatureData(self, order:int) -> List[FeatureData]:
-#         return self._registry.GetFeatureData(order=order, player_id=self._player_id, sess_id=self._session_id)
+#     def _getFeature(self, order:int) -> List[Feature]:
+#         return self._registry.GetFeature(order=order, player_id=self._player_id, sess_id=self._session_id)
     
 #     def trainModels(self):
 #         self._registry = self._clearLines()
@@ -74,10 +74,10 @@
 #             Logger.Log(f"Training failed : {e}", logging.ERROR)
 
 
-#     def _processFeature(self, feature: FeatureData): 
+#     def _processFeature(self, feature: Feature): 
 #         print("\n\n\nInside _processFeature of ModelProcessor")  
 #         self._registry = self._clearLines()
-#         self._registry._updateFromFeatureData(feature)
+#         self._registry._updateFromFeature(feature)
 
 #     # def modelOutput(self):
 #     #     self.modelInfo()
@@ -103,7 +103,7 @@
 import logging
 from typing import List, Type, Optional
 
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.registries.ModelRegistry import ModelRegistry
 from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
@@ -123,10 +123,10 @@ class ModelProcessor(ExtractorProcessor):
         self._registry = self._createRegistry()
         self._registry._loadFromSchema(schema=self._game_schema, loader=self._loader, overrides=self._overrides)
             
-    def ProcessFeature(self, feature: FeatureData):
+    def ProcessFeature(self, feature: Feature):
         # self._registry = self._createRegistry()
         if self._registry:
-            self._registry._updateFromFeatureData(feature)
+            self._registry._updateFromFeature(feature)
 
     def TrainModels(self):
         # self._registry = self._createRegistry()
@@ -148,5 +148,5 @@ class ModelProcessor(ExtractorProcessor):
     def _sessionID(self) -> str: return self._session_id
     def _processEvent(self, event: Event): pass
     def _getLines(self) -> List[ExportRow]: return []
-    def _getFeatureData(self, order:int) -> List[FeatureData]: return []
+    def _getFeature(self, order:int) -> List[Feature]: return []
     def _clearLines(self) -> None: self._registry = self._createRegistry()

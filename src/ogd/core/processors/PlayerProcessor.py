@@ -10,7 +10,7 @@ from ogd.core.processors.SessionProcessor import SessionProcessor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import ExportRow
@@ -88,8 +88,8 @@ class PlayerProcessor(ExtractorProcessor):
         ret_val = [self._player_id, len(self._sessions)] + self._registry.GetFeatureValues()
         return [ret_val]
 
-    def _getFeatureData(self, order:int) -> List[FeatureData]:
-        return self._registry.GetFeatureData(order=order, player_id=self._player_id)
+    def _getFeature(self, order:int) -> List[Feature]:
+        return self._registry.GetFeature(order=order, player_id=self._player_id)
 
     ##  Function to empty the list of lines stored by the PlayerProcessor.
     def _clearLines(self) -> None:

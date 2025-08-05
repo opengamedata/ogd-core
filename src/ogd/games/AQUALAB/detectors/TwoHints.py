@@ -14,8 +14,8 @@ from ogd.common.utils.typing import Map
 class TwoHints(Detector):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
-    :param Feature: Base class for a Custom Feature class.
-    :type Feature: _type_
+    :param Extractor: Base class for a Custom Feature class.
+    :type Extractor: _type_
     """
     DEFAULT_THRESOLD : Final[int] = 5
 

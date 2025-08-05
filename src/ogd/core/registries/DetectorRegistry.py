@@ -8,7 +8,7 @@ from ogd.core.generators.Generator import Generator
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.registries.GeneratorRegistry import GeneratorRegistry
 from ogd.common.models.Event import Event
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.schemas.games.DetectorSchema import DetectorSchema
 from ogd.common.schemas.games.GameSchema import GameSchema
@@ -141,7 +141,7 @@ class DetectorRegistry(GeneratorRegistry):
             if listener.name in self._detectors.keys():
                 self._detectors[listener.name].UpdateFromEvent(event)
 
-    def _updateFromFeatureData(self, feature:FeatureData) -> None:
+    def _updateFromFeature(self, feature:Feature) -> None:
         return
 
     # *** PUBLIC STATICS ***

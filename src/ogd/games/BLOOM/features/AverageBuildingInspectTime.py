@@ -1,12 +1,12 @@
 # import libraries
 from typing import Any, List
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
-class AverageBuildingInspectTime(Feature):
+class AverageBuildingInspectTime(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self._inspect_time  = None
@@ -24,7 +24,7 @@ class AverageBuildingInspectTime(Feature):
     def _updateFromEvent(self, event: Event) -> None:
         pass
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         if feature.ExportMode == self.ExtractionMode:
             match feature.Name:
                 case "ManualBuildingInspectTime":

@@ -6,7 +6,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class JobTotalAttempts(PerJobFeature):
     _checked_alive = False
@@ -26,7 +26,7 @@ class JobTotalAttempts(PerJobFeature):
     def _updateFromEvent(self, event:Event) -> None:
         return
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         if feature.ExportMode == ExtractionMode.PLAYER and feature.CountIndex == self.CountIndex:
             if not self._checked_alive:
                 Logger.Log(f"JobTotalAttempts for job {self.CountIndex} got a feature at player level with same count index")

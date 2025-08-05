@@ -7,7 +7,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.Event import Event, EventSource
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.utils.Logger import Logger
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 
@@ -59,7 +59,7 @@ class SessionDuration(PerJobFeature):
         #     self._client_end_index = event.EventSequenceIndex
         # # self._session_duration = (event.Timestamp - self._client_start_time).total_seconds()
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -7,12 +7,12 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 # import locals
 from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
-class JobsAttempted(Feature):
+class JobsAttempted(Extractor):
 
     def __init__(self, params:GeneratorParameters, job_map:dict, diff_map: dict):
         self._player_id = None
@@ -86,7 +86,7 @@ class JobsAttempted(Feature):
 
         # self._prev_timestamp = event.Timestamp
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         if feature.FeatureType == "JobActiveTime":
             if feature.CountIndex == self.CountIndex:
                 _active_time = feature.FeatureValues[0]

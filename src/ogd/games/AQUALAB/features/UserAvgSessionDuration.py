@@ -5,7 +5,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class UserAvgSessionDuration(SessionFeature):
 
@@ -26,7 +26,7 @@ class UserAvgSessionDuration(SessionFeature):
     def _updateFromEvent(self, event:Event) -> None:
         return
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         if feature.PlayerID == self._player_id:
             if feature.FeatureValues[0] == "No events":
                 pass

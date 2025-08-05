@@ -8,7 +8,7 @@ from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import Generator
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.models.enums.IterationMode import IterationMode
 
@@ -52,8 +52,7 @@ class GeneratorRegistry(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _updateFromFeatureData(self, feature:FeatureData) -> None:
-        print("\n\n\nInside _updateFromFeatureData of GeneratorRegistry")
+    def _updateFromFeature(self, feature:Feature) -> None:
         pass
 
     # *** BUILT-INS & PROPERTIES ***
@@ -108,7 +107,7 @@ class GeneratorRegistry(abc.ABC):
         # TODO : Add error handling and/or timing and/or profiling
         self._updateFromEvent(event=event)
 
-    def UpdateFromFeatureData(self, feature:FeatureData) -> None:
+    def UpdateFromFeature(self, feature:Feature) -> None:
         """Perform extraction of features from a row.
 
         :param event: [description]
@@ -117,9 +116,8 @@ class GeneratorRegistry(abc.ABC):
                              table assiciated with this game is structured.
         :type table_schema: TableSchema
         """
-        # print("\n\n\nInside UpdateFromFeatureData of GeneratorRegistry")
-        if isinstance(feature, FeatureData):
-            self._updateFromFeatureData(feature=feature)
+        if isinstance(feature, Feature):
+            self._updateFromFeature(feature=feature)
         else:
             Logger.Log(f"Got an invalid feature {feature} of type {type(feature)} for a registry in {self._mode.name} mode")
 
