@@ -1,9 +1,9 @@
 # import standard libraries
 import logging
 from pathlib import Path
-from typing import Any, Dict, Optional, Type
+from typing import Any, Dict
 # import local files
-from ogd.common.configs.IndexingConfig import IndexingConfig
+from ogd.common.configs.IndexingConfig import FileIndexingConfig
 from ogd.common.configs.GameStoreConfig import GameStoreConfig
 from ogd.common.configs.storage.DataStoreConfig import DataStoreConfig
 from ogd.common.configs.storage.BigQueryConfig import BigQueryConfig
@@ -29,7 +29,7 @@ class CoreConfig(Schema):
         self._dbg_level      : int
         self._fail_fast      : bool
         self._with_profiling : bool
-        self._file_idx       : IndexingConfig
+        self._file_idx       : FileIndexingConfig
         self._data_src       : Dict[str, DataStoreConfig]
         self._game_src_map   : Dict[str, GameStoreConfig]
 
@@ -63,7 +63,7 @@ class CoreConfig(Schema):
             self._file_idx = CoreConfig._parseFileIndexing(all_elements["FILE_INDEXING"])
         else:
             _fallback_elems = { "LOCAL_DIR" : self._legacy_elems.DataDirectory }
-            self._file_idx = IndexingConfig(name="FILE_INDEXING", all_elements=_fallback_elems)
+            self._file_idx = FileIndexingConfig(name="FILE_INDEXING", all_elements=_fallback_elems)
             Logger.Log(f"{name} config does not have a 'FILE_INDEXING' element; defaulting to file_indexing={self._file_idx}", logging.WARN)
         if "GAME_SOURCES" in all_elements.keys():
             self._data_src = CoreConfig._parseDataSources(all_elements["GAME_SOURCES"])
@@ -127,7 +127,7 @@ class CoreConfig(Schema):
         return self._with_profiling
 
     @property
-    def FileIndexConfig(self) -> IndexingConfig:
+    def FileIndexConfig(self) -> FileIndexingConfig:
         """
         A collection of settings for indexing output files.
 
@@ -242,12 +242,12 @@ class CoreConfig(Schema):
         return ret_val
 
     @staticmethod
-    def _parseFileIndexing(indexing) -> IndexingConfig:
-        ret_val : IndexingConfig
+    def _parseFileIndexing(indexing) -> FileIndexingConfig:
+        ret_val : FileIndexingConfig
         if isinstance(indexing, dict):
-            ret_val = IndexingConfig(name="FILE_INDEXING", all_elements=indexing)
+            ret_val = FileIndexingConfig(name="FILE_INDEXING", all_elements=indexing)
         else:
-            ret_val = IndexingConfig(name="FILE_INDEXING", all_elements={})
+            ret_val = FileIndexingConfig(name="FILE_INDEXING", all_elements={})
             Logger.Log(f"Config file indexing was unexpected type {type(indexing)}, defaulting to default indexing config: {ret_val.AsMarkdown}.", logging.WARN)
         return ret_val
 
