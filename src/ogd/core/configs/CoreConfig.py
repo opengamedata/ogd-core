@@ -10,6 +10,8 @@ from ogd.common.configs.storage.BigQueryConfig import BigQueryConfig
 from ogd.common.configs.storage.FileStoreConfig import FileStoreConfig
 from ogd.common.configs.storage.MySQLConfig import MySQLConfig
 from ogd.common.schemas.Schema import Schema
+from ogd.common.schemas.tables.EventTableSchema import EventTableSchema
+from ogd.common.schemas.tables.FeatureTableSchema import FeatureTableSchema
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import Map
 
@@ -55,6 +57,14 @@ class CoreConfig(Schema):
         self._file_idx       : FileIndexingConfig = file_idx       or self._parseFileIndexing(unparsed_elements=unparsed_elements)
         self._data_src       : Dict[str, DataStoreConfig] = data_src or self._parseDataSources(unparsed_elements=unparsed_elements)
         self._game_src_map   : Dict[str, GameStoreConfig] = game_src_map or self._parseGameSourceMap(unparsed_elements=unparsed_elements)
+        
+        # Set up data store configs and table schemas for each game source mapping
+        for game, cfg in self._game_src_map.items():
+            _store = self._data_src.get(cfg.StoreName)
+            if _store:
+                cfg.StoreConfig = _store
+            cfg.Table = EventTableSchema.FromFile(schema_name=cfg.TableSchemaName)
+            
 
         super().__init__(name=name, other_elements=unparsed_elements)
 
