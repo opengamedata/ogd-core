@@ -182,7 +182,7 @@ class ExportManager:
 
 
                 if self._feat_mgr and self._model_mgr:
-                    self._player_feature_data = self._feat_mgr.GetPlayerFeatureData()
+                    self._player_feature_data = self._feat_mgr.GetPlayerFeatures()
                     # print(f"ExportManager passing {len(self._player_feature_data)} player features to ModelManager for processing...")
                     # print(self._player_feature_data)
                     self._model_mgr.ProcessFeatureData(self._player_feature_data)
