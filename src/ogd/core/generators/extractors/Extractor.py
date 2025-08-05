@@ -78,7 +78,7 @@ class Extractor(Generator):
             count_index=self.CountIndex,
             cols=self.GetFeatureNames(),
             vals=self.GetFeatureValues(),
-            mode=mode,
+            mode=self.ExtractionMode,
             player_id=player_id,
             sess_id=sess_id
         )
