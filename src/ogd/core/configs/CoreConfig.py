@@ -1,7 +1,7 @@
 # import standard libraries
 import logging
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 # import local files
 from ogd.common.configs.IndexingConfig import FileIndexingConfig
 from ogd.common.configs.GameStoreConfig import GameStoreConfig
@@ -9,14 +9,35 @@ from ogd.common.configs.storage.DataStoreConfig import DataStoreConfig
 from ogd.common.configs.storage.BigQueryConfig import BigQueryConfig
 from ogd.common.configs.storage.FileStoreConfig import FileStoreConfig
 from ogd.common.configs.storage.MySQLConfig import MySQLConfig
-from ogd.core.configs.LegacyConfigSchema import LegacyConfigSchema
 from ogd.common.schemas.Schema import Schema
 from ogd.common.utils.Logger import Logger
+from ogd.common.utils.typing import Map
 
 class CoreConfig(Schema):
     """Dumb struct containing properties for each standard OGD-core config item.
     """
-    def __init__(self, name:str, all_elements:Dict[str, Any]):
+    _DEFAULT_LOG_FILE = False
+    _DEFAULT_BATCH_SIZE = 500
+    _DEFAULT_DBG_STR = "INFO"
+    _DEFAULT_FAIL_FAST = False
+    _DEFAULT_WITH_PROFILING = False
+    _DEFAULT_FILE_IDX = FileIndexingConfig.Default()
+    _DEFAULT_DATA_SRC = {}
+    _DEFAULT_GAME_SRC_MAP = {}
+
+    def __init__(
+        self,
+        name: str,
+        log_file: Optional[bool],
+        batch_size: Optional[int],
+        dbg_level: Optional[int],
+        fail_fast: Optional[bool],
+        with_profiling: Optional[bool],
+        file_idx: Optional[FileIndexingConfig],
+        data_src: Optional[Dict[str, DataStoreConfig]],
+        game_src_map: Optional[Dict[str, GameStoreConfig]],
+        other_elements: Dict[str, Any]
+    ):
         """Constructs a ConfigSchema, from a name and dictionary of JSON-style elements.
 
         :param name: The name of the configuration schema.
@@ -24,61 +45,18 @@ class CoreConfig(Schema):
         :param all_elements: A dictionary mapping config item names to their configured values. These will be checked and made available through the ConfigSchema properties.
         :type all_elements: Dict[str, Any]
         """
-        self._log_file       : bool
-        self._batch_size     : int
-        self._dbg_level      : int
-        self._fail_fast      : bool
-        self._with_profiling : bool
-        self._file_idx       : FileIndexingConfig
-        self._data_src       : Dict[str, DataStoreConfig]
-        self._game_src_map   : Dict[str, GameStoreConfig]
+        unparsed_elements : Map = other_elements or {}
 
-        self._legacy_elems : LegacyConfigSchema = LegacyConfigSchema(name=f"{name} Legacy", all_elements=all_elements)
-        if "LOG_FILE" in all_elements.keys():
-            self._log_file = CoreConfig._parseLogFile(all_elements["LOG_FILE"])
-        else:
-            self._log_file = False
-            Logger.Log(f"{name} config does not have a 'LOG_FILE' element; defaulting to log_file={self._log_file}", logging.WARN)
-        if "BATCH_SIZE" in all_elements.keys():
-            self._batch_size = CoreConfig._parseBatchSize(all_elements["BATCH_SIZE"])
-        else:
-            self._batch_size = 500
-            Logger.Log(f"{name} config does not have a 'BATCH_SIZE' element; defaulting to batch_size={self._batch_size}", logging.WARN)
-        if "DEBUG_LEVEL" in all_elements.keys():
-            self._dbg_level = CoreConfig._parseDebugLevel(all_elements["DEBUG_LEVEL"])
-        else:
-            self._dbg_level = logging.INFO
-            Logger.Log(f"{name} config does not have a 'DEBUG_LEVEL' element; defaulting to dbg_level={self._dbg_level}", logging.WARN)
-        if "FAIL_FAST" in all_elements.keys():
-            self._fail_fast = CoreConfig._parseFailFast(all_elements["FAIL_FAST"])
-        else:
-            self._fail_fast = False
-            Logger.Log(f"{name} config does not have a 'FAIL_FAST' element; defaulting to fail_fast={self._fail_fast}", logging.WARN)
-        if "WITH_PROFILING" in all_elements.keys():
-            self._with_profiling = CoreConfig._parseProfiling(all_elements["WITH_PROFILING"])
-        else:
-            self._with_profiling = False
-            Logger.Log(f"{name} config does not have a 'WITH_PROFILING' element; defaulting to with_profiling={self._fail_fast}", logging.WARN)
-        if "FILE_INDEXING" in all_elements.keys():
-            self._file_idx = CoreConfig._parseFileIndexing(all_elements["FILE_INDEXING"])
-        else:
-            _fallback_elems = { "LOCAL_DIR" : self._legacy_elems.DataDirectory }
-            self._file_idx = FileIndexingConfig(name="FILE_INDEXING", all_elements=_fallback_elems)
-            Logger.Log(f"{name} config does not have a 'FILE_INDEXING' element; defaulting to file_indexing={self._file_idx}", logging.WARN)
-        if "GAME_SOURCES" in all_elements.keys():
-            self._data_src = CoreConfig._parseDataSources(all_elements["GAME_SOURCES"])
-        else:
-            self._data_src = {}
-            Logger.Log(f"{name} config does not have a 'GAME_SOURCES' element; defaulting to game_sources={self._data_src}", logging.WARN)
-        if "GAME_SOURCE_MAP" in all_elements.keys():
-            self._game_src_map = CoreConfig._parseGameSourceMap(map=all_elements["GAME_SOURCE_MAP"], sources=self._data_src)
-        else:
-            self._game_src_map = {}
-            Logger.Log(f"{name} config does not have a 'GAME_SOURCE_MAP' element; defaulting to game_source_map={self._game_src_map}", logging.WARN)
+        self._log_file       : bool               = log_file       or self._parseLogFile(unparsed_elements=unparsed_elements)
+        self._batch_size     : int                = batch_size     or self._parseBatchSize(unparsed_elements=unparsed_elements)
+        self._dbg_level      : int                = dbg_level      or self._parseDebugLevel(unparsed_elements=unparsed_elements)
+        self._fail_fast      : bool               = fail_fast      or self._parseFailFast(unparsed_elements=unparsed_elements)
+        self._with_profiling : bool               = with_profiling or self._parseProfiling(unparsed_elements=unparsed_elements)
+        self._file_idx       : FileIndexingConfig = file_idx       or self._parseFileIndexing(unparsed_elements=unparsed_elements)
+        self._data_src       : Dict[str, DataStoreConfig] = data_src or self._parseDataSources(unparsed_elements=unparsed_elements)
+        self._game_src_map   : Dict[str, GameStoreConfig] = game_src_map or self._parseGameSourceMap(unparsed_elements=unparsed_elements)
 
-        _used = {"LOG_FILE", "BATCH_SIZE", "DEBUG_LEVEL", "FAIL_FAST", "FILE_INDEXING", "GAME_SOURCES", "GAME_SOURCE_MAP"}
-        _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
-        super().__init__(name=name, other_elements=_leftovers)
+        super().__init__(name=name, other_elements=unparsed_elements)
 
     @property
     def DataDirectory(self) -> Path:
@@ -88,7 +66,7 @@ class CoreConfig(Schema):
         :return: The local directory where export files will be stored by default.
         :rtype: Path
         """
-        return self.FileIndexConfig.LocalDirectory
+        return self.FileIndexConfig.LocalDirectory.FolderPath
 
     @property
     def UseLogFile(self) -> bool:
@@ -161,122 +139,131 @@ class CoreConfig(Schema):
         return ret_val
 
     @staticmethod
-    def _parseLogFile(use_log) -> bool:
-        ret_val : bool
-        if isinstance(use_log, bool):
-            ret_val = use_log
-        else:
-            ret_val = False
-            Logger.Log(f"Config to use log file was unexpected type {type(use_log)}, defaulting to False.", logging.WARN)
-        return ret_val
+    def _parseLogFile(unparsed_elements:Map) -> bool:
+        return CoreConfig.ParseElement(
+            unparsed_elements=unparsed_elements,
+            valid_keys=['LOG_FILE'],
+            to_type=bool,
+            default_value=CoreConfig._DEFAULT_LOG_FILE,
+            remove_target=True
+        )
 
     @staticmethod
-    def _parseBatchSize(batch_size) -> int:
+    def _parseBatchSize(unparsed_elements:Map) -> int:
+        return CoreConfig.ParseElement(
+            unparsed_elements=unparsed_elements,
+            valid_keys=['BATCH_SIZE'],
+            to_type=int,
+            default_value=CoreConfig._DEFAULT_BATCH_SIZE,
+            remove_target=True
+        )
+
+    @staticmethod
+    def _parseDebugLevel(unparsed_elements:Map) -> int:
         ret_val : int
-        if isinstance(batch_size, int):
-            ret_val = batch_size
-        elif isinstance(batch_size, str):
-            ret_val = int(batch_size)
-        else:
-            ret_val = int(str(batch_size))
-            Logger.Log(f"Config batch size was unexpected type {type(batch_size)}, defaulting to int(str(batch_size))={ret_val}.", logging.WARN)
+        raw_level : str = CoreConfig.ParseElement(
+            unparsed_elements=unparsed_elements,
+            valid_keys=['DEBUG_LEVEL'],
+            to_type=str,
+            default_value=CoreConfig._DEFAULT_DBG_STR,
+            remove_target=True
+        )
+        match raw_level.upper():
+            case "ERROR":
+                ret_val = logging.ERROR
+            case "WARNING" | "WARN":
+                ret_val = logging.WARN
+            case "INFO":
+                ret_val = logging.INFO
+            case "DEBUG":
+                ret_val = logging.DEBUG
+            case _:
+                ret_val = logging.INFO
+                Logger.Log(f"Config debug level had unexpected value {raw_level}, defaulting to logging.INFO.", logging.WARN)
         return ret_val
 
     @staticmethod
-    def _parseDebugLevel(level) -> int:
-        ret_val : int
-        if isinstance(level, str):
-            match level.upper():
-                case "ERROR":
-                    ret_val = logging.ERROR
-                case "WARNING" | "WARN":
-                    ret_val = logging.WARN
-                case "INFO":
-                    ret_val = logging.INFO
-                case "DEBUG":
-                    ret_val = logging.DEBUG
-                case _:
-                    ret_val = logging.INFO
-                    Logger.Log(f"Config debug level had unexpected value {level}, defaulting to logging.INFO.", logging.WARN)
-        else:
-            ret_val = logging.INFO
-            Logger.Log(f"Config debug level was unexpected type {type(level)}, defaulting to logging.INFO.", logging.WARN)
-        return ret_val
+    def _parseFailFast(unparsed_elements:Map) -> bool:
+        return CoreConfig.ParseElement(
+            unparsed_elements=unparsed_elements,
+            valid_keys=['FAIL_FAST'],
+            to_type=bool,
+            default_value=CoreConfig._DEFAULT_FAIL_FAST,
+            remove_target=True
+        )
 
     @staticmethod
-    def _parseFailFast(fail_fast) -> bool:
-        ret_val : bool
-        if isinstance(fail_fast, bool):
-            ret_val = fail_fast
-        elif isinstance(fail_fast, str):
-            match fail_fast.upper():
-                case "TRUE":
-                    ret_val = True
-                case "FALSE":
-                    ret_val = False
-                case _:
-                    ret_val = False
-                    Logger.Log(f"Config fail fast had unexpected value {fail_fast}, defaulting to False.", logging.WARN)
-        else:
-            ret_val = False
-            Logger.Log(f"Config fail fast was unexpected type {type(fail_fast)}, defaulting to False.", logging.WARN)
-        return ret_val
+    def _parseProfiling(unparsed_elements:Map) -> bool:
+        return CoreConfig.ParseElement(
+            unparsed_elements=unparsed_elements,
+            valid_keys=['WITH_PROFILING'],
+            to_type=bool,
+            default_value=CoreConfig._DEFAULT_FAIL_FAST,
+            remove_target=True
+        )
 
     @staticmethod
-    def _parseProfiling(with_profiling) -> bool:
-        ret_val : bool
-        if isinstance(with_profiling, bool):
-            ret_val = with_profiling
-        elif isinstance(with_profiling, str):
-            match with_profiling.upper():
-                case "TRUE":
-                    ret_val = True
-                case "FALSE":
-                    ret_val = False
-                case _:
-                    ret_val = False
-                    Logger.Log(f"Config with_profiling had unexpected value {with_profiling}, defaulting to False.", logging.WARN)
-        else:
-            ret_val = False
-            Logger.Log(f"Config with_profiling was unexpected type {type(with_profiling)}, defaulting to False.", logging.WARN)
-        return ret_val
-
-    @staticmethod
-    def _parseFileIndexing(indexing) -> FileIndexingConfig:
+    def _parseFileIndexing(unparsed_elements:Map) -> FileIndexingConfig:
         ret_val : FileIndexingConfig
-        if isinstance(indexing, dict):
-            ret_val = FileIndexingConfig(name="FILE_INDEXING", all_elements=indexing)
+
+        raw_indexing = CoreConfig.ParseElement(
+            unparsed_elements=unparsed_elements,
+            valid_keys=['FILE_INDEXING'],
+            to_type=dict,
+            default_value=None,
+            remove_target=True
+        )
+
+        if isinstance(raw_indexing, dict):
+            ret_val = FileIndexingConfig.FromDict(name="FILE_INDEXING", unparsed_elements=raw_indexing)
         else:
-            ret_val = FileIndexingConfig(name="FILE_INDEXING", all_elements={})
-            Logger.Log(f"Config file indexing was unexpected type {type(indexing)}, defaulting to default indexing config: {ret_val.AsMarkdown}.", logging.WARN)
+            ret_val = CoreConfig._DEFAULT_FILE_IDX
+            Logger.Log(f"Config file indexing was not found, defaulting to default indexing config: {ret_val.AsMarkdown}.", logging.WARN)
         return ret_val
 
     @staticmethod
-    def _parseDataSources(sources) -> Dict[str, DataStoreConfig]:
+    def _parseDataSources(unparsed_elements:Map) -> Dict[str, DataStoreConfig]:
         ret_val : Dict[str, DataStoreConfig]
-        if isinstance(sources, dict):
+
+        raw_sources = CoreConfig.ParseElement(
+            unparsed_elements=unparsed_elements,
+            valid_keys=['DATA_SOURCES', 'GAME_SOURCES'],
+            to_type=dict,
+            default_value=None,
+            remove_target=True
+        )
+        if isinstance(raw_sources, dict):
             ret_val = {}
-            for key,val in sources.items():
-                match (val.get("DB_TYPE", "").upper()):
+            for key,val in raw_sources.items():
+                src_type = val.get("SOURCE_TYPE", val.get("DB_TYPE", "UNKNOWN")).upper()
+                match src_type:
                     case "BIGQUERY" | "FIREBASE":
-                        ret_val[key] = BigQueryConfig(name=key, all_elements=val)
+                        ret_val[key] = BigQueryConfig.FromDict(name=key, unparsed_elements=val)
                     case "MYSQL":
-                        ret_val[key] = MySQLConfig(name=key, all_elements=val)
+                        ret_val[key] = MySQLConfig.FromDict(name=key, unparsed_elements=val)
                     case "FILE":
-                        ret_val[key] = FileStoreConfig(name=key, all_elements=val)
+                        ret_val[key] = FileStoreConfig.FromDict(name=key, unparsed_elements=val)
                     case _:
                         Logger.Log(f"Game source {key} did not  have a valid 'DB_TYPE' (value: {val.get('DB_TYPE', '')}), and will be skipped!", logging.WARN)
         else:
-            ret_val = {}
-            Logger.Log(f"Config data sources was unexpected type {type(sources)}, defaulting to empty dict: {ret_val}.", logging.WARN)
+            ret_val = CoreConfig._DEFAULT_DATA_SRC
+            Logger.Log(f"Config data sources was not found, defaulting to {ret_val}.", logging.WARN)
         return ret_val
 
     @staticmethod
-    def _parseGameSourceMap(map, sources) -> Dict[str, GameStoreConfig]:
+    def _parseGameSourceMap(unparsed_elements:Map) -> Dict[str, GameStoreConfig]:
         ret_val : Dict[str, GameStoreConfig]
+
+        raw_mappings = CoreConfig.ParseElement(
+            unparsed_elements=unparsed_elements,
+            valid_keys=['GAME_SOURCE_MAP'],
+            to_type=dict,
+            default_value=None,
+            remove_target=True
+        )
         if isinstance(map, dict):
-            ret_val = { key : GameStoreConfig(name=key, all_elements=val, data_sources=sources) for key, val in map.items() }
+            ret_val = { key : GameStoreConfig.FromDict(name=key, unparsed_elements=val) for key, val in raw_mappings.items() }
         else:
             ret_val = {}
-            Logger.Log(f"Config game source map was unexpected type {type(map)}, defaulting to empty dict: {ret_val}.", logging.WARN)
+            Logger.Log(f"Config game source map was not found, defaulting to: {ret_val}.", logging.WARN)
         return ret_val
