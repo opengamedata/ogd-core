@@ -20,14 +20,15 @@ from ogd.common.storage.outerfaces.Outerface import Outerface
 from ogd.common.storage.outerfaces.OuterfaceFactory import OuterfaceFactory
 from ogd.common.schemas.datasets.DatasetSchema import DatasetKey
 from ogd.common.utils.Logger import Logger
+from ogd.common.utils.typing import Date
 
 class ExporterRange:
     """
     Simple class to define a range of data for export.
     """
-    def __init__(self, date_min:datetime | date, date_max:datetime | date, ids:Optional[List[str]], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[Version]]=None):
-        self._date_min : datetime | date = date_min
-        self._date_max : datetime | date = date_max
+    def __init__(self, date_min:Date, date_max:Date, ids:Optional[List[str]], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[Version]]=None):
+        self._date_min : Date = date_min
+        self._date_max : Date = date_max
         self._ids      : Optional[List[str]]       = ids
         self._id_mode  : IDMode                    = id_mode
         self._versions : Optional[List[Version]] = versions
@@ -50,7 +51,7 @@ class ExporterRange:
             raise ValueError(f"Tried to create exporter range from set of IDs, but this resulted in open-ended date range {date_range['min']}-{date_range['max']}, this is not supported!")
 
     @property
-    def DateRange(self) -> Dict[str,datetime | date]:
+    def DateRange(self) -> Dict[str, Date]:
         return {'min':self._date_min, 'max':self._date_max}
 
     @property
