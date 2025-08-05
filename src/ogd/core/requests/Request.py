@@ -1,39 +1,44 @@
 # import standard libraries
 import abc
-from datetime import datetime
+from datetime import datetime, date
 from typing import Dict, List, Optional, Set
 # import local files
 from ogd.common.models.enums.IDMode import IDMode
 from ogd.common.models.enums.ExportMode import ExportMode
-# from ogd.common.storage.interfaces import Interface
-# from ogd.common.storage.outerfaces.Outerface import Outerface
+from ogd.common.filters.collections.DatasetFilterCollection import DatasetFilterCollection
+from ogd.common.filters.collections.IDFilterCollection import IDFilterCollection
+from ogd.common.filters.collections.SequencingFilterCollection import SequencingFilterCollection
+from ogd.common.filters.collections.VersioningFilterCollection import VersioningFilterCollection, Version
+from ogd.common.storage.interfaces import Interface
+from ogd.common.storage.outerfaces.Outerface import Outerface
 from ogd.common.configs.GameStoreConfig import GameStoreConfig
-from ogd.common.configs.storage.
 from ogd.common.utils.Logger import Logger
+from ogd.common.models.SemanticVersion import SemanticVersion
 
 class ExporterRange:
     """
     Simple class to define a range of data for export.
     """
-    def __init__(self, date_min:Optional[datetime], date_max:Optional[datetime], ids:Optional[List[str]], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None):
-        self._date_min : Optional[datetime]  = date_min
-        self._date_max : Optional[datetime]  = date_max
-        self._ids      : Optional[List[str]] = ids
-        self._id_mode  : IDMode              = id_mode
-        self._versions : Optional[List[int]] = versions
+    def __init__(self, date_min:Optional[datetime | date], date_max:Optional[datetime | date], ids:Optional[List[str]], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[Version]]=None):
+        self._date_min : Optional[datetime | date] = date_min
+        self._date_max : Optional[datetime | date] = date_max
+        self._ids      : Optional[List[str]]       = ids
+        self._id_mode  : IDMode                    = id_mode
+        self._versions : Optional[List[Version]] = versions
 
     @staticmethod
-    def FromDateRange(source:Interface.Interface, date_min:datetime, date_max:datetime, versions:Optional[List[int]]=None):
-        ids = source.IDsFromDates(date_min, date_max, versions=versions)
-        return ExporterRange(date_min=date_min, date_max=date_max, ids=ids, id_mode=IDMode.SESSION, versions=versions)
+    def FromDateRange(source:Interface.Interface, dates:SequencingFilterCollection, versions:VersioningFilterCollection):
+        ids = source.AvailableIDs(mode=IDMode.SESSION, filters=DatasetFilterCollection(sequence_filters=dates, version_filters=versions))
+        return ExporterRange(date_min=dates.Timestamps.Min, date_max=dates.Timestamps.Max, ids=ids, id_mode=IDMode.SESSION, versions=versions.LogVersions.AsList)
 
     @staticmethod
-    def FromIDs(source:Interface.Interface, ids:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None):
-        date_range = source.DatesFromIDs(id_list=ids, id_mode=id_mode, versions=versions)
-        return ExporterRange(date_min=date_range['min'], date_max=date_range['max'], ids=ids, id_mode=id_mode, versions=versions)
+    def FromIDs(source:Interface.Interface, ids:IDFilterCollection, id_mode:IDMode=IDMode.SESSION, versions:VersioningFilterCollection=VersioningFilterCollection()):
+        date_range = source.AvailableDates(filters=DatasetFilterCollection(id_filters=ids, version_filters=versions))
+        id_list = ids.Sessions.AsList if id_mode==IDMode.SESSION else ids.Players.AsList
+        return ExporterRange(date_min=date_range['min'], date_max=date_range['max'], ids=id_list, id_mode=id_mode, versions=versions.LogVersions.AsList)
 
     @property
-    def DateRange(self) -> Dict[str,Optional[datetime]]:
+    def DateRange(self) -> Dict[str,Optional[datetime | date]]:
         return {'min':self._date_min, 'max':self._date_max}
 
     @property
@@ -56,16 +61,16 @@ class Request(abc.ABC):
     #                 Should correspond to the app_id in the database.
     #  @param start_date   The starting date for our range of data to process.
     #  @param end_date     The ending date for our range of data to process.
-    def __init__(self, range:ExporterRange, exporter_modes:Set[ExportMode],
+    def __init__(self, filters:DatasetFilterCollection, exporter_modes:Set[ExportMode],
                 interface:Interface.Interface,    outerfaces:Set[Outerface],
                 feature_overrides:Optional[List[str]]=None):
         # TODO: kind of a hack to just get id from interface, figure out later how this should be handled.
-        self._game_id        : str                = str(interface._game_id)
-        self._interface      : Interface.Interface          = interface
-        self._range          : ExporterRange      = range
-        self._exports        : Set[ExportMode]    = exporter_modes
-        self._outerfaces     : Set[Outerface]      = outerfaces
-        self._feat_overrides : Optional[List[str]] = feature_overrides
+        self._game_id        : str                     = str(interface._game_id)
+        self._interface      : Interface.Interface     = interface
+        self._filters        : DatasetFilterCollection = filters
+        self._exports        : Set[ExportMode]         = exporter_modes
+        self._outerfaces     : Set[Outerface]          = outerfaces
+        self._feat_overrides : Optional[List[str]]     = feature_overrides
 
     ## String representation of a request. Just gives game id, and date range.
     def __str__(self):
@@ -91,7 +96,7 @@ class Request(abc.ABC):
 
     @property
     def Range(self) -> ExporterRange:
-        return self._range
+        return self._filters
 
     @property
     def Overrides(self) -> Optional[List[str]]:
