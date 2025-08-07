@@ -9,6 +9,7 @@ from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.core.processors.PopulationProcessor import PopulationProcessor
 from ogd.core.processors.PlayerProcessor import PlayerProcessor
 from ogd.core.processors.SessionProcessor import SessionProcessor
+from ogd.common.models.FeatureData import FeatureData
 from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.models.Event import Event
 from ogd.common.utils.Logger import Logger
@@ -80,6 +81,9 @@ class FeatureManager:
         # 1. Get population 1st-order data
         if self._population is not None and self._players is not None and self._sessions is not None:
             pop_data = self._population.GetFeatureData(order=1)
+
+            # print("\n\n\nInside ProcessFeatureData of FeatureManager")
+            # print(f"Population 1st-order data: {pop_data}, {type(pop_data)}")
             # 2. Distribute population 1st-order data
             self._population.ProcessFeatureData(feature_list=pop_data)
             for player in self._players.values():
@@ -118,6 +122,7 @@ class FeatureManager:
 
     def GetPopulationFeatureNames(self) -> List[str]:
         return self._population.GeneratorNames if self._population is not None else []
+    
     def GetPopulationFeatures(self, as_str:bool = False) -> List[ExportRow]:
         start = datetime.now()
         self._try_update(as_str=as_str)
@@ -137,6 +142,7 @@ class FeatureManager:
 
     def GetSessionFeatureNames(self) -> List[str]:
         return self._sessions["null"]["null"].GeneratorNames if self._sessions is not None else []
+    
     def GetSessionFeatures(self, slice_num:int, slice_count:int, as_str:bool = False) -> List[ExportRow]:
         start   : datetime = datetime.now()
         self._try_update(as_str=as_str)
@@ -144,25 +150,34 @@ class FeatureManager:
         time_delta = datetime.now() - start
         Logger.Log(f"Time to retrieve Session lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val
-    
-    #new
-    # def GetPopulationFeatureData(self) -> List[FeatureData]:
-    #     if self._population is not None:
-    #         population_data = self._population.GetFeatureData(order=1)
-    #     return population_data if self._population is not None else []
-    
-    # def GetSessionFeatureData(self) -> List[FeatureData]:
-    #     session_data=[]
-    #     if self._sessions is not None:
-    #         for sess_list in self._sessions.values():
-    #             for session in sess_list.values():
-    #                  session_data += session.GetFeatureData(order=1)
-    #     return session_data
-    
 
+    def GetPopulationFeatureData(self) -> List[FeatureData]:
+        population_data = []
+        if self._population is not None:
+            population_data += self._population.GetFeatureData(order=1)
+        return population_data
+    
+    def GetPlayerFeatureData(self) -> List[FeatureData]:
+        self._try_update(as_str=False)
+        player_data = []
+        if self._players is not None:
+            for player in self._players.values():
+                player_data += player.GetFeatureData(order=1) + player.GetFeatureData(order=2)
+        return player_data
+    
+    def GetSessionFeatureData(self) -> List[FeatureData]:
+        self._try_update(as_str=False)
+        session_data = []
+        if self._sessions is not None:
+            for sess_list in self._sessions.values():
+                for session in sess_list.values():
+                    session_data += session.GetFeatureData(order=1) + session.GetFeatureData(order=2)
+        return session_data
+   
     def ClearPopulationLines(self) -> None:
         if self._population is not None:
             self._population.ClearLines()
+            
     def ClearPlayerLines(self) -> None:
         if self._players is not None and self._LoaderClass is not None:
             for player in self._players.values():
