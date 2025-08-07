@@ -5,11 +5,13 @@ from typing import Any, Dict, List, Optional, Self, Set
 # import local files
 from ogd.common.configs.Config import Config
 from ogd.core.configs.generators.DetectorMapConfig import DetectorMapConfig
+from ogd.core.configs.generators.ModelMapConfig import ModelMapConfig
 from ogd.core.configs.generators.ExtractorMapConfig import ExtractorMapConfig
 from ogd.core.configs.generators.AggregateConfig import AggregateConfig
 from ogd.core.configs.generators.DetectorConfig import DetectorConfig
 from ogd.core.configs.generators.IteratedConfig import IteratedConfig
 from ogd.core.configs.generators.ExtractorConfig import ExtractorConfig
+from ogd.core.configs.generators.ModelConfig import ModelConfig
 from ogd.common.models.enums.IterationMode import IterationMode
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.utils.Logger import Logger
@@ -25,6 +27,7 @@ class GeneratorCollectionConfig(Config):
     _DEFAULT_DET_AGGREGATES = {}
     _DEFAULT_DET_ITERATED = {}
     _DEFAULT_DETECTOR_MAP = DetectorMapConfig(name="DefaultDetectorMap", percount_detectors=_DEFAULT_DET_ITERATED, aggregate_detectors=_DEFAULT_DET_AGGREGATES, other_elements={})
+    _DEFAULT_MODEL_MAP = ModelMapConfig(name="DefaultModelMapConfig", models={}, other_elements={})
     _DEFAULT_XTOR_AGGREGATES = {}
     _DEFAULT_XTOR_ITERATED = {}
     _DEFAULT_LEGACY_PERCOUNTS = {}
@@ -42,6 +45,7 @@ class GeneratorCollectionConfig(Config):
 
     def __init__(self, name:str, game_id:str,
                  detector_map:Optional[DetectorMapConfig], extractor_map:Optional[ExtractorMapConfig],
+                 model_map:Optional[ModelMapConfig],
                  subunit_range:Optional[range], other_ranges:Dict[str, range],
                  other_elements:Optional[Map]=None):
         """Constructor for the GeneratorCollectionConfig class.
@@ -116,6 +120,8 @@ class GeneratorCollectionConfig(Config):
         self._extractor_map      : ExtractorMapConfig = extractor_map or self._parseExtractorMap(unparsed_elements=unparsed_elements, schema_name=name)
         self._subunit_range      : Optional[range]    = subunit_range
         self._other_ranges       : Dict[str, range]   = other_ranges
+        self._model_map          : ModelMapConfig     = model_map or self._parseModelMap(unparsed_elements=unparsed_elements)
+
 
         super().__init__(name=name, other_elements=unparsed_elements)
 
@@ -161,6 +167,10 @@ class GeneratorCollectionConfig(Config):
         """Property for the dictionary of aggregate detectors.
         """
         return self.Detectors.AggregateDetectors
+    
+    @property
+    def Models(self) -> Dict[str, ModelConfig]:
+        return self._model_map.Models
 
     @property
     def Extractors(self) -> ExtractorMapConfig:
@@ -477,6 +487,21 @@ class GeneratorCollectionConfig(Config):
             schema_name=schema_name
         )
         ret_val = DetectorMapConfig.FromDict(name="DetectorMap", unparsed_elements=detector_map)
+
+        return ret_val
+    
+    @staticmethod
+    def _parseModelMap(unparsed_elements:Map) -> ModelMapConfig:
+        ret_val : ModelMapConfig 
+
+        model_map = GeneratorCollectionConfig.ParseElement(
+            unparsed_elements=unparsed_elements,
+            valid_keys=["models"],
+            to_type=dict,
+            default_value=GeneratorCollectionConfig._DEFAULT_MODEL_MAP,
+            remove_target=True
+        )
+        ret_val = ModelMapConfig.FromDict(name="ModelMap", unparsed_elements=model_map)
 
         return ret_val
 
