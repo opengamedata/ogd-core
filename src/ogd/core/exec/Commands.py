@@ -6,26 +6,27 @@ import traceback
 from argparse import Namespace
 from itertools import chain
 from pathlib import Path
-from typing import Any, List, Optional, Set, Tuple
+from typing import List, Optional, Set
 
 # import 3rd-party libraries
 
 # import OGD files
 # from ogd.core.exec.Generators import OGDGenerators
-from ogd.common.interfaces.CSVInterface import CSVInterface
-from ogd.common.interfaces.EventInterface import EventInterface
-from ogd.common.interfaces.outerfaces.DataOuterface import DataOuterface
-from ogd.common.interfaces.outerfaces.DebugOuterface import DebugOuterface
-from ogd.common.interfaces.outerfaces.TSVOuterface import TSVOuterface
 from ogd.core.managers.ExportManager import ExportManager
-from ogd.common.models.enums.ExportMode import ExportMode
-from ogd.common.models.enums.IDMode import IDMode
 from ogd.core.requests.Request import ExporterRange, Request
 from ogd.core.requests.RequestResult import RequestResult, ResultStatus
-from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
-from ogd.common.schemas.configs.GameSourceSchema import GameSourceSchema
-from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
+from ogd.core.configs.CoreConfig import CoreConfig
+from ogd.common.storage.interfaces.CSVInterface import CSVInterface
+from ogd.common.storage.interfaces.Interface import Interface
+from ogd.common.storage.outerfaces.Outerface import Outerface
+from ogd.common.storage.outerfaces.DebugOuterface import DebugOuterface
+from ogd.common.storage.outerfaces.CSVOuterface import CSVOuterface
+from ogd.common.models.enums.ExportMode import ExportMode
+from ogd.common.models.enums.IDMode import IDMode
+from ogd.common.configs.GameStoreConfig import GameStoreConfig
 from ogd.common.schemas.tables.TableSchema import TableSchema
+from ogd.common.schemas.events.LoggingSpecificationSchema import LoggingSpecificationSchema
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.Readme import Readme
 from .Generators import OGDGenerators
@@ -51,7 +52,7 @@ class OGDCommands:
         return True
 
     @staticmethod
-    def ShowGameInfo(config:ConfigSchema, game:str) -> bool:
+    def ShowGameInfo(config:CoreConfig, game:str) -> bool:
         """Function to print out info on a game from the game's schema.
     This does a similar function to writeReadme, but is limited to the CSV metadata part
     (basically what was in the schema, at one time written into the csv's themselves).
@@ -61,9 +62,10 @@ class OGDCommands:
         :rtype: bool
         """
         try:
-            game_schema = GameSchema.FromFile(game_id=game)
-            table_schema = TableSchema(schema_name=f"{config.GameSourceMap[game].TableSchema}.json")
-            readme = Readme(game_schema=game_schema, table_schema=table_schema)
+            event_schema  = LoggingSpecificationSchema.FromFile(schema_name=game, schema_path=Path("src") / "ogd" / "games" / game / "schemas")
+            generator_cfg = GeneratorCollectionConfig.FromFile( schema_name=game, schema_path=Path("src") / "ogd" / "games" / game / "schemas")
+            table_schema = config.GameSourceMap.get(game,GameStoreConfig.Default()).Table
+            readme = Readme(event_collection=event_schema, generator_collection=generator_cfg, table_schema=table_schema)
             print(readme.CustomReadmeSource)
         except Exception as err:
             msg = f"Could not print information for {game}: {type(err)} {str(err)}"
@@ -74,7 +76,7 @@ class OGDCommands:
             return True
 
     @staticmethod
-    def WriteReadme(config:ConfigSchema, game:str, destination:Path) -> bool:
+    def WriteReadme(config:CoreConfig, game:str, destination:Path) -> bool:
         """Function to write out the readme file for a given game.
     This includes the CSV metadata (data from the schema, originally written into
     the CSV files themselves), custom readme source, and the global changelog.
@@ -85,7 +87,8 @@ class OGDCommands:
         """
         path = destination / game
         try:
-            game_schema = GameSchema.FromFile(game_id=game, schema_path=Path("src") / "ogd" / "games" / game / "schemas")
+            event_schema  = LoggingSpecificationSchema.FromFile(schema_name=game)
+            generator_cfg = GeneratorCollectionConfig.FromFile(schema_name=game, schema_path=Path("src") / "ogd" / "games" / game / "schemas")
             table_schema = TableSchema(schema_name=f"{config.GameSourceMap[game].TableSchema}.json")
             readme = Readme(game_schema=game_schema, table_schema=table_schema)
             readme.GenerateReadme(path=path)
