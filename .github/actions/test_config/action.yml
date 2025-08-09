@@ -28,20 +28,14 @@ runs:
       run: cp ${{ inputs.config_path }}/t_config.py.template ${{ inputs.config_path }}/t_config.py 
       shell: bash
     - name: Set Output Verbosity
-      run: sed -i 's@"VERBOSE"\s*:\s*False@"VERBOSE":${{ inputs.verbose_output }}@g'       ${{ inputs.config_path }}/t_config.py
+      run: sed -i 's@"VERBOSE"\s*:\s*False@"VERBOSE":${{ inputs.verbose_output }}@g' ${{ inputs.config_path }}/t_config.py
       shell: bash
     - name: Set Config test(s) to run or not
-      run: sed -i 's@"CONFIGS"\s*:\s*True@"CONFIGS":${{ inputs.with_configs }}@g'          ${{ inputs.config_path }}/t_config.py
+      run: sed -i 's@"CONFIGS"\s*:\s*True@"CONFIGS":${{ inputs.with_configs }}@g'    ${{ inputs.config_path }}/t_config.py
       shell: bash
-    - name: Set interface test(s) to run or not
-      run: sed -i 's@"INTERFACES"\s*:\s*True@"INTERFACES":${{ inputs.with_interfaces }}@g' ${{ inputs.config_path }}/t_config.py
-      shell: bash
-    - name: Set Schema test(s) to run or not
-      run: sed -i 's@"SCHEMAS"\s*:\s*True@"SCHEMAS":${{ inputs.with_schemas }}@g'          ${{ inputs.config_path }}/t_config.py
-      shell: bash
-    - name: Set utils test(s) to run or not
-      run: sed -i 's@"UTILS"\s*:\s*True@"UTILS":${{ inputs.with_utils }}@g'                ${{ inputs.config_path }}/t_config.py
+    - name: Set Games test(s) to run or not
+      run: sed -i 's@"GAMES"\s*:\s*True@"GAMES":${{ inputs.with_schemas }}@g'        ${{ inputs.config_path }}/t_config.py
       shell: bash
     - name: Set the remote address
-      run: sed -i 's@"address_placeholder"@"${{ inputs.remote_url }}"@g'                   ${{ inputs.config_path }}/t_config.py
+      run: sed -i 's@"address_placeholder"@"${{ inputs.remote_url }}"@g'             ${{ inputs.config_path }}/t_config.py
       shell: bash
