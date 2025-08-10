@@ -28,7 +28,7 @@ from ogd.common.configs.GameStoreConfig import GameStoreConfig
 from ogd.common.schemas.tables.TableSchema import TableSchema
 from ogd.common.schemas.events.LoggingSpecificationSchema import LoggingSpecificationSchema
 from ogd.common.utils.Logger import Logger
-from ogd.common.utils.Readme import Readme
+from ogd.games.Readme import Readme
 from .Generators import OGDGenerators
 
 
