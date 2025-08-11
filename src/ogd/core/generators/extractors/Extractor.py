@@ -71,7 +71,7 @@ class Extractor(Generator):
 
     # *** PUBLIC METHODS ***
 
-    def ToFeature(self, app_id:str, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> Feature:
+    def GetFeature(self, app_id:str, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> Feature:
         return Feature(
             name=self.Name,
             feature_type=type(self).__name__,
