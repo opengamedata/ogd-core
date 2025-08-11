@@ -181,12 +181,12 @@ class ExportManager:
         start = datetime.now()
         if self._feat_mgr is not None:
             if request.ExportPopulation:
-                _pop_feats = self._feat_mgr.GetPopulationFeatures(as_str=True)
+                _pop_feats = self._feat_mgr.GetPopulationFeatures()
                 for outerface in request.Outerfaces:
                     outerface.WriteFeatures(features=_pop_feats, mode=ExportMode.POPULATION)
                 self._feat_mgr.ClearPopulationLines()
             if request.ExportPlayers:
-                _player_feats = self._feat_mgr.GetPlayerFeatures(as_str=True)
+                _player_feats = self._feat_mgr.GetPlayerFeatures()
                 for outerface in request.Outerfaces:
                     outerface.WriteFeatures(features=_player_feats, mode=ExportMode.PLAYER)
                 self._feat_mgr.ClearPlayerLines()
@@ -402,7 +402,7 @@ class ExportManager:
         if self._feat_mgr is not None:
         # 3. Output session features, if requested
             if request.ExportSessions:
-                _sess_feats = self._feat_mgr.GetSessionFeatures(slice_num=slice_num, slice_count=slice_count, as_str=True)
+                _sess_feats = self._feat_mgr.GetSessionFeatures(slice_num=slice_num, slice_count=slice_count)
                 for outerface in request.Outerfaces:
                     outerface.WriteFeatures(features=_sess_feats, mode=ExportMode.SESSION)
                 self._feat_mgr.ClearSessionLines()
