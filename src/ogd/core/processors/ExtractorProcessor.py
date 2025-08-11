@@ -26,9 +26,6 @@ class ExtractorProcessor(GeneratorProcessor):
         self._registry : ExtractorRegistry = ExtractorRegistry(mode=self._mode)
         self._registry.LoadGenerators(generator_cfg=generator_cfg, loader=self._loader, overrides=feature_overrides)
 
-    def __str__(self):
-        return f""
-
     # *** PUBLIC STATICS ***
 
     # *** PUBLIC METHODS ***
