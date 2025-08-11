@@ -230,6 +230,9 @@ class ExportManager:
             case "WAVES":
                 from ogd.games.WAVES.WaveLoader import WaveLoader
                 _loader_class = WaveLoader
+            case "WEATHER_STATION":
+                from ogd.games.WEATHER_STATION.WeatherStationLoader import WeatherStationLoader
+                _loader_class = WeatherStationLoader
             case "PENGUINS":
                 from ogd.games.PENGUINS.PenguinsLoader import PenguinsLoader
                 _loader_class = PenguinsLoader
