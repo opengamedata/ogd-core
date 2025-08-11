@@ -17,14 +17,17 @@ from ogd.core.requests.Request import ExporterRange, Request
 from ogd.core.requests.RequestResult import RequestResult, ResultStatus
 from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.configs.CoreConfig import CoreConfig
+from ogd.common.configs.GameStoreConfig import GameStoreConfig
+from ogd.common.filters.collections.DatasetFilterCollection import DatasetFilterCollection
+from ogd.common.filters.collections.SequencingFilterCollection import SequencingFilterCollection
+from ogd.common.filters.collections.IDFilterCollection import IDFilterCollection
+from ogd.common.models.enums.ExportMode import ExportMode
+from ogd.common.models.enums.IDMode import IDMode
 from ogd.common.storage.interfaces.CSVInterface import CSVInterface
 from ogd.common.storage.interfaces.Interface import Interface
 from ogd.common.storage.outerfaces.Outerface import Outerface
 from ogd.common.storage.outerfaces.DebugOuterface import DebugOuterface
 from ogd.common.storage.outerfaces.CSVOuterface import CSVOuterface
-from ogd.common.models.enums.ExportMode import ExportMode
-from ogd.common.models.enums.IDMode import IDMode
-from ogd.common.configs.GameStoreConfig import GameStoreConfig
 from ogd.common.schemas.tables.TableSchema import TableSchema
 from ogd.common.schemas.tables.EventTableSchema import EventTableSchema
 from ogd.common.schemas.events.LoggingSpecificationSchema import LoggingSpecificationSchema
@@ -55,9 +58,10 @@ class OGDCommands:
     @staticmethod
     def ShowGameInfo(config:CoreConfig, game:str) -> bool:
         """Function to print out info on a game from the game's schema.
-    This does a similar function to writeReadme, but is limited to the CSV metadata part
-    (basically what was in the schema, at one time written into the csv's themselves).
-    Further, the output is printed rather than written to file.
+
+        This does a similar function to writeReadme, but is limited to the CSV metadata part
+        (basically what was in the schema, at one time written into the csv's themselves).
+        Further, the output is printed rather than written to file.
 
         :return: True if game metadata was successfully loaded and printed, or False if an error occurred
         :rtype: bool
@@ -79,9 +83,10 @@ class OGDCommands:
     @staticmethod
     def WriteReadme(config:CoreConfig, game:str, destination:Path) -> bool:
         """Function to write out the readme file for a given game.
-    This includes the CSV metadata (data from the schema, originally written into
-    the CSV files themselves), custom readme source, and the global changelog.
-    The readme is placed in the game's data folder.
+
+        This includes the CSV metadata (data from the schema, originally written into
+        the CSV files themselves), custom readme source, and the global changelog.
+        The readme is placed in the game's data folder.
 
         :return: _description_
         :rtype: bool
@@ -119,15 +124,15 @@ class OGDCommands:
         """
         success : bool = False
 
-        export_modes   : Set[ExportMode]
-        interface      : Interface
-        export_range   : ExporterRange
-        file_outerface : Outerface
+        filters      : DatasetFilterCollection
+        export_modes : Set[ExportMode] = OGDGenerators.GenModes(
+            with_events=with_events, with_features=with_features,
+            no_session_file=args.no_session_file,
+            no_player_file=args.no_player_file,
+            no_pop_file=args.no_pop_file
+        )
         dataset_id     : Optional[str] = None
 
-    # 1. get exporter modes to run
-        export_modes = OGDGenerators.GenModes(with_events=with_events, with_features=with_features,
-                                              no_session_file=args.no_session_file, no_player_file=args.no_player_file, no_pop_file=args.no_pop_file)
     # 2. figure out the interface and range; optionally set a different dataset_id
         if args.file is not None and args.file != "":
             # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
@@ -181,7 +186,14 @@ class OGDCommands:
             outerfaces.add(DebugOuterface(game_id=args.game, config=_cfg, export_modes=export_modes))
 
     # 4. Once we have the parameters parsed out, construct the request.
-        req = Request(range=export_range, exporter_modes=export_modes, interface=interface, outerfaces=outerfaces)
+        req = Request(
+            filters=filters,
+            exporter_modes=export_modes,
+            source=source,
+            dest=dest,
+            fail_fast=config.FailFast,
+            repository=repository,
+            feature_overrides=None)
         if req.Interface.IsOpen():
             export_manager : ExportManager = ExportManager(config=config)
             result         : RequestResult = export_manager.ExecuteRequest(request=req)
