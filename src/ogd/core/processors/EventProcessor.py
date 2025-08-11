@@ -3,11 +3,11 @@ import logging
 from datetime import datetime
 from typing import List
 # import locals
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.processors.Processor import Processor
 from ogd.common.filters.collections.DatasetFilterCollection import DatasetFilterCollection
 from ogd.common.models.Event import Event
 from ogd.common.models.EventSet import EventSet
-from ogd.common.configs.GameStoreConfig import GameStoreConfig
 from ogd.common.utils.typing import ExportRow
 from ogd.common.utils.Logger import Logger
 
@@ -15,8 +15,8 @@ class EventProcessor(Processor):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_schema:GameStoreConfig, filters:DatasetFilterCollection=DatasetFilterCollection()):
-        super().__init__(generator_cfg=game_schema)
+    def __init__(self, generator_cfg:GeneratorCollectionConfig, filters:DatasetFilterCollection=DatasetFilterCollection()):
+        super().__init__(generator_cfg=generator_cfg)
         self._events : EventSet = EventSet(events=[], filters=filters)
 
     @property

@@ -1,17 +1,14 @@
 # import standard libraries
 import logging
-import traceback
-from typing import List, Dict, Type, Optional, Set
+from typing import List, Type, Optional, Set
 # import local files
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
-from ogd.core.processors.SessionProcessor import SessionProcessor
 from ogd.common.models.Event import Event
-from ogd.common.models.enums.ExportMode import ExportMode
-from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
-from ogd.common.configs.GameStoreConfig import GameStoreConfig
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import ExportRow
 
@@ -22,7 +19,7 @@ class PlayerProcessor(ExtractorProcessor):
     # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the PlayerProcessor class.
-    def __init__(self, LoaderClass: Type[GeneratorLoader], game_schema:GameStoreConfig, player_id:str,
+    def __init__(self, LoaderClass: Type[GeneratorLoader], generator_cfg:GeneratorCollectionConfig, player_id:str,
                  feature_overrides:Optional[List[str]]=None):
         """Constructor for the PlayerProcessor class.
            Simply stores some data for use later, including the type of extractor to use.
@@ -42,9 +39,9 @@ class PlayerProcessor(ExtractorProcessor):
         Logger.Log(f"Setting up PlayerProcessor for {player_id}...", logging.DEBUG, depth=2)
         self._player_id : str      = player_id
         self._sessions  : Set[str] = set()
-        super().__init__(LoaderClass=LoaderClass, generator_cfg=game_schema, feature_overrides=feature_overrides)
+        super().__init__(LoaderClass=LoaderClass, generator_cfg=generator_cfg, feature_overrides=feature_overrides)
         ## Define instance vars
-        Logger.Log(f"Done", logging.DEBUG, depth=2)
+        Logger.Log("Done", logging.DEBUG, depth=2)
 
     def __str__(self):
         return f"PlayerProcessor({self._player_id})"

@@ -21,11 +21,11 @@ class EventManager:
         """
         # define instance vars
         self._columns     : List[str]      = Event.ColumnNames()
-        self._raw_events  : EventProcessor = EventProcessor(game_schema=game_schema)
-        self._all_events  : EventProcessor = EventProcessor(game_schema=game_schema)
+        self._raw_events  : EventProcessor = EventProcessor(generator_cfg=game_schema)
+        self._all_events  : EventProcessor = EventProcessor(generator_cfg=game_schema)
         self._detector_processor : Optional[DetectorProcessor] = None
         if LoaderClass is not None:
-            self._detector_processor = DetectorProcessor(game_schema=game_schema,           LoaderClass=LoaderClass,
+            self._detector_processor = DetectorProcessor(generator_cfg=game_schema,           LoaderClass=LoaderClass,
                                                          trigger_callback=trigger_callback, feature_overrides=feature_overrides)
 
     def ProcessEvent(self, event:Event) -> None:

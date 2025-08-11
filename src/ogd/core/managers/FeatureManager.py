@@ -31,16 +31,16 @@ class FeatureManager:
         self._players    : Optional[Dict[str, PlayerProcessor]]            = None
         self._sessions   : Optional[Dict[str, Dict[str,SessionProcessor]]] = None
         if self._LoaderClass is not None:
-            self._population = PopulationProcessor(LoaderClass=self._LoaderClass, game_schema=generator_config,
+            self._population = PopulationProcessor(LoaderClass=self._LoaderClass, generator_cfg=generator_config,
                                                 feature_overrides=feature_overrides)
             # need to initialize null instances for player and session processors, so at very least we can retrieve column names.
             self._players    = {
-                "null" : PlayerProcessor(LoaderClass=self._LoaderClass, game_schema=self._generator_configs,
+                "null" : PlayerProcessor(LoaderClass=self._LoaderClass, generator_cfg=self._generator_configs,
                                         player_id="null", feature_overrides=self._overrides)
             }
             self._sessions   = {
                 "null" : {
-                    "null" : SessionProcessor(LoaderClass=self._LoaderClass, game_schema=self._generator_configs,
+                    "null" : SessionProcessor(LoaderClass=self._LoaderClass, generator_cfg=self._generator_configs,
                                             player_id="null", session_id="null", feature_overrides=self._overrides)
                 }
             }
@@ -97,7 +97,7 @@ class FeatureManager:
             # 2. process at player level, adding player if needed.
             _player_id = event.UserID or "null"
             if self._LoaderClass is not None and _player_id not in self._players.keys():
-                self._players[_player_id] = PlayerProcessor(LoaderClass=self._LoaderClass, game_schema=self._generator_configs,
+                self._players[_player_id] = PlayerProcessor(LoaderClass=self._LoaderClass, generator_cfg=self._generator_configs,
                                                             player_id=_player_id,          feature_overrides=self._overrides)
             if self._LoaderClass is not None and _player_id not in self._sessions.keys():
                 self._sessions[_player_id] = {}
@@ -108,7 +108,7 @@ class FeatureManager:
                 self._used_null_play = True
             # 3. process at session level, adding session if needed.
             if self._LoaderClass is not None and event.SessionID not in self._sessions[_player_id].keys():
-                self._sessions[_player_id][event.SessionID] = SessionProcessor(LoaderClass=self._LoaderClass, game_schema=self._generator_configs,
+                self._sessions[_player_id][event.SessionID] = SessionProcessor(LoaderClass=self._LoaderClass, generator_cfg=self._generator_configs,
                                                                     player_id=_player_id,          session_id=event.SessionID,    feature_overrides=self._overrides)
             self._sessions[_player_id][event.SessionID].ProcessEvent(event=event)
             if event.SessionID == None or event.SessionID.upper() == "NULL":
@@ -174,7 +174,7 @@ class FeatureManager:
             for player in self._players.values():
                 player.ClearLines()
             self._players = {}
-            self._players["null"] = PlayerProcessor(LoaderClass=self._LoaderClass, game_schema=self._generator_configs,
+            self._players["null"] = PlayerProcessor(LoaderClass=self._LoaderClass, generator_cfg=self._generator_configs,
                                                     player_id="null", feature_overrides=self._overrides)
     def ClearSessionLines(self) -> None:
         if self._sessions is not None and self._LoaderClass is not None:
@@ -183,7 +183,7 @@ class FeatureManager:
                     sess.ClearLines()
             self._sessions = {}
             self._sessions["null"] = {
-                "null" : SessionProcessor(LoaderClass=self._LoaderClass, game_schema=self._generator_configs,
+                "null" : SessionProcessor(LoaderClass=self._LoaderClass, generator_cfg=self._generator_configs,
                                         player_id="null", session_id="null", feature_overrides=self._overrides)
             }
 
