@@ -83,8 +83,8 @@ class PopulationProcessor(ExtractorProcessor):
         ret_val = [len(self._players), len(self._sessions)] + self._registry.GetFeatureValues()
         return [ret_val]
 
-    def _getFeature(self, order:int) -> List[Feature]:
-        return self._registry.GetFeature(order=order)
+    def _getFeatures(self, order:int) -> List[Feature]:
+        return self._registry.GetFeatures(order=order)
 
     ##  Function to empty the list of lines stored by the PopulationProcessor.
     #   This is helpful if we're processing a lot of data and want to avoid

@@ -87,8 +87,8 @@ class SessionProcessor(ExtractorProcessor):
         ret_val = [self._playerID, self._sessionID] + self._registry.GetFeatureValues()
         return [ret_val]
 
-    def _getFeature(self, order:int) -> List[Feature]:
-        return self._registry.GetFeature(order=order, player_id=self._player_id, sess_id=self._session_id)
+    def _getFeatures(self, order:int) -> List[Feature]:
+        return self._registry.GetFeatures(order=order, player_id=self._player_id, sess_id=self._session_id)
 
     def _clearLines(self) -> None:
         Logger.Log(f"Clearing features from SessionProcessor for player {self._player_id}, session {self._session_id}.", logging.DEBUG, depth=2)

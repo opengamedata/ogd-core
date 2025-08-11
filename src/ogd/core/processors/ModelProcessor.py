@@ -147,5 +147,5 @@ class ModelProcessor(ExtractorProcessor):
     def _sessionID(self) -> str: return self._session_id
     def _processEvent(self, event: Event): pass
     def _getLines(self) -> List[ExportRow]: return []
-    def _getFeature(self, order:int) -> List[Feature]: return []
+    def _getFeatures(self, order:int) -> List[Feature]: return []
     def _clearLines(self) -> None: self._registry = self._createRegistry()

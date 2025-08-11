@@ -13,7 +13,9 @@ from ogd.core.generators.Generator import Generator
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.registries.GeneratorRegistry import GeneratorRegistry
 from ogd.core.generators.extractors.Extractor import Extractor
+from ogd.common.filters.collections.DatasetFilterCollection import DatasetFilterCollection
 from ogd.common.models.Event import Event
+from ogd.common.models.FeatureSet import FeatureSet
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 from ogd.common.models.enums.IterationMode import IterationMode
@@ -224,11 +226,11 @@ class ExtractorRegistry(GeneratorRegistry):
         """
         return len(self._extractors)
 
-    def GetFeature(self, order:int, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> List[Feature]:
+    def GetFeatures(self, order:int, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> FeatureSet:
         order_index = order - 1 # orders are counted from 1, so need to adjust to index from 0.
-        ret_val : List[Feature] = []
+        ret_val : FeatureSet = FeatureSet(features=[], filters=DatasetFilterCollection()) # TODO : maybe take an actual arg here, or somewhere.
         for extractor in self._extractors[order_index].values():
-            ret_val.append(extractor.ToFeature(player_id=player_id, sess_id=sess_id))
+            ret_val.Features.append(extractor.GetFeature(player_id=player_id, sess_id=sess_id))
         return ret_val
 
     def GetFeatureValues(self) -> List[Any]:

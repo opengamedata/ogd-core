@@ -120,7 +120,7 @@ class FeatureManager:
         Logger.Log("Processing Feature Data...", logging.INFO, depth=3)
         # 1. Get population 1st-order data
         if self._population is not None and self._players is not None and self._sessions is not None:
-            pop_data = self._population.GetFeature(order=1)
+            pop_data = self._population.GetFeatures(order=1)
             # 2. Distribute population 1st-order data
             self._population.ProcessFeature(feature_list=pop_data)
             for player in self._players.values():
@@ -131,7 +131,7 @@ class FeatureManager:
                     session.ProcessFeature(feature_list=pop_data)
             # 3. For each player, get 1st-order data
             for player_name,player in self._players.items():
-                play_data = player.GetFeature(order=1)
+                play_data = player.GetFeatures(order=1)
                 # 4. Distribute player 1st-order data
                 self._population.ProcessFeature(feature_list=play_data)
                 player.ProcessFeature(feature_list=play_data)
@@ -140,7 +140,7 @@ class FeatureManager:
             # 5. For each session, get 1st-order data
             for session_list in self._sessions.values():
                 for session in session_list.values():
-                    sess_data = session.GetFeature(order=1)
+                    sess_data = session.GetFeatures(order=1)
                     # 6. Distribute session 1st-order data
                     self._population.ProcessFeature(feature_list=sess_data)
                     player = self._players.get(session._playerID, None)

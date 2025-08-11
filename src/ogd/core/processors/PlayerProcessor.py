@@ -85,8 +85,8 @@ class PlayerProcessor(ExtractorProcessor):
         ret_val = [self._player_id, len(self._sessions)] + self._registry.GetFeatureValues()
         return [ret_val]
 
-    def _getFeature(self, order:int) -> List[Feature]:
-        return self._registry.GetFeature(order=order, player_id=self._player_id)
+    def _getFeatures(self, order:int) -> List[Feature]:
+        return self._registry.GetFeatures(order=order, player_id=self._player_id)
 
     ##  Function to empty the list of lines stored by the PlayerProcessor.
     def _clearLines(self) -> None:
