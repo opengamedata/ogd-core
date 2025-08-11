@@ -26,6 +26,7 @@ from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.common.models.enums.IDMode import IDMode
 from ogd.common.configs.GameStoreConfig import GameStoreConfig
 from ogd.common.schemas.tables.TableSchema import TableSchema
+from ogd.common.schemas.tables.EventTableSchema import EventTableSchema
 from ogd.common.schemas.events.LoggingSpecificationSchema import LoggingSpecificationSchema
 from ogd.common.utils.Logger import Logger
 from ogd.games.Readme import Readme
@@ -64,7 +65,7 @@ class OGDCommands:
         try:
             event_schema  = LoggingSpecificationSchema.FromFile(schema_name=game, schema_path=Path("src") / "ogd" / "games" / game / "schemas")
             generator_cfg = GeneratorCollectionConfig.FromFile( schema_name=game, schema_path=Path("src") / "ogd" / "games" / game / "schemas")
-            table_schema = config.GameSourceMap.get(game,GameStoreConfig.Default()).Table
+            table_schema = config.GameSourceMap.get(game,GameStoreConfig.Default()).Table or TableSchema.Default()
             readme = Readme(event_collection=event_schema, generator_collection=generator_cfg, table_schema=table_schema)
             print(readme.CustomReadmeSource)
         except Exception as err:
@@ -89,9 +90,9 @@ class OGDCommands:
         try:
             event_schema  = LoggingSpecificationSchema.FromFile(schema_name=game)
             generator_cfg = GeneratorCollectionConfig.FromFile(schema_name=game, schema_path=Path("src") / "ogd" / "games" / game / "schemas")
-            table_schema = TableSchema(schema_name=f"{config.GameSourceMap[game].TableSchema}.json")
-            readme = Readme(game_schema=game_schema, table_schema=table_schema)
-            readme.GenerateReadme(path=path)
+            table_schema = EventTableSchema.FromFile(schema_name=f"{config.GameSourceMap[game].TableName}.json")
+            readme = Readme(event_collection=event_schema, generator_collection=generator_cfg, table_schema=table_schema)
+            readme.ToFile(path=path)
         except Exception as err:
             msg = f"Could not create a readme for {game}: {type(err)} {str(err)}"
             Logger.Log(msg, logging.ERROR)
@@ -102,7 +103,7 @@ class OGDCommands:
             return True
 
     @staticmethod
-    def RunExport(args:Namespace, config:ConfigSchema, destination:Path, with_events:bool = False, with_features:bool = False) -> bool:
+    def RunExport(args:Namespace, config:CoreConfig, destination:Path, with_events:bool = False, with_features:bool = False) -> bool:
         """Function to handle execution of export code.
         This is the main intended use of the program.
 
