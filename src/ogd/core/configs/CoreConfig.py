@@ -3,7 +3,7 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, Optional
 # import local files
-from ogd.common.configs.IndexingConfig import FileIndexingConfig
+from ogd.common.configs.storage.RepositoryIndexingConfig import RepositoryIndexingConfig
 from ogd.common.configs.GameStoreConfig import GameStoreConfig
 from ogd.common.configs.storage.DataStoreConfig import DataStoreConfig
 from ogd.common.configs.storage.BigQueryConfig import BigQueryConfig
@@ -23,7 +23,7 @@ class CoreConfig(Schema):
     _DEFAULT_DBG_STR = "INFO"
     _DEFAULT_FAIL_FAST = False
     _DEFAULT_WITH_PROFILING = False
-    _DEFAULT_FILE_IDX = FileIndexingConfig.Default()
+    _DEFAULT_FILE_IDX = RepositoryIndexingConfig.Default()
     _DEFAULT_DATA_SRC = {}
     _DEFAULT_GAME_SRC_MAP = {}
 
@@ -35,7 +35,7 @@ class CoreConfig(Schema):
         dbg_level: Optional[int],
         fail_fast: Optional[bool],
         with_profiling: Optional[bool],
-        file_idx: Optional[FileIndexingConfig],
+        file_idx: Optional[RepositoryIndexingConfig],
         data_src: Optional[Dict[str, DataStoreConfig]],
         game_src_map: Optional[Dict[str, GameStoreConfig]],
         other_elements: Dict[str, Any]
@@ -54,7 +54,7 @@ class CoreConfig(Schema):
         self._dbg_level      : int                = dbg_level      or self._parseDebugLevel(unparsed_elements=unparsed_elements)
         self._fail_fast      : bool               = fail_fast      or self._parseFailFast(unparsed_elements=unparsed_elements)
         self._with_profiling : bool               = with_profiling or self._parseProfiling(unparsed_elements=unparsed_elements)
-        self._file_idx       : FileIndexingConfig = file_idx       or self._parseFileIndexing(unparsed_elements=unparsed_elements)
+        self._file_idx       : RepositoryIndexingConfig   = file_idx       or self._parseFileIndexing(unparsed_elements=unparsed_elements)
         self._data_src       : Dict[str, DataStoreConfig] = data_src or self._parseDataSources(unparsed_elements=unparsed_elements)
         self._game_src_map   : Dict[str, GameStoreConfig] = game_src_map or self._parseGameSourceMap(unparsed_elements=unparsed_elements)
         
@@ -115,7 +115,7 @@ class CoreConfig(Schema):
         return self._with_profiling
 
     @property
-    def FileIndexConfig(self) -> FileIndexingConfig:
+    def FileIndexConfig(self) -> RepositoryIndexingConfig:
         """
         A collection of settings for indexing output files.
 
@@ -213,19 +213,19 @@ class CoreConfig(Schema):
         )
 
     @staticmethod
-    def _parseFileIndexing(unparsed_elements:Map) -> FileIndexingConfig:
-        ret_val : FileIndexingConfig
+    def _parseFileIndexing(unparsed_elements:Map) -> RepositoryIndexingConfig:
+        ret_val : RepositoryIndexingConfig
 
         raw_indexing = CoreConfig.ParseElement(
             unparsed_elements=unparsed_elements,
-            valid_keys=['FILE_INDEXING'],
+            valid_keys=['REPOSITORY_CONFIG', 'FILE_INDEXING'],
             to_type=dict,
             default_value=None,
             remove_target=True
         )
 
         if isinstance(raw_indexing, dict):
-            ret_val = FileIndexingConfig.FromDict(name="FILE_INDEXING", unparsed_elements=raw_indexing)
+            ret_val = RepositoryIndexingConfig.FromDict(name="FILE_INDEXING", unparsed_elements=raw_indexing)
         else:
             ret_val = CoreConfig._DEFAULT_FILE_IDX
             Logger.Log(f"Config file indexing was not found, defaulting to default indexing config: {ret_val.AsMarkdown}.", logging.WARN)
