@@ -202,7 +202,7 @@ class FeatureManager:
     def _try_update(self):
         if not self._up_to_date:
             self.ProcessFeatures()
-            _feature_set : FeatureSet
+            _feature_set : FeatureSet = self._population.GetFeatures(order=None, app_id=self.)
             # for some reason, this didn't work as sum over list of lists, so get sessions manually with a normal loop:
             list_o_playlists : List[List[ExportRow]]       = [player.Lines for player_id,player in self._players.items() if (player_id != "null" or self._used_null_play)] if self._players is not None else []
             flat_playlist    : List[ExportRow]             = list(itertools.chain.from_iterable(list_o_playlists))
