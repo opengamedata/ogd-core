@@ -3,7 +3,7 @@ import abc
 from typing import List, Type, Optional
 
 # import locals
-from ogd.common.models.Feature import Feature
+from ogd.common.models.FeatureSet import FeatureSet
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.registries.ExtractorRegistry import ExtractorRegistry
@@ -16,7 +16,7 @@ class ExtractorProcessor(GeneratorProcessor):
 
     ## Abstract declaration of a function to get the calculated value of the feature, as a Feature package, given data seen so far.
     @abc.abstractmethod
-    def _getFeatures(self, order:int) -> List[Feature]:
+    def _getFeatures(self, order:int, app_id:str) -> FeatureSet:
         pass
 
     # *** BUILT-INS & PROPERTIES ***
@@ -33,9 +33,9 @@ class ExtractorProcessor(GeneratorProcessor):
 
     # *** PUBLIC METHODS ***
 
-    def GetFeatures(self, order:int) -> List[Feature]:
+    def GetFeatures(self, order:int, app_id:str) -> FeatureSet:
         # TODO: add error handling code, if applicable.
-        return self._getFeatures(order=order)
+        return self._getFeatures(order=order, app_id=app_id)
 
     # *** PRIVATE STATICS ***
 
