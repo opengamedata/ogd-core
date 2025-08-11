@@ -1,6 +1,5 @@
 ## import standard libraries
 import logging
-from datetime import datetime
 from typing import Callable, List, Type, Optional
 ## import local files
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
