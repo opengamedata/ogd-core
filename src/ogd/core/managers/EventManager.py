@@ -1,23 +1,21 @@
 ## import standard libraries
-import json
 import logging
 from datetime import datetime
-from typing import Any, Callable, List, Type, Optional, Set
+from typing import Callable, List, Type, Optional
 ## import local files
-from ogd.core.registries.DetectorRegistry import DetectorRegistry
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.processors.DetectorProcessor import DetectorProcessor
 from ogd.core.processors.EventProcessor import EventProcessor
 from ogd.common.models.Event import Event, EventSource
-from ogd.common.schemas.games.GameSchema import GameSchema
-from ogd.common.utils import utils
+from ogd.common.models.EventSet import EventSet
+from ogd.common.configs.GameStoreConfig import GameStoreConfig
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import ExportRow
 
 ## @class EventProcessor
 #  Class to manage data for a csv events file.
 class EventManager:
-    def __init__(self, game_schema: GameSchema, trigger_callback:Callable[[Event], None],
+    def __init__(self, game_schema:GameStoreConfig, trigger_callback:Callable[[Event], None],
                  LoaderClass:Optional[Type[GeneratorLoader]], feature_overrides:Optional[List[str]]=None):
         """Constructor for EventManager.
         Just creates empty list of lines and generates list of column names.
@@ -31,7 +29,7 @@ class EventManager:
             self._detector_processor = DetectorProcessor(game_schema=game_schema,           LoaderClass=LoaderClass,
                                                          trigger_callback=trigger_callback, feature_overrides=feature_overrides)
 
-    def ProcessEvent(self, event:Event, separator:str = "\t") -> None:
+    def ProcessEvent(self, event:Event) -> None:
         # event.EventData = json.dumps(event.EventData)
         # TODO: double-check if the remote_addr is there to be dropped/ignored.
         self._all_events.ProcessEvent(event=event)
@@ -43,19 +41,19 @@ class EventManager:
     def GetColumnNames(self) -> List[str]:
         return self._columns
 
-    def GetRawLines(self, slice_num:int, slice_count:int) -> List[ExportRow]:
-        start   : datetime = datetime.now()
-        ret_val : List[Any] = self._raw_events.Lines
-        time_delta = datetime.now() - start
-        Logger.Log(f"Time to retrieve raw Event lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
-        return ret_val
+    @property
+    def GameEvents(self) -> EventSet:
+        return self._raw_events.Events
+    @property
+    def GameLines(self) -> List[ExportRow]:
+        return self._raw_events.Lines
 
-    def GetAllLines(self, slice_num:int, slice_count:int) -> List[ExportRow]:
-        start   : datetime = datetime.now()
-        ret_val : List[Any] = self._all_events.Lines
-        time_delta = datetime.now() - start
-        Logger.Log(f"Time to retrieve all Event lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
-        return ret_val
+    @property
+    def AllEvents(self) -> EventSet:
+        return self._all_events.Events
+    @property
+    def AllLines(self) -> List[ExportRow]:
+        return self._all_events.Lines
 
     ## Function to empty the list of lines stored by the EventProcessor.
     #  This is helpful if we're processing a lot of data and want to avoid
