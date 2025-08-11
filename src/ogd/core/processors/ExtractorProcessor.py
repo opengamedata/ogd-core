@@ -5,11 +5,9 @@ from typing import Dict, List, Type, Optional, Set
 # import locals
 from ogd.common.models.Feature import Feature
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.processors.GeneratorProcessor import GeneratorProcessor
-from ogd.common.configs.GameStoreConfig import GameStoreConfig
-from ogd.common.models.enums.ExportMode import ExportMode
-from ogd.common.utils.typing import ExportRow
 
 ## @class Processor
 class ExtractorProcessor(GeneratorProcessor):
@@ -23,10 +21,10 @@ class ExtractorProcessor(GeneratorProcessor):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_schema:GameStoreConfig, LoaderClass:Type[GeneratorLoader], feature_overrides:Optional[List[str]]=None):
-        super().__init__(game_schema=game_schema, LoaderClass=LoaderClass, feature_overrides=feature_overrides)
+    def __init__(self, generator_cfg:GeneratorCollectionConfig, LoaderClass:Type[GeneratorLoader], feature_overrides:Optional[List[str]]=None):
+        super().__init__(generator_cfg=generator_cfg, LoaderClass=LoaderClass, feature_overrides=feature_overrides)
         self._registry : ExtractorRegistry = ExtractorRegistry(mode=self._mode)
-        self._registry.LoadFromSchema(schema=game_schema, loader=self._loader, overrides=feature_overrides)
+        self._registry.LoadGenerators(generator_cfg=generator_cfg, loader=self._loader, overrides=feature_overrides)
 
     def __str__(self):
         return f""

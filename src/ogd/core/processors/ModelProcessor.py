@@ -117,11 +117,11 @@ class ModelProcessor(ExtractorProcessor):
     def __init__(self, LoaderClass:Type[GeneratorLoader], game_schema:GameStoreConfig, feature_overrides:Optional[List[str]]=None):
         self._player_id    : str = "population"
         self._session_id   : str = "population"
-        super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
+        super().__init__(LoaderClass=LoaderClass, generator_cfg=game_schema, feature_overrides=feature_overrides)
 
     def InitializeModels(self):
         self._registry = self._createRegistry()
-        self._registry._loadFromSchema(schema=self._game_schema, loader=self._loader, overrides=self._overrides)
+        self._registry._loadGenerators(schema=self._generator_cfg, loader=self._loader, overrides=self._overrides)
             
     def ProcessFeature(self, feature: Feature):
         # self._registry = self._createRegistry()
@@ -131,7 +131,7 @@ class ModelProcessor(ExtractorProcessor):
     def TrainModels(self):
         # self._registry = self._createRegistry()
         if self._registry:
-            self._registry._loadFromSchema(generator_schemas=self._game_schema, loader=self._loader, overrides=self._overrides)
+            self._registry._loadGenerators(generator_cfg=self._generator_cfg, loader=self._loader, overrides=self._overrides)
 
     @property
     def _mode(self) -> ExtractionMode:

@@ -5,10 +5,10 @@ from typing import List, Type, Optional
 # import locals
 from ogd.core.registries.GeneratorRegistry import GeneratorRegistry
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.processors.Processor import Processor
 from ogd.common.models.Feature import Feature
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.configs.GameStoreConfig import GameStoreConfig
 from ogd.common.utils.Logger import Logger
 
 ## @class Processor
@@ -40,10 +40,10 @@ class GeneratorProcessor(Processor):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_schema:GameStoreConfig, LoaderClass:Type[GeneratorLoader], feature_overrides:Optional[List[str]]=None):
-        super().__init__(game_schema=game_schema)
+    def __init__(self, generator_cfg:GeneratorCollectionConfig, LoaderClass:Type[GeneratorLoader], feature_overrides:Optional[List[str]]=None):
+        super().__init__(generator_cfg=generator_cfg)
         self._overrides   : Optional[List[str]]   = feature_overrides
-        self._loader      : GeneratorLoader       = LoaderClass(player_id=self._playerID, session_id=self._sessionID, generator_config=self._game_schema,
+        self._loader      : GeneratorLoader       = LoaderClass(player_id=self._playerID, session_id=self._sessionID, generator_config=self._generator_cfg,
                                                                 mode=self._mode, feature_overrides=self._overrides)
         self._registry    : Optional[GeneratorRegistry] = None # Set to 0, let subclasses create own instances.
 

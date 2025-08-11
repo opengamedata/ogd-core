@@ -45,7 +45,7 @@ class SessionProcessor(ExtractorProcessor):
         self._session_id   : str = session_id
         self._player_id    : str = player_id
         # NOTE: need session and player IDs set before we do initialization in parent.
-        super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
+        super().__init__(LoaderClass=LoaderClass, generator_cfg=game_schema, feature_overrides=feature_overrides)
 
     def __str__(self):
         return f"SessionProcessor({self._player_id}, {self._session_id})"

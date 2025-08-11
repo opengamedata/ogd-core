@@ -42,7 +42,7 @@ class PlayerProcessor(ExtractorProcessor):
         Logger.Log(f"Setting up PlayerProcessor for {player_id}...", logging.DEBUG, depth=2)
         self._player_id : str      = player_id
         self._sessions  : Set[str] = set()
-        super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
+        super().__init__(LoaderClass=LoaderClass, generator_cfg=game_schema, feature_overrides=feature_overrides)
         ## Define instance vars
         Logger.Log(f"Done", logging.DEBUG, depth=2)
 

@@ -43,7 +43,7 @@ class GeneratorRegistry(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _loadFromSchema(self, schema:GeneratorCollectionConfig, loader:GeneratorLoader, overrides:Optional[List[str]]):
+    def _loadGenerators(self, generator_cfg:GeneratorCollectionConfig, loader:GeneratorLoader, overrides:Optional[List[str]]):
         pass
 
     @abc.abstractmethod
@@ -89,9 +89,9 @@ class GeneratorRegistry(abc.ABC):
         # TODO : Add error handling and/or timing and/or profiling
         return self._getGeneratorNames()
 
-    def LoadFromSchema(self, schema:GeneratorCollectionConfig, loader:GeneratorLoader, overrides:Optional[List[str]]):
+    def LoadGenerators(self, generator_cfg:GeneratorCollectionConfig, loader:GeneratorLoader, overrides:Optional[List[str]]):
         # TODO : Add error handling and/or timing and/or profiling
-        self._loadFromSchema(schema=schema, loader=loader, overrides=overrides)
+        self._loadGenerators(generator_cfg=generator_cfg, loader=loader, overrides=overrides)
 
     def UpdateFromEvent(self, event:Event) -> None:
         """Perform extraction of features from a row.

@@ -17,9 +17,9 @@ class DetectorProcessor(GeneratorProcessor):
     def __init__(self, game_schema:GameStoreConfig, LoaderClass: Type[GeneratorLoader], trigger_callback:Callable[[Event], None],
                  feature_overrides:Optional[List[str]]=None):
         # TODO: Consider having multiple registries for per-player or per-session kinds of things.
-        super().__init__(game_schema=game_schema, LoaderClass=LoaderClass, feature_overrides=feature_overrides)
+        super().__init__(generator_cfg=game_schema, LoaderClass=LoaderClass, feature_overrides=feature_overrides)
         self._registry = DetectorRegistry(mode=self._mode, trigger_callback=trigger_callback)
-        self._registry.LoadFromSchema(schema=game_schema, loader=self._loader, overrides=feature_overrides)
+        self._registry.LoadGenerators(generator_cfg=game_schema, loader=self._loader, overrides=feature_overrides)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
@@ -47,7 +47,7 @@ class DetectorProcessor(GeneratorProcessor):
 
     def _clearLines(self):
         if self._registry is not None:
-            self._registry.LoadFromSchema(schema=self._game_schema, loader=self._loader, overrides=self._overrides)
+            self._registry.LoadGenerators(generator_cfg=self._generator_cfg, loader=self._loader, overrides=self._overrides)
 
     # *** PUBLIC STATICS ***
 

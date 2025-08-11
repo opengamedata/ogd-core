@@ -16,7 +16,7 @@ class EventProcessor(Processor):
     # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, game_schema:GameStoreConfig, filters:DatasetFilterCollection=DatasetFilterCollection()):
-        super().__init__(game_schema=game_schema)
+        super().__init__(generator_cfg=game_schema)
         self._events : EventSet = EventSet(events=[], filters=filters)
 
     @property

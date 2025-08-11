@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 from typing import List
 # import locals
-from ogd.common.configs.GameStoreConfig import GameStoreConfig
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.common.models.Event import Event
 from ogd.common.utils.typing import ExportRow
 
@@ -28,11 +28,8 @@ class Processor(abc.ABC):
 
     # *** BUILT-INS ***
 
-    def __init__(self, game_schema: GameStoreConfig):
-        self._game_schema : GameStoreConfig = game_schema
-
-    def __str__(self):
-        return f"Processor object for {self._game_schema.GameID} data"
+    def __init__(self, generator_cfg:GeneratorCollectionConfig):
+        self._generator_cfg : GeneratorCollectionConfig = generator_cfg
 
     # *** PUBLIC STATICS ***
 

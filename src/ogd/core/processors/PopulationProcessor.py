@@ -36,7 +36,7 @@ class PopulationProcessor(ExtractorProcessor):
         """
         self._players  : Set[str] = set()
         self._sessions : Set[str] = set()
-        super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
+        super().__init__(LoaderClass=LoaderClass, generator_cfg=game_schema, feature_overrides=feature_overrides)
 
     def __str__(self):
         return f"PopulationProcessor"
