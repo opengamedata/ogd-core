@@ -110,17 +110,17 @@ class FeatureManager:
         else:
             Logger.Log("Skipped processing of Feature, no feature Processors available!", logging.INFO, depth=3)
 
-    def GetFeatureValues(self, as_str:bool = False) -> Dict[str, List[ExportRow]]:
+    def GetFeatureValues(self) -> Dict[str, List[ExportRow]]:
         start = datetime.now()
-        self._try_update(as_str=as_str)
+        self._try_update()
         Logger.Log(f"Time to retrieve all feature values: {datetime.now() - start}", logging.INFO, depth=2)
         return self._latest_values
 
     def GetPopulationFeatureNames(self) -> List[str]:
         return self._population.GeneratorNames if self._population is not None else []
-    def GetPopulationFeatures(self, as_str:bool = False) -> List[ExportRow]:
+    def GetPopulationFeatures(self) -> List[ExportRow]:
         start = datetime.now()
-        self._try_update(as_str=as_str)
+        self._try_update()
         ret_val = self._latest_values.get('population', [])
         Logger.Log(f"Time to retrieve Population lines: {datetime.now() - start} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val
@@ -128,18 +128,18 @@ class FeatureManager:
     def GetPlayerFeatureNames(self) -> List[str]:
         return self._players["null"].GeneratorNames if self._players is not None else []
     
-    def GetPlayerFeatures(self, as_str:bool = False) -> List[ExportRow]:
+    def GetPlayerFeatures(self) -> List[ExportRow]:
         start   : datetime = datetime.now()
-        self._try_update(as_str=as_str)
+        self._try_update()
         ret_val = self._latest_values.get('players', [])
         Logger.Log(f"Time to retrieve Player lines: {datetime.now() - start} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val
 
     def GetSessionFeatureNames(self) -> List[str]:
         return self._sessions["null"]["null"].GeneratorNames if self._sessions is not None else []
-    def GetSessionFeatures(self, slice_num:int, slice_count:int, as_str:bool = False) -> List[ExportRow]:
+    def GetSessionFeatures(self, slice_num:int, slice_count:int) -> List[ExportRow]:
         start   : datetime = datetime.now()
-        self._try_update(as_str=as_str)
+        self._try_update()
         ret_val = self._latest_values.get('sessions', [])
         time_delta = datetime.now() - start
         Logger.Log(f"Time to retrieve Session lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
@@ -192,7 +192,7 @@ class FeatureManager:
                 ret_val += sess_list.values()
         return ret_val
 
-    def _try_update(self, as_str:bool = False):
+    def _try_update(self):
         if not self._up_to_date:
             self.ProcessFeature()
             # for some reason, this didn't work as sum over list of lists, so get sessions manually with a normal loop:
