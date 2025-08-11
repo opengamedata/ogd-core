@@ -181,12 +181,12 @@ class ExportManager:
         start = datetime.now()
         if self._feat_mgr is not None:
             if request.ExportPopulation:
-                _pop_feats = self._feat_mgr.GetPopulationFeatures()
+                _pop_feats = self._feat_mgr.PopulationLines
                 for outerface in request.Outerfaces:
                     outerface.WriteFeatures(features=_pop_feats, mode=ExportMode.POPULATION)
                 self._feat_mgr.ClearPopulationLines()
             if request.ExportPlayers:
-                _player_feats = self._feat_mgr.GetPlayerFeatures()
+                _player_feats = self._feat_mgr.PlayerLines
                 for outerface in request.Outerfaces:
                     outerface.WriteFeatures(features=_player_feats, mode=ExportMode.PLAYER)
                 self._feat_mgr.ClearPlayerLines()
@@ -353,19 +353,19 @@ class ExportManager:
                 Logger.Log("Event log not requested, skipping events output.", logging.INFO, depth=1)
         if self._feat_mgr is not None:
             if request.ExportSessions:
-                cols = self._feat_mgr.GetSessionFeatureNames()
+                cols = self._feat_mgr.SessionFeatureNames
                 for outerface in request.Outerfaces:
                     outerface.WriteHeader(header=cols, mode=ExportMode.SESSION)
             else:
                 Logger.Log("Session features not requested, skipping session_features file.", logging.INFO, depth=1)
             if request.ExportPlayers:
-                cols = self._feat_mgr.GetPlayerFeatureNames()
+                cols = self._feat_mgr.PlayerFeatureNames
                 for outerface in request.Outerfaces:
                     outerface.WriteHeader(header=cols, mode=ExportMode.PLAYER)
             else:
                 Logger.Log("Player features not requested, skipping player_features file.", logging.INFO, depth=1)
             if request.ExportPopulation:
-                cols = self._feat_mgr.GetPopulationFeatureNames()
+                cols = self._feat_mgr.PopulationFeatureNames
                 for outerface in request.Outerfaces:
                     outerface.WriteHeader(header=cols, mode=ExportMode.POPULATION)
             else:
@@ -402,7 +402,7 @@ class ExportManager:
         if self._feat_mgr is not None:
         # 3. Output session features, if requested
             if request.ExportSessions:
-                _sess_feats = self._feat_mgr.GetSessionFeatures(slice_num=slice_num, slice_count=slice_count)
+                _sess_feats = self._feat_mgr.SessionLines(slice_num=slice_num, slice_count=slice_count)
                 for outerface in request.Outerfaces:
                     outerface.WriteFeatures(features=_sess_feats, mode=ExportMode.SESSION)
                 self._feat_mgr.ClearSessionLines()

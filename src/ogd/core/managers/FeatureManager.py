@@ -47,6 +47,46 @@ class FeatureManager:
         else:
             Logger.Log("FeatureManager did not set up any Processors, no LoaderClass was given!", logging.WARN, depth=3)
 
+    @property
+    def FeatureLines(self) -> Dict[str, List[ExportRow]]:
+        start = datetime.now()
+        self._try_update()
+        Logger.Log(f"Time to retrieve all feature values: {datetime.now() - start}", logging.INFO, depth=2)
+        return self._latest_values
+
+    @property
+    def PopulationFeatureNames(self) -> List[str]:
+        return self._population.GeneratorNames if self._population is not None else []
+    @property
+    def PopulationLines(self) -> List[ExportRow]:
+        start = datetime.now()
+        self._try_update()
+        ret_val = self._latest_values.get('population', [])
+        Logger.Log(f"Time to retrieve Population lines: {datetime.now() - start} to get {len(ret_val)} lines", logging.INFO, depth=2)
+        return ret_val
+
+    @property
+    def PlayerFeatureNames(self) -> List[str]:
+        return self._players["null"].GeneratorNames if self._players is not None else []
+    @property
+    def PlayerLines(self) -> List[ExportRow]:
+        start   : datetime = datetime.now()
+        self._try_update()
+        ret_val = self._latest_values.get('players', [])
+        Logger.Log(f"Time to retrieve Player lines: {datetime.now() - start} to get {len(ret_val)} lines", logging.INFO, depth=2)
+        return ret_val
+
+    @property
+    def SessionFeatureNames(self) -> List[str]:
+        return self._sessions["null"]["null"].GeneratorNames if self._sessions is not None else []
+    def SessionLines(self, slice_num:int, slice_count:int) -> List[ExportRow]:
+        start   : datetime = datetime.now()
+        self._try_update()
+        ret_val = self._latest_values.get('sessions', [])
+        time_delta = datetime.now() - start
+        Logger.Log(f"Time to retrieve Session lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
+        return ret_val
+    
     # TODO: make this function take list of events, and do the loop over events as low in the hierarchy as possible, which technically should be faster.
     def ProcessEvent(self, event:Event) -> None:
         # 1. process at population level.
@@ -110,41 +150,6 @@ class FeatureManager:
         else:
             Logger.Log("Skipped processing of Feature, no feature Processors available!", logging.INFO, depth=3)
 
-    def GetFeatureValues(self) -> Dict[str, List[ExportRow]]:
-        start = datetime.now()
-        self._try_update()
-        Logger.Log(f"Time to retrieve all feature values: {datetime.now() - start}", logging.INFO, depth=2)
-        return self._latest_values
-
-    def GetPopulationFeatureNames(self) -> List[str]:
-        return self._population.GeneratorNames if self._population is not None else []
-    def GetPopulationFeatures(self) -> List[ExportRow]:
-        start = datetime.now()
-        self._try_update()
-        ret_val = self._latest_values.get('population', [])
-        Logger.Log(f"Time to retrieve Population lines: {datetime.now() - start} to get {len(ret_val)} lines", logging.INFO, depth=2)
-        return ret_val
-
-    def GetPlayerFeatureNames(self) -> List[str]:
-        return self._players["null"].GeneratorNames if self._players is not None else []
-    
-    def GetPlayerFeatures(self) -> List[ExportRow]:
-        start   : datetime = datetime.now()
-        self._try_update()
-        ret_val = self._latest_values.get('players', [])
-        Logger.Log(f"Time to retrieve Player lines: {datetime.now() - start} to get {len(ret_val)} lines", logging.INFO, depth=2)
-        return ret_val
-
-    def GetSessionFeatureNames(self) -> List[str]:
-        return self._sessions["null"]["null"].GeneratorNames if self._sessions is not None else []
-    def GetSessionFeatures(self, slice_num:int, slice_count:int) -> List[ExportRow]:
-        start   : datetime = datetime.now()
-        self._try_update()
-        ret_val = self._latest_values.get('sessions', [])
-        time_delta = datetime.now() - start
-        Logger.Log(f"Time to retrieve Session lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
-        return ret_val
-    
     #new
     # def GetPopulationFeature(self) -> List[Feature]:
     #     if self._population is not None:
