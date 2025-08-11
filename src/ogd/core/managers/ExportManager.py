@@ -303,12 +303,12 @@ class ExportManager:
             Logger.Log(f"Could not retrieve data set for slice [{slice_num}/{slice_count}].", logging.WARN, depth=2)
         return ret_val
 
-    def _processSlice(self, next_slice_data:List[Event], id_mode:IDMode, ids:List[str]):
+    def _processSlice(self, next_slice_data:EventSet, id_mode:IDMode, ids:List[str]):
         _unsessioned_event_count : int = 0
         _sampled_an_event = False
         # 3a) If next slice yielded valid data from the interface, process row-by-row.
         # TODO: instead of separating everything out into one call per event, turn this into a list comprehension using a validation function, so we can pass whole list down a level.
-        for event in next_slice_data:
+        for event in next_slice_data.Events:
             if not _sampled_an_event:
                 Logger.Log(f"First event of slice is:\n{event}", logging.DEBUG, depth=2)
                 _sampled_an_event = True
