@@ -85,7 +85,7 @@ class PlayerProcessor(ExtractorProcessor):
         ret_val = [self._player_id, len(self._sessions)] + self._registry.GetFeatureValues()
         return [ret_val]
 
-    def _getFeatures(self, order:int, app_id:str) -> FeatureSet:
+    def _getFeatures(self, order:int, app_id:Optional[str]=None) -> FeatureSet:
         return self._registry.GetFeatures(order=order, app_id=app_id, sess_id="*", player_id=self._player_id)
 
     ##  Function to empty the list of lines stored by the PlayerProcessor.

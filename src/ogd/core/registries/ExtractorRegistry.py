@@ -226,7 +226,7 @@ class ExtractorRegistry(GeneratorRegistry):
         """
         return len(self._extractors)
 
-    def GetFeatures(self, order:Optional[int], app_id:str, sess_id:str, player_id:Optional[str]=None) -> FeatureSet:
+    def GetFeatures(self, order:Optional[int], app_id:Optional[str]=None, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> FeatureSet:
         ret_val : FeatureSet = FeatureSet(features=[], filters=DatasetFilterCollection()) # TODO : maybe take an actual arg here, or somewhere.
 
         if order is None:

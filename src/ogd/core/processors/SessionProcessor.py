@@ -87,7 +87,7 @@ class SessionProcessor(ExtractorProcessor):
         ret_val = [self._playerID, self._sessionID] + self._registry.GetFeatureValues()
         return [ret_val]
 
-    def _getFeatures(self, order:int, app_id:str) -> FeatureSet:
+    def _getFeatures(self, order:int, app_id:Optional[str]=None) -> FeatureSet:
         return self._registry.GetFeatures(order=order, app_id=app_id, player_id=self._player_id, sess_id=self._session_id)
 
     def _clearLines(self) -> None:

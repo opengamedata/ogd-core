@@ -16,7 +16,7 @@ class ExtractorProcessor(GeneratorProcessor):
 
     ## Abstract declaration of a function to get the calculated value of the feature, as a Feature package, given data seen so far.
     @abc.abstractmethod
-    def _getFeatures(self, order:Optional[int], app_id:str) -> FeatureSet:
+    def _getFeatures(self, order:Optional[int], app_id:Optional[str]=None) -> FeatureSet:
         pass
 
     # *** BUILT-INS & PROPERTIES ***
@@ -30,7 +30,7 @@ class ExtractorProcessor(GeneratorProcessor):
 
     # *** PUBLIC METHODS ***
 
-    def GetFeatures(self, order:Optional[int], app_id:str) -> FeatureSet:
+    def GetFeatures(self, order:Optional[int], app_id:Optional[str]=None) -> FeatureSet:
         """Get a FeatureSet with the feature outputs of all Extractors for the given order, or all Features from all orders if the order parameter is None
 
         :param order: _description_
