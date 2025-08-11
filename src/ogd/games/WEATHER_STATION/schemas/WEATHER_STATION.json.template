@@ -1,4 +1,8 @@
 {
+    "level_range": {
+        "min": 0,
+        "max": 6
+    },
     "enums" : {
         "Speaker" : ["RAY", "MISSION_CONTROL", "ALEX", "MATT", "ARGO"],
         "DialogType" : ["EXPOSITION", "HINT", "FUN_FACT"],
