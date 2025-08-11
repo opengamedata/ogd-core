@@ -37,7 +37,8 @@ class EventManager:
         if self._detector_processor is not None:
             self._detector_processor.ProcessEvent(event=event)
 
-    def GetColumnNames(self) -> List[str]:
+    @property
+    def ColumnNames(self) -> List[str]:
         return self._columns
 
     @property
