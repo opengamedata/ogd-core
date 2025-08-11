@@ -7,7 +7,7 @@ from ogd.common.models.Feature import Feature
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.processors.GeneratorProcessor import GeneratorProcessor
-from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.configs.GameStoreConfig import GameStoreConfig
 from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.common.utils.typing import ExportRow
 
@@ -23,7 +23,7 @@ class ExtractorProcessor(GeneratorProcessor):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_schema: GameSchema, LoaderClass:Type[GeneratorLoader], feature_overrides:Optional[List[str]]=None):
+    def __init__(self, game_schema:GameStoreConfig, LoaderClass:Type[GeneratorLoader], feature_overrides:Optional[List[str]]=None):
         super().__init__(game_schema=game_schema, LoaderClass=LoaderClass, feature_overrides=feature_overrides)
         self._registry : ExtractorRegistry = ExtractorRegistry(mode=self._mode)
         self._registry.LoadFromSchema(schema=game_schema, loader=self._loader, overrides=feature_overrides)

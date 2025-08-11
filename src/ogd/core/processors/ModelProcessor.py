@@ -131,7 +131,7 @@ class ModelProcessor(ExtractorProcessor):
     def TrainModels(self):
         # self._registry = self._createRegistry()
         if self._registry:
-            self._registry._loadFromSchema(schema=self._game_schema, loader=self._loader, overrides=self._overrides)
+            self._registry._loadFromSchema(generator_schemas=self._game_schema, loader=self._loader, overrides=self._overrides)
 
     @property
     def _mode(self) -> ExtractionMode:
