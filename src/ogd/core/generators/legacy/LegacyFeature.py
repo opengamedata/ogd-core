@@ -133,7 +133,7 @@ class LegacyFeature(Extractor):
                                  generator_cfg.LevelRange.stop  or 1 if generator_cfg.LevelRange is not None else 1)
             self._features.update({f:{lvl:{"val":None, "prefix":"lvl"} for lvl in _level_range } for f in _perlevels.keys()})
             # next, do something similar for other per-custom-count features.
-            _percounts = generator_cfg.PerCountFeatures
+            _percounts = generator_cfg.IteratedExtractors
             self._features.update({f:{num:{"val":None, "prefix":_percounts[f].Prefix} for num in range(0, int(_percounts[f].Count)) } for f in _percounts.keys()})
             # finally, add in aggregate-only features.
             self._features.update({f:0 for f in generator_cfg.AggregateExtractors.keys()})

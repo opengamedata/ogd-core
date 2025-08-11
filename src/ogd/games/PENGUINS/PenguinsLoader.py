@@ -53,7 +53,7 @@ class PenguinsLoader(GeneratorLoader):
     def _getFeaturesModule():
         return features
     
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Extractor]:
+    def _loadExtractor(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Extractor]:
         ret_val : Optional[Extractor] = None
         if extractor_params._count_index == None:
             match feature_type:

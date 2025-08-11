@@ -10,7 +10,7 @@ class LegacyLoader(GeneratorLoader):
     def __init__(self, player_id:str, session_id:str, game_schema:GameStoreConfig, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
         super().__init__(player_id=player_id, session_id=session_id, generator_config=game_schema, mode=mode, feature_overrides=feature_overrides)
 
-    def GetFeatureClass(self, feature_type:str) -> Optional[Type[Extractor]]:
+    def GetExtractorClass(self, feature_type:str) -> Optional[Type[Extractor]]:
         return None
 
     def _validateMode(self, feature_type) -> bool:

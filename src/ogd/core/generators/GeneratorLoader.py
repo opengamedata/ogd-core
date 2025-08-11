@@ -21,7 +21,7 @@ class GeneratorLoader(abc.ABC):
     # *** ABSTRACTS ***
     
     @abc.abstractmethod
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Extractor]:
+    def _loadExtractor(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Extractor]:
         pass
     
     @abc.abstractmethod
@@ -72,17 +72,17 @@ class GeneratorLoader(abc.ABC):
 
         return ret_val
 
-    def LoadFeature(self, feature_type:str, name:str, schema_args:Dict[str,Any], count_index:Optional[int] = None) -> Optional[Extractor]:
+    def LoadExtractor(self, extractor_type:str, name:str, schema_args:Dict[str,Any], count_index:Optional[int] = None) -> Optional[Extractor]:
         ret_val = None
 
-        if self._validateMode(feature_type=feature_type):
+        if self._validateMode(feature_type=extractor_type):
             params = GeneratorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
-            ret_val = self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args) \
-                   or self._loadBuiltinFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
+            ret_val = self._loadExtractor(feature_type=extractor_type, extractor_params=params, schema_args=schema_args) \
+                   or self._loadBuiltinFeature(feature_type=extractor_type, extractor_params=params, schema_args=schema_args)
 
         return ret_val
 
-    def GetFeatureClass(self, feature_type:str) -> Optional[Type[Extractor]]:
+    def GetExtractorClass(self, feature_type:str) -> Optional[Type[Extractor]]:
         ret_val : Optional[Type[Extractor]] = None
         game_module = self._getFeaturesModule()
         try:
@@ -99,13 +99,13 @@ class GeneratorLoader(abc.ABC):
         else:
             # If the above did not generate an error, then try to get actual feature class from its module.
             # If not found, then we fall back on getting builtin directly, though in practice this is probably redundant.
-            ret_val = getattr(feature_mod, feature_type, None) or self.GetBuiltinFeatureClass(feature_type=feature_type)
+            ret_val = getattr(feature_mod, feature_type, None) or self.GetBuiltinExtractorClass(feature_type=feature_type)
             # if ret_val is None:
             #     ret_val = 
         finally:
             return ret_val
 
-    def GetBuiltinFeatureClass(self, feature_type:str) -> Optional[Type[BuiltinExtractor]]:
+    def GetBuiltinExtractorClass(self, feature_type:str) -> Optional[Type[BuiltinExtractor]]:
         ret_val : Optional[Type[BuiltinExtractor]] = None
         try:
             feature_mod = getattr(builtin, feature_type)
@@ -124,7 +124,7 @@ class GeneratorLoader(abc.ABC):
     def _validateMode(self, feature_type) -> bool:
         ret_val = False
 
-        feature_class : Optional[Type[Extractor]]  = self.GetFeatureClass(feature_type=feature_type)
+        feature_class : Optional[Type[Extractor]]  = self.GetExtractorClass(feature_type=feature_type)
         if feature_class is None:
             Logger.Log(f"In GeneratorLoader, skipping feature class `{feature_type}`, which could not be found.", logging.WARN)
         else:
@@ -135,7 +135,7 @@ class GeneratorLoader(abc.ABC):
     def _loadBuiltinFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Extractor:
         ret_val : BuiltinExtractor
         if extractor_params._name not in GeneratorLoader._derived_builtins.keys():
-            feature_class = self.GetBuiltinFeatureClass(feature_type=feature_type)
+            feature_class = self.GetBuiltinExtractorClass(feature_type=feature_type)
             if feature_class is not None:
                 GeneratorLoader._derived_builtins[extractor_params._name] = feature_class._createDerivedGenerator(params=extractor_params, schema_args=schema_args)
         # Session-level features.
