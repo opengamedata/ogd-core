@@ -4,7 +4,7 @@ import logging
 from datetime import datetime, date, timedelta
 from typing import Dict, List, Optional, Set
 # import local files
-from ogd.common.configs.storage.LocalDatasetRepositoryConfig import LocalDatasetRepositoryConfig
+from ogd.common.configs.storage.DatasetRepositoryConfig import DatasetRepositoryConfig
 from ogd.common.configs.GameStoreConfig import GameStoreConfig
 from ogd.common.filters.RangeFilter import RangeFilter
 from ogd.common.filters.collections.DatasetFilterCollection import DatasetFilterCollection
@@ -74,7 +74,7 @@ class Request(abc.ABC):
 
     def __init__(self, filters:DatasetFilterCollection, exporter_modes:Set[ExportMode],
                 source:GameStoreConfig, dest:GameStoreConfig,
-                fail_fast:bool, repository:LocalDatasetRepositoryConfig,
+                fail_fast:bool, repository:DatasetRepositoryConfig,
                 feature_overrides:Optional[List[str]]=None):
         """ Constructor for the request base class.
             Just stores whatever data is given.
