@@ -8,12 +8,12 @@ from typing import Optional, Set
 # import 3rd-party libraries
 
 # import local files
-from ogd.common.interfaces.EventInterface import EventInterface
-from ogd.common.interfaces.MySQLInterface import MySQLInterface
-from ogd.common.interfaces.BigQueryInterface import BigQueryInterface
-from ogd.common.interfaces.BQFirebaseInterface import BQFirebaseInterface
 from ogd.core.requests.Request import ExporterRange
-from ogd.core.schemas.configs.CoreConfig import CoreConfig
+from ogd.core.configs.CoreConfig import CoreConfig
+from ogd.common.storage.interfaces.Interface import Interface
+from ogd.common.storage.interfaces.MySQLInterface import MySQLInterface
+from ogd.common.storage.interfaces.BigQueryInterface import BigQueryInterface
+from ogd.common.storage.interfaces.BQFirebaseInterface import BQFirebaseInterface
 from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.common.utils.Logger import Logger
 
@@ -24,7 +24,7 @@ class OGDGenerators:
     """
 
     @staticmethod
-    def GenDBInterface(config:CoreConfig, game:str) -> EventInterface:
+    def GenDBInterface(config:CoreConfig, game:str) -> Interface:
         """Create a data interface based on a config and desired game.
 
         :param config: The current OGD configuration
@@ -34,12 +34,12 @@ class OGDGenerators:
         :raises Exception: If the configuration for the given game does not give a valid type of database for the source.
         :raises ValueError: If the given game does not exist in the GameSourceMap of the given configuration.
         :return: A data interface for the configured type of database.
-        :rtype: EventInterface
+        :rtype: Interface
 
         .. todo:: Accept a GameSourceSchema instead of a full CoreConfig
         .. todo:: Use the "upper" of the source type, instead of checking for capitalized and non-capitalized versions of names.
         """
-        ret_val : EventInterface
+        ret_val : Interface
         _game_cfg = config.GameSourceMap.get(game)
         if _game_cfg is not None and _game_cfg.Source is not None:
             match (_game_cfg.Source.Type):
@@ -50,7 +50,7 @@ class OGDGenerators:
                 case "MySQL" | "MYSQL":
                     ret_val = MySQLInterface(game_id=game, config=_game_cfg, fail_fast=config.FailFast)
                 case _:
-                    raise Exception(f"{_game_cfg.Source.Type} is not a valid EventInterface type!")
+                    raise Exception(f"{_game_cfg.Source.Type} is not a valid Interface type!")
             return ret_val
         else:
             raise ValueError(f"Config for {game} was invalid or not found in GameSourceMap!")
@@ -89,7 +89,7 @@ class OGDGenerators:
 
     # retrieve/calculate date range.
     @staticmethod
-    def GenDateRange(game:str, interface:EventInterface, monthly:bool, start_date:str, end_date:Optional[str]) -> ExporterRange:
+    def GenDateRange(game:str, interface:Interface, monthly:bool, start_date:str, end_date:Optional[str]) -> ExporterRange:
         """Use a pair of date strings to create an `ExporterRange` for use with an interface.
 
         Also allows the range to be specified as "monthly,"
@@ -100,7 +100,7 @@ class OGDGenerators:
         :param game: The specific game for which a date range is generated
         :type game: str
         :param interface: An interface to use for generation of the `ExporterRange`.
-        :type interface: EventInterface
+        :type interface: Interface
         :param monthly: Whether the range should cover a full month, or use the exact given start and end.
         :type monthly: bool
         :param start_date: A string representing the first day of the range in MM/DD/YYYY format, or the month to use for the range in MM/YYYY format.

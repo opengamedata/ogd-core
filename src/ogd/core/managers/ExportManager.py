@@ -21,7 +21,7 @@ from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorColle
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.managers.EventManager import EventManager
 from ogd.core.managers.FeatureManager import FeatureManager
-from ogd.core.schemas.configs.CoreConfig import CoreConfig
+from ogd.core.configs.CoreConfig import CoreConfig
 from ogd.core.requests.Request import Request
 from ogd.core.requests.RequestResult import RequestResult
 

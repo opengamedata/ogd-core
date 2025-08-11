@@ -120,7 +120,7 @@ class OGDCommands:
         success : bool = False
 
         export_modes   : Set[ExportMode]
-        interface      : EventInterface
+        interface      : Interface
         export_range   : ExporterRange
         file_outerface : DataOuterface
         dataset_id     : Optional[str] = None
