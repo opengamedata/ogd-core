@@ -404,7 +404,7 @@ class ExportManager:
         # 3. Output session features, if requested
             if request.ExportSessions:
                 Logger.Log(f"Retrieving game Events for slice [{slice_num}/{slice_count}]...", logging.INFO, depth=2)
-                _sess_feats = self._feat_mgr.SessionLines
+                _sess_feats = FeatureSet(features=self._feat_mgr.SessionFeatures, filters=DatasetFilterCollection())
                 for outerface in request.Outerfaces:
                     outerface.WriteFeatures(features=_sess_feats, mode=ExportMode.SESSION)
                 self._feat_mgr.ClearSessionLines()
