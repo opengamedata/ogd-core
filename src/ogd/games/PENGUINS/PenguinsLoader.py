@@ -3,20 +3,20 @@ import json
 from pathlib import Path
 from typing import Any, Callable, Dict, Final, List, Optional
 ## import local files
-from . import features
 from ogd.games import PENGUINS
+from ogd.games.PENGUINS.detectors import *
+from ogd.games.PENGUINS.features import *
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Extractor import Extractor
-from ogd.games.PENGUINS.detectors import *
-from ogd.games.PENGUINS.features import *
 # from ogd.games.PENGUINS.DBExport import scene_map
 from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.common.utils.Logger import Logger
+from . import features
 
 ## @class WaveExtractor
 #  Extractor subclass for extracting features from Waves game data.

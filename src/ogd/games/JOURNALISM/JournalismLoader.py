@@ -12,7 +12,7 @@ from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.games.JOURNALISM.features import StoryScoreSequence
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.common.utils.Logger import Logger
 
 class JournalismLoader(GeneratorLoader):
