@@ -4,7 +4,7 @@ import logging
 from typing import List, Optional
 # import locals
 from ogd.common.models.Event import Event
-from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.enums import ExtractionMode
 from ogd.common.utils.Logger import Logger
 
 ## @class ExtractorParams
@@ -14,7 +14,7 @@ class GeneratorParameters:
     so that we don't need to change the param list for hundreds of individual
     extractor subclasses every time something changes.
     """
-    def __init__(self, name:str, description:str, mode:ExtractionMode, count_index:Optional[int]):
+    def __init__(self, name:str, description:str, mode:ExtractionMode.ExtractionMode, count_index:Optional[int]):
         self._name = name
         self._desc = description
         self._mode = mode
@@ -30,7 +30,7 @@ class Generator(abc.ABC):
     ## Abstract function to get a list of event types the Feature wants.
     @classmethod
     @abc.abstractmethod
-    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode.ExtractionMode) -> List[str]:
         """ Abstract function to get a list of event types the Feature wants.
             The types of event accepted by a feature are a responsibility of the Feature's developer,
             so this is a required part of interface instead of a config item in the schema.
@@ -42,7 +42,7 @@ class Generator(abc.ABC):
 
     @classmethod
     @abc.abstractmethod
-    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode.ExtractionMode) -> List[str]:
         """Base function for getting any features a second-order feature depends upon.
         By default, no dependencies.
         Any feature intented to be second-order should override this function.
@@ -111,23 +111,23 @@ class Generator(abc.ABC):
         return None
 
     @staticmethod
-    def AvailableModes() -> List[ExtractionMode]:
+    def AvailableModes() -> List[ExtractionMode.ExtractionMode]:
         """List of ExtractionMode supported by the Extractor
 
         Base function to give a list of which ExtractionModes an extractor will handle.
         :return: _description_
         :rtype: List[ExtractionMode]
         """
-        return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR]
+        return [ExtractionMode.ExtractionMode.POPULATION, ExtractionMode.ExtractionMode.PLAYER, ExtractionMode.ExtractionMode.SESSION, ExtractionMode.ExtractionMode.DETECTOR]
 
     # *** PUBLIC METHODS ***
 
     @classmethod
-    def EventFilter(cls, mode:ExtractionMode) -> List[str]:
+    def EventFilter(cls, mode:ExtractionMode.ExtractionMode) -> List[str]:
         return cls._eventFilter(mode=mode)
 
     @classmethod
-    def FeatureFilter(cls, mode:ExtractionMode) -> List[str]:
+    def FeatureFilter(cls, mode:ExtractionMode.ExtractionMode) -> List[str]:
         return cls._featureFilter(mode=mode)
 
     def UpdateFromEvent(self, event:Event):
@@ -145,7 +145,7 @@ class Generator(abc.ABC):
         return self._params._desc
 
     @property
-    def ExtractionMode(self) -> ExtractionMode:
+    def ExtractionMode(self) -> ExtractionMode.ExtractionMode:
         return self._params._mode
 
     @property
