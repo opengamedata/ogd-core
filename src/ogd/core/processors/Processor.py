@@ -4,7 +4,6 @@ import json
 from datetime import datetime
 from typing import List
 # import locals
-from ogd.common.models.Feature import Feature
 from ogd.common.configs.GameStoreConfig import GameStoreConfig
 from ogd.common.models.Event import Event
 from ogd.common.utils.typing import ExportRow
