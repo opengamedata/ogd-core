@@ -3,7 +3,10 @@ __all__ = [
     "DetectorConfig",
     "ExtractorConfig",
     "AggregateConfig",
-    "IteratedConfig"
+    "IteratedConfig",
+    "DetectorMapConfig",
+    "ExtractorMapConfig",
+    "GeneratorCollectionConfig"
 ]
 
 from . import GeneratorConfig
@@ -11,3 +14,6 @@ from . import DetectorConfig
 from . import ExtractorConfig
 from . import AggregateConfig
 from . import IteratedConfig
+from . import DetectorMapConfig
+from . import ExtractorMapConfig
+from . import GeneratorCollectionConfig
