@@ -7,7 +7,7 @@ from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.common.models.Event import Event
-from ogd.common.models.Feature import Feature
+from ogd.common.models.FeatureSet import FeatureSet
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import ExportRow
@@ -83,8 +83,8 @@ class PopulationProcessor(ExtractorProcessor):
         ret_val = [len(self._players), len(self._sessions)] + self._registry.GetFeatureValues()
         return [ret_val]
 
-    def _getFeatures(self, order:int) -> List[Feature]:
-        return self._registry.GetFeatures(order=order)
+    def _getFeatures(self, order:int, app_id:str) -> FeatureSet:
+        return self._registry.GetFeatures(order=order, app_id=app_id, sess_id="*", player_id="*")
 
     ##  Function to empty the list of lines stored by the PopulationProcessor.
     #   This is helpful if we're processing a lot of data and want to avoid

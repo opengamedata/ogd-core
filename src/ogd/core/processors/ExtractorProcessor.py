@@ -1,6 +1,6 @@
 ## import standard libraries
 import abc
-from typing import Dict, List, Type, Optional, Set
+from typing import List, Type, Optional
 
 # import locals
 from ogd.common.models.Feature import Feature
