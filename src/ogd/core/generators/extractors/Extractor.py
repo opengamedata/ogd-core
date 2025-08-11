@@ -71,17 +71,17 @@ class Extractor(Generator):
 
     # *** PUBLIC METHODS ***
 
-    def GetFeature(self, app_id:str, sess_id:str, player_id:Optional[str]=None) -> Feature:
+    def GetFeature(self, app_id:Optional[str]=None, sess_id:Optional[str]=None, player_id:Optional[str]=None) -> Feature:
         return Feature(
             name=self.Name,
             feature_type=type(self).__name__,
-            app_id=app_id,
+            app_id=app_id or self._initial_app_id or "UNKNOWN APP",
             game_unit="*",
             game_unit_index=self.CountIndex,
             subfeatures=self.GetFeatureNames(),
             values=self.GetFeatureValues(),
-            user_id=player_id,
-            session_id=sess_id
+            user_id=player_id or self._initial_user_id,
+            session_id=sess_id or self._initial_session_id or "UNKNOWN SESSION"
         )
 
     def BaseFeatureSuffix(self) -> str:

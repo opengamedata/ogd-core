@@ -66,9 +66,30 @@ class Generator(abc.ABC):
 
     def __init__(self, params:GeneratorParameters):
         self._params = params
+        self._event_count        : int = 0
+        self._initial_app_id     : Optional[str] = None
+        self._initial_user_id    : Optional[str] = None
+        self._initial_session_id : Optional[str] = None
 
     def __str__(self):
         return f"{self.Name} : {self.Description}"
+
+    @property
+    def Name(self) -> str:
+        return self._params._name
+
+    @property
+    def Description(self) -> str:
+        return self._params._desc
+
+    @property
+    def ExtractMode(self) -> ExtractionMode.ExtractionMode:
+        return self._params._mode
+
+    @property
+    def CountIndex(self) -> Optional[int]:
+        return self._params._count_index
+
 
     # *** PUBLIC STATICS ***
 
@@ -132,25 +153,12 @@ class Generator(abc.ABC):
 
     def UpdateFromEvent(self, event:Event):
         if self._validateEvent(event=event):
+            if self._event_count == 0:
+                self._initial_app_id     = event.AppID
+                self._initial_user_id    = event.UserID
+                self._initial_session_id = event.SessionID
             self._updateFromEvent(event=event)
-
-    # *** PROPERTIES ***
-
-    @property
-    def Name(self) -> str:
-        return self._params._name
-
-    @property
-    def Description(self) -> str:
-        return self._params._desc
-
-    @property
-    def ExtractionMode(self) -> ExtractionMode.ExtractionMode:
-        return self._params._mode
-
-    @property
-    def CountIndex(self) -> Optional[int]:
-        return self._params._count_index
+            self._event_count += 1
 
     # *** PRIVATE STATICS ***
 
@@ -199,7 +207,7 @@ class Generator(abc.ABC):
         :return: True if the given event type is in this feature's list, otherwise false.
         :rtype: bool
         """
-        _deps = self.EventFilter(mode=self.ExtractionMode)
+        _deps = self.EventFilter(mode=self.ExtractMode)
         if event_type in _deps or 'all_events' in _deps:
             return True
         else:
