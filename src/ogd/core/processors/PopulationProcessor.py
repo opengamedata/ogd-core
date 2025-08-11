@@ -8,7 +8,7 @@ from ogd.core.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.configs.GameStoreConfig import GameStoreConfig
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import ExportRow
 
@@ -19,7 +19,7 @@ class PopulationProcessor(ExtractorProcessor):
     # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the PopulationProcessor class.
-    def __init__(self, LoaderClass: Type[GeneratorLoader], game_schema: GameSchema,
+    def __init__(self, LoaderClass: Type[GeneratorLoader], game_schema:GameStoreConfig,
                  feature_overrides:Optional[List[str]]=None):
         """Constructor for the PopulationProcessor class.
         Simply stores some data for use later, including the type of extractor to use.
@@ -28,7 +28,7 @@ class PopulationProcessor(ExtractorProcessor):
                             This should correspond to whatever game_id is in the TableSchema.
         :type LoaderClass: Type[GeneratorLoader]
         :param game_schema: A dictionary that defines how the game data itself is structured.
-        :type game_schema: GameSchema
+        :type game_schema: GameStoreConfig
         :param feature_overrides: _description_, defaults to None
         :type feature_overrides: Optional[List[str]], optional
         :param pop_file: _description_, defaults to None

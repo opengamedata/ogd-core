@@ -10,7 +10,7 @@ from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.configs.GameStoreConfig import GameStoreConfig
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import ExportRow
 
@@ -21,7 +21,7 @@ class SessionProcessor(ExtractorProcessor):
     # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the SessionProcessor class.
-    def __init__(self, LoaderClass:Type[GeneratorLoader], game_schema: GameSchema, player_id:str, session_id:str,
+    def __init__(self, LoaderClass:Type[GeneratorLoader], game_schema:GameStoreConfig, player_id:str, session_id:str,
                  feature_overrides:Optional[List[str]]=None):
         """Constructor for the SessionProcessor class.
         Simply stores some data for use later, including the type of extractor to
@@ -31,7 +31,7 @@ class SessionProcessor(ExtractorProcessor):
                             This should correspond to whatever game_id is in the TableSchema.
         :type LoaderClass: Type[GeneratorLoader]
         :param game_schema: A dictionary that defines how the game data itself is structured.
-        :type game_schema: GameSchema
+        :type game_schema: GameScGameStoreConfig
         :param player_id: _description_
         :type player_id: str
         :param session_id: _description_

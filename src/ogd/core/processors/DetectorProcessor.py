@@ -7,14 +7,14 @@ from ogd.core.processors.GeneratorProcessor import GeneratorProcessor
 from ogd.common.models.Event import Event
 from ogd.common.models.Feature import Feature
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.configs.GameStoreConfig import GameStoreConfig
 from ogd.common.utils.typing import ExportRow
 
 class DetectorProcessor(GeneratorProcessor):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_schema: GameSchema, LoaderClass: Type[GeneratorLoader], trigger_callback:Callable[[Event], None],
+    def __init__(self, game_schema:GameStoreConfig, LoaderClass: Type[GeneratorLoader], trigger_callback:Callable[[Event], None],
                  feature_overrides:Optional[List[str]]=None):
         # TODO: Consider having multiple registries for per-player or per-session kinds of things.
         super().__init__(game_schema=game_schema, LoaderClass=LoaderClass, feature_overrides=feature_overrides)

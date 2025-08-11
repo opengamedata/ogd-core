@@ -109,12 +109,12 @@ from ogd.core.registries.ModelRegistry import ModelRegistry
 from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.configs.GameStoreConfig import GameStoreConfig
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import ExportRow
 
 class ModelProcessor(ExtractorProcessor):
-    def __init__(self, LoaderClass:Type[GeneratorLoader], game_schema: GameSchema, feature_overrides:Optional[List[str]]=None):
+    def __init__(self, LoaderClass:Type[GeneratorLoader], game_schema:GameStoreConfig, feature_overrides:Optional[List[str]]=None):
         self._player_id    : str = "population"
         self._session_id   : str = "population"
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)

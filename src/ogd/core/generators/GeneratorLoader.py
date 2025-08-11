@@ -5,15 +5,15 @@ from importlib import import_module
 from types import ModuleType
 from typing import Any, Callable, Dict, List, Optional, Type
 # import locals
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.generators.extractors import builtin
 from ogd.core.generators.extractors.builtin.BuiltinExtractor import BuiltinExtractor
 from ogd.core.generators.extractors.builtin import *
-from ogd.core.generators.Generator import Generator, GeneratorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.common.utils.Logger import Logger
 
 class GeneratorLoader(abc.ABC):
@@ -43,10 +43,10 @@ class GeneratorLoader(abc.ABC):
 
         :param player_id: _description_
         :type player_id: str
-        :param session_id: The id of the session from which we will extract features.
+        :param session_id: _description_
         :type session_id: str
-        :param game_schema: A dictionary that defines how the game data itself is structured.
-        :type game_schema: GameSchema
+        :param generator_config: _description_
+        :type generator_config: GeneratorCollectionConfig
         :param mode: _description_
         :type mode: ExtractionMode
         :param feature_overrides: _description_

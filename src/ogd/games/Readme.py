@@ -76,10 +76,6 @@ class Readme:
         Gives a summary of the data licensing and suggested citation,
         then adds the markdown-formatted information from game and table schemas.
 
-        :param game_schema: [description]
-        :type game_schema: GameSchema
-        :param table_schema: [description]
-        :type table_schema: TableConfig
         :return: A string containing metadata for the given game.
         :rtype: str
         """
