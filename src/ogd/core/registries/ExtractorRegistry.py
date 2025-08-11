@@ -8,15 +8,14 @@ from typing import Any, Dict, List, Optional, Set
 ## import local files
 from ogd.core.configs.generators.AggregateConfig import AggregateConfig
 from ogd.core.configs.generators.IteratedConfig import IteratedConfig
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.generators.Generator import Generator
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.registries.GeneratorRegistry import GeneratorRegistry
 from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
-from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.models.enums.IterationMode import IterationMode
 from ogd.common.utils.Logger import Logger
 
@@ -132,38 +131,38 @@ class ExtractorRegistry(GeneratorRegistry):
                 ret_val += feature.GetFeatureNames()
         return ret_val
 
-    def _loadFromSchema(self, schema:GameSchema, loader:GeneratorLoader, overrides:Optional[List[str]]=None):
+    def _loadFromSchema(self, generator_schemas:GeneratorCollectionConfig, loader:GeneratorLoader, overrides:Optional[List[str]]=None):
         # first, get list of what should actually be loaded.
         # TODO : move this logic as high up as possible, so that we only need to do it once for each kind of processor.
         # 1. Start with overrides, else list of enabled features in schema.
         agg_load_set : Set[AggregateConfig]
         per_load_set : Set[IteratedConfig]
         if overrides is not None:
-            agg_load_set = {schema.AggregateFeatures[name] for name in overrides if name in schema.AggregateFeatures.keys()}
-            per_load_set = {schema.PerCountFeatures[name]  for name in overrides if name in schema.PerCountFeatures.keys()}
+            agg_load_set = {generator_schemas.AggregateExtractors[name] for name in overrides if name in generator_schemas.AggregateExtractors.keys()}
+            per_load_set = {generator_schemas.IteratedExtractors[name]  for name in overrides if name in generator_schemas.IteratedExtractors.keys()}
         else:
-            agg_load_set = {val for val in schema.EnabledFeatures(iter_modes={IterationMode.AGGREGATE}, extract_modes={self._mode}).values() if isinstance(val, AggregateConfig)}
-            per_load_set = {val for val in schema.EnabledFeatures(iter_modes={IterationMode.PERCOUNT}, extract_modes={self._mode}).values() if isinstance(val, IteratedConfig)}
+            agg_load_set = {val for val in generator_schemas.EnabledFeatures(iter_modes={IterationMode.AGGREGATE}, extract_modes={self._mode}).values() if isinstance(val, AggregateConfig)}
+            per_load_set = {val for val in generator_schemas.EnabledFeatures(iter_modes={IterationMode.PERCOUNT}, extract_modes={self._mode}).values() if isinstance(val, IteratedConfig)}
         # 2. For each, grab the list of feature dependencies, and add to the list of features we want to load.
         _agg_deps = set()
         for agg in agg_load_set:
             _class = loader.GetFeatureClass(feature_type=agg.TypeName)
             if _class is not None:
                 _agg_deps = _agg_deps.union(set(_class.FeatureFilter(mode=self._mode)))
-        agg_load_set = agg_load_set.union({schema.AggregateFeatures[agg] for agg in _agg_deps if agg in schema.AggregateFeatures.keys()})
+        agg_load_set = agg_load_set.union({generator_schemas.AggregateExtractors[agg] for agg in _agg_deps if agg in generator_schemas.AggregateExtractors.keys()})
         _per_deps = set()
         for per in per_load_set:
             _class = loader.GetFeatureClass(feature_type=per.TypeName)
             if _class is not None:
                 _per_deps = _per_deps.union(set(_class.FeatureFilter(mode=self._mode)))
-        per_load_set = per_load_set.union({schema.PerCountFeatures[per] for per in _per_deps if per in schema.PerCountFeatures.keys()})
+        per_load_set = per_load_set.union({generator_schemas.PerCountFeatures[per] for per in _per_deps if per in generator_schemas.PerCountFeatures.keys()})
         # 3. Now that we know what needs loading, load them and register.
         for agg_schema in sorted(agg_load_set, key=lambda x : x.Name):
             feature = loader.LoadFeature(feature_type=agg_schema.TypeName, name=agg_schema.Name, schema_args=agg_schema.NonStandardElements)
             if feature is not None and self._mode in feature.AvailableModes():
                     self.Register(extractor=feature, iter_mode=IterationMode.AGGREGATE)
         for per_schema in sorted(per_load_set, key=lambda x : x.Name):
-            for i in schema.GetCountRange(count=per_schema.Count):
+            for i in generator_schemas.GetCountRange(count=per_schema.Count):
                 instance_name = f"{per_schema.Prefix}{i}_{per_schema.Name}"
                 feature = loader.LoadFeature(feature_type=per_schema.TypeName, name=instance_name, schema_args=per_schema.NonStandardElements, count_index=i)
                 if feature is not None and self._mode in feature.AvailableModes():
