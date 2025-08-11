@@ -17,6 +17,7 @@ from ogd.common.filters import *
 from ogd.common.filters.collections import *
 from ogd.common.models.Event import Event
 from ogd.common.models.EventSet import EventSet
+from ogd.common.models.FeatureSet import FeatureSet
 from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.common.models.enums.FilterMode import FilterMode
 from ogd.common.models.enums.IDMode import IDMode
@@ -181,12 +182,12 @@ class ExportManager:
         start = datetime.now()
         if self._feat_mgr is not None:
             if request.ExportPopulation:
-                _pop_feats = self._feat_mgr.PopulationLines
+                _pop_feats = FeatureSet(features=self._feat_mgr.PopulationFeatures, filters=DatasetFilterCollection())
                 for outerface in request.Outerfaces:
                     outerface.WriteFeatures(features=_pop_feats, mode=ExportMode.POPULATION)
                 self._feat_mgr.ClearPopulationLines()
             if request.ExportPlayers:
-                _player_feats = self._feat_mgr.PlayerLines
+                _player_feats = FeatureSet(features=self._feat_mgr.PlayerFeatures, filters=DatasetFilterCollection())
                 for outerface in request.Outerfaces:
                     outerface.WriteFeatures(features=_player_feats, mode=ExportMode.PLAYER)
                 self._feat_mgr.ClearPlayerLines()
