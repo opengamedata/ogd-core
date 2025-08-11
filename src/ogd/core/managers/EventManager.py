@@ -29,8 +29,6 @@ class EventManager:
                                                          trigger_callback=trigger_callback, feature_overrides=feature_overrides)
 
     def ProcessEvent(self, event:Event) -> None:
-        # event.EventData = json.dumps(event.EventData)
-        # TODO: double-check if the remote_addr is there to be dropped/ignored.
         self._all_events.ProcessEvent(event=event)
         if event.EventSource == EventSource.GAME:
             self._raw_events.ProcessEvent(event=event)
