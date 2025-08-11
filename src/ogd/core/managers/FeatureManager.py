@@ -11,6 +11,7 @@ from ogd.core.processors.PlayerProcessor import PlayerProcessor
 from ogd.core.processors.SessionProcessor import SessionProcessor
 from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.common.models.Event import Event
+from ogd.common.models.FeatureSet import FeatureSet
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import ExportRow
 
@@ -201,6 +202,7 @@ class FeatureManager:
     def _try_update(self):
         if not self._up_to_date:
             self.ProcessFeatures()
+            _feature_set : FeatureSet
             # for some reason, this didn't work as sum over list of lists, so get sessions manually with a normal loop:
             list_o_playlists : List[List[ExportRow]]       = [player.Lines for player_id,player in self._players.items() if (player_id != "null" or self._used_null_play)] if self._players is not None else []
             flat_playlist    : List[ExportRow]             = list(itertools.chain.from_iterable(list_o_playlists))
