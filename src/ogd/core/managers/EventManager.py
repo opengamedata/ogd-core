@@ -2,30 +2,30 @@
 import logging
 from typing import Callable, List, Type, Optional
 ## import local files
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.processors.DetectorProcessor import DetectorProcessor
 from ogd.core.processors.EventProcessor import EventProcessor
 from ogd.common.models.Event import Event, EventSource
 from ogd.common.models.EventSet import EventSet
-from ogd.common.configs.GameStoreConfig import GameStoreConfig
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import ExportRow
 
 ## @class EventProcessor
 #  Class to manage data for a csv events file.
 class EventManager:
-    def __init__(self, game_schema:GameStoreConfig, trigger_callback:Callable[[Event], None],
+    def __init__(self, generator_cfg:GeneratorCollectionConfig, trigger_callback:Callable[[Event], None],
                  LoaderClass:Optional[Type[GeneratorLoader]], feature_overrides:Optional[List[str]]=None):
         """Constructor for EventManager.
         Just creates empty list of lines and generates list of column names.
         """
         # define instance vars
         self._columns     : List[str]      = Event.ColumnNames()
-        self._raw_events  : EventProcessor = EventProcessor(generator_cfg=game_schema)
-        self._all_events  : EventProcessor = EventProcessor(generator_cfg=game_schema)
+        self._raw_events  : EventProcessor = EventProcessor(generator_cfg=generator_cfg)
+        self._all_events  : EventProcessor = EventProcessor(generator_cfg=generator_cfg)
         self._detector_processor : Optional[DetectorProcessor] = None
         if LoaderClass is not None:
-            self._detector_processor = DetectorProcessor(generator_cfg=game_schema,           LoaderClass=LoaderClass,
+            self._detector_processor = DetectorProcessor(generator_cfg=generator_cfg,           LoaderClass=LoaderClass,
                                                          trigger_callback=trigger_callback, feature_overrides=feature_overrides)
 
     def ProcessEvent(self, event:Event) -> None:

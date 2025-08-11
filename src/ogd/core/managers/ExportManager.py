@@ -144,7 +144,7 @@ class ExportManager:
 
     # 2. Set up EventManager, assuming it was requested.
         if request.ExportRawEvents or request.ExportProcessedEvents:
-            self._event_mgr = EventManager(game_schema=generator_config, LoaderClass=load_class,
+            self._event_mgr = EventManager(generator_cfg=generator_config, LoaderClass=load_class,
                                            trigger_callback=self._receiveEventTrigger, feature_overrides=request.Overrides)
         else:
             Logger.Log("Event data not requested, skipping event manager.", logging.INFO, depth=1)
