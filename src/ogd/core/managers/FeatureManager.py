@@ -79,12 +79,13 @@ class FeatureManager:
     @property
     def SessionFeatureNames(self) -> List[str]:
         return self._sessions["null"]["null"].GeneratorNames if self._sessions is not None else []
-    def SessionLines(self, slice_num:int, slice_count:int) -> List[ExportRow]:
+    @property
+    def SessionLines(self) -> List[ExportRow]:
         start   : datetime = datetime.now()
         self._try_update()
         ret_val = self._latest_values.get('sessions', [])
         time_delta = datetime.now() - start
-        Logger.Log(f"Time to retrieve Session lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
+        Logger.Log(f"Time to retrieve Session lines: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val
     
     # TODO: make this function take list of events, and do the loop over events as low in the hierarchy as possible, which technically should be faster.
