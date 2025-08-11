@@ -226,11 +226,20 @@ class ExtractorRegistry(GeneratorRegistry):
         """
         return len(self._extractors)
 
-    def GetFeatures(self, order:int, app_id:str, sess_id:str, player_id:Optional[str]=None) -> FeatureSet:
-        order_index = order - 1 # orders are counted from 1, so need to adjust to index from 0.
+    def GetFeatures(self, order:Optional[int], app_id:str, sess_id:str, player_id:Optional[str]=None) -> FeatureSet:
         ret_val : FeatureSet = FeatureSet(features=[], filters=DatasetFilterCollection()) # TODO : maybe take an actual arg here, or somewhere.
-        for extractor in self._extractors[order_index].values():
-            ret_val.Features.append(extractor.GetFeature(app_id=app_id, player_id=player_id, sess_id=sess_id))
+
+        if order is None:
+            for _order in self._extractors:
+                feature_set = FeatureSet(features=[], filters=DatasetFilterCollection())
+                for extractor in _order.values():
+                    feature_set.Features.append(extractor.GetFeature(app_id=app_id, player_id=player_id, sess_id=sess_id))
+                ret_val = ret_val + feature_set
+        else:
+            order_index = order - 1 # orders are counted from 1, so need to adjust to index from 0.
+            for extractor in self._extractors[order_index].values():
+                ret_val.Features.append(extractor.GetFeature(app_id=app_id, player_id=player_id, sess_id=sess_id))
+
         return ret_val
 
     def GetFeatureValues(self) -> List[Any]:
