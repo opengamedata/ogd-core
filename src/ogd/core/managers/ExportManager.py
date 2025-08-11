@@ -342,15 +342,13 @@ class ExportManager:
     def _outputHeaders(self, request:Request):
         if self._event_mgr is not None:
             if request.ExportRawEvents:
-                cols = self._event_mgr.GetColumnNames()
                 for outerface in request.Outerfaces:
-                    outerface.WriteHeader(header=cols, mode=ExportMode.EVENTS)
+                    outerface.WriteHeader(header=self._event_mgr.ColumnNames, mode=ExportMode.EVENTS)
             else:
                 Logger.Log("Event log not requested, skipping events output.", logging.INFO, depth=1)
             if request.ExportProcessedEvents:
-                cols = self._event_mgr.GetColumnNames()
                 for outerface in request.Outerfaces:
-                    outerface.WriteHeader(header=cols, mode=ExportMode.DETECTORS)
+                    outerface.WriteHeader(header=self._event_mgr.ColumnNames, mode=ExportMode.DETECTORS)
             else:
                 Logger.Log("Event log not requested, skipping events output.", logging.INFO, depth=1)
         if self._feat_mgr is not None:
@@ -388,12 +386,14 @@ class ExportManager:
         if self._event_mgr is not None:
         # 1. Output raw events, if requested
             if request.ExportRawEvents:
-                _events = self._event_mgr.GetRawLines(slice_num=slice_num, slice_count=slice_count)
+                Logger.Log(f"Retrieving game Events for slice [{slice_num}/{slice_count}]...", logging.INFO, depth=2)
+                _events = self._event_mgr.GameEvents
                 for outerface in request.Outerfaces:
                     outerface.WriteEvents(events=_events, mode=ExportMode.EVENTS)
         # 2. Output combined raw & detected events, if requested
             if request.ExportProcessedEvents:
-                _events = self._event_mgr.GetAllLines(slice_num=slice_num, slice_count=slice_count)
+                Logger.Log(f"Retrieving all Events for slice [{slice_num}/{slice_count}]...", logging.INFO, depth=2)
+                _events = self._event_mgr.AllEvents
                 for outerface in request.Outerfaces:
                     outerface.WriteEvents(events=_events, mode=ExportMode.DETECTORS)
             self._event_mgr.ClearLines()
