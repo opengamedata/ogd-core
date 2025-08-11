@@ -13,7 +13,7 @@ from ogd.common.interfaces.MySQLInterface import MySQLInterface
 from ogd.common.interfaces.BigQueryInterface import BigQueryInterface
 from ogd.common.interfaces.BQFirebaseInterface import BQFirebaseInterface
 from ogd.core.requests.Request import ExporterRange
-from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
+from ogd.core.schemas.configs.CoreConfig import CoreConfig
 from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.common.utils.Logger import Logger
 
@@ -24,11 +24,11 @@ class OGDGenerators:
     """
 
     @staticmethod
-    def GenDBInterface(config:ConfigSchema, game:str) -> EventInterface:
+    def GenDBInterface(config:CoreConfig, game:str) -> EventInterface:
         """Create a data interface based on a config and desired game.
 
         :param config: The current OGD configuration
-        :type config: ConfigSchema
+        :type config: CoreConfig
         :param game: The ID of the game whose data should be retrieved from the interface
         :type game: str
         :raises Exception: If the configuration for the given game does not give a valid type of database for the source.
@@ -36,7 +36,7 @@ class OGDGenerators:
         :return: A data interface for the configured type of database.
         :rtype: EventInterface
 
-        .. todo:: Accept a GameSourceSchema instead of a full ConfigSchema
+        .. todo:: Accept a GameSourceSchema instead of a full CoreConfig
         .. todo:: Use the "upper" of the source type, instead of checking for capitalized and non-capitalized versions of names.
         """
         ret_val : EventInterface

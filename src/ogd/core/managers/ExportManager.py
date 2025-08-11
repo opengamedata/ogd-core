@@ -21,7 +21,7 @@ from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorColle
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.managers.EventManager import EventManager
 from ogd.core.managers.FeatureManager import FeatureManager
-from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
+from ogd.core.schemas.configs.CoreConfig import CoreConfig
 from ogd.core.requests.Request import Request
 from ogd.core.requests.RequestResult import RequestResult
 
@@ -36,14 +36,14 @@ class ExportManager:
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, config:ConfigSchema):
+    def __init__(self, config:CoreConfig):
         """Constructor for an ExportManager object.
         Simply sets the config for the manager. All other data comes from a request given to the manager.
 
         :param settings: [description]
         :type settings: [type]
         """
-        self._config      : ConfigSchema = config
+        self._config      : CoreConfig = config
         self._event_mgr   : Optional[EventManager]   = None
         self._feat_mgr    : Optional[FeatureManager] = None
         self._debug_count : int                      = 0

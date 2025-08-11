@@ -40,11 +40,11 @@ class CoreConfig(Schema):
         game_src_map: Optional[Dict[str, GameStoreConfig]],
         other_elements: Dict[str, Any]
     ):
-        """Constructs a ConfigSchema, from a name and dictionary of JSON-style elements.
+        """Constructs a CoreConfig, from a name and dictionary of JSON-style elements.
 
         :param name: The name of the configuration schema.
         :type name: str
-        :param all_elements: A dictionary mapping config item names to their configured values. These will be checked and made available through the ConfigSchema properties.
+        :param all_elements: A dictionary mapping config item names to their configured values. These will be checked and made available through the CoreConfig properties.
         :type all_elements: Dict[str, Any]
         """
         unparsed_elements : Map = other_elements or {}
@@ -140,7 +140,7 @@ class CoreConfig(Schema):
     @property
     def AsMarkdown(self) -> str:
         """
-        A Markdown-formatted stringification of the ConfigSchema.
+        A Markdown-formatted stringification of the CoreConfig.
         (presently just the schema name)
         """
         ret_val : str
