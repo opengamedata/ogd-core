@@ -159,14 +159,14 @@ class ExportManager:
         start  : datetime
         slices : List[Slice] = self._generateSlices(sess_ids=ids)
 
-        _next_slice_data : Optional[List[Event]] = None
+        _next_slice_data : Optional[EventSet] = None
         for i, next_slice_ids in enumerate(slices):
             _next_slice_data = self._loadSlice(request=request, next_slice_ids=next_slice_ids, slice_num=i+1, slice_count=len(slices))
             if _next_slice_data is not None:
             # 1. Process the slice.
                 start = datetime.now()
                 Logger.Log(f"Processing slice [{i+1}/{len(slices)}]...", logging.INFO, depth=2)
-                self._processSlice(next_slice_data=_next_slice_data, request=request, ids=ids)
+                self._processSlice(next_slice_data=_next_slice_data, id_mode=request.Range.IDMode, ids=ids)
                 time_delta = datetime.now() - start
                 Logger.Log(f"Processing time for slice [{i+1}/{len(slices)}]: {time_delta} to handle {len(_next_slice_data)} events", logging.INFO, depth=2)
 
