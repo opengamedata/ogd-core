@@ -114,16 +114,17 @@ class Request(abc.ABC):
 
     ## String representation of a request. Just gives game id, and date range.
     def __str__(self):
-        _min = "Unkown"
-        _max = "Unkown"
-        try:
-            _fmt = "%Y-%m-%d"
-            _min = self.Range.DateRange['min'].strftime(_fmt) if self.Range.DateRange['min'] is not None else "None"
-            _max = self.Range.DateRange['max'].strftime(_fmt) if self.Range.DateRange['max'] is not None else "None"
-        except Exception as err:
-            Logger.Log(f"Got an error when trying to stringify a Request: {type(err)} {str(err)}")
-        finally:
-            return f"{self._game_id}: {_min}<->{_max} ({[str(export) for export in self._exports]})"
+        return "Request Object"
+        # _min = "Unkown"
+        # _max = "Unkown"
+        # try:
+        #     _fmt = "%Y-%m-%d"
+        #     _min = self.Range.DateRange['min'].strftime(_fmt) if self.Range.DateRange['min'] is not None else "None"
+        #     _max = self.Range.DateRange['max'].strftime(_fmt) if self.Range.DateRange['max'] is not None else "None"
+        # except Exception as err:
+        #     Logger.Log(f"Got an error when trying to stringify a Request: {type(err)} {str(err)}")
+        # finally:
+        #     return f"{self._game_id}: {_min}<->{_max} ({[str(export) for export in self._exports]})"
 
     @property
     def GameID(self):
