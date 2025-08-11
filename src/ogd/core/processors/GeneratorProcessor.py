@@ -56,7 +56,7 @@ class GeneratorProcessor(Processor):
 
     # *** PUBLIC METHODS ***
 
-    def ProcessFeature(self, feature_list:List[Feature]) -> None:
+    def ProcessFeatures(self, feature_list:List[Feature]) -> None:
         if self._registry is not None:
             for feature in feature_list:
                 self._registry.UpdateFromFeature(feature=feature)

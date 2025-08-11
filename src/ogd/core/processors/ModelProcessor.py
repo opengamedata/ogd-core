@@ -122,7 +122,7 @@ class ModelProcessor(ExtractorProcessor):
         self._registry = self._createRegistry()
         self._registry.LoadGenerators(generator_cfg=self._generator_cfg, loader=self._loader, overrides=self._overrides)
             
-    def ProcessFeature(self, feature: Feature):
+    def ProcessFeatures(self, feature: Feature):
         # self._registry = self._createRegistry()
         if self._registry:
             self._registry.UpdateFromFeature(feature)

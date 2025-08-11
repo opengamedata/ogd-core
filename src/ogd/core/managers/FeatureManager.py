@@ -10,7 +10,9 @@ from ogd.core.processors.PopulationProcessor import PopulationProcessor
 from ogd.core.processors.PlayerProcessor import PlayerProcessor
 from ogd.core.processors.SessionProcessor import SessionProcessor
 from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
+from ogd.common.filters.collections.DatasetFilterCollection import DatasetFilterCollection
 from ogd.common.models.Event import Event
+from ogd.common.models.Feature import Feature
 from ogd.common.models.FeatureSet import FeatureSet
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import ExportRow
@@ -22,7 +24,7 @@ class FeatureManager:
         self._overrides         : Optional[List[str]]        = feature_overrides
         # local tracking of whether we're up-to-date on getting feature values.
         self._up_to_date        : bool                       = True
-        self._latest_values     : Dict[str,List[ExportRow]]  = {}
+        self._latest_features   : FeatureSet                 = FeatureSet(features=[], filters=DatasetFilterCollection())
         # local tracking of whether we used null instances in our processor hierarchies or not.
         self._used_null_play    : bool                       = False
         self._used_null_sess    : Dict[str, bool]            = { "null" : False }
@@ -49,20 +51,33 @@ class FeatureManager:
             Logger.Log("FeatureManager did not set up any Processors, no LoaderClass was given!", logging.WARN, depth=3)
 
     @property
-    def FeatureLines(self) -> Dict[str, List[ExportRow]]:
+    def Features(self) -> FeatureSet:
         start = datetime.now()
         self._try_update()
         Logger.Log(f"Time to retrieve all feature values: {datetime.now() - start}", logging.INFO, depth=2)
-        return self._latest_values
+        return self._latest_features
+    @property
+    def FeatureLines(self) -> List[ExportRow]:
+        start = datetime.now()
+        self._try_update()
+        Logger.Log(f"Time to retrieve all feature lines: {datetime.now() - start}", logging.INFO, depth=2)
+        return self._latest_features.FeatureLines
 
     @property
     def PopulationFeatureNames(self) -> List[str]:
         return self._population.GeneratorNames if self._population is not None else []
     @property
+    def PopulationFeatures(self) -> List[Feature]:
+        start = datetime.now()
+        self._try_update()
+        ret_val = self._latest_features.PopulationFeatures
+        Logger.Log(f"Time to retrieve Population features: {datetime.now() - start} to get {len(ret_val)} features", logging.INFO, depth=2)
+        return ret_val
+    @property
     def PopulationLines(self) -> List[ExportRow]:
         start = datetime.now()
         self._try_update()
-        ret_val = self._latest_values.get('population', [])
+        ret_val = self._latest_features.PopulationLines
         Logger.Log(f"Time to retrieve Population lines: {datetime.now() - start} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val
 
@@ -70,10 +85,17 @@ class FeatureManager:
     def PlayerFeatureNames(self) -> List[str]:
         return self._players["null"].GeneratorNames if self._players is not None else []
     @property
+    def PlayerFeatures(self) -> List[Feature]:
+        start   : datetime = datetime.now()
+        self._try_update()
+        ret_val = self._latest_features.PlayerFeatures
+        Logger.Log(f"Time to retrieve Player features: {datetime.now() - start} to get {len(ret_val)} features", logging.INFO, depth=2)
+        return ret_val
+    @property
     def PlayerLines(self) -> List[ExportRow]:
         start   : datetime = datetime.now()
         self._try_update()
-        ret_val = self._latest_values.get('players', [])
+        ret_val = self._latest_features.PlayerLines
         Logger.Log(f"Time to retrieve Player lines: {datetime.now() - start} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val
 
@@ -81,10 +103,18 @@ class FeatureManager:
     def SessionFeatureNames(self) -> List[str]:
         return self._sessions["null"]["null"].GeneratorNames if self._sessions is not None else []
     @property
+    def SessionFeatures(self) -> List[Feature]:
+        start   : datetime = datetime.now()
+        self._try_update()
+        ret_val = self._latest_features.SessionFeatures
+        time_delta = datetime.now() - start
+        Logger.Log(f"Time to retrieve Session features: {time_delta} to get {len(ret_val)} features", logging.INFO, depth=2)
+        return ret_val
+    @property
     def SessionLines(self) -> List[ExportRow]:
         start   : datetime = datetime.now()
         self._try_update()
-        ret_val = self._latest_values.get('sessions', [])
+        ret_val = self._latest_features.SessionLines
         time_delta = datetime.now() - start
         Logger.Log(f"Time to retrieve Session lines: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val
@@ -123,31 +153,31 @@ class FeatureManager:
         if self._population is not None and self._players is not None and self._sessions is not None:
             pop_data = self._population.GetFeatures(order=1)
             # 2. Distribute population 1st-order data
-            self._population.ProcessFeature(feature_list=pop_data)
+            self._population.ProcessFeatures(feature_list=pop_data.Features)
             for player in self._players.values():
-                player.ProcessFeature(feature_list=pop_data)
+                player.ProcessFeatures(feature_list=pop_data.Features)
 
             for session_list in self._sessions.values():
                 for session in session_list.values():
-                    session.ProcessFeature(feature_list=pop_data)
+                    session.ProcessFeatures(feature_list=pop_data.Features)
             # 3. For each player, get 1st-order data
             for player_name,player in self._players.items():
                 play_data = player.GetFeatures(order=1)
                 # 4. Distribute player 1st-order data
-                self._population.ProcessFeature(feature_list=play_data)
-                player.ProcessFeature(feature_list=play_data)
+                self._population.ProcessFeatures(feature_list=play_data.Features)
+                player.ProcessFeatures(feature_list=play_data.Features)
                 for session in self._sessions.get(player_name, {}).values():
-                    session.ProcessFeature(feature_list=play_data)
+                    session.ProcessFeatures(feature_list=play_data.Features)
             # 5. For each session, get 1st-order data
             for session_list in self._sessions.values():
                 for session in session_list.values():
                     sess_data = session.GetFeatures(order=1)
                     # 6. Distribute session 1st-order data
-                    self._population.ProcessFeature(feature_list=sess_data)
+                    self._population.ProcessFeatures(feature_list=sess_data.Features)
                     player = self._players.get(session._playerID, None)
                     if player is not None:
-                        player.ProcessFeature(feature_list=sess_data)
-                    session.ProcessFeature(feature_list=sess_data)
+                        player.ProcessFeatures(feature_list=sess_data.Features)
+                    session.ProcessFeatures(feature_list=sess_data.Features)
             Logger.Log(f"Time to process Feature Data: {datetime.now() - start}", logging.INFO, depth=3)
         else:
             Logger.Log("Skipped processing of Feature, no feature Processors available!", logging.INFO, depth=3)
@@ -202,15 +232,18 @@ class FeatureManager:
     def _try_update(self):
         if not self._up_to_date:
             self.ProcessFeatures()
-            _feature_set : FeatureSet = self._population.GetFeatures(order=None)
+
+            self._latest_features : FeatureSet = FeatureSet(features=[], filters=DatasetFilterCollection())
+            if self._population:
+               self._latest_features += self._population.GetFeatures(order=None)
             # for some reason, this didn't work as sum over list of lists, so get sessions manually with a normal loop:
-            list_o_playlists : List[List[ExportRow]]       = [player.Lines for player_id,player in self._players.items() if (player_id != "null" or self._used_null_play)] if self._players is not None else []
-            flat_playlist    : List[ExportRow]             = list(itertools.chain.from_iterable(list_o_playlists))
-            list_o_sesslists : List[List[List[ExportRow]]] = [[session.Lines for session_id,session in session_list.items() if (session_id != "null" or self._used_null_sess[player_name])] for player_name,session_list in self._sessions.items()] if self._sessions is not None else []
-            flat_sesslist    : List[ExportRow]             = list(itertools.chain.from_iterable(itertools.chain.from_iterable(list_o_sesslists)))
-            self._latest_values = {
-                "population" : self._population.Lines if self._population is not None else [],
-                "players"    : flat_playlist,
-                "sessions"   : flat_sesslist
-            }
+            if self._players:
+                for player_id,player in self._players.items():
+                    if player_id != "null" or self._used_null_play:
+                        self._latest_features += player.GetFeatures(order=None)
+            if self._sessions:
+                for player_name,session_list in self._sessions.items():
+                     if (session_id != "null" or self._used_null_sess[player_name]):
+                          for session_id,session in session_list.items():
+                            self._latest_features += session.GetFeatures(order=None)
             self._up_to_date = True
