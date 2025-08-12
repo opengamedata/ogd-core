@@ -26,38 +26,6 @@ class OGDGenerators:
     """
 
     @staticmethod
-    def GenDBInterface(config:CoreConfig, game:str) -> EventInterface:
-        """Create a data interface based on a config and desired game.
-
-        :param config: The current OGD configuration
-        :type config: CoreConfig
-        :param game: The ID of the game whose data should be retrieved from the interface
-        :type game: str
-        :raises Exception: If the configuration for the given game does not give a valid type of database for the source.
-        :raises ValueError: If the given game does not exist in the GameSourceMap of the given configuration.
-        :return: A data interface for the configured type of database.
-        :rtype: EventInterface
-
-        .. todo:: Accept a GameSourceSchema instead of a full CoreConfig
-        .. todo:: Use the "upper" of the source type, instead of checking for capitalized and non-capitalized versions of names.
-        """
-        ret_val : EventInterface
-        _game_cfg = config.GameSourceMap.get(game)
-        if _game_cfg is not None and _game_cfg.Source is not None:
-            match (_game_cfg.Source.Type):
-                case "Firebase" | "FIREBASE":
-                    ret_val = BQFirebaseInterface(game_id=game, config=_game_cfg, fail_fast=config.FailFast)
-                case "BigQuery" | "BIGQUERY":
-                    ret_val = BigQueryInterface(game_id=game, config=_game_cfg, fail_fast=config.FailFast)
-                case "MySQL" | "MYSQL":
-                    ret_val = MySQLInterface(game_id=game, config=_game_cfg, fail_fast=config.FailFast)
-                case _:
-                    raise Exception(f"{_game_cfg.Source.Type} is not a valid EventInterface type!")
-            return ret_val
-        else:
-            raise ValueError(f"Config for {game} was invalid or not found in GameSourceMap!")
-
-    @staticmethod
     def GenModes(with_events:bool, with_features:bool, no_session_file:bool, no_player_file:bool, no_pop_file:bool) -> Set[ExportMode]:
         """Convert a series of booleans for each type of export mode into a set of ExportMode enum values.
 
