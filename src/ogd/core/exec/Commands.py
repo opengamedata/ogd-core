@@ -115,7 +115,11 @@ class OGDCommands:
     @staticmethod
     def RunExport(args:Namespace, config:CoreConfig, destination:Path, with_events:bool = False, with_features:bool = False) -> bool:
         """Function to handle execution of export code.
+
         This is the main intended use of the program.
+
+        .. TODO:: Refactor "step 2" logic into smaller functions, probably a "get case", then pass in to a "get range" and "get dataset ID"
+        .. TODO:: Use DatasetKey here for the dataset name.
 
         :param events: _description_, defaults to False
         :type events: bool, optional
@@ -123,9 +127,6 @@ class OGDCommands:
         :type features: bool, optional
         :return: _description_
         :rtype: bool
-
-        .. todo:: Make use of destination parameter
-        .. todo:: Refactor "step 2" logic into smaller functions, probably a "get case", then pass in to a "get range" and "get dataset ID"
         """
         success : bool = False
 
@@ -185,13 +186,14 @@ class OGDCommands:
         # e. Default case where we use date range
             else:
                 filters.Sequences.Timestamps = OGDGenerators.GenDateFilter(game=args.game, monthly=args.monthly, start_date=args.start_date, end_date=args.end_date)
+                dataset_id = f"{args.game}_{args.start_date}_to_{args.end_date}"
     # 3. set up the outerface, based on the range and dataset_id.
         dest = GameStoreConfig(name="FileDestination",
                                 game_id=args.game,
                                 source_name=None,
                                 schema_name=None,
                                 table_location=None,
-                                source=FileStoreConfig(name="OutputFile", location=config.DataDirectory / args.game / f"{dataset_id}.tsv", file_credential=None),
+                                source=FileStoreConfig(name="OutputFile", location=destination / args.game / f"{dataset_id}.tsv", file_credential=None),
                                 schema=EventTableSchema.FromFile(schema_name="OGD_EVENT_FILE")
         )
         # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
