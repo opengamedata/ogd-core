@@ -148,6 +148,10 @@ class CoreConfig(Schema):
         ret_val = f"{self.Name}"
         return ret_val
 
+    def _fromDict(cls, name:str, unparsed_elements:Map, key_overrides:Optional[Dict[str, str]]=None, default_override:Optional[Self]=None)-> "DetectorMapConfig":
+        return CoreConfig(name=name, log_file=None, batch_size=None, dbg_level=None, fail_fast=None, with_profiling=None,
+                          file_idx=None, data_src=None, game_src_map=None, other_elements=unparsed_elements)
+
     @staticmethod
     def _parseLogFile(unparsed_elements:Map) -> bool:
         return CoreConfig.ParseElement(
