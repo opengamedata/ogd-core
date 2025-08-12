@@ -1,7 +1,7 @@
 # import standard libraries
 import logging
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Self
 # import local files
 from ogd.common.configs.storage.RepositoryIndexingConfig import RepositoryIndexingConfig
 from ogd.common.configs.GameStoreConfig import GameStoreConfig
@@ -21,6 +21,7 @@ class CoreConfig(Schema):
     _DEFAULT_LOG_FILE = False
     _DEFAULT_BATCH_SIZE = 500
     _DEFAULT_DBG_STR = "INFO"
+    _DEFAULT_DBG = logging.INFO
     _DEFAULT_FAIL_FAST = False
     _DEFAULT_WITH_PROFILING = False
     _DEFAULT_FILE_IDX = RepositoryIndexingConfig.Default()
@@ -137,6 +138,8 @@ class CoreConfig(Schema):
         """
         return self._game_src_map
 
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
+
     @property
     def AsMarkdown(self) -> str:
         """
@@ -148,7 +151,23 @@ class CoreConfig(Schema):
         ret_val = f"{self.Name}"
         return ret_val
 
-    def _fromDict(cls, name:str, unparsed_elements:Map, key_overrides:Optional[Dict[str, str]]=None, default_override:Optional[Self]=None)-> "DetectorMapConfig":
+    @classmethod
+    def Default(cls) -> "CoreConfig":
+        return CoreConfig(
+            name="DefaultCoreConfig",
+            log_file=cls._DEFAULT_LOG_FILE,
+            batch_size=cls._DEFAULT_BATCH_SIZE,
+            dbg_level=cls._DEFAULT_DBG,
+            fail_fast=cls._DEFAULT_FAIL_FAST,
+            with_profiling=cls._DEFAULT_WITH_PROFILING,
+            file_idx=cls._DEFAULT_FILE_IDX,
+            data_src=cls._DEFAULT_DATA_SRC,
+            game_src_map=cls._DEFAULT_GAME_SRC_MAP,
+            other_elements={}
+        )
+
+    @classmethod
+    def _fromDict(cls, name:str, unparsed_elements:Map, key_overrides:Optional[Dict[str, str]]=None, default_override:Optional[Self]=None)-> "CoreConfig":
         return CoreConfig(name=name, log_file=None, batch_size=None, dbg_level=None, fail_fast=None, with_profiling=None,
                           file_idx=None, data_src=None, game_src_map=None, other_elements=unparsed_elements)
 
