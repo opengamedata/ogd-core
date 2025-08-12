@@ -88,7 +88,7 @@ class OGDParsers:
                             help="Tell the program to output data for a collection of players with IDs in given file, instead of using a date range.")
         export_parser.add_argument("--session_id_file", default="",
                             help="Tell the program to output data for a collection of sessions with IDs in given file, instead of using a date range.")
-        export_parser.add_argument("-f", "--from", "--file", default="",
+        export_parser.add_argument("-f", "--from", "--file", default="", dest="from_source",
                             help="Tell the program to use a file as input, instead of looking up a database.")
         export_parser.add_argument("-m", "--monthly", default=False, action="store_true",
                             help="Set the program to export a month's-worth of data, instead of using a date range. Replace the start_date argument with a month in MM/YYYY format.")

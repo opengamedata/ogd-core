@@ -142,15 +142,15 @@ class OGDCommands:
         dataset_id     : Optional[str] = None
 
     # 2. figure out the interface and range; optionally set a different dataset_id
-        if args.file is not None and args.file != "":
+        if args.from_source is not None and args.from_source != "":
             # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
-            _ext = str(args.file).rsplit('.', maxsplit=1)[-1]
+            _ext = str(args.from_source).rsplit('.', maxsplit=1)[-1]
             source = GameStoreConfig(name="FILE SOURCE",
                                    game_id=args.game,
                                    source_name=None,
                                    schema_name=None,
                                    table_location=None,
-                                   source=FileStoreConfig(name="SourceFile", location=args.file, file_credential=None),
+                                   source=FileStoreConfig(name="SourceFile", location=args.from_source, file_credential=None),
                                    schema=EventTableSchema.FromFile(schema_name="OGD_EVENT_FILE")
             )
         else:
