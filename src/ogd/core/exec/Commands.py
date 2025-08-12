@@ -186,10 +186,18 @@ class OGDCommands:
             else:
                 filters.Sequences.Timestamps = OGDGenerators.GenDateFilter(game=args.game, monthly=args.monthly, start_date=args.start_date, end_date=args.end_date)
     # 3. set up the outerface, based on the range and dataset_id.
-        dest = GameStoreConfig(name="FileDestination", all_elements={"database":"FILE", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
+        dest = GameStoreConfig(name="FileDestination",
+                                game_id=args.game,
+                                source_name=None,
+                                schema_name=None,
+                                table_location=None,
+                                source=FileStoreConfig(name="OutputFile", location=config.DataDirectory / args.game / f"{dataset_id}.tsv", file_credential=None),
+                                schema=EventTableSchema.FromFile(schema_name="OGD_EVENT_FILE")
+        )
         # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
-        if config.DebugLevel == "DEBUG":
-            _cfg = GameStoreConfig(name="DEBUG", all_elements={"database":"DEBUG", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
+        # TODO : re-enable multi-output option
+        # if config.DebugLevel == "DEBUG":
+        #     _cfg = GameStoreConfig(name="DEBUG", all_elements={"database":"DEBUG", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
 
     # 4. Once we have the parameters parsed out, construct the request.
         req = Request(
@@ -200,7 +208,7 @@ class OGDCommands:
             fail_fast=config.FailFast,
             repository=repository,
             feature_overrides=None)
-        if req.Interface.IsOpen():
+        if req.Interface.Connector.IsOpen:
             export_manager : ExportManager = ExportManager(config=config)
             result         : RequestResult = export_manager.ExecuteRequest(request=req)
             success = result.Status == ResultStatus.SUCCESS
