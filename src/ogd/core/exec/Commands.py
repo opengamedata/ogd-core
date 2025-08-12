@@ -18,10 +18,15 @@ from ogd.core.requests.RequestResult import RequestResult, ResultStatus
 from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.configs.CoreConfig import CoreConfig
 from ogd.common.configs.GameStoreConfig import GameStoreConfig
+from ogd.common.configs.storage.FileStoreConfig import FileStoreConfig
+from ogd.common.configs.storage.DatasetRepositoryConfig import DatasetRepositoryConfig
 from ogd.common.filters.collections.DatasetFilterCollection import DatasetFilterCollection
+from ogd.common.filters.SetFilter import SetFilter
+from ogd.common.filters.RangeFilter import RangeFilter
 from ogd.common.filters.collections.SequencingFilterCollection import SequencingFilterCollection
 from ogd.common.filters.collections.IDFilterCollection import IDFilterCollection
 from ogd.common.models.enums.ExportMode import ExportMode
+from ogd.common.models.enums.FilterMode import FilterMode
 from ogd.common.models.enums.IDMode import IDMode
 from ogd.common.storage.interfaces.CSVInterface import CSVInterface
 from ogd.common.storage.interfaces.Interface import Interface
@@ -124,27 +129,34 @@ class OGDCommands:
         """
         success : bool = False
 
-        filters      : DatasetFilterCollection
+        filters      : DatasetFilterCollection = DatasetFilterCollection()
         export_modes : Set[ExportMode] = OGDGenerators.GenModes(
             with_events=with_events, with_features=with_features,
             no_session_file=args.no_session_file,
             no_player_file=args.no_player_file,
             no_pop_file=args.no_pop_file
         )
+        source : GameStoreConfig = config.GameSourceMap.get(args.game, GameStoreConfig.Default())
+        dest   : GameStoreConfig = config.GameSourceMap.get(args.game, GameStoreConfig.Default())
+        repository : DatasetRepositoryConfig = DatasetRepositoryConfig.Default()
         dataset_id     : Optional[str] = None
 
     # 2. figure out the interface and range; optionally set a different dataset_id
         if args.file is not None and args.file != "":
             # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
             _ext = str(args.file).rsplit('.', maxsplit=1)[-1]
-            _cfg = GameSourceSchema(name="FILE SOURCE", all_elements={"schema":"OGD_EVENT_FILE"}, data_sources={})
-            interface = CSVInterface(game_id=args.game, config=_cfg, fail_fast=config.FailFast, filepath=Path(args.file), delim="\t" if _ext == 'tsv' else ',')
-            export_range = ExporterRange.FromIDs(source=interface, ids=interface.AllIDs() or [])
+            source = GameStoreConfig(name="FILE SOURCE",
+                                   game_id=args.game,
+                                   source_name=None,
+                                   schema_name=None,
+                                   table_location=None,
+                                   source=FileStoreConfig(name="SourceFile", location=args.file, file_credential=None),
+                                   schema=EventTableSchema.FromFile(schema_name="OGD_EVENT_FILE")
+            )
         else:
-            interface = OGDGenerators.GenDBInterface(config=config, game=args.game)
         # a. Case where specific player ID was given
             if args.player is not None and args.player != "":
-                export_range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.USER)
+                filters.IDFilters.Players = SetFilter(mode=FilterMode.INCLUDE, set_elements={args.player})
                 dataset_id = f"{args.game}_{args.player}"
         # b. Case where player ID file was given
             elif args.player_id_file is not None and args.player_id_file != "":
@@ -152,13 +164,13 @@ class OGDCommands:
                 with open(file_path) as player_file:
                     reader = csv.reader(player_file)
                     file_contents = list(reader) # this gives list of lines, each line a list
-                    names = list(chain.from_iterable(file_contents)) # so, convert to single list
+                    names = set(chain.from_iterable(file_contents)) # so, convert to single list
                     print(f"list of names: {list(names)}")
-                    export_range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.USER)
+                    filters.IDFilters.Players = SetFilter(mode=FilterMode.INCLUDE, set_elements=names)
                 dataset_id = f"{args.game}_from_{file_path.name}"
         # c. Case where specific session ID was given
             elif args.session is not None and args.session != "":
-                export_range = ExporterRange.FromIDs(source=interface, ids=[args.session], id_mode=IDMode.SESSION)
+                filters.IDFilters.Sessions = SetFilter(mode=FilterMode.INCLUDE, set_elements={args.session})
                 dataset_id = f"{args.game}_{args.session}"
         # d. Case where session ID file was given
             elif args.session_id_file is not None and args.session_id_file != "":
@@ -166,24 +178,18 @@ class OGDCommands:
                 with open(file_path) as session_file:
                     reader = csv.reader(session_file)
                     file_contents = list(reader) # this gives list of lines, each line a list
-                    names = list(chain.from_iterable(file_contents)) # so, convert to single list
+                    names = set(chain.from_iterable(file_contents)) # so, convert to single list
                     print(f"list of sessions: {list(names)}")
-                    export_range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.SESSION)
+                    filters.IDFilters.Sessions = SetFilter(mode=FilterMode.INCLUDE, set_elements=names)
                 dataset_id = f"{args.game}_from_{file_path.name}"
         # e. Default case where we use date range
             else:
-                export_range = OGDGenerators.GenDateRange(game=args.game, interface=interface, monthly=args.monthly, start_date=args.start_date, end_date=args.end_date)
+                filters.Sequences.Timestamps = OGDGenerators.GenDateFilter(game=args.game, monthly=args.monthly, start_date=args.start_date, end_date=args.end_date)
     # 3. set up the outerface, based on the range and dataset_id.
-        _cfg = GameSourceSchema(name="FILE DEST", all_elements={"database":"FILE", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
-        file_outerface = TSVOuterface(game_id=args.game, config=_cfg, export_modes=export_modes, date_range=export_range.DateRange,
-                                    file_indexing=config.FileIndexConfig, dataset_id=dataset_id)
-        # file_outerface = TSVOuterface(game_id=args.game, config=_cfg, export_modes=export_modes, date_range=export_range.DateRange,
-        #                             file_indexing=config.FileIndexConfig, dataset_id=dataset_id, with_zipping=not args.no_zips)
-        outerfaces : Set[Outerface] = {file_outerface}
+        dest = GameStoreConfig(name="FileDestination", all_elements={"database":"FILE", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
         # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
         if config.DebugLevel == "DEBUG":
-            _cfg = GameSourceSchema(name="DEBUG", all_elements={"database":"DEBUG", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
-            outerfaces.add(DebugOuterface(game_id=args.game, config=_cfg, export_modes=export_modes))
+            _cfg = GameStoreConfig(name="DEBUG", all_elements={"database":"DEBUG", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
 
     # 4. Once we have the parameters parsed out, construct the request.
         req = Request(
