@@ -10,11 +10,13 @@ from typing import Optional, Set
 # import local files
 from ogd.core.requests.Request import ExporterRange
 from ogd.core.configs.CoreConfig import CoreConfig
+from ogd.common.filters.RangeFilter import RangeFilter
 from ogd.common.storage.interfaces.Interface import Interface
 from ogd.common.storage.interfaces.MySQLInterface import MySQLInterface
 from ogd.common.storage.interfaces.BigQueryInterface import BigQueryInterface
 from ogd.common.storage.interfaces.BQFirebaseInterface import BQFirebaseInterface
 from ogd.common.models.enums.ExportMode import ExportMode
+from ogd.common.models.enums.FilterMode import FilterMode
 from ogd.common.utils.Logger import Logger
 
 class OGDGenerators:
@@ -89,7 +91,7 @@ class OGDGenerators:
 
     # retrieve/calculate date range.
     @staticmethod
-    def GenDateRange(game:str, monthly:bool, start_date:str, end_date:Optional[str]) -> ExporterRange:
+    def GenDateFilter(game:str, monthly:bool, start_date:str, end_date:Optional[str]) -> RangeFilter:
         """Use a pair of date strings to create an `ExporterRange` for use with an interface.
 
         Also allows the range to be specified as "monthly,"
@@ -140,4 +142,4 @@ class OGDGenerators:
             if _from > _to:
                 raise ValueError(f"Invalid date range, start date of {_from} is after end date of {_to}!")
             Logger.Log(f"Exporting from {str(_from)} to {str(_to)} of data for {game}...", logging.INFO)
-        return ExporterRange.FromDateRange(source=interface, date_min=_from, date_max=_to)
+        return RangeFilter(mode=FilterMode.INCLUDE, minimum=_from, maximum=_to)
