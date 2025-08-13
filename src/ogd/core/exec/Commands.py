@@ -4,11 +4,13 @@ import csv
 import logging
 import traceback
 from argparse import Namespace
+from datetime import date
 from itertools import chain
 from pathlib import Path
 from typing import List, Optional, Set
 
 # import 3rd-party libraries
+from dateutil.parser import parse
 
 # import OGD files
 # from ogd.core.exec.Generators import OGDGenerators
@@ -177,7 +179,9 @@ class OGDCommands:
                 dataset_id = f"{args.game}_from_{file_path.name}"
         # e. Default case where we use date range
             else:
-                filters.Sequences.Timestamps = OGDGenerators.GenDateFilter(game=args.game, monthly=args.monthly, start_date=args.start_date, end_date=args.end_date)
+                start_date = parse(timestr=args.start_date, dayfirst=False).date()
+                end_date   = parse(timestr=args.end_date, dayfirst=False).date()
+                filters.Sequences.Timestamps = OGDGenerators.GenDateFilter(game=args.game, monthly=args.monthly, start_date=start_date, end_date=end_date)
                 dataset_id = DatasetKey.FromDateRange(game_id=args.game, start_date=args.start_date, end_date=args.end_date)
     # 3. set up the outerface, based on the range and dataset_id.
         dest = GameStoreConfig(name="FileDestination",

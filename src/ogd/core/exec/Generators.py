@@ -2,7 +2,7 @@
 # import standard libraries
 import logging
 from calendar import monthrange
-from datetime import datetime
+from datetime import datetime, date, time
 from typing import Optional, Set
 
 # import 3rd-party libraries
@@ -59,7 +59,7 @@ class OGDGenerators:
 
     # retrieve/calculate date range.
     @staticmethod
-    def GenDateFilter(game:str, monthly:bool, start_date:str, end_date:Optional[str]) -> RangeFilter:
+    def GenDateFilter(game:str, monthly:bool, start_date:str|date, end_date:Optional[str|date]) -> RangeFilter:
         """Use a pair of date strings to create an `ExporterRange` for use with an interface.
 
         Also allows the range to be specified as "monthly,"
@@ -93,9 +93,13 @@ class OGDGenerators:
         if monthly:
             month : int = today.month
             year  : int = today.year
-            month_year = start_date.split("/")
-            month = int(month_year[0])
-            year  = int(month_year[1])
+            if isinstance(start_date, str):
+                month_year = start_date.split("/")
+                month = int(month_year[0])
+                year  = int(month_year[1])
+            else:
+                month = start_date.month
+                year  = start_date.year
             month_range = monthrange(year, month)
             days_in_month = month_range[1]
             _from = datetime(year=year, month=month, day=1, hour=0, minute=0, second=0)
@@ -103,10 +107,21 @@ class OGDGenerators:
             Logger.Log(f"Exporting {month}/{year} data for {game}...", logging.DEBUG)
         # Otherwise, create date range from given pair of dates.
         else:
-            _from = datetime.strptime(start_date, "%m/%d/%Y") if start_date is not None else today
-            _from = _from.replace(hour=0, minute=0, second=0)
-            _to   = datetime.strptime(end_date, "%m/%d/%Y") if end_date is not None else _from
-            _to = _to.replace(hour=23, minute=59, second=59)
+            # get starting point
+            if isinstance(start_date, str):
+                _from = datetime.strptime(start_date, "%m/%d/%Y") if start_date is not None else today
+                _from = _from.replace(hour=0, minute=0, second=0)
+            else:
+                _from = datetime.combine(date=start_date, time=time())
+            # get ending point
+            if end_date is None:
+                _to = _from
+            elif isinstance(end_date, str):
+                _to   = datetime.strptime(end_date, "%m/%d/%Y") if end_date is not None else _from
+                _to = _to.replace(hour=23, minute=59, second=59)
+            else:
+                _to = datetime.combine(date=end_date, time=time())
+            # check that we didn't try to stop before we started
             if _from > _to:
                 raise ValueError(f"Invalid date range, start date of {_from} is after end date of {_to}!")
             Logger.Log(f"Exporting from {str(_from)} to {str(_to)} of data for {game}...", logging.INFO)
