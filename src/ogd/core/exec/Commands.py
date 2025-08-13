@@ -132,7 +132,11 @@ class OGDCommands:
             no_pop_file=args.no_pop_file
         )
         source : GameStoreConfig = config.GameSourceMap.get(args.game, GameStoreConfig.Default())
-        dest   : GameStoreConfig = config.GameSourceMap.get(args.game, GameStoreConfig.Default())
+        source.StoreConfig       = config.DataSources.get(source.StoreName) or config.DataSources[list(config.DataSources.keys())[0]] # TODO : if source wasn't found, just take first source we find, because why not. But do something smarter later.
+        source.Table             = EventTableSchema.FromFile(source.TableSchemaName)
+        dest : GameStoreConfig = config.GameSourceMap.get(args.game, GameStoreConfig.Default())
+        dest.StoreConfig       = config.DataSources.get(dest.StoreName) or config.DataSources[list(config.DataSources.keys())[0]] # TODO : if dest wasn't found, just take first dest we find, because why not. But do something smarter later.
+        dest.Table             = EventTableSchema.FromFile(dest.TableSchemaName)
         repository : DatasetRepositoryConfig = DatasetRepositoryConfig.Default()
         dataset_id : Optional[DatasetKey | str] = None
 
