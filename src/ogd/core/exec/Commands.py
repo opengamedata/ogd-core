@@ -22,17 +22,9 @@ from ogd.common.configs.storage.FileStoreConfig import FileStoreConfig
 from ogd.common.configs.storage.DatasetRepositoryConfig import DatasetRepositoryConfig
 from ogd.common.filters.collections.DatasetFilterCollection import DatasetFilterCollection
 from ogd.common.filters.SetFilter import SetFilter
-from ogd.common.filters.RangeFilter import RangeFilter
-from ogd.common.filters.collections.SequencingFilterCollection import SequencingFilterCollection
-from ogd.common.filters.collections.IDFilterCollection import IDFilterCollection
 from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.common.models.enums.FilterMode import FilterMode
-from ogd.common.models.enums.IDMode import IDMode
-from ogd.common.storage.interfaces.CSVInterface import CSVInterface
-from ogd.common.storage.interfaces.Interface import Interface
-from ogd.common.storage.outerfaces.Outerface import Outerface
-from ogd.common.storage.outerfaces.DebugOuterface import DebugOuterface
-from ogd.common.storage.outerfaces.CSVOuterface import CSVOuterface
+from ogd.common.models.DatasetKey import DatasetKey
 from ogd.common.schemas.tables.TableSchema import TableSchema
 from ogd.common.schemas.tables.EventTableSchema import EventTableSchema
 from ogd.common.schemas.events.LoggingSpecificationSchema import LoggingSpecificationSchema
@@ -140,7 +132,7 @@ class OGDCommands:
         source : GameStoreConfig = config.GameSourceMap.get(args.game, GameStoreConfig.Default())
         dest   : GameStoreConfig = config.GameSourceMap.get(args.game, GameStoreConfig.Default())
         repository : DatasetRepositoryConfig = DatasetRepositoryConfig.Default()
-        dataset_id     : Optional[str] = None
+        dataset_id : Optional[DatasetKey | str] = None
 
     # 2. figure out the interface and range; optionally set a different dataset_id
         if args.from_source is not None and args.from_source != "":
@@ -158,7 +150,7 @@ class OGDCommands:
         # a. Case where specific player ID was given
             if args.player is not None and args.player != "":
                 filters.IDFilters.Players = SetFilter(mode=FilterMode.INCLUDE, set_elements={args.player})
-                dataset_id = f"{args.game}_{args.player}"
+                dataset_id = DatasetKey.FromID(game_id=args.game, ID=args.player)
         # b. Case where player ID file was given
             elif args.player_id_file is not None and args.player_id_file != "":
                 file_path = Path(args.player_id_file)
@@ -168,7 +160,7 @@ class OGDCommands:
                     names = set(chain.from_iterable(file_contents)) # so, convert to single list
                     print(f"list of names: {list(names)}")
                     filters.IDFilters.Players = SetFilter(mode=FilterMode.INCLUDE, set_elements=names)
-                dataset_id = f"{args.game}_from_{file_path.name}"
+                dataset_id = DatasetKey.FromFile(game_id=args.game, file_path=file_path)
         # c. Case where specific session ID was given
             elif args.session is not None and args.session != "":
                 filters.IDFilters.Sessions = SetFilter(mode=FilterMode.INCLUDE, set_elements={args.session})
@@ -186,7 +178,7 @@ class OGDCommands:
         # e. Default case where we use date range
             else:
                 filters.Sequences.Timestamps = OGDGenerators.GenDateFilter(game=args.game, monthly=args.monthly, start_date=args.start_date, end_date=args.end_date)
-                dataset_id = f"{args.game}_{args.start_date}_to_{args.end_date}"
+                dataset_id = DatasetKey.FromDateRange(game_id=args.game, start_date=args.start_date, end_date=args.end_date)
     # 3. set up the outerface, based on the range and dataset_id.
         dest = GameStoreConfig(name="FileDestination",
                                 game_id=args.game,
