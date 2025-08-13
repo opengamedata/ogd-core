@@ -182,7 +182,7 @@ class OGDCommands:
                 start_date = parse(timestr=args.start_date, dayfirst=False).date()
                 end_date   = parse(timestr=args.end_date, dayfirst=False).date()
                 filters.Sequences.Timestamps = OGDGenerators.GenDateFilter(game=args.game, monthly=args.monthly, start_date=start_date, end_date=end_date)
-                dataset_id = DatasetKey.FromDateRange(game_id=args.game, start_date=args.start_date, end_date=args.end_date)
+                dataset_id = DatasetKey.FromDateRange(game_id=args.game, start_date=start_date, end_date=end_date)
     # 3. set up the outerface, based on the range and dataset_id.
         dest = GameStoreConfig(name="FileDestination",
                                 game_id=args.game,
