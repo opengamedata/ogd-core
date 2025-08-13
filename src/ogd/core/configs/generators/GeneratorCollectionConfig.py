@@ -112,8 +112,8 @@ class GeneratorCollectionConfig(Config):
 
     # 1. define instance vars
         self._game_id            : str                = game_id or name
-        self._detector_map       : DetectorMapConfig  = detector_map  or self._parseDetectorMap(unparsed_elements=unparsed_elements)
-        self._extractor_map      : ExtractorMapConfig = extractor_map or self._parseExtractorMap(unparsed_elements=unparsed_elements)
+        self._detector_map       : DetectorMapConfig  = detector_map  or self._parseDetectorMap(unparsed_elements=unparsed_elements, schema_name=name)
+        self._extractor_map      : ExtractorMapConfig = extractor_map or self._parseExtractorMap(unparsed_elements=unparsed_elements, schema_name=name)
         self._subunit_range      : Optional[range]    = subunit_range
         self._other_ranges       : Dict[str, range]   = other_ranges
 
@@ -465,7 +465,7 @@ class GeneratorCollectionConfig(Config):
     # *** PRIVATE STATICS ***
 
     @staticmethod
-    def _parseDetectorMap(unparsed_elements:Map) -> DetectorMapConfig:
+    def _parseDetectorMap(unparsed_elements:Map, schema_name:Optional[str]=None) -> DetectorMapConfig:
         ret_val : DetectorMapConfig
 
         detector_map = GeneratorCollectionConfig.ParseElement(
@@ -473,14 +473,15 @@ class GeneratorCollectionConfig(Config):
             valid_keys=["detectors"],
             to_type=dict,
             default_value=GeneratorCollectionConfig._DEFAULT_DETECTOR_MAP,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
         ret_val = DetectorMapConfig.FromDict(name="DetectorMap", unparsed_elements=detector_map)
 
         return ret_val
 
     @staticmethod
-    def _parseExtractorMap(unparsed_elements:Map) -> ExtractorMapConfig:
+    def _parseExtractorMap(unparsed_elements:Map, schema_name:Optional[str]=None) -> ExtractorMapConfig:
         ret_val : ExtractorMapConfig
 
         feature_map = GeneratorCollectionConfig.ParseElement(
@@ -488,13 +489,14 @@ class GeneratorCollectionConfig(Config):
             valid_keys=["extractors", "features"],
             to_type=dict,
             default_value=GeneratorCollectionConfig._DEFAULT_EXTRACTOR_MAP,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
         ret_val = ExtractorMapConfig.FromDict(name="ExtractorMap", unparsed_elements=feature_map)
         return ret_val
 
     @staticmethod
-    def _parseLevelRange(unparsed_elements:Map) -> Optional[range]:
+    def _parseLevelRange(unparsed_elements:Map, schema_name:Optional[str]=None) -> Optional[range]:
         ret_val : Optional[range] = GeneratorCollectionConfig._DEFAULT_LEVEL_RANGE
 
         level_range = GeneratorCollectionConfig.ParseElement(
@@ -502,7 +504,8 @@ class GeneratorCollectionConfig(Config):
             valid_keys=["level_range"],
             to_type=dict,
             default_value=None,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
 
         if isinstance(level_range, dict):

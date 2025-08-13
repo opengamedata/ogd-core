@@ -50,14 +50,14 @@ class CoreConfig(Schema):
         """
         unparsed_elements : Map = other_elements or {}
 
-        self._log_file       : bool               = log_file       or self._parseLogFile(unparsed_elements=unparsed_elements)
-        self._batch_size     : int                = batch_size     or self._parseBatchSize(unparsed_elements=unparsed_elements)
-        self._dbg_level      : int                = dbg_level      or self._parseDebugLevel(unparsed_elements=unparsed_elements)
-        self._fail_fast      : bool               = fail_fast      or self._parseFailFast(unparsed_elements=unparsed_elements)
-        self._with_profiling : bool               = with_profiling or self._parseProfiling(unparsed_elements=unparsed_elements)
-        self._file_idx       : RepositoryIndexingConfig   = file_idx       or self._parseFileIndexing(unparsed_elements=unparsed_elements)
-        self._data_src       : Dict[str, DataStoreConfig] = data_src or self._parseDataSources(unparsed_elements=unparsed_elements)
-        self._game_src_map   : Dict[str, GameStoreConfig] = game_src_map or self._parseGameSourceMap(unparsed_elements=unparsed_elements)
+        self._log_file       : bool               = log_file       or self._parseLogFile(unparsed_elements=unparsed_elements, schema_name=name)
+        self._batch_size     : int                = batch_size     or self._parseBatchSize(unparsed_elements=unparsed_elements, schema_name=name)
+        self._dbg_level      : int                = dbg_level      or self._parseDebugLevel(unparsed_elements=unparsed_elements, schema_name=name)
+        self._fail_fast      : bool               = fail_fast      or self._parseFailFast(unparsed_elements=unparsed_elements, schema_name=name)
+        self._with_profiling : bool               = with_profiling or self._parseProfiling(unparsed_elements=unparsed_elements, schema_name=name)
+        self._file_idx       : RepositoryIndexingConfig   = file_idx       or self._parseFileIndexing(unparsed_elements=unparsed_elements, schema_name=name)
+        self._data_src       : Dict[str, DataStoreConfig] = data_src or self._parseDataSources(unparsed_elements=unparsed_elements, schema_name=name)
+        self._game_src_map   : Dict[str, GameStoreConfig] = game_src_map or self._parseGameSourceMap(unparsed_elements=unparsed_elements, schema_name=name)
         
         # Set up data store configs and table schemas for each game source mapping
         for game, cfg in self._game_src_map.items():
@@ -172,34 +172,37 @@ class CoreConfig(Schema):
                           file_idx=None, data_src=None, game_src_map=None, other_elements=unparsed_elements)
 
     @staticmethod
-    def _parseLogFile(unparsed_elements:Map) -> bool:
+    def _parseLogFile(unparsed_elements:Map, schema_name:Optional[str]=None) -> bool:
         return CoreConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=['LOG_FILE'],
             to_type=bool,
             default_value=CoreConfig._DEFAULT_LOG_FILE,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
 
     @staticmethod
-    def _parseBatchSize(unparsed_elements:Map) -> int:
+    def _parseBatchSize(unparsed_elements:Map, schema_name:Optional[str]=None) -> int:
         return CoreConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=['BATCH_SIZE'],
             to_type=int,
             default_value=CoreConfig._DEFAULT_BATCH_SIZE,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
 
     @staticmethod
-    def _parseDebugLevel(unparsed_elements:Map) -> int:
+    def _parseDebugLevel(unparsed_elements:Map, schema_name:Optional[str]=None) -> int:
         ret_val : int
         raw_level : str = CoreConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=['DEBUG_LEVEL'],
             to_type=str,
             default_value=CoreConfig._DEFAULT_DBG_STR,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
         match raw_level.upper():
             case "ERROR":
@@ -216,27 +219,29 @@ class CoreConfig(Schema):
         return ret_val
 
     @staticmethod
-    def _parseFailFast(unparsed_elements:Map) -> bool:
+    def _parseFailFast(unparsed_elements:Map, schema_name:Optional[str]=None) -> bool:
         return CoreConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=['FAIL_FAST'],
             to_type=bool,
             default_value=CoreConfig._DEFAULT_FAIL_FAST,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
 
     @staticmethod
-    def _parseProfiling(unparsed_elements:Map) -> bool:
+    def _parseProfiling(unparsed_elements:Map, schema_name:Optional[str]=None) -> bool:
         return CoreConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=['WITH_PROFILING'],
             to_type=bool,
             default_value=CoreConfig._DEFAULT_FAIL_FAST,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
 
     @staticmethod
-    def _parseFileIndexing(unparsed_elements:Map) -> RepositoryIndexingConfig:
+    def _parseFileIndexing(unparsed_elements:Map, schema_name:Optional[str]=None) -> RepositoryIndexingConfig:
         ret_val : RepositoryIndexingConfig
 
         raw_indexing = CoreConfig.ParseElement(
@@ -244,7 +249,8 @@ class CoreConfig(Schema):
             valid_keys=['REPOSITORY_CONFIG', 'FILE_INDEXING'],
             to_type=dict,
             default_value=None,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
 
         if isinstance(raw_indexing, dict):
@@ -255,7 +261,7 @@ class CoreConfig(Schema):
         return ret_val
 
     @staticmethod
-    def _parseDataSources(unparsed_elements:Map) -> Dict[str, DataStoreConfig]:
+    def _parseDataSources(unparsed_elements:Map, schema_name:Optional[str]=None) -> Dict[str, DataStoreConfig]:
         ret_val : Dict[str, DataStoreConfig]
 
         raw_sources = CoreConfig.ParseElement(
@@ -263,7 +269,8 @@ class CoreConfig(Schema):
             valid_keys=['DATA_SOURCES', 'GAME_SOURCES'],
             to_type=dict,
             default_value=None,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
         if isinstance(raw_sources, dict):
             ret_val = {}
@@ -284,7 +291,7 @@ class CoreConfig(Schema):
         return ret_val
 
     @staticmethod
-    def _parseGameSourceMap(unparsed_elements:Map) -> Dict[str, GameStoreConfig]:
+    def _parseGameSourceMap(unparsed_elements:Map, schema_name:Optional[str]=None) -> Dict[str, GameStoreConfig]:
         ret_val : Dict[str, GameStoreConfig]
 
         raw_mappings = CoreConfig.ParseElement(
@@ -292,9 +299,10 @@ class CoreConfig(Schema):
             valid_keys=['GAME_SOURCE_MAP'],
             to_type=dict,
             default_value=None,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
-        if isinstance(map, dict):
+        if isinstance(raw_mappings, dict):
             ret_val = { key : GameStoreConfig.FromDict(name=key, unparsed_elements=val) for key, val in raw_mappings.items() }
         else:
             ret_val = {}

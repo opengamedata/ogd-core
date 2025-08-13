@@ -60,8 +60,8 @@ class IteratedConfig(ExtractorConfig):
         """
         unparsed_elements : Map = other_elements or {}
 
-        self._count  : int | str = count  or self._parseCount(unparsed_elements=unparsed_elements)
-        self._prefix : str       = prefix or self._parsePrefix(unparsed_elements=unparsed_elements)
+        self._count  : int | str = count  or self._parseCount(unparsed_elements=unparsed_elements, schema_name=name)
+        self._prefix : str       = prefix or self._parsePrefix(unparsed_elements=unparsed_elements, schema_name=name)
 
         super().__init__(name=name, return_type=return_type, subfeatures=subfeatures, enabled=enabled, type_name=type_name, description=description, other_elements=unparsed_elements)
 
@@ -122,23 +122,25 @@ class IteratedConfig(ExtractorConfig):
     # *** PRIVATE STATICS ***
 
     @staticmethod
-    def _parseCount(unparsed_elements:Map) -> int | str:
+    def _parseCount(unparsed_elements:Map, schema_name:Optional[str]=None) -> int | str:
         return IteratedConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=["count"],
             to_type=[int, str],
             default_value=IteratedConfig._DEFAULT_COUNT,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
 
     @staticmethod
-    def _parsePrefix(unparsed_elements:Map) -> str:
+    def _parsePrefix(unparsed_elements:Map, schema_name:Optional[str]=None) -> str:
         return IteratedConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=["prefix"],
             to_type=str,
             default_value=IteratedConfig._DEFAULT_PREFIX,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
 
     # *** PRIVATE METHODS ***
