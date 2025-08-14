@@ -235,7 +235,7 @@ class FeatureManager:
 
             self._latest_features : FeatureSet = FeatureSet(features=[], filters=DatasetFilterCollection())
             if self._population:
-               self._latest_features += self._population.GetFeatures(order=None)
+                self._latest_features += self._population.GetFeatures(order=None)
             # for some reason, this didn't work as sum over list of lists, so get sessions manually with a normal loop:
             if self._players:
                 for player_id,player in self._players.items():
@@ -243,7 +243,7 @@ class FeatureManager:
                         self._latest_features += player.GetFeatures(order=None)
             if self._sessions:
                 for player_name,session_list in self._sessions.items():
-                     if (session_id != "null" or self._used_null_sess[player_name]):
-                          for session_id,session in session_list.items():
+                    for session_id,session in session_list.items():
+                        if (session_id != "null" or self._used_null_sess[player_name]):
                             self._latest_features += session.GetFeatures(order=None)
             self._up_to_date = True
