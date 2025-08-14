@@ -25,13 +25,13 @@ class AveragePhosphorusViewTime(Extractor):
         pass
 
     def _updateFromFeature(self, feature: Feature):
-        if feature.ExportMode == self.ExtractionMode:
+        if feature.ExportMode == self.ExtractMode:
             match feature.Name:
                 case "PhosphorusViewTime":
                     idx = feature.FeatureNames.index("PhosphorusViewTime-Seconds")
-                    self._phos_time = feature.FeatureValues[idx]
+                    self._phos_time = feature.Values[idx]
                 case "PhosphorusViewCount":
-                    self._phos_count = feature.FeatureValues[0]
+                    self._phos_count = feature.Values[0]
 
     def _getFeatureValues(self) -> List[Any]:
         if self._phos_time is not None and self._phos_count is not None and self._phos_count > 0:

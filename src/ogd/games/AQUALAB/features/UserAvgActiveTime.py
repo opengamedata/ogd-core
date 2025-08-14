@@ -29,10 +29,10 @@ class UserAvgActiveTime(SessionFeature):
 
     def _updateFromFeature(self, feature:Feature):
         if feature.PlayerID == self._player_id:
-            if feature.FeatureValues[0] == "No events":
+            if feature.Values[0] == "No events":
                 pass
             else:
-                self._times.append(feature.FeatureValues[0]/timedelta(seconds=1))
+                self._times.append(feature.Values[0]/timedelta(seconds=1))
 
     def _getFeatureValues(self) -> List[Any]:
         if len(self._times) > 0:

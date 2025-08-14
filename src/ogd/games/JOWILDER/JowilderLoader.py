@@ -11,7 +11,7 @@ from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.games.JOWILDER.features import *
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.common.utils.Logger import Logger
 
 class JowilderLoader(GeneratorLoader):
@@ -22,7 +22,7 @@ class JowilderLoader(GeneratorLoader):
     def _getFeaturesModule():
         return features
 
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Extractor]:
+    def _loadExtractor(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Extractor]:
         ret_val : Optional[Extractor] = None
         match feature_type:
             case "QuestionAnswers":

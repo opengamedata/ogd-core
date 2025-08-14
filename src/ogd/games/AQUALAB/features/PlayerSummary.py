@@ -42,17 +42,17 @@ class PlayerSummary(SessionFeature):
                     "num_sessions": 0
                 }
             if feature.FeatureType == "JobsCompleted":
-                self._summary[user_id]["jobs_completed"] = feature.FeatureValues[0]
+                self._summary[user_id]["jobs_completed"] = feature.Values[0]
             elif feature.FeatureType == "SessionDuration":
-                if isinstance(feature.FeatureValues[0], timedelta):
-                    self._summary[user_id]["active_time"] += feature.FeatureValues[0].total_seconds()
-                elif isinstance(feature.FeatureValues[0], str) and feature.FeatureValues[0] == "No events":
+                if isinstance(feature.Values[0], timedelta):
+                    self._summary[user_id]["active_time"] += feature.Values[0].total_seconds()
+                elif isinstance(feature.Values[0], str) and feature.Values[0] == "No events":
                     pass
                 else:
-                    raise ValueError(f"PlayerSummary got {feature.Name} feature with value {feature.FeatureValues[0]} of non-timedelta type {type(feature.FeatureValues[0])} in the {feature.FeatureNames[0]} column!")
+                    raise ValueError(f"PlayerSummary got {feature.Name} feature with value {feature.Values[0]} of non-timedelta type {type(feature.Values[0])} in the {feature.FeatureNames[0]} column!")
         elif feature.ExportMode == ExtractionMode.SESSION:
             if feature.FeatureType == "SessionID":
-                self._summary[user_id]["sessions"].append(feature.FeatureValues[0])
+                self._summary[user_id]["sessions"].append(feature.Values[0])
 
 
     def _getFeatureValues(self) -> List[Any]:

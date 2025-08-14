@@ -6,7 +6,7 @@ from typing import Any, Callable, Dict, List, Optional
 # OGD imports
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.common.utils.fileio import loadJSONFile
 from ogd.common.utils.Logger import Logger
 # import local files
@@ -66,7 +66,7 @@ class ThermoLabLoader(GeneratorLoader):
     def _getFeaturesModule():
         return features
 
-    def _loadFeature(self, feature_type: str, extractor_params: GeneratorParameters, schema_args: Dict[str, Any]) -> Optional[Extractor]:
+    def _loadExtractor(self, feature_type: str, extractor_params: GeneratorParameters, schema_args: Dict[str, Any]) -> Optional[Extractor]:
         ret_val: Optional[Extractor] = None
         # First run through aggregate features
         if extractor_params._count_index is None:

@@ -9,7 +9,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.legacy.LegacyFeature import LegacyFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 
 ## @class MagnetExtractor
 #  Extractor subclass for extracting features from Magnet game data.
@@ -45,7 +45,7 @@ class MagnetExtractor(LegacyFeature):
         if level > max_level:
             Logger.Log(f"Got an event with level too high ({level} > max level of {max_level})!\nFull data:\n{str(event)}")
         # Check for invalid row.
-        if self.ExtractionMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
+        if self.ExtractMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
             Logger.Log(f"Got an event with incorrect session id! Expected {self._session_id}, got {event.SessionID}!",
                                 logging.ERROR)
         # If row is valid, process it.

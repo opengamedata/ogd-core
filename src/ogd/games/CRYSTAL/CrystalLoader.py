@@ -9,7 +9,7 @@ from ogd.core.generators.legacy.LegacyLoader import LegacyLoader
 from ogd.games.CRYSTAL.features.CrystalExtractor import CrystalExtractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.common.utils.Logger import Logger
 
 class CrystalLoader(LegacyLoader):
@@ -20,7 +20,7 @@ class CrystalLoader(LegacyLoader):
     def _getFeaturesModule():
         return ogd.games.CRYSTAL.features
 
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Extractor]:
+    def _loadExtractor(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Extractor]:
         return CrystalExtractor(params=extractor_params, generator_config=self._generator_config, session_id=self._session_id)
 
     def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Optional[Detector]:

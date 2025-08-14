@@ -30,30 +30,30 @@ class JobTasksCompleted(PerJobFeature):
         _task = event.EventData.get("task_id", "TASK NAME NOT FOUND")
         if _task in self._completed_tasks:
             Logger.Log(f"Player {event.UserID} repeated task {_task} in job {event.GameState.get("job_name")}!", logging.WARN)
-        match self.ExtractionMode:
+        match self.ExtractMode:
             case ExtractionMode.POPULATION:
                 self._task_counter[_task] += 1
             case ExtractionMode.PLAYER | ExtractionMode.SESSION:
                 self._completed_tasks.append(_task)
             case _:
-                raise ValueError(f"JobTasksCompleted was given an invalid extraction mode of {self.ExtractionMode}!")
+                raise ValueError(f"JobTasksCompleted was given an invalid extraction mode of {self.ExtractMode}!")
         _task = event.EventData.get("task_id", "TASK NAME NOT FOUND")
         if _task in self._completed_tasks:
             Logger.Log(f"Player {event.UserID} repeated task {_task} in job {event.GameState.get("job_name")}!", logging.WARN)
-        match self.ExtractionMode:
+        match self.ExtractMode:
             case ExtractionMode.POPULATION:
                 self._task_counter[_task] += 1
             case ExtractionMode.PLAYER | ExtractionMode.SESSION:
                 self._completed_tasks.append(_task)
             case _:
-                raise ValueError(f"JobTasksCompleted was given an invalid extraction mode of {self.ExtractionMode}!")
+                raise ValueError(f"JobTasksCompleted was given an invalid extraction mode of {self.ExtractMode}!")
 
     def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        _base_val = self._task_counter         if self.ExtractionMode == ExtractionMode.POPULATION else self._completed_tasks
-        _count    = self._task_counter.total() if self.ExtractionMode == ExtractionMode.POPULATION else len(self._completed_tasks)
+        _base_val = self._task_counter         if self.ExtractMode == ExtractionMode.POPULATION else self._completed_tasks
+        _count    = self._task_counter.total() if self.ExtractMode == ExtractionMode.POPULATION else len(self._completed_tasks)
         return [_base_val, _count]
 
     def Subfeatures(self) -> List[str]:

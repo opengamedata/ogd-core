@@ -50,9 +50,9 @@ class GeneratorConfig(Config):
         self._type_name   : str
         self._description : str
 
-        self._enabled     = enabled     or GeneratorConfig._parseEnabled(unparsed_elements=unparsed_elements)
-        self._type_name   = type_name   or GeneratorConfig._parseType(unparsed_elements=unparsed_elements)
-        self._description = description or GeneratorConfig._parseDescription(unparsed_elements=unparsed_elements)
+        self._enabled     = enabled     or GeneratorConfig._parseEnabled(unparsed_elements=unparsed_elements, schema_name=name)
+        self._type_name   = type_name   or GeneratorConfig._parseType(unparsed_elements=unparsed_elements, schema_name=name)
+        self._description = description or GeneratorConfig._parseDescription(unparsed_elements=unparsed_elements, schema_name=name)
 
         super().__init__(name=name, other_elements=unparsed_elements)
 
@@ -69,17 +69,18 @@ class GeneratorConfig(Config):
         return self._description
     
     @staticmethod
-    def _parseType(unparsed_elements:Map):
+    def _parseType(unparsed_elements:Map, schema_name:Optional[str]=None) -> str:
         return GeneratorConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=["type"],
             to_type=str,
             default_value=GeneratorConfig._DEFAULT_TYPE,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
 
     @staticmethod
-    def _parseEnabled(unparsed_elements:Map) -> Set[ExtractionMode]:
+    def _parseEnabled(unparsed_elements:Map, schema_name:Optional[str]=None) -> Set[ExtractionMode]:
         ret_val : Set[ExtractionMode] = set()
 
         enabled = GeneratorConfig.ParseElement(
@@ -87,7 +88,8 @@ class GeneratorConfig(Config):
             valid_keys=['enabled'],
             to_type=[bool, list],
             default_value=GeneratorConfig._DEFAULT_ENABLED,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
         if isinstance(enabled, bool):
             if enabled:
@@ -114,11 +116,12 @@ class GeneratorConfig(Config):
         return ret_val
     
     @staticmethod
-    def _parseDescription(unparsed_elements:Map) -> str:
+    def _parseDescription(unparsed_elements:Map, schema_name:Optional[str]=None) -> str:
         return GeneratorConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=['description'],
             to_type=str,
             default_value=GeneratorConfig._DEFAULT_DESCRIPTION,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )

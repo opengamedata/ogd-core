@@ -1,16 +1,14 @@
 # import standard libraries
 import logging
-import traceback
-from typing import List, Dict, Type, Optional, Set
+from typing import List, Type, Optional
 # import local files
-from ogd.common.models.Feature import Feature
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.common.models.Event import Event
-from ogd.common.models.enums.ExportMode import ExportMode
+from ogd.common.models.FeatureSet import FeatureSet
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import ExportRow
 
@@ -21,7 +19,7 @@ class SessionProcessor(ExtractorProcessor):
     # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the SessionProcessor class.
-    def __init__(self, LoaderClass:Type[GeneratorLoader], game_schema: GameSchema, player_id:str, session_id:str,
+    def __init__(self, LoaderClass:Type[GeneratorLoader], generator_cfg:GeneratorCollectionConfig, player_id:str, session_id:str,
                  feature_overrides:Optional[List[str]]=None):
         """Constructor for the SessionProcessor class.
         Simply stores some data for use later, including the type of extractor to
@@ -31,7 +29,7 @@ class SessionProcessor(ExtractorProcessor):
                             This should correspond to whatever game_id is in the TableSchema.
         :type LoaderClass: Type[GeneratorLoader]
         :param game_schema: A dictionary that defines how the game data itself is structured.
-        :type game_schema: GameSchema
+        :type game_schema: GameScGameStoreConfig
         :param player_id: _description_
         :type player_id: str
         :param session_id: _description_
@@ -45,7 +43,7 @@ class SessionProcessor(ExtractorProcessor):
         self._session_id   : str = session_id
         self._player_id    : str = player_id
         # NOTE: need session and player IDs set before we do initialization in parent.
-        super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
+        super().__init__(LoaderClass=LoaderClass, generator_cfg=generator_cfg, feature_overrides=feature_overrides)
 
     def __str__(self):
         return f"SessionProcessor({self._player_id}, {self._session_id})"
@@ -89,8 +87,8 @@ class SessionProcessor(ExtractorProcessor):
         ret_val = [self._playerID, self._sessionID] + self._registry.GetFeatureValues()
         return [ret_val]
 
-    def _getFeature(self, order:int) -> List[Feature]:
-        return self._registry.GetFeature(order=order, player_id=self._player_id, sess_id=self._session_id)
+    def _getFeatures(self, order:int, app_id:Optional[str]=None) -> FeatureSet:
+        return self._registry.GetFeatures(order=order, app_id=app_id, player_id=self._player_id, sess_id=self._session_id)
 
     def _clearLines(self) -> None:
         Logger.Log(f"Clearing features from SessionProcessor for player {self._player_id}, session {self._session_id}.", logging.DEBUG, depth=2)

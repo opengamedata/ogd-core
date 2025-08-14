@@ -33,11 +33,11 @@ class JobQuitsPerComplete(Extractor):
         return 
     
     def _updateFromFeature(self, feature:Feature):
-        if feature.ExportMode == self.ExtractionMode:
+        if feature.ExportMode == self.ExtractMode:
             if feature.Name == "TotalJobQuits":
-                self._total_job_quits = feature.FeatureValues[0]
+                self._total_job_quits = feature.Values[0]
             elif feature.Name == "JobsCompleted":
-                self._jobs_completed = feature.FeatureValues[0]
+                self._jobs_completed = feature.Values[0]
 
     def _getFeatureValues(self) -> List[Any]:
         if self._jobs_completed != 0:

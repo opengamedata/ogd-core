@@ -14,7 +14,7 @@ from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.common.utils import fileio
 from ogd.common.utils.Logger import Logger
 from . import features
@@ -78,7 +78,7 @@ class AqualabLoader(GeneratorLoader):
     def _getFeaturesModule() -> ModuleType:
         return features
 
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Extractor]:
+    def _loadExtractor(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Extractor]:
         ret_val : Optional[Extractor] = None
         # First run through aggregate features
         if extractor_params._count_index is None:

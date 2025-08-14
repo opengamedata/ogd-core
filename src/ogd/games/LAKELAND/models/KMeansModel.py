@@ -38,17 +38,17 @@
 #         print("\n\n\nInside _updateFromFeature of KMeansModel")
 #         if hasattr(feature, 'ExtractionMode') and feature.ExtractionMode == ExtractionMode.SESSION:
 #             if feature.Name == "CropBuildCount":
-#                 self._crop_build_count.append(feature.FeatureValues[0])
+#                 self._crop_build_count.append(feature.Values[0])
 #             elif feature.Name == "DairyBuildCount":
-#                 self._dairy_build_count.append(feature.FeatureValues[0])
+#                 self._dairy_build_count.append(feature.Values[0])
 #             elif feature.Name == "HouseBuildCount":
-#                 self._house_build_count.append(feature.FeatureValues[0])
+#                 self._house_build_count.append(feature.Values[0])
 #             elif feature.Name == "HoversBeforeCropPlacement":
-#                 self._hovers_before_crop_placement.append(feature.FeatureValues[0])
+#                 self._hovers_before_crop_placement.append(feature.Values[0])
 #             elif feature.Name == "TotalBuildCount":
-#                 self._total_build_count.append(feature.FeatureValues[0])
+#                 self._total_build_count.append(feature.Values[0])
 
-#             Logger.Log(f"[KMeansModel] Received feature: {feature.Name} = {feature.FeatureValues[0]}", logging.DEBUG)
+#             Logger.Log(f"[KMeansModel] Received feature: {feature.Name} = {feature.Values[0]}", logging.DEBUG)
 
 
 #     def _updateFromEvent(self, event):
@@ -118,7 +118,7 @@
 #         input_features = {}
         
 #         for feature_data in apply_to:
-#             if feature_data.ExportMode == self.ExtractionMode:
+#             if feature_data.ExportMode == self.ExtractMode:
 #                 if feature_data.Name == "CropBuildCount":
 #                     input_features["CropBuildCount"] = feature_data.FeatureValues[0]
 #                 elif feature_data.Name == "DairyBuildCount":
@@ -130,7 +130,7 @@
 #                 elif feature_data.Name == "TotalBuildCount":
 #                     input_features["TotalBuildCount"] = feature_data.FeatureValues[0]
     
-#         required_features = self._featureFilter(self.ExtractionMode)
+#         required_features = self._featureFilter(self.ExtractMode)
 #         if len(input_features) != len(required_features):
 #             raise ValueError(f"Missing required features. Got {list(input_features.keys())}, need {required_features}")
         
@@ -152,7 +152,7 @@
         
 #         result_feature = apply_to[0] if apply_to else None
 #         if result_feature:
-#             result_feature.FeatureValues = [cluster_assignment]
+#             result_feature.Values = [cluster_assignment]
 #             result_feature.Name = "PredictedCluster"
         
 #         return result_feature
@@ -495,9 +495,9 @@ class KMeansModel(PopulationModel):
         ]
 
     def _updateFromFeatureData(self, feature: Feature):
-        if feature.ExportMode == self.ExtractionMode:
+        if feature.ExportMode == self.ExtractMode:
             try:
-                value_as_string = str(feature.FeatureValues[0])
+                value_as_string = str(feature.Values[0])
                 numeric_value = int(value_as_string.split()[-1])
             except (ValueError, IndexError):
                 numeric_value = 0
@@ -603,10 +603,10 @@ class KMeansModel(PopulationModel):
         input_features = {}
         for feature_data in apply_to:
             print("feature_data:", feature_data)
-            if feature_data.ExportMode == self.ExtractionMode:
+            if feature_data.ExportMode == self.ExtractMode:
                 input_features[feature_data.Name] = feature_data.FeatureValues[0]
 
-        required_features = self._featureFilter(self.ExtractionMode)
+        required_features = self._featureFilter(self.ExtractMode)
         if len(input_features) != len(required_features):
             raise ValueError(f"Missing required features. Got {list(input_features.keys())}, need {required_features}")
 
@@ -621,7 +621,7 @@ class KMeansModel(PopulationModel):
 
         result_feature = apply_to[0] if apply_to else None
         if result_feature:
-            result_feature.FeatureValues = [cluster_assignment]
+            result_feature.Values = [cluster_assignment]
             result_feature.Name = "PredictedCluster"
 
         return result_feature

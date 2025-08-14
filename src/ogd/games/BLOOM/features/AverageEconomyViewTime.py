@@ -25,13 +25,13 @@ class AverageEconomyViewTime(Extractor):
         pass
 
     def _updateFromFeature(self, feature: Feature):
-        if feature.ExportMode == self.ExtractionMode:
+        if feature.ExportMode == self.ExtractMode:
             match feature.Name:
                 case "EconomyViewTime":
                     idx = feature.FeatureNames.index("EconomyViewTime-Seconds")
-                    self._econ_time = feature.FeatureValues[idx]
+                    self._econ_time = feature.Values[idx]
                 case "EconomyViewCount":
-                    self._econ_count = feature.FeatureValues[0]
+                    self._econ_count = feature.Values[0]
 
     def _getFeatureValues(self) -> List[Any]:
         if self._econ_time is not None and self._econ_count is not None and self._econ_count > 0:

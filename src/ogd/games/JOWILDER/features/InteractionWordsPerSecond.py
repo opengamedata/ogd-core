@@ -92,7 +92,7 @@ class InteractionWordsPerSecond(PerCountFeature):
             return
         if feature.CountIndex != self.CountIndex:
             return
-        _words = feature.FeatureValues[2]
+        _words = feature.Values[2]
         
         self._words_persecond = _words/np.mean(self._interaction_time)
         self._first_encounter = _words/self._interaction_time[0]

@@ -1,25 +1,25 @@
 # import libraries
-from typing import Any, Callable, Dict, List, Type, Optional
+from typing import Callable, Dict, List, Type, Optional
 # import locals
-from ogd.core.registries.DetectorRegistry import DetectorRegistry
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.processors.GeneratorProcessor import GeneratorProcessor
+from ogd.core.registries.DetectorRegistry import DetectorRegistry
 from ogd.common.models.Event import Event
 from ogd.common.models.Feature import Feature
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.utils.typing import ExportRow
 
 class DetectorProcessor(GeneratorProcessor):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_schema: GameSchema, LoaderClass: Type[GeneratorLoader], trigger_callback:Callable[[Event], None],
+    def __init__(self, generator_cfg:GeneratorCollectionConfig, LoaderClass: Type[GeneratorLoader], trigger_callback:Callable[[Event], None],
                  feature_overrides:Optional[List[str]]=None):
         # TODO: Consider having multiple registries for per-player or per-session kinds of things.
-        super().__init__(game_schema=game_schema, LoaderClass=LoaderClass, feature_overrides=feature_overrides)
+        super().__init__(generator_cfg=generator_cfg, LoaderClass=LoaderClass, feature_overrides=feature_overrides)
         self._registry = DetectorRegistry(mode=self._mode, trigger_callback=trigger_callback)
-        self._registry.LoadFromSchema(schema=game_schema, loader=self._loader, overrides=feature_overrides)
+        self._registry.LoadGenerators(generator_cfg=generator_cfg, loader=self._loader, overrides=feature_overrides)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
@@ -35,7 +35,7 @@ class DetectorProcessor(GeneratorProcessor):
     def _sessionID(self) -> str:
         return "detectors"
 
-    def _getGeneratorNames(self, order:int) -> Dict[str,List[Feature]]:
+    def _getGeneratorNames(self) -> Dict[str,List[Feature]]:
         raise NotImplementedError("Function stub! Haven't written name getter for detector processor.")
 
     def _processEvent(self, event:Event):
@@ -47,7 +47,7 @@ class DetectorProcessor(GeneratorProcessor):
 
     def _clearLines(self):
         if self._registry is not None:
-            self._registry.LoadFromSchema(schema=self._game_schema, loader=self._loader, overrides=self._overrides)
+            self._registry.LoadGenerators(generator_cfg=self._generator_cfg, loader=self._loader, overrides=self._overrides)
 
     # *** PUBLIC STATICS ***
 

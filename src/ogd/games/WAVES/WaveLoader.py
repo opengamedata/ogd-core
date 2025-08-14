@@ -10,7 +10,7 @@ from ogd.games.WAVES.features import *
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.common.utils.Logger import Logger
 
 ## @class WaveExtractor
@@ -23,7 +23,7 @@ class WaveLoader(GeneratorLoader):
     def _getFeaturesModule():
         return features
     
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Extractor]:
+    def _loadExtractor(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Extractor]:
         ret_val : Optional[Extractor] = None
         # Session-level features.
         if extractor_params._count_index is None:

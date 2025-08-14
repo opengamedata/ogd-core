@@ -7,12 +7,12 @@ from collections import defaultdict
 from datetime import timedelta
 from typing import Any, Dict, List, Optional, Union
 ## import local files
-from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
-from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
+from ogd.common.utils.Logger import Logger
 
 LegacyFeatureType = Union[int,float,timedelta,Dict[int,Dict[str,Any]]]
 
@@ -40,16 +40,18 @@ class LegacyFeature(Extractor):
         The constructor sets an extractor's session id and range of levels,
         as well as initializing the features dictionary and list of played levels.
 
-        :param session_id: The id of the session from which we will extract features.
-        :type session_id: int
-        :param game_schema: A dictionary that defines how the game data itself is structured
-        :type game_schema: GameSchema
+        :param params: _description_
+        :type params: GeneratorParameters
+        :param generator_config: _description_
+        :type generator_config: GeneratorCollectionConfig
+        :param session_id: _description_
+        :type session_id: str
         """
         self._session_id  : str         = session_id
         self._generator_config : GeneratorCollectionConfig  = generator_config
         self._levels      : List[int]   = []
         self._sequences   : List        = []
-        self._features    : LegacyFeature.LegacySessionFeatures = LegacyFeature.LegacySessionFeatures(game_schema=generator_config)
+        self._features    : LegacyFeature.LegacySessionFeatures = LegacyFeature.LegacySessionFeatures(generator_cfg=generator_config)
         super().__init__(params=params)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -122,19 +124,19 @@ class LegacyFeature(Extractor):
     #  the actual extractor code easier to read/write, since there is less need
     #  to understand the structure of feature data.
     class LegacySessionFeatures:
-        def __init__(self, game_schema: GameSchema):
+        def __init__(self, generator_cfg:GeneratorCollectionConfig):
             self._features       : Dict[str, LegacyFeatureType] = {}
-            self._perlevel_names : List[str] = list(game_schema._legacy_perlevel_feats.keys())
+            self._perlevel_names : List[str] = list(generator_cfg.LegacyPerLevelFeatures.keys())
 
-            _perlevels = game_schema._legacy_perlevel_feats
-            _level_range = range(game_schema._min_level   if game_schema._min_level is not None else 0,
-                                 game_schema._max_level+1 if game_schema._max_level is not None else 1)
+            _perlevels = generator_cfg.LegacyPerLevelFeatures
+            _level_range = range(generator_cfg.LevelRange.start or 0 if generator_cfg.LevelRange is not None else 0,
+                                 generator_cfg.LevelRange.stop  or 1 if generator_cfg.LevelRange is not None else 1)
             self._features.update({f:{lvl:{"val":None, "prefix":"lvl"} for lvl in _level_range } for f in _perlevels.keys()})
             # next, do something similar for other per-custom-count features.
-            _percounts = game_schema.PerCountFeatures
+            _percounts = generator_cfg.IteratedExtractors
             self._features.update({f:{num:{"val":None, "prefix":_percounts[f].Prefix} for num in range(0, int(_percounts[f].Count)) } for f in _percounts.keys()})
             # finally, add in aggregate-only features.
-            self._features.update({f:0 for f in game_schema.AggregateFeatures.keys()})
+            self._features.update({f:0 for f in generator_cfg.AggregateExtractors.keys()})
 
         @property
         def Features(self):

@@ -62,8 +62,8 @@ class DetectorMapConfig(Config):
         :param other_elements: _description_, defaults to None
         :type other_elements: Optional[Map], optional
         """
-        self._iterated_detectors  : Dict[str, DetectorConfig] = percount_detectors or self._parseIteratedDetectors(unparsed_elements=other_elements or {})
-        self._aggregate_detectors : Dict[str, DetectorConfig] = aggregate_detectors or self._parseAggregateDetectors(unparsed_elements=other_elements or {})
+        self._iterated_detectors  : Dict[str, DetectorConfig] = percount_detectors or self._parseIteratedDetectors(unparsed_elements=other_elements or {}, schema_name=name)
+        self._aggregate_detectors : Dict[str, DetectorConfig] = aggregate_detectors or self._parseAggregateDetectors(unparsed_elements=other_elements or {}, schema_name=name)
 
         super().__init__(name=name, other_elements=other_elements)
 
@@ -171,7 +171,7 @@ class DetectorMapConfig(Config):
     # *** PRIVATE STATICS ***
 
     @staticmethod
-    def _parseIteratedDetectors(unparsed_elements:Map) -> Dict[str, DetectorConfig]:
+    def _parseIteratedDetectors(unparsed_elements:Map, schema_name:Optional[str]=None) -> Dict[str, DetectorConfig]:
         ret_val : Dict[str, DetectorConfig]
 
         percounts = DetectorMapConfig.ParseElement(
@@ -179,7 +179,8 @@ class DetectorMapConfig(Config):
             valid_keys=["iterated", "per_count", "percount"],
             to_type=dict,
             default_value=DetectorMapConfig._DEFAULT_ITERATED_DETECTORS,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
         if isinstance(percounts, dict):
             ret_val = { key : DetectorConfig.FromDict(name=key, unparsed_elements=val) for key,val in percounts.items() }
@@ -189,7 +190,7 @@ class DetectorMapConfig(Config):
         return ret_val
 
     @staticmethod
-    def _parseAggregateDetectors(unparsed_elements:Map) -> Dict[str, DetectorConfig]:
+    def _parseAggregateDetectors(unparsed_elements:Map, schema_name:Optional[str]=None) -> Dict[str, DetectorConfig]:
         ret_val : Dict[str, DetectorConfig]
 
         aggregates = DetectorMapConfig.ParseElement(
@@ -197,7 +198,8 @@ class DetectorMapConfig(Config):
             valid_keys=["aggregate"],
             to_type=dict,
             default_value=DetectorMapConfig._DEFAULT_AGGREGATE_DETECTORS,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
         if isinstance(aggregates, dict):
             ret_val = {key : DetectorConfig.FromDict(name=key, unparsed_elements=val) for key,val in aggregates.items()}
