@@ -1,7 +1,7 @@
 # import standard libraries
 import logging
 from pathlib import Path
-from typing import Any, Dict, Optional, Self
+from typing import Any, Dict, Final, Optional, Self
 # import local files
 from ogd.common.configs.storage.RepositoryIndexingConfig import RepositoryIndexingConfig
 from ogd.common.configs.GameStoreConfig import GameStoreConfig
@@ -9,23 +9,31 @@ from ogd.common.configs.storage.DataStoreConfig import DataStoreConfig
 from ogd.common.configs.storage.BigQueryConfig import BigQueryConfig
 from ogd.common.configs.storage.FileStoreConfig import FileStoreConfig
 from ogd.common.configs.storage.MySQLConfig import MySQLConfig
+from ogd.common.configs.storage.credentials.KeyCredentialConfig import KeyCredential
 from ogd.common.schemas.Schema import Schema
 from ogd.common.schemas.tables.EventTableSchema import EventTableSchema
 from ogd.common.schemas.tables.FeatureTableSchema import FeatureTableSchema
+from ogd.common.schemas.locations.DatabaseLocationSchema import DatabaseLocationSchema
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import Map
 
 class CoreConfig(Schema):
     """Dumb struct containing properties for each standard OGD-core config item.
     """
-    _DEFAULT_LOG_FILE = False
-    _DEFAULT_BATCH_SIZE = 500
-    _DEFAULT_DBG_STR = "INFO"
-    _DEFAULT_DBG = logging.INFO
-    _DEFAULT_FAIL_FAST = False
-    _DEFAULT_WITH_PROFILING = False
-    _DEFAULT_FILE_IDX = RepositoryIndexingConfig.Default()
-    _DEFAULT_DATA_SRC = {}
+    _DEFAULT_BATCH_SIZE     : Final[int]  = 500
+    _DEFAULT_LOG_FILE       : Final[bool] = False
+    _DEFAULT_DBG_STR        : Final[str]  = "INFO"
+    _DEFAULT_DBG            : Final[int]  = logging.INFO
+    _DEFAULT_FAIL_FAST      : Final[bool] = False
+    _DEFAULT_WITH_PROFILING : Final[bool] = False
+    _DEFAULT_FILE_IDX       : Final[RepositoryIndexingConfig] = RepositoryIndexingConfig.Default()
+    _DEFAULT_DATA_SRC       : Final[Dict[str, DataStoreConfig]] = {
+        "OPENGAMEDATA_BQ" : BigQueryConfig(
+            name="OPENGAMEDATA_BQ",
+            location=DatabaseLocationSchema(name="OPENGAMEDATA_BQLocation", database_name="wcer-field-day-ogd-1798", table_name=None),
+            credential=KeyCredential(name="OPENGAMEDATA_BQKey", location="./config/ogd.json")
+        )
+    }
     _DEFAULT_GAME_SRC_MAP = {}
 
     def __init__(
