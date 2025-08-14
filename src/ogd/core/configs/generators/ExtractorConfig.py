@@ -110,6 +110,7 @@ class ExtractorConfig(GeneratorConfig):
             to_type=dict,
             default_value=ExtractorConfig._DEFAULT_SUBFEATURES,
             remove_target=True,
+            optional_element=True,
             schema_name=schema_name
         )
         if isinstance(subfeatures, dict):

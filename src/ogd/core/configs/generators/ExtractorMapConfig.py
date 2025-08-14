@@ -226,6 +226,7 @@ class ExtractorMapConfig(Config):
             valid_keys=["perlevel", "per_level"],
             to_type=dict,
             default_value=ExtractorMapConfig._DEFAULT_LEGACY_EXTORS,
+            optional_element=True,
             schema_name=schema_name
         )
         if isinstance(perlevels, dict):
