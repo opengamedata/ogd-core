@@ -203,13 +203,13 @@ class OGDCommands:
 
     # 4. Once we have the parameters parsed out, construct the request.
         req = Request(
-            filters=filters,
             exporter_modes=export_modes,
-            source=source,
-            dest=dest,
-            fail_fast=config.FailFast,
-            repository=repository,
-            feature_overrides=None)
+            filters=filters,
+            global_cfg=config,
+            game_cfg=None,
+            custom_source=source,
+            custom_dest=dest,
+            custom_data_directory=repository)
         if req.Interface.Connector.IsOpen:
             export_manager : ExportManager = ExportManager(config=config)
             result         : RequestResult = export_manager.ExecuteRequest(request=req)
