@@ -9,12 +9,7 @@ from typing import Optional, Set
 
 # import local files
 from ogd.core.requests.Request import ExporterRange
-from ogd.core.configs.CoreConfig import CoreConfig
 from ogd.common.filters.RangeFilter import RangeFilter
-from ogd.common.storage.interfaces.Interface import Interface
-from ogd.common.storage.interfaces.MySQLInterface import MySQLInterface
-from ogd.common.storage.interfaces.BigQueryInterface import BigQueryInterface
-from ogd.common.storage.interfaces.BQFirebaseInterface import BQFirebaseInterface
 from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.common.models.enums.FilterMode import FilterMode
 from ogd.common.utils.Logger import Logger

@@ -12,7 +12,6 @@ from pathlib import Path
 from typing import List, Type, Optional, Set
 
 ## import local files
-from ogd import games
 from ogd.common.filters import *
 from ogd.common.filters.collections import *
 from ogd.common.models.Event import Event
@@ -132,8 +131,6 @@ class ExportManager:
         :param request: The export request being processed
         :type request: Request
         """
-        _games_path  = Path(games.__file__) if Path(games.__file__).is_dir() else Path(games.__file__).parent
-        generator_config  : GeneratorCollectionConfig  = GeneratorCollectionConfig.FromFile(schema_name=f"{request.GameID}.json", schema_path=_games_path / request.GameID / "schemas")
     # 1. Get LoaderClass
         load_class = ExportManager._loadLoaderClass(request.GameID)
         if load_class is None:
@@ -145,13 +142,13 @@ class ExportManager:
 
     # 2. Set up EventManager, assuming it was requested.
         if request.ExportRawEvents or request.ExportProcessedEvents:
-            self._event_mgr = EventManager(generator_cfg=generator_config, LoaderClass=load_class,
+            self._event_mgr = EventManager(generator_cfg=request.Generators, LoaderClass=load_class,
                                            trigger_callback=self._receiveEventTrigger, feature_overrides=None)
         else:
             Logger.Log("Event data not requested, skipping event manager.", logging.INFO, depth=1)
     # 3. Set up FeatureManager, assuming it was requested.
         if request.ExportSessions or request.ExportPlayers or request.ExportPopulation:
-            self._feat_mgr = FeatureManager(generator_config=generator_config, LoaderClass=load_class, feature_overrides=None)
+            self._feat_mgr = FeatureManager(generator_config=request.Generators, LoaderClass=load_class, feature_overrides=None)
         else:
             Logger.Log("Feature data not requested, or extractor loader unavailable, skipping feature manager.", logging.INFO, depth=1)
         self._outputHeaders(request=request)

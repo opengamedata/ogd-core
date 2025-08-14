@@ -14,6 +14,7 @@ from dateutil.parser import parse
 
 # import OGD files
 # from ogd.core.exec.Generators import OGDGenerators
+from ogd import games
 from ogd.core.managers.ExportManager import ExportManager
 from ogd.core.requests.Request import ExporterRange, Request
 from ogd.core.requests.RequestResult import RequestResult, ResultStatus
@@ -140,6 +141,9 @@ class OGDCommands:
         repository : DatasetRepositoryConfig = DatasetRepositoryConfig.Default()
         dataset_id : Optional[DatasetKey | str] = None
 
+        _games_path  = Path(games.__file__) if Path(games.__file__).is_dir() else Path(games.__file__).parent
+        generator_config  : GeneratorCollectionConfig  = GeneratorCollectionConfig.FromFile(schema_name=f"{args.game}.json", schema_path=_games_path / args.game / "schemas")
+
     # 2. figure out the interface and range; optionally set a different dataset_id
         if args.from_source is not None and args.from_source != "":
             # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
@@ -206,7 +210,7 @@ class OGDCommands:
             exporter_modes=export_modes,
             filters=filters,
             global_cfg=config,
-            game_cfg=None,
+            game_cfg=generator_config,
             custom_source=source,
             custom_dest=dest,
             custom_data_directory=repository)
