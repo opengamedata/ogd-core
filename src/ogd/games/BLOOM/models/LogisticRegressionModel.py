@@ -13,12 +13,58 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.models.PopulationModel import PopulationModel
 from ogd.common.utils.Logger import Logger
 from pathlib import Path
+import time
 
+
+# class LogisticRegressionModel(PopulationModel):
+#     def __init__(self, params: GeneratorParameters):
+#         super().__init__(params=params)
+#         print("\n\nInitializing Logistic Regression Model (BLOOM)\n\n")
+
+#         self._economy_view_count = []
+#         self._alert_review_count = []
+#         self._policy_change_count = []
+#         self._game_win = []
+
+#         self._scaler = None
+#         self._model = None
+#         self._processed_data = None
+#         self._accuracy = None
+
+#     @classmethod
+#     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
+#         return [
+#             'EconomyViewCount',
+#             'AlertReviewCount',
+#             'TotalPolicyChangeCount',
+#             'win_game'
+#         ]
+
+#     def _updateFromFeatureData(self, feature: FeatureData):
+#         if feature.ExportMode == self.ExtractionMode:
+#             try:
+#                 value = float(feature.FeatureValues[0]) if feature.FeatureValues[0] else 0
+#             except Exception:
+#                 value = 0
+
+
+#             if feature.Name == "EconomyViewCount":
+#                 self._economy_view_count.append(value)
+#                 # print(f"Processing EconomyViewCount feature: {value}")
+#             elif feature.Name == "AlertReviewCount":
+#                 self._alert_review_count.append(value)
+#             elif feature.Name == "TotalPolicyChangeCount":
+#                 self._policy_change_count.append(value)
+#             elif feature.Name == "win_game":
+#                 print(f"Processing win_game feature: {feature.FeatureValues[0]}")
+#                 print(feature.FeatureValues)
+                
 
 class LogisticRegressionModel(PopulationModel):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         print("\n\nInitializing Logistic Regression Model (BLOOM)\n\n")
+
         self._economy_view_count = []
         self._alert_review_count = []
         self._policy_change_count = []
@@ -35,28 +81,31 @@ class LogisticRegressionModel(PopulationModel):
             'EconomyViewCount',
             'AlertReviewCount',
             'TotalPolicyChangeCount',
-            'win_game'
+            'GameCompletionStatus'
         ]
 
     def _updateFromFeatureData(self, feature: FeatureData):
-        if feature.ExportMode == self.ExtractionMode:
-            try:
-                value = float(feature.FeatureValues[0]) if feature.FeatureValues[0] else 0
-            except Exception:
-                value = 0
+        if feature.ExportMode != self.ExtractionMode:
+            return
 
-            if feature.Name == "EconomyViewCount":
-                self._economy_view_count.append(value)
-            elif feature.Name == "AlertReviewCount":
-                self._alert_review_count.append(value)
-            elif feature.Name == "TotalPolicyChangeCount":
-                self._policy_change_count.append(value)
-            elif feature.Name == "win_game":
-                print(f"Processing win_game feature: {feature.FeatureValues[0]}")
-                # try:
-                #     self._game_win.append(1 if str(feature.FeatureValues[0]).strip().upper() == "WIN" else 0)
-                # except:
-                #     self._game_win.append(0)
+        try:
+            value = float(feature.FeatureValues[0]) if feature.FeatureValues[0] else 0
+        except Exception:
+            value = 0
+
+        name = feature.Name
+
+        if name == "EconomyViewCount":
+            self._economy_view_count.append(value)
+        elif name == "AlertReviewCount":
+            self._alert_review_count.append(value)
+        elif name == "TotalPolicyChangeCount":
+            self._policy_change_count.append(value)
+        elif name == "GameCompletionStatus":
+            if feature.FeatureValues[0] == "WIN":
+                self._game_win.append(1)
+            else:
+                self._game_win.append(0)
 
     def _updateFromEvent(self, event):
         pass
@@ -64,14 +113,7 @@ class LogisticRegressionModel(PopulationModel):
     def _train(self):
         print("\n\nTraining Logistic Regression Model (BLOOM)\n\n")
 
-        X = pd.DataFrame({
-            'EconomyViewCount': self._economy_view_count,
-            'AlertReviewCount': self._alert_review_count,
-            'TotalPolicyChangeCount': self._policy_change_count,
-        })
-        print("df created")
-
-        print("value of x is ",X)
+        print(self._game_win)
 
         min_length = min(
             len(self._economy_view_count),
