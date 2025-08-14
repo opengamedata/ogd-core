@@ -115,6 +115,12 @@ class CoreConfig(Schema):
         Whether to fail the export on errors due to bad data, or ignore the bad data and continue processing.
         """
         return self._fail_fast
+    @FailFast.setter
+    def FailFast(self, enabled:bool) -> None:
+        """
+        Whether to fail the export on errors due to bad data, or ignore the bad data and continue processing.
+        """
+        self._fail_fast = enabled
 
     @property
     def WithProfiling(self) -> bool:
