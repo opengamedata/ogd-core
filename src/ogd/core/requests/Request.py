@@ -100,7 +100,7 @@ class Request(abc.ABC):
         self._filters    : DatasetFilterCollection   = filters
         self._generators : GeneratorCollectionConfig = game_cfg
         self._global_cfg : CoreConfig                = global_cfg
-        self._repository : DatasetRepositoryConfig   = self._toRepository(repository=custom_data_directory)
+        repository       : DatasetRepositoryConfig   = self._toRepository(data_directory=custom_data_directory)
         source = custom_source or self._global_cfg.GameSourceMap.get(self._game_id, GameStoreConfig.Default())
         dest   = custom_dest   or self._global_cfg.GameSourceMap.get(self._game_id, GameStoreConfig.Default())
 
@@ -147,8 +147,8 @@ class Request(abc.ABC):
         return self._range
 
     @property
-    def Overrides(self) -> Optional[List[str]]:
-        return self._feat_overrides
+    def Generators(self) -> GeneratorCollectionConfig:
+        return self._generators
 
     @property
     def ExportRawEvents(self) -> bool:
@@ -181,7 +181,7 @@ class Request(abc.ABC):
         return self.Range.IDs
 
     @staticmethod
-    def _toRepository(data_directory:Optional[DatasetRepositoryConfig | Dict | Path | str], fallbacks:Map) -> DatasetRepositoryConfig:
+    def _toRepository(data_directory:Optional[DatasetRepositoryConfig | Dict | Path | str]) -> DatasetRepositoryConfig:
         ret_val: DatasetRepositoryConfig
 
         if isinstance(data_directory, DatasetRepositoryConfig):
