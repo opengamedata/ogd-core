@@ -119,7 +119,7 @@
 #         input_features = {}
         
 #         for feature_data in apply_to:
-#             if feature_data.ExportMode == self.ExtractionMode:
+#             if feature_data.ExportMode == self.ExtractMode:
 #                 if feature_data.Name == "CropBuildCount":
 #                     input_features["CropBuildCount"] = feature_data.FeatureValues[0]
 #                 elif feature_data.Name == "DairyBuildCount":
@@ -131,7 +131,7 @@
 #                 elif feature_data.Name == "TotalBuildCount":
 #                     input_features["TotalBuildCount"] = feature_data.FeatureValues[0]
     
-#         required_features = self._featureFilter(self.ExtractionMode)
+#         required_features = self._featureFilter(self.ExtractMode)
 #         if len(input_features) != len(required_features):
 #             raise ValueError(f"Missing required features. Got {list(input_features.keys())}, need {required_features}")
         
@@ -361,7 +361,7 @@ class KMeansModel(PopulationModel):
         input_features = {}
         
         for feature_data in apply_to:
-            if feature_data.ExportMode == self.ExtractionMode:
+            if feature_data.ExportMode == self.ExtractMode:
                 if feature_data.Name == "CropBuildCount":
                     input_features["CropBuildCount"] = feature_data.FeatureValues[0]
                 elif feature_data.Name == "DairyBuildCount":
@@ -373,7 +373,7 @@ class KMeansModel(PopulationModel):
                 elif feature_data.Name == "TotalBuildCount":
                     input_features["TotalBuildCount"] = feature_data.FeatureValues[0]
     
-        required_features = self._featureFilter(self.ExtractionMode)
+        required_features = self._featureFilter(self.ExtractMode)
         if len(input_features) != len(required_features):
             raise ValueError(f"Missing required features. Got {list(input_features.keys())}, need {required_features}")
         

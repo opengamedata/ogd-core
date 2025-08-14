@@ -15,7 +15,7 @@ class JobActiveTime(PerJobFeature):
     def __init__(self, params:GeneratorParameters, job_map:dict):
         super().__init__(params=params, job_map=job_map)
         self._total_time = timedelta(0)
-        if self.ExtractionMode == ExtractionMode.PLAYER:
+        if self.ExtractMode == ExtractionMode.PLAYER:
             self._session_id      = None
             self._last_start_time = None
             self._last_event_time = None
@@ -26,14 +26,14 @@ class JobActiveTime(PerJobFeature):
             self._last_event_name = None
             self._last_event_index = None
         else:
-            raise NotImplementedError(f"Got invalid export mode of {self.ExtractionMode.name} in JobActiveTime!")
+            raise NotImplementedError(f"Got invalid export mode of {self.ExtractMode.name} in JobActiveTime!")
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["all_events"]
-        # if self.ExtractionMode == ExtractionMode.PLAYER \
-        # or self.ExtractionMode == ExtractionMode.SESSION:
+        # if self.ExtractMode == ExtractionMode.PLAYER \
+        # or self.ExtractMode == ExtractionMode.SESSION:
         #     return ["all_events"]
         # else:
         #     return []
@@ -41,7 +41,7 @@ class JobActiveTime(PerJobFeature):
     @classmethod
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
-        # if self.ExtractionMode == ExtractionMode.POPULATION:
+        # if self.ExtractMode == ExtractionMode.POPULATION:
         #     return ["JobActiveTime"]
         # else:
         #     return []
@@ -91,10 +91,10 @@ class JobActiveTime(PerJobFeature):
 
     def _updateFromFeature(self, feature:Feature):
         return
-        # if self.ExtractionMode == ExtractionMode.PLAYER \
-        # or self.ExtractionMode == ExtractionMode.SESSION:
+        # if self.ExtractMode == ExtractionMode.PLAYER \
+        # or self.ExtractMode == ExtractionMode.SESSION:
         #     pass
-        # elif self.ExtractionMode == ExtractionMode.POPULATION:
+        # elif self.ExtractMode == ExtractionMode.POPULATION:
         #     self._handle_population(feature=feature)
 
     def _getFeatureValues(self) -> List[Any]:
@@ -173,7 +173,7 @@ class JobActiveTime(PerJobFeature):
                 self._last_event_time = None
             else:
                 self.WarningMessage(f"JobActiveTime could not update total time, missing previous event time!")
-        elif self.ExtractionMode == ExtractionMode.PLAYER:
+        elif self.ExtractMode == ExtractionMode.PLAYER:
             self.WarningMessage(f"JobActiveTime could not update total time for player {self._player_id}, session {self._session_id} missing start time!")
 
     # def _handle_population(self, feature:Feature):

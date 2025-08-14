@@ -25,7 +25,7 @@ class AverageEconomyViewTime(Extractor):
         pass
 
     def _updateFromFeature(self, feature: Feature):
-        if feature.ExportMode == self.ExtractionMode:
+        if feature.ExportMode == self.ExtractMode:
             match feature.Name:
                 case "EconomyViewTime":
                     idx = feature.FeatureNames.index("EconomyViewTime-Seconds")

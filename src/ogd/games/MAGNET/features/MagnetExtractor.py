@@ -45,7 +45,7 @@ class MagnetExtractor(LegacyFeature):
         if level > max_level:
             Logger.Log(f"Got an event with level too high ({level} > max level of {max_level})!\nFull data:\n{str(event)}")
         # Check for invalid row.
-        if self.ExtractionMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
+        if self.ExtractMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
             Logger.Log(f"Got an event with incorrect session id! Expected {self._session_id}, got {event.SessionID}!",
                                 logging.ERROR)
         # If row is valid, process it.

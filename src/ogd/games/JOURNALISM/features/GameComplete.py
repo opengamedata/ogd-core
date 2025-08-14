@@ -76,7 +76,7 @@ class GameComplete(SessionFeature):
         #       The number of instances of each Feature may vary, depending on the configuration and the unit of analysis at which this CustomFeature is run.
         # print(feature._vals)
         # print(feature._player_id)
-        if(feature.ExportMode == self.ExtractionMode and feature._vals[0]==True):
+        if(feature.ExportMode == self.ExtractMode and feature._vals[0]==True):
             self._boolean_log.append(feature._vals[0])
 
         # print("-----")

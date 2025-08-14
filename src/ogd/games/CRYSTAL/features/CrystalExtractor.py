@@ -54,7 +54,7 @@ class CrystalExtractor(LegacyFeature):
         level = event.GameState['level']
         event_client_time = event.Timestamp
         # Check for invalid row.
-        if self.ExtractionMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
+        if self.ExtractMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
             Logger.Log(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.SessionID}!", logging.ERROR)
         # If row is valid, process it.
         else:
