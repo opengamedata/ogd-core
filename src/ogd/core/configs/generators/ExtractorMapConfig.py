@@ -3,8 +3,8 @@ import logging
 from typing import Dict, Optional, Self
 # import local files
 from ogd.common.configs.Config import Config
-from ogd.common.configs.generators.AggregateConfig import AggregateConfig
-from ogd.common.configs.generators.IteratedConfig import IteratedConfig
+from ogd.core.configs.generators.AggregateConfig import AggregateConfig
+from ogd.core.configs.generators.IteratedConfig import IteratedConfig
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import conversions, Map
 
@@ -77,10 +77,10 @@ class ExtractorMapConfig(Config):
         """
         unparsed_elements : Map = other_elements or {}
 
-        self._legacy_mode           : bool                       = legacy_mode           or self._parseLegacyMode(unparsed_elements=unparsed_elements)
-        self._legacy_extractors     : Dict[str, IteratedConfig]  = legacy_perlevel_extractors or self._parsePerLevelExtractors(unparsed_elements=unparsed_elements)
-        self._iterated_extractors   : Dict[str, IteratedConfig]  = iterated_extractors        or self._parseIteratedExtractors(unparsed_elements=unparsed_elements)
-        self._aggregate_feats       : Dict[str, AggregateConfig] = aggregate_extractors       or self._parseAggregateExtractors(unparsed_elements=unparsed_elements)
+        self._legacy_mode           : bool                       = legacy_mode                or self._parseLegacyMode(unparsed_elements=unparsed_elements, schema_name=name)
+        self._legacy_extractors     : Dict[str, IteratedConfig]  = legacy_perlevel_extractors or self._parsePerLevelExtractors(unparsed_elements=unparsed_elements, schema_name=name)
+        self._iterated_extractors   : Dict[str, IteratedConfig]  = iterated_extractors        or self._parseIteratedExtractors(unparsed_elements=unparsed_elements, schema_name=name)
+        self._aggregate_feats       : Dict[str, AggregateConfig] = aggregate_extractors       or self._parseAggregateExtractors(unparsed_elements=unparsed_elements, schema_name=name)
 
         super().__init__(name=name, other_elements=other_elements)
 
@@ -190,7 +190,7 @@ class ExtractorMapConfig(Config):
     # *** PRIVATE STATICS ***
 
     @staticmethod
-    def _parseLegacyMode(unparsed_elements:Map) -> bool:
+    def _parseLegacyMode(unparsed_elements:Map, schema_name:Optional[str]=None) -> bool:
         """_summary_
 
         TODO : Get the 'legacy' dict with the conversions function, to take advantage of debug prints.
@@ -210,6 +210,7 @@ class ExtractorMapConfig(Config):
                     valid_keys=["enabled"],
                     to_type=bool,
                     default_value=ExtractorMapConfig._DEFAULT_LEGACY_MODE,
+                    schema_name=schema_name
                 )
             else:
                 ret_val = conversions.ConvertToType(value=legacy_element, to_type=bool, name="legacy_element")
@@ -217,14 +218,15 @@ class ExtractorMapConfig(Config):
         return ret_val
 
     @staticmethod
-    def _parsePerLevelExtractors(unparsed_elements:Map) -> Dict[str, IteratedConfig]:
+    def _parsePerLevelExtractors(unparsed_elements:Map, schema_name:Optional[str]=None) -> Dict[str, IteratedConfig]:
         ret_val : Dict[str, IteratedConfig]
 
         perlevels = ExtractorMapConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=["perlevel", "per_level"],
             to_type=dict,
-            default_value=ExtractorMapConfig._DEFAULT_LEGACY_EXTORS
+            default_value=ExtractorMapConfig._DEFAULT_LEGACY_EXTORS,
+            schema_name=schema_name
         )
         if isinstance(perlevels, dict):
             ret_val = { key : IteratedConfig.FromDict(name=key, unparsed_elements=val) for key,val in perlevels.items() }
@@ -234,14 +236,15 @@ class ExtractorMapConfig(Config):
         return ret_val
 
     @staticmethod
-    def _parseIteratedExtractors(unparsed_elements:Map) -> Dict[str, IteratedConfig]:
+    def _parseIteratedExtractors(unparsed_elements:Map, schema_name:Optional[str]=None) -> Dict[str, IteratedConfig]:
         ret_val : Dict[str, IteratedConfig]
 
         percounts = ExtractorMapConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=["iterated", "per_count", "percount"],
             to_type=dict,
-            default_value=ExtractorMapConfig._DEFAULT_ITERATED_EXTORS
+            default_value=ExtractorMapConfig._DEFAULT_ITERATED_EXTORS,
+            schema_name=schema_name
         )
         if isinstance(percounts, dict):
             ret_val = { key : IteratedConfig.FromDict(name=key, unparsed_elements=val) for key,val in percounts.items() }
@@ -251,14 +254,15 @@ class ExtractorMapConfig(Config):
         return ret_val
 
     @staticmethod
-    def _parseAggregateExtractors(unparsed_elements:Map) -> Dict[str, AggregateConfig]:
+    def _parseAggregateExtractors(unparsed_elements:Map, schema_name:Optional[str]=None) -> Dict[str, AggregateConfig]:
         ret_val : Dict[str, AggregateConfig]
 
         aggregates = ExtractorMapConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=["aggregate"],
             to_type=dict,
-            default_value=ExtractorMapConfig._DEFAULT_AGGREGATE_EXTORS
+            default_value=ExtractorMapConfig._DEFAULT_AGGREGATE_EXTORS,
+            schema_name=schema_name
         )
         if isinstance(aggregates, dict):
             ret_val = {key : AggregateConfig.FromDict(name=key, unparsed_elements=val) for key,val in aggregates.items()}

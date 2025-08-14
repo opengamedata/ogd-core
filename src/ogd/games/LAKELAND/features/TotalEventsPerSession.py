@@ -3,13 +3,13 @@ import json
 from typing import Any, List, Optional
 # import local files
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 
-class TotalEventsPerSession(Feature):
+class TotalEventsPerSession(Extractor):
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self.total_events_count = 0
@@ -26,7 +26,7 @@ class TotalEventsPerSession(Feature):
     def _updateFromEvent(self, event:Event) -> None:
         self.total_events_count += 1
             
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

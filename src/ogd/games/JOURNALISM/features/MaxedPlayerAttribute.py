@@ -8,7 +8,7 @@ from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class MaxedPlayerAttribute(PerCountFeature):
     def __init__(self, params:GeneratorParameters):
@@ -40,7 +40,7 @@ class MaxedPlayerAttribute(PerCountFeature):
         pass
 
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         #add logic to make sure that MODE is session, not player so we don't get duplicates
         if(feature._mode == ExtractionMode.SESSION):
             attribute_list = feature._vals[1]

@@ -9,7 +9,7 @@ from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class LevelTime(PerLevelFeature):
     def __init__(self, params:GeneratorParameters):
@@ -42,10 +42,10 @@ class LevelTime(PerLevelFeature):
         else:
             Logger.Log(f"LevelTime received an event which was not a BEGIN or a COMPLETE!", logging.WARN)
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         IDLE_TIME_INDEX : Final[int] = 2 # Idle time should be at index 2 for the PlayTime feature
         if feature.FeatureType == "PlayTime":
-            self._idle_time = feature.FeatureValues[IDLE_TIME_INDEX]
+            self._idle_time = feature.Values[IDLE_TIME_INDEX]
 
     def _getFeatureValues(self) -> List[Any]:
         if len(self._begin_times) < len(self._complete_times):

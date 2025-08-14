@@ -6,7 +6,7 @@ from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
 chime_dict = {'chime 1':0, 'chime 2':0, 'chime 3':0, 'chime 4':0, 'chime 5':0, 'chime 6':0, 'unknown chime':0}
@@ -33,7 +33,7 @@ class RingChimesCount(SessionFeature):
         self._object_id = event.event_data.get("note_played", "unknown chime")
         self._chime_dict[self._object_id] += 1
         
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -73,11 +73,10 @@ class Detector(Generator):
                 self._callback(_new_event)
 
     def GenerateEvent(self, event_name:str,              event_data:Map,
-                      session_id:Optional[str]=None,     app_id:Optional[str]=None,
-                      timestamp:Optional[datetime]=None, time_offset:Optional[timedelta]=None,
-                      app_version:Optional[str]=None,    log_version:Optional[str]=None,
-                      user_id:Optional[str] = None,      user_data:Optional[Map] = None,
-                      game_state:Optional[Map]=None,     event_sequence_index:Optional[int]=None):
+                      app_id:Optional[str]=None,         user_data:Optional[Map] = None,       session_id:Optional[str]=None,     
+                      app_version:Optional[str]=None,    app_branch:Optional[str]=None,        log_version:Optional[str]=None,
+                      timestamp:Optional[datetime]=None, time_offset:Optional[timedelta]=None, event_sequence_index:Optional[int]=None,
+                      game_state:Optional[Map]=None,     user_id:Optional[str] = None):
         return DetectorEvent(
             session_id = session_id   or self._triggering_event.SessionID,
             app_id     = app_id       or self._triggering_event.AppID,
@@ -86,6 +85,7 @@ class Detector(Generator):
             timestamp  = timestamp    or self._triggering_event.Timestamp,
             time_offset= time_offset  or self._triggering_event.TimeOffset,
             app_version= app_version  or self._triggering_event.AppVersion,
+            app_branch = app_branch   or self._triggering_event.AppBranch,
             log_version= log_version  or self._triggering_event.LogVersion,
             user_id    = user_id      or self._triggering_event.UserID,
             user_data  = user_data    or self._triggering_event.UserData,

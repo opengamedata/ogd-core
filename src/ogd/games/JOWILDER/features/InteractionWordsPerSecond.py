@@ -7,7 +7,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 # import local files
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.models.Event import Event
 from datetime import datetime, timedelta
 from ogd.games.JOWILDER import Jowilder_Enumerators as je
@@ -18,8 +18,8 @@ from ogd.games.JOWILDER.features.Interaction import clicks_track
 class InteractionWordsPerSecond(PerCountFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
-    :param Feature: Base class for a Custom Feature class.
-    :type Feature: _type_
+    :param Extractor: Base class for a Custom Feature class.
+    :type Extractor: _type_
     """
 
     def __init__(self, params: GeneratorParameters):
@@ -87,12 +87,12 @@ class InteractionWordsPerSecond(PerCountFeature):
         
         return
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         if len(self._interaction_time) == 0:
             return
         if feature.CountIndex != self.CountIndex:
             return
-        _words = feature.FeatureValues[2]
+        _words = feature.Values[2]
         
         self._words_persecond = _words/np.mean(self._interaction_time)
         self._first_encounter = _words/self._interaction_time[0]

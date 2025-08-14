@@ -4,7 +4,7 @@
 from typing import Dict, Optional, Self, Set
 # import local files
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.configs.generators.GeneratorConfig import GeneratorConfig
+from ogd.core.configs.generators.GeneratorConfig import GeneratorConfig
 from ogd.common.utils.typing import Map
 
 class DetectorConfig(GeneratorConfig):

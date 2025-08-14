@@ -2,7 +2,7 @@ from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.games.BLOOM.features.PerCountyFeature import PerCountyFeature
 
 class CountyFailCount(PerCountyFeature):
@@ -34,7 +34,7 @@ class CountyFailCount(PerCountyFeature):
             if fail_type in self.county_fail_counts:
                 self.county_fail_counts[fail_type] += 1
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

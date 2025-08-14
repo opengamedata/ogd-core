@@ -7,10 +7,10 @@ from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.models.Event import Event
 from ogd.games.JOWILDER import Jowilder_Enumerators as je
-from ogd.common.utils.utils import loadJSONFile
+from ogd.common.utils.fileio import loadJSONFile
 from ogd.common.utils.Logger import Logger
 
 interaction_path = Path('.') / "ogd" / "games" / "JOWILDER"
@@ -38,7 +38,7 @@ class InteractionName(PerCountFeature):
     def _updateFromEvent(self, event:Event) -> None:
         return
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -7,7 +7,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class JobArgumentationRejects(PerJobFeature):
     def __init__(self, params:GeneratorParameters, job_map:dict):
@@ -35,7 +35,7 @@ class JobArgumentationRejects(PerJobFeature):
             if self._inside_argument:
                 self._fact_rejected_inside_argument += 1
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

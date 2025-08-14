@@ -6,7 +6,7 @@ import json
 from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.core.generators.Generator import GeneratorParameters
 
 
@@ -18,8 +18,8 @@ from ogd.core.generators.Generator import GeneratorParameters
 class QuitTypePerLevel(PerLevelFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
-    :param Feature: Base class for a Custom Feature class.
-    :type Feature: _type_
+    :param Extractor: Base class for a Custom Feature class.
+    :type Extractor: _type_
     """
 
     def __init__(self, params:GeneratorParameters):
@@ -122,11 +122,11 @@ class QuitTypePerLevel(PerLevelFeature):
 
         return
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         """_summary_
 
         :param feature: _description_
-        :type feature: FeatureData
+        :type feature: Feature
         """
         # >>> use data in the Feature Data object to update state variables as needed. <<<
         # Note: This function runs on data from each Feature whose name matches one of the strings returned by _featureFilter().

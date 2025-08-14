@@ -4,7 +4,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class Thermotool(Enum):
     INSULATION          = "insulation"
@@ -38,7 +38,7 @@ class ToolNudgeCount(SessionFeature):
                     tool = Thermotool(tool_name)
                     self._tool_nudge_count[tool] += 1
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

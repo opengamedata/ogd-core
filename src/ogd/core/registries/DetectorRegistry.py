@@ -1,17 +1,16 @@
 ## import standard libraries
-import logging
 from collections import OrderedDict
-from typing import Any, Callable, List, Optional, Set
+from typing import Callable, List, Optional, Set
 ## import local files
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import Generator
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
+from ogd.core.configs.generators.DetectorConfig import DetectorConfig
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.registries.GeneratorRegistry import GeneratorRegistry
 from ogd.common.models.Event import Event
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.schemas.games.DetectorSchema import DetectorSchema
-from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.models.enums.IterationMode import IterationMode
 
 ## @class Extractor
@@ -96,18 +95,18 @@ class DetectorRegistry(GeneratorRegistry):
         ret_val : List[str] = [feature.Name for feature in self._detectors.values()]
         return ret_val
 
-    def _loadFromSchema(self, schema:GameSchema, loader:GeneratorLoader, overrides:Optional[List[str]]=None):
+    def _loadGenerators(self, generator_cfg:GeneratorCollectionConfig, loader:GeneratorLoader, overrides:Optional[List[str]]=None):
         # first, get list of what should actually be loaded.
         # TODO : move this logic as high up as possible, so that we only need to do it once for each kind of processor.
         # 1. Start with overrides, else list of enabled features in schema.
-        agg_load_set : Set[DetectorSchema]
-        per_load_set : Set[DetectorSchema]
+        agg_load_set : Set[DetectorConfig]
+        per_load_set : Set[DetectorConfig]
         if overrides is not None:
-            agg_load_set = {schema.Detectors['aggregate'][name] for name in overrides if name in schema.Detectors['aggregate'].keys()}
-            per_load_set = {schema.Detectors['per_count'][name] for name in overrides if name in schema.Detectors['per_count'].keys()}
+            agg_load_set = {generator_cfg.AggregateDetectors[name] for name in overrides if name in generator_cfg.AggregateDetectors.keys()}
+            per_load_set = {generator_cfg.IteratedDetectors[name] for name in overrides if name in generator_cfg.IteratedDetectors.keys()}
         else:
-            agg_load_set = {val for val in schema.EnabledDetectors(iter_modes={IterationMode.AGGREGATE}, extract_modes={self._mode}).values() if isinstance(val, DetectorSchema)}
-            per_load_set = {val for val in schema.EnabledDetectors(iter_modes={IterationMode.PERCOUNT}, extract_modes={self._mode}).values() if isinstance(val, DetectorSchema)}
+            agg_load_set = {val for val in generator_cfg.EnabledDetectors(iter_modes={IterationMode.AGGREGATE}, extract_modes={self._mode}).values() if isinstance(val, DetectorConfig)}
+            per_load_set = {val for val in generator_cfg.EnabledDetectors(iter_modes={IterationMode.PERCOUNT}, extract_modes={self._mode}).values() if isinstance(val, DetectorConfig)}
         # 2. Now that we know what needs loading, load them and register.
         # TODO : right now, Detectors are at weird halfway point wrt whether they can be aggregate and percount or not. Need to resolve that.
         detector : Optional[Detector]
@@ -116,7 +115,7 @@ class DetectorRegistry(GeneratorRegistry):
             if detector is not None and self._mode in detector.AvailableModes():
                     self.Register(extractor=detector, iter_mode=IterationMode.AGGREGATE)
         for per_schema in per_load_set:
-            for i in schema.GetCountRange(count=per_schema.NonStandardElements.get('count', 1)):
+            for i in generator_cfg.GetCountRange(count=per_schema.NonStandardElements.get('count', 1)):
                 instance_name = f"{per_schema.NonStandardElements.get('prefix', '')}{i}_{per_schema.Name}"
                 detector = loader.LoadDetector(detector_type=per_schema.TypeName, name=per_schema.Name, schema_args=per_schema.NonStandardElements, trigger_callback=self._trigger_callback)
                 if detector is not None and self._mode in detector.AvailableModes():
@@ -141,7 +140,7 @@ class DetectorRegistry(GeneratorRegistry):
             if listener.name in self._detectors.keys():
                 self._detectors[listener.name].UpdateFromEvent(event)
 
-    def _updateFromFeatureData(self, feature:FeatureData) -> None:
+    def _updateFromFeature(self, feature:Feature) -> None:
         return
 
     # *** PUBLIC STATICS ***
