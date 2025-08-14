@@ -36,7 +36,7 @@ class Clicks(SessionFeature):
 
     def _updateFromFeature(self, feature: Feature):
         if self._click_count > 0:
-            self._avg_time = feature.FeatureValues[0].total_seconds()/self._click_count
+            self._avg_time = feature.Values[0].total_seconds()/self._click_count
         else:
             Logger.Log(f"Clicks extractor received 0 click events, in mode {self.ExtractMode.name}", logging.DEBUG)
             self._avg_time = 0

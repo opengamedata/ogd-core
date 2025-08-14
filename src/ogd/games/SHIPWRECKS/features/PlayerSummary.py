@@ -35,9 +35,9 @@ class PlayerSummary(SessionFeature):
             }
 
         if feature.FeatureType == "JobsCompleted":
-            self._summary[session_id]["jobs_completed"] = feature.FeatureValues[0]
+            self._summary[session_id]["jobs_completed"] = feature.Values[0]
         elif feature.FeatureType == "SessionDuration":
-            self._summary[session_id]["active_time"] += feature.FeatureValues[0]
+            self._summary[session_id]["active_time"] += feature.Values[0]
 
     def _getFeatureValues(self) -> List[Any]:
         return [self._summary]

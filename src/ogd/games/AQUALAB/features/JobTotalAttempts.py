@@ -31,7 +31,7 @@ class JobTotalAttempts(PerJobFeature):
             if not self._checked_alive:
                 Logger.Log(f"JobTotalAttempts for job {self.CountIndex} got a feature at player level with same count index")
                 self._checked_alive = True
-            if feature.FeatureValues[0] == True:
+            if feature.Values[0] == True:
                 self._count += 1
 
     def _getFeatureValues(self) -> List[Any]:

@@ -93,7 +93,7 @@ class InteractionTextBoxesPerSecond(PerCountFeature):
             return
         if feature.CountIndex != self.CountIndex:
             return
-        _boxes = feature.FeatureValues[1]
+        _boxes = feature.Values[1]
         
         self._boxes_persecond = _boxes/np.mean(self._interaction_time)
         self._first_encounter = _boxes/self._interaction_time[0]

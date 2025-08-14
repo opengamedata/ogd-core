@@ -29,9 +29,9 @@ class PopulationSummary(SessionFeature):
 
     def _updateFromFeature(self, feature:Feature):
         if feature.FeatureType == "JobsCompleted":
-            self._session_completions[feature.SessionID] = feature.FeatureValues[0]
+            self._session_completions[feature.SessionID] = feature.Values[0]
         elif feature.FeatureType == "SessionDuration":
-            self._session_times.append(feature.FeatureValues[0])
+            self._session_times.append(feature.Values[0])
 
     def _getFeatureValues(self) -> List[Any]:
         num_completions = [len(self._session_completions[session]) for session in self._session_completions]

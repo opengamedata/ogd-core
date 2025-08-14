@@ -37,14 +37,14 @@ class TotalPlayTime(Extractor):
     def _updateFromFeature(self, feature:Feature):
         if feature.ExportMode == ExtractionMode.SESSION:
             try:
-                self._play_time += feature.FeatureValues[0]
-                self._play_time_seconds += feature.FeatureValues[1]
-                self._active_time += feature.FeatureValues[2]
-                self._active_time_seconds += feature.FeatureValues[3]
-                self._idle_time += feature.FeatureValues[4]
-                self._idle_time += feature.FeatureValues[5]
+                self._play_time += feature.Values[0]
+                self._play_time_seconds += feature.Values[1]
+                self._active_time += feature.Values[2]
+                self._active_time_seconds += feature.Values[3]
+                self._idle_time += feature.Values[4]
+                self._idle_time += feature.Values[5]
             except TypeError as err:
-                self.WarningMessage(f"TotalPlayTime for player {feature.PlayerID} got non-timedelta value of {feature.FeatureValues[0]}")
+                self.WarningMessage(f"TotalPlayTime for player {feature.PlayerID} got non-timedelta value of {feature.Values[0]}")
     
     def _getFeatureValues(self) -> List[Any]:
         return [self._play_time, self._play_time_seconds, self._active_time, self._active_time_seconds, self._idle_time, self._idle_time_seconds]

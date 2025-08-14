@@ -71,8 +71,8 @@ class QuitNode(SessionFeature):
         """
         QNODE_INDEX : Final[int]    = 2 # The "Node" subfeature of the "QuitLevel" feature should be at index 2.
         quit_node   : Optional[str] = None
-        if len(feature.FeatureValues) > QNODE_INDEX: # need to ensure there's at least 3 items, for index 2 to be valid...
-            quit_node = str(feature.FeatureValues[2])
+        if len(feature.Values) > QNODE_INDEX: # need to ensure there's at least 3 items, for index 2 to be valid...
+            quit_node = str(feature.Values[2])
         else:
             Logger.Log("In QuitNode, no subfeature value found, defaulting to None!", logging.WARN)
         self._quit_nodes.update(quit_node)

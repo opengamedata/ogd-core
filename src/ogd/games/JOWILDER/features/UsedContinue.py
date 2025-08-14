@@ -35,9 +35,9 @@ class UsedContinue(SessionFeature):
 
     def _updateFromFeature(self, feature: Feature):
         if feature.FeatureType == "UsedSaveCode":
-            self._save_code = feature.FeatureValues[0]
+            self._save_code = feature.Values[0]
         elif feature.FeatureType == "FirstInteraction":
-            self._first_inc = feature.FeatureValues[0]
+            self._first_inc = feature.Values[0]
         return
 
     def _getFeatureValues(self) -> List[Any]:

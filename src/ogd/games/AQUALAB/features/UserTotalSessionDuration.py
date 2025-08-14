@@ -32,10 +32,10 @@ class UserTotalSessionDuration(SessionFeature):
 
     def _updateFromFeature(self, feature:Feature):
         if feature.PlayerID == self._player_id:
-            if type(feature.FeatureValues[0]) == str and feature.FeatureValues[0] == "No events":
+            if type(feature.Values[0]) == str and feature.Values[0] == "No events":
                 pass
             else:
-                self._time += feature.FeatureValues[0]
+                self._time += feature.Values[0]
 
     def _getFeatureValues(self) -> List[Any]:
         return [self._time.total_seconds()]

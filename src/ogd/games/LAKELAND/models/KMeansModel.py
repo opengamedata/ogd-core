@@ -39,17 +39,17 @@
 #         print("\n\n\nInside _updateFromFeature of KMeansModel")
 #         if hasattr(feature, 'ExtractionMode') and feature.ExtractionMode == ExtractionMode.SESSION:
 #             if feature.Name == "CropBuildCount":
-#                 self._crop_build_count.append(feature.FeatureValues[0])
+#                 self._crop_build_count.append(feature.Values[0])
 #             elif feature.Name == "DairyBuildCount":
-#                 self._dairy_build_count.append(feature.FeatureValues[0])
+#                 self._dairy_build_count.append(feature.Values[0])
 #             elif feature.Name == "HouseBuildCount":
-#                 self._house_build_count.append(feature.FeatureValues[0])
+#                 self._house_build_count.append(feature.Values[0])
 #             elif feature.Name == "HoversBeforeCropPlacement":
-#                 self._hovers_before_crop_placement.append(feature.FeatureValues[0])
+#                 self._hovers_before_crop_placement.append(feature.Values[0])
 #             elif feature.Name == "TotalBuildCount":
-#                 self._total_build_count.append(feature.FeatureValues[0])
+#                 self._total_build_count.append(feature.Values[0])
 
-#             Logger.Log(f"[KMeansModel] Received feature: {feature.Name} = {feature.FeatureValues[0]}", logging.DEBUG)
+#             Logger.Log(f"[KMeansModel] Received feature: {feature.Name} = {feature.Values[0]}", logging.DEBUG)
 
 
 #     def _updateFromEvent(self, event):
@@ -153,7 +153,7 @@
         
 #         result_feature = apply_to[0] if apply_to else None
 #         if result_feature:
-#             result_feature.FeatureValues = [cluster_assignment]
+#             result_feature.Values = [cluster_assignment]
 #             result_feature.Name = "PredictedCluster"
         
 #         return result_feature
@@ -258,7 +258,7 @@ class KMeansModel(PopulationModel):
     def _updateFromFeature(self, feature: Feature):
         # --- ADD THIS DETAILED DEBUGGING BLOCK ---
         print(" DEBUGGING: CHECKPOINT 2 (KMeansModel) ")
-        print(f"Received feature: {feature.Name} with value {feature.FeatureValues[0]}")
+        print(f"Received feature: {feature.Name} with value {feature.Values[0]}")
         mode_check_passed = False
         if hasattr(feature, 'ExtractionMode') and feature.ExtractionMode == ExtractionMode.SESSION:
             mode_check_passed = True
@@ -270,7 +270,7 @@ class KMeansModel(PopulationModel):
         # 2. If the mode was correct, check the Name condition
         if mode_check_passed:
             try:
-                value_as_string = str(feature.FeatureValues[0])
+                value_as_string = str(feature.Values[0])
                 numeric_value = int(value_as_string.split()[-1])
             except (ValueError, IndexError):
                 numeric_value = 0
@@ -395,7 +395,7 @@ class KMeansModel(PopulationModel):
         
         result_feature = apply_to[0] if apply_to else None
         if result_feature:
-            result_feature.FeatureValues = [cluster_assignment]
+            result_feature.Values = [cluster_assignment]
             result_feature.Name = "PredictedCluster"
         
         return result_feature

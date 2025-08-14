@@ -178,7 +178,7 @@ class JobActiveTime(PerJobFeature):
 
     # def _handle_population(self, feature:Feature):
     #     if feature.ExportMode == ExtractionMode.PLAYER:
-    #         _val = feature.FeatureValues[0]
+    #         _val = feature.Values[0]
     #         if type(_val) == timedelta:
     #             self._total_seconds += _val
     #         else:

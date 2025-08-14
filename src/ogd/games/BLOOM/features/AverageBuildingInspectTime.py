@@ -29,9 +29,9 @@ class AverageBuildingInspectTime(Extractor):
             match feature.Name:
                 case "ManualBuildingInspectTime":
                     idx = feature.FeatureNames.index("ManualBuildingInspectTime-Seconds")
-                    self._inspect_time = feature.FeatureValues[idx]
+                    self._inspect_time = feature.Values[idx]
                 case "ManualBuildingInspectCount":
-                    self._inspect_count = feature.FeatureValues[0]
+                    self._inspect_count = feature.Values[0]
 
     def _getFeatureValues(self) -> List[Any]:
         if self._inspect_time is not None and self._inspect_count is not None and self._inspect_count > 0:

@@ -89,7 +89,7 @@ class JobsAttempted(Extractor):
     def _updateFromFeature(self, feature:Feature):
         if feature.FeatureType == "JobActiveTime":
             if feature.CountIndex == self.CountIndex:
-                _active_time = feature.FeatureValues[0]
+                _active_time = feature.Values[0]
                 if self.ExtractMode == ExtractionMode.SESSION \
                 and feature.ExportMode == ExtractionMode.SESSION:
                     # session should only have one time, namely the time for the session.

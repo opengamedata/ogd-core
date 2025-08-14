@@ -26,7 +26,7 @@ class EchoSessionID(SessionFeature):
         return
 
     def _updateFromFeature(self, feature:Feature):
-        self._session_id = feature.FeatureValues[0]
+        self._session_id = feature.Values[0]
 
     def _getFeatureValues(self) -> List[Any]:
         return [f"The sess ID is: {self._session_id}"]
