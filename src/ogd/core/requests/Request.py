@@ -1,7 +1,7 @@
 # import standard libraries
 import abc
 import logging
-from datetime import datetime, date, timedelta
+from datetime import datetime, date, timedelta, time
 from pathlib import Path
 from typing import Dict, List, Optional, Set
 # import local files
@@ -114,11 +114,11 @@ class Request(abc.ABC):
             self._range = ExporterRange.FromIDs(source=self._interface, ids=filters.IDFilters, id_mode=IDMode.USER, versions=filters.Versions)
         else:
             Logger.Log("Request filters did not define a time range, nor session set, nor player set! Defaulting to filter for yesterday's data!", logging.WARNING)
-            yesterday = datetime.now() - timedelta(days=1)
-            filters.Sequences.Timestamps = RangeFilter[date](mode=FilterMode.INCLUDE, minimum=yesterday.date(), maximum=datetime.now().date())
+            yesterday = datetime.combine(datetime.now().date(), time(0)) - timedelta(days=1)
+            filters.Sequences.Timestamps = RangeFilter[datetime](mode=FilterMode.INCLUDE, minimum=yesterday, maximum=datetime.now())
             self._range = ExporterRange.FromDateRange(source=self._interface, dates=filters.Sequences, versions=filters.Versions)
         dataset_key = DatasetKey.FromDateRange(game_id=self.GameID, start_date=self.Range.DateRange['min'], end_date=self.Range.DateRange['max'])
-        self._outerfaces     : Set[Outerface]          = {OuterfaceFactory.FromConfig(config=dest, export_modes=exporter_modes, repository=repository, dataset_id=str(dataset_key))}
+        self._outerfaces : Set[Outerface] = {OuterfaceFactory.FromConfig(config=dest, export_modes=exporter_modes, repository=repository, dataset_id=str(dataset_key))}
 
     ## String representation of a request. Just gives game id, and date range.
     def __str__(self):

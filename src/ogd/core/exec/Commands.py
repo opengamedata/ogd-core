@@ -156,6 +156,7 @@ class OGDCommands:
                                    source=FileStoreConfig(name="SourceFile", location=args.from_source, file_credential=None),
                                    schema=EventTableSchema.FromFile(schema_name="OGD_EVENT_FILE")
             )
+            filters.IDFilters.Players = SetFilter(mode=FilterMode.EXCLUDE, set_elements=set()) # ensure we've got some kind of filter, and it's to exclude nobody.
         else:
         # a. Case where specific player ID was given
             if args.player is not None and args.player != "":
