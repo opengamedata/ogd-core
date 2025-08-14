@@ -336,6 +336,7 @@ class ExportManager:
                 raise err
             else:
                 Logger.Log(f"Error while processing event {next_event.EventName}. This event will be skipped. \nFull error: {traceback.format_exc()}", logging.WARNING, depth=2)
+                traceback.print_tb(err.__traceback__)
 
     def _outputHeaders(self, request:Request):
         if self._event_mgr is not None:
