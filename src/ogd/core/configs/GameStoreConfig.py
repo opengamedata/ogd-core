@@ -129,18 +129,30 @@ class GameStoreConfig(Schema):
     @property
     def EventsFrom(self) -> List[DataTableConfig]:
         return self._events_from
+    @EventsFrom.setter
+    def EventsFrom(self, new_list: List[DataTableConfig]) -> None:
+        self._events_from = new_list
 
     @property
     def EventsTo(self) -> List[DataTableConfig]:
         return self._events_to
+    @EventsTo.setter
+    def EventsTo(self, new_list: List[DataTableConfig]) -> None:
+        self._events_to = new_list
 
     @property
     def FeaturesFrom(self) -> List[DataTableConfig]:
         return self._feats_from
+    @FeaturesFrom.setter
+    def FeaturesFrom(self, new_list: List[DataTableConfig]) -> None:
+        self._feats_from = new_list
 
     @property
     def FeaturesTo(self) -> List[DataTableConfig]:
         return self._feats_to
+    @FeaturesTo.setter
+    def FeaturesTo(self, new_list: List[DataTableConfig]) -> None:
+        self._feats_to = new_list
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
@@ -188,6 +200,12 @@ class GameStoreConfig(Schema):
     # *** PUBLIC STATICS ***
 
     # *** PUBLIC METHODS ***
+
+    def UpdateStores(self, data_sources:Dict[str, DataStoreConfig]):
+        for table_cfg in self.EventsFrom + self.EventsTo + self.FeaturesFrom + self.FeaturesTo:
+            _existing_store = data_sources.get(table_cfg.StoreName)
+            if _existing_store:
+                table_cfg.StoreConfig = _existing_store
 
     # *** PRIVATE STATICS ***
 
