@@ -1,5 +1,6 @@
 # import standard libraries
-from typing import Dict, Final, LiteralString, Optional, Self
+import json
+from typing import Dict, Final, List, LiteralString, Optional, Self
 # import local files
 from ogd.common.schemas.Schema import Schema
 from ogd.common.configs.DataTableConfig import DataTableConfig
@@ -12,6 +13,7 @@ from ogd.common.schemas.tables.EventTableSchema import EventTableSchema
 from ogd.common.schemas.tables.FeatureTableSchema import FeatureTableSchema
 from ogd.common.schemas.locations.DatabaseLocationSchema import DatabaseLocationSchema
 from ogd.common.utils.typing import Map
+from ogd.common.utils.typing import conversions
 
 class GameStoreConfig(Schema):
     """A simple Schema structure containing configuration information for a particular game's data.
@@ -31,46 +33,46 @@ class GameStoreConfig(Schema):
     """
 
     _DEFAULT_GAME_ID     : Final[LiteralString] = "UNKNOWN GAME"
-    _DEFAULT_EVENTS_FROM : Final[DataTableConfig] = DataTableConfig(
+    _DEFAULT_EVENTS_FROM : Final[List[DataTableConfig]] = [DataTableConfig(
         name="DefaultEventSource",
         store_name="DefaultStore",
         schema_name="DefaultTable",
         table_location=DatabaseLocationSchema.Default(),
         store_config=BigQueryConfig.Default(),
         table_schema=EventTableSchema.FromFile(schema_name="OPENGAMEDATA_BQ")
-    )
-    _DEFAULT_EVENTS_TO   : Final[DataTableConfig] = DataTableConfig(
+    )]
+    _DEFAULT_EVENTS_TO   : Final[List[DataTableConfig]] = [DataTableConfig(
         name="DefaultEventDest",
         store_name="DefaultStore",
         schema_name="DefaultTable",
         table_location=None,
         store_config=FileStoreConfig.Default(),
         table_schema=EventTableSchema.FromFile(schema_name="OGD_EVENTS_FILE")
-    )
-    _DEFAULT_FEATS_FROM  : Final[DataTableConfig] = DataTableConfig(
+    )]
+    _DEFAULT_FEATS_FROM  : Final[List[DataTableConfig]] = [DataTableConfig(
         name="DefaultFeatSource",
         store_name="DefaultStore",
         schema_name="DefaultTable",
         table_location=DatabaseLocationSchema.Default(),
         store_config=BigQueryConfig.Default(),
         table_schema=FeatureTableSchema.FromFile(schema_name="OPENGAMEDATA_BQ")
-    )
-    _DEFAULT_FEATS_TO    : Final[DataTableConfig] = DataTableConfig(
+    )]
+    _DEFAULT_FEATS_TO    : Final[List[DataTableConfig]] = [DataTableConfig(
         name="DefaultFeatDest",
         store_name="DefaultStore",
         schema_name="DefaultTable",
         table_location=None,
         store_config=DatasetRepositoryConfig.Default(),
         table_schema=FeatureTableSchema.FromFile(schema_name="OGD_EVENTS_FILE")
-    )
+    )]
 
     # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, name:str, game_id:Optional[str],
-                 events_from : Optional[DataTableConfig],
-                 events_to   : Optional[DataTableConfig],
-                 feats_from  : Optional[DataTableConfig],
-                 feats_to    : Optional[DataTableConfig],
+                 events_from : Optional[List[DataTableConfig]],
+                 events_to   : Optional[List[DataTableConfig]],
+                 feats_from  : Optional[List[DataTableConfig]],
+                 feats_to    : Optional[List[DataTableConfig]],
                  other_elements:Optional[Map]=None):
         """Constructor for the `DataTableConfig` class.
         
@@ -104,10 +106,10 @@ class GameStoreConfig(Schema):
 
         self._game_id     : str             = game_id     or name
         # TODO : use parsing functions
-        self._events_from : DataTableConfig = events_from or self._DEFAULT_EVENTS_FROM
-        self._events_to   : DataTableConfig = events_to   or self._DEFAULT_EVENTS_TO # TODO : in addition to parsing, fall back on default dest being the standard output to repo at ./data/
-        self._feats_from  : DataTableConfig = feats_from  or self._DEFAULT_FEATS_FROM # TODO : in addition to parsing, fall back on default source being same store as events, just a different table schema
-        self._feats_to    : DataTableConfig = feats_to    or self._DEFAULT_FEATS_TO # TODO : in addition to parsing, fall back on default dest being the standard output to repo at ./data/
+        self._events_from : List[DataTableConfig] = events_from or self._parseEventsFrom(unparsed_elements=unparsed_elements)
+        self._events_to   : List[DataTableConfig] = events_to   or self._parseEventsTo(unparsed_elements=unparsed_elements) # TODO : in addition to parsing, fall back on default dest being the standard output to repo at ./data/
+        self._feats_from  : List[DataTableConfig] = feats_from  or self._parseFeatsFrom(unparsed_elements=unparsed_elements) # TODO : in addition to parsing, fall back on default source being same store as events, just a different table schema
+        self._feats_to    : List[DataTableConfig] = feats_to    or self._parseFeatsTo(unparsed_elements=unparsed_elements) # TODO : in addition to parsing, fall back on default dest being the standard output to repo at ./data/
 
         super().__init__(name=name, other_elements=other_elements)
 
@@ -122,7 +124,23 @@ class GameStoreConfig(Schema):
         """
         return self._game_id
 
-        # TODO : add props to acces the different parts
+    # TODO : add props to acces the different parts
+
+    @property
+    def EventsFrom(self) -> List[DataTableConfig]:
+        return self._events_from
+
+    @property
+    def EventsTo(self) -> List[DataTableConfig]:
+        return self._events_to
+
+    @property
+    def FeaturesFrom(self) -> List[DataTableConfig]:
+        return self._feats_from
+
+    @property
+    def FeaturesTo(self) -> List[DataTableConfig]:
+        return self._feats_to
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
@@ -130,26 +148,25 @@ class GameStoreConfig(Schema):
     def AsMarkdown(self) -> str:
         ret_val : str
 
-        ret_val = f"{self.Name}: _{self.TableSchemaName}_ format, source {self.StoreName} : {self.Location.Location}"
+        ret_val = f"{self.Name}: {len(self.EventsFrom)} event sources, {len(self.EventsTo)} event destinations, {len(self.FeaturesFrom)} feature sources, {len(self.FeaturesTo)} feature destinations"
         return ret_val
 
     @classmethod
-    def Default(cls) -> "DataTableConfig":
-        return DataTableConfig(
-            name="DefaultDataTableConfig",
+    def Default(cls) -> "GameStoreConfig":
+        return GameStoreConfig(
+            name="DefaultGameStoreConfig",
             game_id=cls._DEFAULT_GAME_ID,
-            store_name=cls._DEFAULT_STORE_NAME,
-            store_config=None,
-            schema_name=cls._DEFAULT_TABLE_SCHEMA_NAME,
-            table_schema=None,
-            table_location=cls._DEFAULT_TABLE_LOC,
+            events_from=cls._DEFAULT_EVENTS_FROM,
+            events_to=cls._DEFAULT_EVENTS_TO,
+            feats_from=cls._DEFAULT_FEATS_FROM,
+            feats_to=cls._DEFAULT_FEATS_TO,
             other_elements={}
         )
 
     @classmethod
     def _fromDict(cls, name:str, unparsed_elements:Map,
                   key_overrides:Optional[Dict[str, str]]=None,
-                  default_override:Optional[Self]=None) -> "DataTableConfig":
+                  default_override:Optional[Self]=None) -> "GameStoreConfig":
         """Create a DataTableConfig from a given dictionary
 
         TODO : Add example of what format unparsed_elements is expected to have.
@@ -166,8 +183,7 @@ class GameStoreConfig(Schema):
         :return: _description_
         :rtype: DataTableConfig
         """
-        return DataTableConfig(name=name, game_id=None, store_name=None, schema_name=None,
-                                table_location=None, other_elements=unparsed_elements)
+        return GameStoreConfig(name=name, game_id=None, events_from=None, events_to=None, feats_from=None, feats_to=None, other_elements=unparsed_elements)
 
     # *** PUBLIC STATICS ***
 
@@ -176,31 +192,84 @@ class GameStoreConfig(Schema):
     # *** PRIVATE STATICS ***
 
     @staticmethod
-    def _parseStoreName(unparsed_elements:Map) -> str:
-        return DataTableConfig.ParseElement(
+    def _parseEventsFrom(unparsed_elements:Map) -> List[DataTableConfig]:
+        ret_val : List[DataTableConfig] = []
+
+        raw_elems = GameStoreConfig.ParseElement(
             unparsed_elements=unparsed_elements,
-            valid_keys=["source", "source_name", "store", "store_name"],
-            to_type=str,
-            default_value=DataTableConfig._DEFAULT_STORE_NAME,
+            valid_keys=["events_from"],
+            to_type=list,
+            default_value=None,
             remove_target=True
         )
+        if raw_elems:
+            for config in raw_elems:
+                as_dict = conversions.ConvertToType(config, to_type=dict)
+                ret_val.append(DataTableConfig.FromDict(name="EventSource", unparsed_elements=as_dict))
+        else:
+            ret_val = GameStoreConfig._DEFAULT_EVENTS_FROM
+
+        return ret_val
 
     @staticmethod
-    def _parseTableSchemaName(unparsed_elements:Map) -> str:
-        return DataTableConfig.ParseElement(
+    def _parseEventsTo(unparsed_elements:Map) -> List[DataTableConfig]:
+        ret_val : List[DataTableConfig] = []
+
+        raw_elems = GameStoreConfig.ParseElement(
             unparsed_elements=unparsed_elements,
-            valid_keys=["table_schema", "schema"],
-            to_type=str,
-            default_value=DataTableConfig._DEFAULT_TABLE_SCHEMA_NAME,
+            valid_keys=["events_to"],
+            to_type=list,
+            default_value=None,
             remove_target=True
         )
+        if raw_elems:
+            for config in raw_elems:
+                as_dict = conversions.ConvertToType(config, to_type=dict)
+                ret_val.append(DataTableConfig.FromDict(name="EventDestination", unparsed_elements=as_dict))
+        else:
+            ret_val = GameStoreConfig._DEFAULT_EVENTS_TO
+
+        return ret_val
 
     @staticmethod
-    def _parseTableLocation(unparsed_elements:Map) -> DatabaseLocationSchema:
-        return DatabaseLocationSchema.FromDict(
-            name="TableLocation",
+    def _parseFeatsFrom(unparsed_elements:Map) -> List[DataTableConfig]:
+        ret_val : List[DataTableConfig] = []
+
+        raw_elems = GameStoreConfig.ParseElement(
             unparsed_elements=unparsed_elements,
-            default_override=DataTableConfig._DEFAULT_TABLE_LOC
+            valid_keys=["feats_from"],
+            to_type=list,
+            default_value=None,
+            remove_target=True
         )
+        if raw_elems:
+            for config in raw_elems:
+                as_dict = conversions.ConvertToType(config, to_type=dict)
+                ret_val.append(DataTableConfig.FromDict(name="EventSource", unparsed_elements=as_dict))
+        else:
+            ret_val = GameStoreConfig._DEFAULT_FEATS_FROM
+
+        return ret_val
+
+    @staticmethod
+    def _parseFeatsTo(unparsed_elements:Map) -> List[DataTableConfig]:
+        ret_val : List[DataTableConfig] = []
+
+        raw_elems = GameStoreConfig.ParseElement(
+            unparsed_elements=unparsed_elements,
+            valid_keys=["feats_to"],
+            to_type=list,
+            default_value=None,
+            remove_target=True
+        )
+        if raw_elems:
+            for config in raw_elems:
+                as_dict = conversions.ConvertToType(config, to_type=dict)
+                ret_val.append(DataTableConfig.FromDict(name="EventSource", unparsed_elements=as_dict))
+        else:
+            ret_val = GameStoreConfig._DEFAULT_FEATS_TO
+
+        return ret_val
+
 
     # *** PRIVATE METHODS ***
