@@ -7,6 +7,7 @@ from typing import Dict, List, Optional, Set
 # import local files
 from ogd.core.configs.CoreConfig import CoreConfig
 from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
+from ogd.core.configs.GameStoreConfig import GameStoreConfig
 from ogd.common.configs.storage.DatasetRepositoryConfig import DatasetRepositoryConfig
 from ogd.common.configs.DataTableConfig import DataTableConfig
 from ogd.common.filters.RangeFilter import RangeFilter
@@ -81,7 +82,7 @@ class Request(abc.ABC):
 
     def __init__(self, exporter_modes:Set[ExportMode], filters:DatasetFilterCollection,
                  global_cfg:CoreConfig, game_cfg:GeneratorCollectionConfig,
-                 custom_source:Optional[DataTableConfig]=None, custom_dest:Optional[DataTableConfig]=None,
+                 custom_game_stores:Optional[GameStoreConfig],
                  custom_data_directory:Optional[DatasetRepositoryConfig | Dict | Path | str]=None):
         """ Constructor for the request base class.
             Just stores whatever data is given.
@@ -99,14 +100,13 @@ class Request(abc.ABC):
         :type feature_overrides: Optional[List[str]], optional
         """
         # TODO: kind of a hack to just get id from interface, figure out later how this should be handled.
-        self._game_id    : str                       = game_cfg.GameName
-        self._exports    : Set[ExportMode]           = exporter_modes
-        self._filters    : DatasetFilterCollection   = filters
-        self._generators : GeneratorCollectionConfig = game_cfg
-        self._global_cfg : CoreConfig                = global_cfg
-        repository       : DatasetRepositoryConfig   = self._toRepository(data_directory=custom_data_directory)
-        source = custom_source or self._global_cfg.GameSourceMap.get(self._game_id, DataTableConfig.Default())
-        dest   = custom_dest   or self._global_cfg.GameSourceMap.get(self._game_id, DataTableConfig.Default())
+        self._game_id      : str                       = game_cfg.GameName
+        self._exports      : Set[ExportMode]           = exporter_modes
+        self._filters      : DatasetFilterCollection   = filters
+        self._generators   : GeneratorCollectionConfig = game_cfg
+        self._global_cfg   : CoreConfig                = global_cfg
+        repository         : DatasetRepositoryConfig   = self._toRepository(data_directory=custom_data_directory)
+        custom_game_stores : GameStoreConfig           = custom_game_stores or self._global_cfg.GameSourceMap.get(self._game_id, GameStoreConfig().Default())
 
         self._interface  : Interface.Interface     = InterfaceFactory.FromConfig(config=source, fail_fast=self._global_cfg.FailFast)
         self._range      : ExporterRange
