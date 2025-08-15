@@ -17,6 +17,8 @@ from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorColle
 from ogd.common.utils.fileio import loadJSONFile
 from ogd.games.BLOOM.features import PersistThroughFailure
 from . import features
+from ogd.common.utils.Logger import Logger
+import logging
 
 # EXPORT_PATH : Final[str] = "games/BLOOM/DBExport.json"
 
@@ -175,6 +177,28 @@ class BloomLoader(GeneratorLoader):
                 raise NotImplementedError(f"'{detector_type}' is not a valid detector for Bloom.")
         return ret_val
 
+
+    @staticmethod
+    def _loadConfiguredModels(generator_config, mode, loader):
+        model_objs = []
+        for model_name, model_cfg in generator_config.Models.items():
+            type_path = model_cfg.TypeName
+            try:
+                module_path, class_name = type_path.rsplit('.', 1)
+                module = __import__(module_path, fromlist=[class_name])
+                ModelClass = getattr(module, class_name)
+                params = GeneratorParameters(
+                    name=model_name,
+                    mode=mode,
+                    description=model_cfg.Description or "",
+                    count_index=0,
+                    params=getattr(model_cfg, "Params", {})
+                )
+                model = ModelClass(params=params)
+                model_objs.append((model_name, model))
+            except Exception as e:
+                Logger.Log(f"Failed loading model {model_name}: {e}", logging.ERROR)
+        return model_objs
 
     # @staticmethod
     # def GetBloomLabCount(db_export_path:Path=Path(".") / "ogd" / "games" / "BLOOM"):

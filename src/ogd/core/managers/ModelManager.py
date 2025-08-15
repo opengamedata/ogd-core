@@ -14,7 +14,7 @@ class ModelManager:
         self._models: Optional[ModelProcessor] = None
         if LoaderClass is not None:
             self._models = ModelProcessor(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
-            # REFINED: Initialize the models as soon as the manager is created.
+  
             self._models.InitializeModels()
         else:
             Logger.Log("ModelManager did not set up a ModelProcessor, no LoaderClass was given!", logging.WARN)

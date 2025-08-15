@@ -2,8 +2,7 @@ from typing import List
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 import logging
 
@@ -15,17 +14,16 @@ from ogd.common.utils.Logger import Logger
 from pathlib import Path
 import time
 
-class LogisticRegressionModel(PopulationModel):
+class RandomForestModel(PopulationModel):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        print("\n\nInitializing Logistic Regression Model (BLOOM)\n\n")
+        print("\n\nInitializing Random Forest Model (BLOOM)\n\n")
 
         self._economy_view_count = []
         self._alert_review_count = []
         self._policy_change_count = []
         self._game_win = []
 
-        self._scaler = None
         self._model = None
         self._processed_data = None
         self._accuracy = None
@@ -66,9 +64,7 @@ class LogisticRegressionModel(PopulationModel):
         pass
 
     def _train(self):
-        print("\n\nTraining Logistic Regression Model (BLOOM)\n\n")
-
-        print(self._game_win)
+        print("\n\nTraining Random Forest Model (BLOOM)\n\n")
 
         min_length = min(
             len(self._economy_view_count),
@@ -78,9 +74,10 @@ class LogisticRegressionModel(PopulationModel):
         )
 
         if min_length == 0:
-            Logger.Log("No sufficient data for Logistic Regression model training.", logging.WARN)
+            Logger.Log("No sufficient data for Random Forest model training.", logging.WARN)
             return
 
+        # Trim to same length
         X = pd.DataFrame({
             'EconomyViewCount': self._economy_view_count[:min_length],
             'AlertReviewCount': self._alert_review_count[:min_length],
@@ -89,15 +86,15 @@ class LogisticRegressionModel(PopulationModel):
 
         y = self._game_win[:min_length]
 
-        self._scaler = StandardScaler()
-        X_scaled = self._scaler.fit_transform(X)
+        self._model = RandomForestClassifier(
+            n_estimators=100, 
+            random_state=42
+        )
+        self._model.fit(X, y)
 
-        self._model = LogisticRegression()
-        self._model.fit(X_scaled, y)
-
-        y_pred = self._model.predict(X_scaled)
+        y_pred = self._model.predict(X)
         self._accuracy = accuracy_score(y, y_pred)
-        Logger.Log(f"Logistic Regression training completed. Accuracy: {self._accuracy:.2f}", logging.INFO)
+        Logger.Log(f"Random Forest training completed. Accuracy: {self._accuracy:.2f}", logging.INFO)
 
     def _apply(self, apply_to: List[FeatureData]) -> FeatureData:
         if self._model is None:
@@ -114,9 +111,8 @@ class LogisticRegressionModel(PopulationModel):
                 raise ValueError(f"Missing required feature: {key}")
 
         input_df = pd.DataFrame([input_features])
-        input_scaled = self._scaler.transform(input_df[required_features])
-        pred = self._model.predict(input_scaled)[0]
-        prob = self._model.predict_proba(input_scaled)[0][1]
+        pred = self._model.predict(input_df)[0]
+        prob = self._model.predict_proba(input_df)[0][1]
 
         result_feature = apply_to[0] if apply_to else None
         if result_feature:
@@ -127,11 +123,11 @@ class LogisticRegressionModel(PopulationModel):
 
     def _render(self, save_path: Path = None):
         if self._model:
-            Logger.Log("Logistic Regression Coefficients:", logging.INFO)
+            Logger.Log("Random Forest Feature Importances:", logging.INFO)
             features = ['EconomyViewCount', 'AlertReviewCount', 'TotalPolicyChangeCount']
-            for name, coef in zip(features, self._model.coef_[0]):
-                Logger.Log(f"{name}: {coef:.4f}", logging.INFO)
+            for name, importance in zip(features, self._model.feature_importances_):
+                Logger.Log(f"{name}: {importance:.4f}", logging.INFO)
 
     def _modelInfo(self):
         if self._model:
-            Logger.Log(f"Logistic Regression Model Accuracy: {self._accuracy:.2f}", logging.INFO)
+            Logger.Log(f"Random Forest Model Accuracy: {self._accuracy:.2f}", logging.INFO)
