@@ -28,7 +28,7 @@ class PlayerProcessor(ExtractorProcessor):
                             This should correspond to whatever game_id is in the TableSchema.
         :type LoaderClass: Type[GeneratorLoader]
         :param game_schema: A dictionary that defines how the game data itself is structured.
-        :type game_schema: GameStoreConfig
+        :type game_schema: DataTableConfig
         :param player_id: _description_
         :type player_id: str
         :param feature_overrides: _description_, defaults to None

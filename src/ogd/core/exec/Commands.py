@@ -20,7 +20,7 @@ from ogd.core.requests.Request import ExporterRange, Request
 from ogd.core.requests.RequestResult import RequestResult, ResultStatus
 from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.configs.CoreConfig import CoreConfig
-from ogd.common.configs.GameStoreConfig import GameStoreConfig
+from ogd.common.configs.DataTableConfig import DataTableConfig
 from ogd.common.configs.storage.FileStoreConfig import FileStoreConfig
 from ogd.common.configs.storage.DatasetRepositoryConfig import DatasetRepositoryConfig
 from ogd.common.filters.collections.DatasetFilterCollection import DatasetFilterCollection
@@ -69,7 +69,7 @@ class OGDCommands:
         try:
             event_schema  = LoggingSpecificationSchema.FromFile(schema_name=game, schema_path=Path("src") / "ogd" / "games" / game / "schemas")
             generator_cfg = GeneratorCollectionConfig.FromFile( schema_name=game, schema_path=Path("src") / "ogd" / "games" / game / "schemas")
-            table_schema = config.GameSourceMap.get(game,GameStoreConfig.Default()).Table or EventTableSchema.Default()
+            table_schema = config.GameSourceMap.get(game,DataTableConfig.Default()).Table or EventTableSchema.Default()
             readme = Readme(event_collection=event_schema, generator_collection=generator_cfg, table_schema=table_schema)
             print(readme.CustomReadmeSource)
         except Exception as err:
@@ -132,10 +132,10 @@ class OGDCommands:
             no_player_file=args.no_player_file,
             no_pop_file=args.no_pop_file
         )
-        source : GameStoreConfig = config.GameSourceMap.get(args.game, GameStoreConfig.Default())
+        source : DataTableConfig = config.GameSourceMap.get(args.game, DataTableConfig.Default())
         source.StoreConfig       = config.DataSources.get(source.StoreName) or config.DataSources[list(config.DataSources.keys())[0]] # TODO : if source wasn't found, just take first source we find, because why not. But do something smarter later.
         source.Table             = EventTableSchema.FromFile(source.TableSchemaName)
-        dest : GameStoreConfig = config.GameSourceMap.get(args.game, GameStoreConfig.Default())
+        dest : DataTableConfig = config.GameSourceMap.get(args.game, DataTableConfig.Default())
         dest.StoreConfig       = config.DataSources.get(dest.StoreName) or config.DataSources[list(config.DataSources.keys())[0]] # TODO : if dest wasn't found, just take first dest we find, because why not. But do something smarter later.
         dest.Table             = EventTableSchema.FromFile(dest.TableSchemaName)
         repository : DatasetRepositoryConfig = DatasetRepositoryConfig.Default()
@@ -148,7 +148,7 @@ class OGDCommands:
         if args.from_source is not None and args.from_source != "":
             # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
             _ext = str(args.from_source).rsplit('.', maxsplit=1)[-1]
-            source = GameStoreConfig(name="FILE SOURCE",
+            source = DataTableConfig(name="FILE SOURCE",
                                    game_id=args.game,
                                    source_name=None,
                                    schema_name=None,
@@ -193,7 +193,7 @@ class OGDCommands:
                 filters.Sequences.Timestamps = OGDGenerators.GenDateFilter(game=args.game, monthly=args.monthly, start_date=start_date, end_date=end_date)
                 dataset_id = DatasetKey.FromDateRange(game_id=args.game, start_date=start_date, end_date=end_date)
     # 3. set up the outerface, based on the range and dataset_id.
-        dest = GameStoreConfig(name="FileDestination",
+        dest = DataTableConfig(name="FileDestination",
                                 game_id=args.game,
                                 source_name=None,
                                 schema_name=None,
@@ -204,7 +204,7 @@ class OGDCommands:
         # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
         # TODO : re-enable multi-output option
         # if config.DebugLevel == "DEBUG":
-        #     _cfg = GameStoreConfig(name="DEBUG", all_elements={"database":"DEBUG", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
+        #     _cfg = DataTableConfig(name="DEBUG", all_elements={"database":"DEBUG", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
 
     # 4. Once we have the parameters parsed out, construct the request.
         req = Request(

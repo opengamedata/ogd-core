@@ -7,7 +7,7 @@ from ogd.common.configs.TestConfig import TestConfig
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.utils.Logger import Logger
 # import locals
-from src.ogd.common.configs.generators.IteratedConfig import IteratedConfig
+from src.ogd.core.configs.generators.IteratedConfig import IteratedConfig
 from tests.config.t_config import settings
 
 class test_IteratedConfig(TestCase):

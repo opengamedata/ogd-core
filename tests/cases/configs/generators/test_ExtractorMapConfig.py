@@ -6,12 +6,12 @@ from unittest import TestCase
 from ogd.common.configs.TestConfig import TestConfig
 from ogd.common.utils.Logger import Logger
 # import locals
-from src.ogd.common.configs.generators.ExtractorMapConfig import ExtractorMapConfig
+from src.ogd.core.configs.generators.ExtractorMapConfig import ExtractorMapConfig
 from tests.config.t_config import settings
 
 @unittest.skip("Not implemented")
 class test_ExtractorMapConfig(TestCase):
-    """Testbed for the GameStoreConfig class.
+    """Testbed for the ExtractorMapConfig class.
 
         TODO : Implement and enable tests.
     """

@@ -7,11 +7,11 @@ from ogd.common.configs.TestConfig import TestConfig
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.utils.Logger import Logger
 # import locals
-from src.ogd.common.configs.generators.AggregateConfig import AggregateConfig
+from src.ogd.core.configs.generators.AggregateConfig import AggregateConfig
 from tests.config.t_config import settings
 
 class test_AggregateConfig(TestCase):
-    """Testbed for the GameStoreConfig class.
+    """Testbed for the AggregateConfig class.
 
         TODO : Test more 'enabled' options/combinations.
     """

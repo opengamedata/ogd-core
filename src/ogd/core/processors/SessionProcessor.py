@@ -28,21 +28,20 @@ class SessionProcessor(ExtractorProcessor):
         :param LoaderClass: The type of data extractor to use for input data.
                             This should correspond to whatever game_id is in the TableSchema.
         :type LoaderClass: Type[GeneratorLoader]
-        :param game_schema: A dictionary that defines how the game data itself is structured.
-        :type game_schema: GameScGameStoreConfig
+        :param generator_cfg: _description_
+        :type generator_cfg: GeneratorCollectionConfig
         :param player_id: _description_
         :type player_id: str
         :param session_id: _description_
         :type session_id: str
         :param feature_overrides: _description_, defaults to None
         :type feature_overrides: Optional[List[str]], optional
-        :param session_file: _description_, defaults to None
-        :type session_file: Union[IO[str],None], optional
         """
         ## Define instance vars
         self._session_id   : str = session_id
         self._player_id    : str = player_id
         # NOTE: need session and player IDs set before we do initialization in parent.
+
         super().__init__(LoaderClass=LoaderClass, generator_cfg=generator_cfg, feature_overrides=feature_overrides)
 
     def __str__(self):

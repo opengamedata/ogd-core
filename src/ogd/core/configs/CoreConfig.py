@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any, Dict, Final, Optional, Self
 # import local files
 from ogd.common.configs.storage.RepositoryIndexingConfig import RepositoryIndexingConfig
-from ogd.common.configs.GameStoreConfig import GameStoreConfig
+from ogd.common.configs.DataTableConfig import DataTableConfig
 from ogd.common.configs.storage.DataStoreConfig import DataStoreConfig
 from ogd.common.configs.storage.BigQueryConfig import BigQueryConfig
 from ogd.common.configs.storage.FileStoreConfig import FileStoreConfig
@@ -46,7 +46,7 @@ class CoreConfig(Schema):
         with_profiling: Optional[bool],
         file_idx: Optional[RepositoryIndexingConfig],
         data_src: Optional[Dict[str, DataStoreConfig]],
-        game_src_map: Optional[Dict[str, GameStoreConfig]],
+        game_src_map: Optional[Dict[str, DataTableConfig]],
         other_elements: Dict[str, Any]
     ):
         """Constructs a CoreConfig, from a name and dictionary of JSON-style elements.
@@ -65,7 +65,7 @@ class CoreConfig(Schema):
         self._with_profiling : bool               = with_profiling or self._parseProfiling(unparsed_elements=unparsed_elements, schema_name=name)
         self._file_idx       : RepositoryIndexingConfig   = file_idx       or self._parseFileIndexing(unparsed_elements=unparsed_elements, schema_name=name)
         self._data_src       : Dict[str, DataStoreConfig] = data_src or self._parseDataSources(unparsed_elements=unparsed_elements, schema_name=name)
-        self._game_src_map   : Dict[str, GameStoreConfig] = game_src_map or self._parseGameSourceMap(unparsed_elements=unparsed_elements, schema_name=name)
+        self._game_src_map   : Dict[str, DataTableConfig] = game_src_map or self._parseGameSourceMap(unparsed_elements=unparsed_elements, schema_name=name)
         
         # Set up data store configs and table schemas for each game source mapping
         for game, cfg in self._game_src_map.items():
@@ -146,7 +146,7 @@ class CoreConfig(Schema):
         return self._data_src
 
     @property
-    def GameSourceMap(self) -> Dict[str, GameStoreConfig]:
+    def GameSourceMap(self) -> Dict[str, DataTableConfig]:
         """
         A mapping from game IDs to the data sources they use.
         """
@@ -305,8 +305,8 @@ class CoreConfig(Schema):
         return ret_val
 
     @staticmethod
-    def _parseGameSourceMap(unparsed_elements:Map, schema_name:Optional[str]=None) -> Dict[str, GameStoreConfig]:
-        ret_val : Dict[str, GameStoreConfig]
+    def _parseGameSourceMap(unparsed_elements:Map, schema_name:Optional[str]=None) -> Dict[str, DataTableConfig]:
+        ret_val : Dict[str, DataTableConfig]
 
         raw_mappings = CoreConfig.ParseElement(
             unparsed_elements=unparsed_elements,
@@ -317,7 +317,7 @@ class CoreConfig(Schema):
             schema_name=schema_name
         )
         if isinstance(raw_mappings, dict):
-            ret_val = { key : GameStoreConfig.FromDict(name=key, unparsed_elements=val) for key, val in raw_mappings.items() }
+            ret_val = { key : DataTableConfig.FromDict(name=key, unparsed_elements=val) for key, val in raw_mappings.items() }
         else:
             ret_val = {}
             Logger.Log(f"Config game source map was not found, defaulting to: {ret_val}.", logging.WARN)

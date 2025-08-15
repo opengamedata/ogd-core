@@ -6,9 +6,9 @@ from unittest import TestCase
 from ogd.common.configs.TestConfig import TestConfig
 from ogd.common.utils.Logger import Logger
 # import locals
-from src.ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
-from src.ogd.common.configs.generators.DetectorMapConfig import DetectorMapConfig
-from src.ogd.common.configs.generators.ExtractorMapConfig import ExtractorMapConfig
+from src.ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
+from src.ogd.core.configs.generators.DetectorMapConfig import DetectorMapConfig
+from src.ogd.core.configs.generators.ExtractorMapConfig import ExtractorMapConfig
 from tests.config.t_config import settings
 
 class test_GeneratorCollectionConfig(TestCase):

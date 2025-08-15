@@ -8,7 +8,7 @@ from typing import Dict, List, Optional, Set
 from ogd.core.configs.CoreConfig import CoreConfig
 from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.common.configs.storage.DatasetRepositoryConfig import DatasetRepositoryConfig
-from ogd.common.configs.GameStoreConfig import GameStoreConfig
+from ogd.common.configs.DataTableConfig import DataTableConfig
 from ogd.common.filters.RangeFilter import RangeFilter
 from ogd.common.filters.collections.DatasetFilterCollection import DatasetFilterCollection
 from ogd.common.filters.collections.IDFilterCollection import IDFilterCollection
@@ -35,6 +35,10 @@ class ExporterRange:
         self._ids      : Optional[List[str]]       = ids
         self._id_mode  : IDMode                    = id_mode
         self._versions : Optional[List[Version]] = versions
+
+    @staticmethod
+    def FromWholeSource(source:Interface.Interface, versions:VersioningFilterCollection):
+
 
     @staticmethod
     def FromDateRange(source:Interface.Interface, dates:SequencingFilterCollection, versions:VersioningFilterCollection):
@@ -77,7 +81,7 @@ class Request(abc.ABC):
 
     def __init__(self, exporter_modes:Set[ExportMode], filters:DatasetFilterCollection,
                  global_cfg:CoreConfig, game_cfg:GeneratorCollectionConfig,
-                 custom_source:Optional[GameStoreConfig]=None, custom_dest:Optional[GameStoreConfig]=None,
+                 custom_source:Optional[DataTableConfig]=None, custom_dest:Optional[DataTableConfig]=None,
                  custom_data_directory:Optional[DatasetRepositoryConfig | Dict | Path | str]=None):
         """ Constructor for the request base class.
             Just stores whatever data is given.
@@ -88,9 +92,9 @@ class Request(abc.ABC):
         :param exporter_modes: _description_
         :type exporter_modes: Set[ExportMode]
         :param source: _description_
-        :type source: GameStoreConfig
+        :type source: DataTableConfig
         :param dest: _description_
-        :type dest: GameStoreConfig
+        :type dest: DataTableConfig
         :param feature_overrides: _description_, defaults to None
         :type feature_overrides: Optional[List[str]], optional
         """
@@ -101,8 +105,8 @@ class Request(abc.ABC):
         self._generators : GeneratorCollectionConfig = game_cfg
         self._global_cfg : CoreConfig                = global_cfg
         repository       : DatasetRepositoryConfig   = self._toRepository(data_directory=custom_data_directory)
-        source = custom_source or self._global_cfg.GameSourceMap.get(self._game_id, GameStoreConfig.Default())
-        dest   = custom_dest   or self._global_cfg.GameSourceMap.get(self._game_id, GameStoreConfig.Default())
+        source = custom_source or self._global_cfg.GameSourceMap.get(self._game_id, DataTableConfig.Default())
+        dest   = custom_dest   or self._global_cfg.GameSourceMap.get(self._game_id, DataTableConfig.Default())
 
         self._interface  : Interface.Interface     = InterfaceFactory.FromConfig(config=source, fail_fast=self._global_cfg.FailFast)
         self._range      : ExporterRange
