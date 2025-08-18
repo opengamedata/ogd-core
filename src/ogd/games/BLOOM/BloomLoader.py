@@ -179,8 +179,10 @@ class BloomLoader(GeneratorLoader):
 
 
     @staticmethod
-    def _loadConfiguredModels(generator_config, mode, loader):
+    def loadConfiguredModels(generator_config, mode):
         model_objs = []
+        print("inside the loadConfiguredModels")
+        print("generator_config.Models:", generator_config.Models)
         for model_name, model_cfg in generator_config.Models.items():
             type_path = model_cfg.TypeName
             try:

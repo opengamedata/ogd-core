@@ -200,24 +200,24 @@ class FeatureManager:
     def GetPopulationFeatures(self) -> List[Feature]:
         population_data = []
         if self._population is not None:
-            population_data += self._population.GetFeatureData(order=1)
+            population_data += self._population.GetFeatures(order=1)
         return population_data
     
     def GetPlayerFeatures(self) -> List[Feature]:
-        self._try_update(as_str=False)
+        self._try_update()
         player_data = []
         if self._players is not None:
             for player in self._players.values():
-                player_data += player.GetFeatureData(order=1) + player.GetFeatureData(order=2)
+                player_data += player.GetFeatures(order=1).Features + player.GetFeatures(order=2).Features
         return player_data
     
     def GetSessionFeatures(self) -> List[Feature]:
-        self._try_update(as_str=False)
+        self._try_update()
         session_data = []
         if self._sessions is not None:
             for sess_list in self._sessions.values():
                 for session in sess_list.values():
-                    session_data += session.GetFeatureData(order=1) + session.GetFeatureData(order=2)
+                    session_data += session.GetFeatures(order=1) + session.GetFeatures(order=2)
         return session_data
    
     def ClearPopulationLines(self) -> None:

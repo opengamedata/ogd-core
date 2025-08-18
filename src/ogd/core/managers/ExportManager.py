@@ -153,7 +153,7 @@ class ExportManager:
             self._feat_mgr = FeatureManager(generator_config=request.Generators, LoaderClass=load_class, feature_overrides=None)
         else:
             Logger.Log("Feature data not requested, or extractor loader unavailable, skipping feature manager.", logging.INFO, depth=1)
-        self._model_mgr = ModelManager(game_schema=request.Generators, LoaderClass=load_class, feature_overrides=None)
+        self._model_mgr = ModelManager(generator_cfg=request.Generators, LoaderClass=load_class, feature_overrides=None)
         self._outputHeaders(request=request)
 
     def _processSlices(self, request:Request, ids:List[str]) -> None:
@@ -182,7 +182,7 @@ class ExportManager:
                     self._player_feature_data = self._feat_mgr.GetPlayerFeatures()
                     # print(f"ExportManager passing {len(self._player_feature_data)} player features to ModelManager for processing...")
                     # print(self._player_feature_data)
-                    self._model_mgr.ProcessFeatureData(self._player_feature_data)
+                    self._model_mgr.ProcessFeature(self._player_feature_data)
 
             # 2. Write out the session data and reset for next slice.
                 start = datetime.now()

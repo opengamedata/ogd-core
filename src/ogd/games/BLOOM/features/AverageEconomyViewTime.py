@@ -28,8 +28,8 @@ class AverageEconomyViewTime(Extractor):
         if feature.ExportMode == self.ExtractMode:
             match feature.Name:
                 case "EconomyViewTime":
-                    idx = feature.FeatureNames.index("EconomyViewTime-Seconds")
-                    self._econ_time = feature.Values[idx]
+                    # idx = feature.FeatureNames.index("EconomyViewTime-Seconds")
+                    self._econ_time = feature.Values[0]
                 case "EconomyViewCount":
                     self._econ_count = feature.Values[0]
 

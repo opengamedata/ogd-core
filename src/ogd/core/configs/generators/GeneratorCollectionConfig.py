@@ -314,7 +314,8 @@ class GeneratorCollectionConfig(Config):
         _other_ranges : Dict[str, range] = cls._parseOtherRanges(unparsed_elements=unparsed_elements)
 
         return GeneratorCollectionConfig(name=name, game_id=_game_id,
-                          detector_map=None, extractor_map=None,
+                          detector_map=None, extractor_map=None, 
+                          model_map= cls._parseModelMap(unparsed_elements=unparsed_elements) or cls._DEFAULT_MODEL_MAP,
                           subunit_range=_level_range, other_ranges=_other_ranges,
                           other_elements=unparsed_elements)
 
@@ -325,6 +326,7 @@ class GeneratorCollectionConfig(Config):
             game_id="DEFAULT_GAME",
             detector_map=cls._DEFAULT_DETECTOR_MAP,
             extractor_map=cls._DEFAULT_EXTRACTOR_MAP,
+            model_map=cls._DEFAULT_MODEL_MAP,
             subunit_range=cls._DEFAULT_LEVEL_RANGE,
             other_ranges=cls._DEFAULT_OTHER_RANGES,
             other_elements={}

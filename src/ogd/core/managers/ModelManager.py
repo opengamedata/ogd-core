@@ -5,28 +5,28 @@ from typing import List, Type, Optional
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.processors.ModelProcessor import ModelProcessor
 from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
+# from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.models.Feature import Feature
 from ogd.common.models.Event import Event
 from ogd.common.utils.Logger import Logger
 
 class ModelManager:
-    def __init__(self, game_schema:GeneratorCollectionConfig, LoaderClass:Optional[Type[GeneratorLoader]], feature_overrides:Optional[List[str]]):
+    def __init__(self, generator_cfg:GeneratorCollectionConfig, LoaderClass:Optional[Type[GeneratorLoader]], feature_overrides:Optional[List[str]]):
         self._models: Optional[ModelProcessor] = None
         if LoaderClass is not None:
-            self._models = ModelProcessor(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
-  
+            self._models = ModelProcessor(LoaderClass=LoaderClass, generator_cfg=generator_cfg, feature_overrides=feature_overrides)
             self._models.InitializeModels()
         else:
             Logger.Log("ModelManager did not set up a ModelProcessor, no LoaderClass was given!", logging.WARN)
 
-    def ProcessFeatureData(self, features: List[Feature]):
+    def ProcessFeature(self, features: List[Feature]):
         # REFINED: A single, clean public method to process a list of features.
         if not self._models:
             return
         start = datetime.now()
         Logger.Log(f"ModelManager processing {len(features)} features...", logging.INFO)
         for feature in features:
-            self._models.ProcessFeature(feature)
+            self._models.ProcessFeatures(feature)
         Logger.Log(f"Time for ModelManager to process features: {datetime.now() - start}", logging.INFO)
 
     def TrainModels(self) -> None:

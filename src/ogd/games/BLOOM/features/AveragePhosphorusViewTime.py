@@ -28,8 +28,8 @@ class AveragePhosphorusViewTime(Extractor):
         if feature.ExportMode == self.ExtractMode:
             match feature.Name:
                 case "PhosphorusViewTime":
-                    idx = feature.FeatureNames.index("PhosphorusViewTime-Seconds")
-                    self._phos_time = feature.Values[idx]
+                    # idx = feature.FeatureNames.index("PhosphorusViewTime-Seconds")
+                    self._phos_time = feature.Values[0]
                 case "PhosphorusViewCount":
                     self._phos_count = feature.Values[0]
 

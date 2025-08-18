@@ -8,7 +8,7 @@ from sklearn.metrics import accuracy_score
 import logging
 
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.models.PopulationModel import PopulationModel
 from ogd.common.utils.Logger import Logger
@@ -39,7 +39,7 @@ class LogisticRegressionModel(PopulationModel):
             'GameCompletionStatus'
         ]
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         if feature.ExportMode != self.ExtractionMode:
             return
 
@@ -99,7 +99,7 @@ class LogisticRegressionModel(PopulationModel):
         self._accuracy = accuracy_score(y, y_pred)
         Logger.Log(f"Logistic Regression training completed. Accuracy: {self._accuracy:.2f}", logging.INFO)
 
-    def _apply(self, apply_to: List[FeatureData]) -> FeatureData:
+    def _apply(self, apply_to: List[Feature]) -> Feature:
         if self._model is None:
             raise ValueError("Model must be trained before applying.")
 
