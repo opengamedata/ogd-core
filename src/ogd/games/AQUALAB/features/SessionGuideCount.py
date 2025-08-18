@@ -2,12 +2,12 @@
 from typing import Any, List
 # import locals
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
-class SessionGuideCount(Feature):
+class SessionGuideCount(Extractor):
 
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
@@ -25,7 +25,7 @@ class SessionGuideCount(Feature):
     def _updateFromEvent(self, event:Event) -> None:
         self._count += 1
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

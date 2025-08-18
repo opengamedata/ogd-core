@@ -6,7 +6,7 @@ from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class TotalArrowMoves(PerLevelFeature):
     def __init__(self, params:GeneratorParameters):
@@ -26,7 +26,7 @@ class TotalArrowMoves(PerLevelFeature):
     def _updateFromEvent(self, event:Event) -> None:
         self._arrow_move_count += 1
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

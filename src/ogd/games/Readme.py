@@ -4,7 +4,7 @@ import traceback
 from pathlib import Path
 
 # import local files
-from ogd.common.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.common.schemas.events.LoggingSpecificationSchema import LoggingSpecificationSchema
 from ogd.common.schemas.tables.TableSchema import TableSchema
 from ogd.common.utils.Logger import Logger
@@ -76,10 +76,6 @@ class Readme:
         Gives a summary of the data licensing and suggested citation,
         then adds the markdown-formatted information from game and table schemas.
 
-        :param game_schema: [description]
-        :type game_schema: GameSchema
-        :param table_schema: [description]
-        :type table_schema: TableConfig
         :return: A string containing metadata for the given game.
         :rtype: str
         """

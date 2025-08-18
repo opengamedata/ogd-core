@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 # import PerCountyFeature
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
@@ -28,7 +28,7 @@ class CountyLatestMoney(PerCountyFeature):
         current_money = event.GameState.get("current_money", None)
         self.latest_money = current_money
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

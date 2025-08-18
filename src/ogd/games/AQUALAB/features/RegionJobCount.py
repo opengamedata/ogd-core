@@ -9,7 +9,7 @@ from ogd.core.generators.extractors.Extractor import GeneratorParameters
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 
 class RegionJobCount(PerCountFeature):
@@ -42,7 +42,7 @@ class RegionJobCount(PerCountFeature):
     def _updateFromEvent(self, event:Event) -> None:
         self.count += 1
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

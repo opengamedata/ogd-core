@@ -1,18 +1,15 @@
 ## import standard libraries
 import abc
 import logging
-from typing import Dict, List, Type, Optional, Set
+from typing import List, Type, Optional
 # import locals
 from ogd.core.registries.GeneratorRegistry import GeneratorRegistry
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.common.models.FeatureData import FeatureData
-from ogd.core.generators.GeneratorLoader import GeneratorLoader
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.processors.Processor import Processor
+from ogd.common.models.Feature import Feature
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.schemas.games.GameSchema import GameSchema
-from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.common.utils.Logger import Logger
-from ogd.common.utils.typing import ExportRow
 
 ## @class Processor
 class GeneratorProcessor(Processor):
@@ -43,15 +40,12 @@ class GeneratorProcessor(Processor):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_schema: GameSchema, LoaderClass:Type[GeneratorLoader], feature_overrides:Optional[List[str]]=None):
-        super().__init__(game_schema=game_schema)
+    def __init__(self, generator_cfg:GeneratorCollectionConfig, LoaderClass:Type[GeneratorLoader], feature_overrides:Optional[List[str]]=None):
+        super().__init__(generator_cfg=generator_cfg)
         self._overrides   : Optional[List[str]]   = feature_overrides
-        self._loader      : GeneratorLoader       = LoaderClass(player_id=self._playerID, session_id=self._sessionID, game_schema=self._game_schema,
+        self._loader      : GeneratorLoader       = LoaderClass(player_id=self._playerID, session_id=self._sessionID, generator_config=self._generator_cfg,
                                                                 mode=self._mode, feature_overrides=self._overrides)
         self._registry    : Optional[GeneratorRegistry] = None # Set to 0, let subclasses create own instances.
-
-    def __str__(self):
-        return f""
 
     @property
     def GeneratorNames(self) -> List[str]:
@@ -62,12 +56,12 @@ class GeneratorProcessor(Processor):
 
     # *** PUBLIC METHODS ***
 
-    def ProcessFeatureData(self, feature_list:List[FeatureData]) -> None:
+    def ProcessFeatures(self, feature_list:List[Feature]) -> None:
         if self._registry is not None:
             for feature in feature_list:
-                self._registry.UpdateFromFeatureData(feature=feature)
+                self._registry.UpdateFromFeature(feature=feature)
         else:
-            Logger.Log(f"Processor has no registry, skipping FeatureData.", logging.WARN)
+            Logger.Log("Processor has no registry, skipping Feature.", logging.WARN)
 
     # *** PRIVATE STATICS ***
 

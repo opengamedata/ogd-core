@@ -3,13 +3,13 @@ import logging
 from typing import Any, List, Optional
 # OGD imports
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.utils.Logger import Logger
 
-class JobsBeforeSurvey(Feature):
+class JobsBeforeSurvey(Extractor):
 
     def __init__(self, params: GeneratorParameters, survey_ID: str):
         super().__init__(params=params)
@@ -41,7 +41,7 @@ class JobsBeforeSurvey(Feature):
             if survey_id == self.survey_ID:
                 self._survey_found = True
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -1,7 +1,7 @@
 """ Lakeland Feature Extractor
 Note that a separate file unique to the lakeland extractor is necessary to run this script.
 The file is Lakeland Enumerators.json, and is required for the line:
-_STR_TO_ENUM = utils.loadJSONFile("games/LAKELAND/Lakeland Enumerators.json")
+_STR_TO_ENUM = fileio.loadJSONFile("games/LAKELAND/Lakeland Enumerators.json")
 
 This json file is created from the fielddaylab/lakeland README on github via
 "produce_lakeland_enumerators.py". Please run that script with the appropriate inpath and outpath before running this
@@ -25,8 +25,8 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.legacy.LegacyFeature import LegacyFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.schemas.games.GameSchema import GameSchema
-from ogd.common.utils import utils
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
+from ogd.common.utils import fileio
 from ogd.common.utils.Logger import Logger
 
 # temp comment
@@ -47,7 +47,7 @@ class LakelandExtractor(LegacyFeature):
     ]
     try:
         # TODO: someday, change directory to the directory of current file first, and fix this path, so we don't have indirection issues.
-        _STR_TO_ENUM = utils.loadJSONFile(filename="LakelandEnumerators.json", path=Path(".") / "ogd" / "games" / "LAKELAND" / "features" )
+        _STR_TO_ENUM = fileio.loadJSONFile(filename="LakelandEnumerators.json", path=Path(".") / "ogd" / "games" / "LAKELAND" / "features" )
     except FileNotFoundError as err:
         Logger.Log(message=f"Could not load Lakeland Enumerators", level=logging.WARNING)
         _STR_TO_ENUM = {}
@@ -99,17 +99,17 @@ class LakelandExtractor(LegacyFeature):
     #                    by this extractor instance.
     #  @param game_table A data structure containing information on how the db
     #                    table associated with this game is structured.
-    #  @param game_schema A dictionary that defines how the game data itself is
+    #  @param generator_config A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, params:GeneratorParameters, game_schema:GameSchema, session_id:str):
+    def __init__(self, params:GeneratorParameters, generator_config:GeneratorCollectionConfig, session_id:str):
         # Initialize superclass
-        super().__init__(params=params, game_schema=game_schema, session_id=session_id)
+        super().__init__(params=params, generator_config=generator_config, session_id=session_id)
         # Set window and overlap size
-        self._NUM_SECONDS_PER_WINDOW = game_schema.Config[LakelandExtractor._WINDOW_PREFIX+'WINDOW_SIZE_SECONDS']
-        self._NUM_SECONDS_PER_WINDOW_OVERLAP = game_schema.Config["WINDOW_OVERLAP_SECONDS"]
-        self._GAME_SCHEMA = game_schema
-        self._IDLE_THRESH_SECONDS = game_schema.Config['IDLE_THRESH_SECONDS']
-        self.WINDOW_RANGE = range(game_schema.LevelRange.stop)
+        self._NUM_SECONDS_PER_WINDOW = generator_config.Config[LakelandExtractor._WINDOW_PREFIX+'WINDOW_SIZE_SECONDS']
+        self._NUM_SECONDS_PER_WINDOW_OVERLAP = generator_config.Config["WINDOW_OVERLAP_SECONDS"]
+        self._GAME_SCHEMA = generator_config
+        self._IDLE_THRESH_SECONDS = generator_config.Config['IDLE_THRESH_SECONDS']
+        self.WINDOW_RANGE = range(generator_config.LevelRange.stop)
         self._WINDOW_RANGES = self._get_window_ranges()
         self._cur_gameplay = 1
         self._startgame_count = 0
@@ -154,7 +154,7 @@ class LakelandExtractor(LegacyFeature):
             self._VERSION = event.LogVersion
             self.setValByName("version", self._VERSION)
         # Check for invalid row.
-        if self.ExtractionMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
+        if self.ExtractMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
             Logger.Log(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.SessionID}!", logging.ERROR)
         # If row is valid, process it.
         else:
@@ -1462,7 +1462,7 @@ class LakelandExtractor(LegacyFeature):
     def reset(self):
         self.levels:           List[int]       = []
         self.last_adjust_type: Optional[str] = None
-        self.features:         LegacyFeature.LegacySessionFeatures = LegacyFeature.LegacySessionFeatures(game_schema=self._GAME_SCHEMA)
+        self.features:         LegacyFeature.LegacySessionFeatures = LegacyFeature.LegacySessionFeatures(generator_config=self._GAME_SCHEMA)
         self.setValByName('sessID', new_value=self._session_id)
 
         # Initialize Lakeland Variables

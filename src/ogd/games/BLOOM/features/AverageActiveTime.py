@@ -2,12 +2,12 @@
 from datetime import timedelta
 from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
-class AverageActiveTime(Feature):
+class AverageActiveTime(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.active_time_per_session: Dict[str, timedelta] = {} 
@@ -35,7 +35,7 @@ class AverageActiveTime(Feature):
             self.active_time_per_session[player_id] = self.active_time_per_session.get(player_id, timedelta())
             self.active_time_per_session[player_id] += event.Timestamp
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         if feature.Name == "ActiveTime":
             self.active_time_per_session = feature.Value 
         elif feature.Name == "NumberOfSessionsPerPlayer":
@@ -58,12 +58,12 @@ class AverageActiveTime(Feature):
 from typing import Any, Dict, List, Optional
 from datetime import timedelta
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
-class AverageActiveTime(Feature):
+class AverageActiveTime(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.active_time_per_session: Dict[str, timedelta] = {}
@@ -89,7 +89,7 @@ class AverageActiveTime(Feature):
         elif event.EventName == "unpause_game":
             self.session_start_time[session_id] = event
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

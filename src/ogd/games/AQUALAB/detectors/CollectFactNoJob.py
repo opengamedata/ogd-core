@@ -12,8 +12,8 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 class CollectFactNoJob(Detector):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
-    :param Feature: Base class for a Custom Feature class.
-    :type Feature: _type_
+    :param Extractor: Base class for a Custom Feature class.
+    :type Extractor: _type_
     """
     def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None]):
         super().__init__(params=params, trigger_callback=trigger_callback)

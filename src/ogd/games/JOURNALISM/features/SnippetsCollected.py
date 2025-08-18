@@ -8,7 +8,7 @@ from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class SnippetsCollected(PerLevelFeature):
     def __init__(self, params:GeneratorParameters):
@@ -33,11 +33,11 @@ class SnippetsCollected(PerLevelFeature):
             self._snippet_quals.append(event.EventData.get("snippet_quality", "SNIPPET QUALITY NOT FOUND"))
             self._snippet_types.append(event.EventData.get("snippet_type", "SNIPPET TYPE NOT FOUND"))
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         """_summary_
 
         :param feature: _description_
-        :type feature: FeatureData
+        :type feature: Feature
         """
         return
 
