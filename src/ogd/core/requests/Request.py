@@ -1,74 +1,25 @@
 # import standard libraries
 import abc
-import logging
-from datetime import datetime, date, timedelta, time
 from pathlib import Path
 from typing import Dict, List, Optional, Set
+# import 3rd-party libraries
+from deprecated import deprecated
 # import local files
 from ogd.core.configs.CoreConfig import CoreConfig
 from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.configs.GameStoreConfig import GameStoreConfig
 from ogd.common.configs.storage.DatasetRepositoryConfig import DatasetRepositoryConfig
 from ogd.common.configs.DataTableConfig import DataTableConfig
-from ogd.common.filters.RangeFilter import RangeFilter
 from ogd.common.filters.collections.DatasetFilterCollection import DatasetFilterCollection
-from ogd.common.filters.collections.IDFilterCollection import IDFilterCollection
-from ogd.common.filters.collections.SequencingFilterCollection import SequencingFilterCollection
-from ogd.common.filters.collections.VersioningFilterCollection import VersioningFilterCollection, Version
 from ogd.common.models.enums.IDMode import IDMode
-from ogd.common.models.enums.FilterMode import FilterMode
 from ogd.common.models.enums.ExportMode import ExportMode
-from ogd.common.storage.interfaces import Interface
+from ogd.common.storage.interfaces.Interface import Interface
 from ogd.common.storage.interfaces.InterfaceFactory import InterfaceFactory
 from ogd.common.storage.outerfaces.Outerface import Outerface
 from ogd.common.storage.outerfaces.OuterfaceFactory import OuterfaceFactory
 from ogd.common.schemas.datasets.DatasetSchema import DatasetKey
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import Date, Map
-
-class ExporterRange:
-    """
-    Simple class to define a range of data for export.
-    """
-    def __init__(self, date_min:Date, date_max:Date, ids:Optional[List[str]], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[Version]]=None):
-        self._date_min : Date = date_min
-        self._date_max : Date = date_max
-        self._ids      : Optional[List[str]]       = ids
-        self._id_mode  : IDMode                    = id_mode
-        self._versions : Optional[List[Version]] = versions
-
-    @staticmethod
-    def FromWholeSource(source:Interface.Interface, versions:VersioningFilterCollection):
-
-
-    @staticmethod
-    def FromDateRange(source:Interface.Interface, dates:SequencingFilterCollection, versions:VersioningFilterCollection):
-        if dates.Timestamps.Min and dates.Timestamps.Max:
-            ids = source.AvailableIDs(mode=IDMode.SESSION, filters=DatasetFilterCollection(sequence_filters=dates, version_filters=versions))
-            return ExporterRange(date_min=dates.Timestamps.Min, date_max=dates.Timestamps.Max, ids=ids, id_mode=IDMode.SESSION, versions=versions.LogVersions.AsList)
-        else:
-            raise ValueError(f"Tried to create exporter range from open-ended set of dates {dates.Timestamps.Min}-{dates.Timestamps.Max}, this is not supported!")
-
-    @staticmethod
-    def FromIDs(source:Interface.Interface, ids:IDFilterCollection, id_mode:IDMode=IDMode.SESSION, versions:VersioningFilterCollection=VersioningFilterCollection()):
-        date_range = source.AvailableDates(filters=DatasetFilterCollection(id_filters=ids, version_filters=versions))
-        if date_range['min'] is not None and date_range['max'] is not None:
-            id_list = ids.Sessions.AsList if id_mode==IDMode.SESSION else ids.Players.AsList
-            return ExporterRange(date_min=date_range['min'], date_max=date_range['max'], ids=id_list, id_mode=id_mode, versions=versions.LogVersions.AsList)
-        else:
-            raise ValueError(f"Tried to create exporter range from set of IDs, but this resulted in open-ended date range {date_range['min']}-{date_range['max']}, this is not supported!")
-
-    @property
-    def DateRange(self) -> Dict[str, Date]:
-        return {'min':self._date_min, 'max':self._date_max}
-
-    @property
-    def IDs(self) -> Optional[List[str]]:
-        return self._ids
-
-    @property
-    def IDMode(self):
-        return self._id_mode
 
 class Request(abc.ABC):
     """Request class
@@ -80,10 +31,13 @@ class Request(abc.ABC):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, exporter_modes:Set[ExportMode], filters:DatasetFilterCollection,
-                 global_cfg:CoreConfig, game_cfg:GeneratorCollectionConfig,
-                 custom_game_stores:Optional[GameStoreConfig],
-                 custom_data_directory:Optional[DatasetRepositoryConfig | Dict | Path | str]=None):
+    def __init__(self, exporter_modes:Set[ExportMode],
+                 filters:DatasetFilterCollection,
+                 global_cfg:CoreConfig,
+                 game_cfg:GeneratorCollectionConfig,
+                 custom_dataset_key:Optional[DatasetKey] = None,
+                 custom_game_stores:Optional[GameStoreConfig] = None,
+                 custom_data_directory:Optional[DatasetRepositoryConfig | Dict | Path | str] = None): # pylint: disable=unsupported-binary-operation
         """ Constructor for the request base class.
             Just stores whatever data is given.
             No checking done to ensure we have all necessary data, this can be checked wherever Requests are actually used.
@@ -106,23 +60,17 @@ class Request(abc.ABC):
         self._generators   : GeneratorCollectionConfig = game_cfg
         self._global_cfg   : CoreConfig                = global_cfg
         repository         : DatasetRepositoryConfig   = self._toRepository(data_directory=custom_data_directory)
-        custom_game_stores : GameStoreConfig           = custom_game_stores or self._global_cfg.GameSourceMap.get(self._game_id, GameStoreConfig().Default())
+        self._game_stores  : GameStoreConfig           = custom_game_stores or self._global_cfg.GameSourceMap.get(self._game_id, GameStoreConfig.Default())
+        self.dataset_key   : DatasetKey                = custom_dataset_key or DatasetKey(game_id=self.GameID, from_date=self._filters.Sequences.Timestamps.Min, to_date=self._filters.Sequences.Timestamps.Max)
+        self._interfaces   : Dict[str, Interface]      = {
+            source.Name : InterfaceFactory.FromConfig(config=source, fail_fast=self._global_cfg.FailFast) \
+            for source in self._game_stores.EventsFrom
+        }
+        self._outerfaces  : Dict[str, Outerface]       = {
+            dest.Name : OuterfaceFactory.FromConfig(config=dest, export_modes=exporter_modes, repository=repository, dataset_id=str(dataset_key)) \
+            for dest in (self._game_stores.EventsTo + self._game_stores.FeaturesTo)
 
-        self._interface  : Interface.Interface     = InterfaceFactory.FromConfig(config=source, fail_fast=self._global_cfg.FailFast)
-        self._range      : ExporterRange
-        if filters.Sequences.Timestamps.Active:
-            self._range = ExporterRange.FromDateRange(source=self._interface, dates=filters.Sequences, versions=filters.Versions)
-        elif filters.IDFilters.Sessions.Active:
-            self._range = ExporterRange.FromIDs(source=self._interface, ids=filters.IDFilters, id_mode=IDMode.SESSION, versions=filters.Versions)
-        elif filters.IDFilters.Players.Active:
-            self._range = ExporterRange.FromIDs(source=self._interface, ids=filters.IDFilters, id_mode=IDMode.USER, versions=filters.Versions)
-        else:
-            Logger.Log("Request filters did not define a time range, nor session set, nor player set! Defaulting to filter for yesterday's data!", logging.WARNING)
-            yesterday = datetime.combine(datetime.now().date(), time(0)) - timedelta(days=1)
-            filters.Sequences.Timestamps = RangeFilter[datetime](mode=FilterMode.INCLUDE, minimum=yesterday, maximum=datetime.now())
-            self._range = ExporterRange.FromDateRange(source=self._interface, dates=filters.Sequences, versions=filters.Versions)
-        dataset_key = DatasetKey.FromDateRange(game_id=self.GameID, start_date=self.Range.DateRange['min'], end_date=self.Range.DateRange['max'])
-        self._outerfaces : Set[Outerface] = {OuterfaceFactory.FromConfig(config=dest, export_modes=exporter_modes, repository=repository, dataset_id=str(dataset_key))}
+        }
 
     ## String representation of a request. Just gives game id, and date range.
     def __str__(self):
@@ -141,14 +89,6 @@ class Request(abc.ABC):
     @property
     def GameID(self):
         return self._game_id
-
-    @property
-    def Interface(self) -> Interface.Interface:
-        return self._interface
-
-    @property
-    def Range(self) -> ExporterRange:
-        return self._range
 
     @property
     def Generators(self) -> GeneratorCollectionConfig:
@@ -171,21 +111,24 @@ class Request(abc.ABC):
         return ExportMode.POPULATION in self._exports
 
     @property
-    def Outerfaces(self) -> Set[Outerface]:
+    def Filters(self) -> DatasetFilterCollection:
+        return self._filters
+
+    @property
+    def Interfaces(self) -> Dict[str, Interface]:
+        return self._interfaces
+
+    @property
+    def Outerfaces(self) -> Dict[str, Outerface]:
         return self._outerfaces
 
     def RemoveExportMode(self, mode:ExportMode):
         self._exports.discard(mode)
-        for outerface in self.Outerfaces:
+        for outerface in self.Outerfaces.values():
             outerface.RemoveExportMode(mode=mode)
 
-    ## Method to retrieve the list of IDs for all sessions covered by the request.
-    #  Note, this will use the 
-    def RetrieveIDs(self) -> Optional[List[str]]:
-        return self.Range.IDs
-
     @staticmethod
-    def _toRepository(data_directory:Optional[DatasetRepositoryConfig | Dict | Path | str]) -> DatasetRepositoryConfig:
+    def _toRepository(data_directory:Optional[DatasetRepositoryConfig | Dict | Path | str]) -> DatasetRepositoryConfig: # pylint: disable=unsupported-binary-operation
         ret_val: DatasetRepositoryConfig
 
         if isinstance(data_directory, DatasetRepositoryConfig):
