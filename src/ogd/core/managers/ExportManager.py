@@ -8,7 +8,6 @@ import math
 # import subprocess
 import traceback
 from datetime import datetime
-from pathlib import Path
 from typing import List, Type, Optional, Set
 
 ## import local files
@@ -21,7 +20,6 @@ from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.common.models.enums.FilterMode import FilterMode
 from ogd.common.models.enums.IDMode import IDMode
 from ogd.common.utils.Logger import Logger
-from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.managers.EventManager import EventManager
 from ogd.core.managers.FeatureManager import FeatureManager
@@ -80,13 +78,12 @@ class ExportManager:
             self._preProcess(request=request)
             Logger.Log("Done", logging.INFO)
             Logger.Log("Executing...", logging.INFO)
-            _sess_ids : List[str] = request.RetrieveIDs() or []
-            for outerface in request.Outerfaces:
-                outerface.SessionCount = len(_sess_ids)
 
         # 2. Process slices
-            Logger.Log(f"Preparing to process {len(_sess_ids)} sessions...", logging.INFO, depth=1)
-            self._processSlices(request=request, ids=_sess_ids)
+            slices : List[Slice] = self._generateSlices(request=request)
+            sess_count = sum([len(slice) for slice in slices])
+            Logger.Log(f"Preparing to process {sess_count} sessions...", logging.INFO, depth=1)
+            self._processSlices(request=request, slices=slices)
             Logger.Log("Done", logging.INFO, depth=1)
 
         # 3. Output population/player features as post-slicing data.
@@ -94,7 +91,7 @@ class ExportManager:
             self._postProcess(request=request)
             Logger.Log("Done", logging.INFO)
 
-            ret_val.SessionCount = len(_sess_ids)
+            ret_val.SessionCount = sess_count
             ret_val.RequestSucceeded(msg=f"Successfully executed data request {request}.")
         except ValueError as err:
             msg = f"Failed to execute data request {str(request)}, an invalid value was found:\n{str(err)}\n{traceback.format_exc()}"
@@ -153,9 +150,26 @@ class ExportManager:
             Logger.Log("Feature data not requested, or extractor loader unavailable, skipping feature manager.", logging.INFO, depth=1)
         self._outputHeaders(request=request)
 
-    def _processSlices(self, request:Request, ids:List[str]) -> None:
+    def _generateSlices(self, request:Request) -> List[Slice]:
+        """
+        Convert session ID list into slices of size `self._config.BatchSize.`
+
+        Each slice is just a list of session IDs.
+        :param sess_ids: The list of all session IDs in the request.
+        :type sess_ids: List[str]
+        :return: A list of ID blocks (slices).
+        :rtype: List[Slice]
+        """
+        # HACK : we're just using the first interface in dict, which we need to do more correctly down the road.
+        sess_ids = list(request.Interfaces.values())[0].AvailableIDs(mode=IDMode.SESSION, filters=request.Filters) or []
+        _num_sess = len(sess_ids)
+        _slice_size = self._config.BatchSize
+        Logger.Log(f"With slice size = {_slice_size}, there are {math.ceil(_num_sess / _slice_size)} slices", logging.INFO, depth=1)
+        return [[sess_ids[i] for i in range( j*_slice_size, min((j+1)*_slice_size, _num_sess) )]
+                             for j in range( 0, math.ceil(_num_sess / _slice_size) )]
+
+    def _processSlices(self, request:Request, slices:List[Slice]) -> None:
         start  : datetime
-        slices : List[Slice] = self._generateSlices(sess_ids=ids)
 
         _next_slice_data : Optional[EventSet] = None
         for i, next_slice_ids in enumerate(slices):
@@ -243,22 +257,6 @@ class ExportManager:
                 else:
                     Logger.Log(f"ExportManager Got an unrecognized game ID ({game_id})! Attempting export anyway...", logging.WARNING)
         return _loader_class
-
-    def _generateSlices(self, sess_ids:List[str]) -> List[Slice]:
-        """
-        Convert session ID list into slices of size `self._config.BatchSize.`
-
-        Each slice is just a list of session IDs.
-        :param sess_ids: The list of all session IDs in the request.
-        :type sess_ids: List[str]
-        :return: A list of ID blocks (slices).
-        :rtype: List[Slice]
-        """
-        _num_sess = len(sess_ids)
-        _slice_size = self._config.BatchSize
-        Logger.Log(f"With slice size = {_slice_size}, there are {math.ceil(_num_sess / _slice_size)} slices", logging.INFO, depth=1)
-        return [[sess_ids[i] for i in range( j*_slice_size, min((j+1)*_slice_size, _num_sess) )]
-                             for j in range( 0, math.ceil(_num_sess / _slice_size) )]
 
     def _loadSlice(self, request:Request, next_slice_ids:List[str], slice_num:int, slice_count:int) -> Optional[EventSet]:
         ret_val : Optional[EventSet]
