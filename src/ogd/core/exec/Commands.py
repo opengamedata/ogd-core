@@ -16,7 +16,7 @@ from dateutil.parser import parse
 # from ogd.core.exec.Generators import OGDGenerators
 from ogd import games
 from ogd.core.managers.ExportManager import ExportManager
-from ogd.core.requests.Request import ExporterRange, Request
+from ogd.core.requests.Request import Request
 from ogd.core.requests.RequestResult import RequestResult, ResultStatus
 from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.configs.GameStoreConfig import GameStoreConfig
@@ -25,6 +25,7 @@ from ogd.common.configs.DataTableConfig import DataTableConfig
 from ogd.common.configs.storage.FileStoreConfig import FileStoreConfig
 from ogd.common.configs.storage.DatasetRepositoryConfig import DatasetRepositoryConfig
 from ogd.common.filters.collections.DatasetFilterCollection import DatasetFilterCollection
+from ogd.common.filters.collections.EventFilterCollection import EventFilterCollection
 from ogd.common.filters.SetFilter import SetFilter
 from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.common.models.enums.FilterMode import FilterMode
@@ -133,7 +134,7 @@ class OGDCommands:
         player_id = args.player
         player_id_file = args.player_id_file
 
-        filters      : DatasetFilterCollection = DatasetFilterCollection()
+        filters      : DatasetFilterCollection = OGDCommands._setupFilters(game_id=game_id)
         export_modes : Set[ExportMode] = OGDGenerators.GenModes(
             with_events=with_events, with_features=with_features,
             no_session_file=args.no_session_file,
@@ -141,22 +142,15 @@ class OGDCommands:
             no_pop_file=args.no_pop_file
         )
         game_source_mapping = config.GameSourceMap
-        # source : DataTableConfig = config.GameSourceMap.get(args.game, DataTableConfig.Default())
-        # source.StoreConfig       = config.DataSources.get(source.StoreName) or config.DataSources[list(config.DataSources.keys())[0]] # TODO : if source wasn't found, just take first source we find, because why not. But do something smarter later.
-        # source.Table             = EventTableSchema.FromFile(source.TableSchemaName)
-        # dest : DataTableConfig = config.GameSourceMap.get(args.game, DataTableConfig.Default())
-        # dest.StoreConfig       = config.DataSources.get(dest.StoreName) or config.DataSources[list(config.DataSources.keys())[0]] # TODO : if dest wasn't found, just take first dest we find, because why not. But do something smarter later.
-        # dest.Table             = EventTableSchema.FromFile(dest.TableSchemaName)
         repository : DatasetRepositoryConfig = DatasetRepositoryConfig.Default()
         dataset_id : Optional[DatasetKey | str] = None
 
         _games_path  = Path(games.__file__) if Path(games.__file__).is_dir() else Path(games.__file__).parent
         generator_config  : GeneratorCollectionConfig  = GeneratorCollectionConfig.FromFile(schema_name=f"{game_id}.json", schema_path=_games_path / game_id / "schemas")
 
-    # 2. figure out the interface and range; optionally set a different dataset_id
+    # 2. figure out the interface and range
         if from_source is not None and from_source != "":
             # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
-            _ext = str(from_source).rsplit('.', maxsplit=1)[-1]
             game_source_mapping[game_id].EventsFrom = [
                 DataTableConfig(name="FILE SOURCE",
                     store_name=None,
@@ -165,7 +159,6 @@ class OGDCommands:
                     store_config=FileStoreConfig(name="SourceFile", location=from_source, file_credential=None),
                     table_schema=EventTableSchema.FromFile(schema_name="OGD_EVENT_FILE") )
             ]
-            filters.IDFilters.Players = SetFilter(mode=FilterMode.EXCLUDE, set_elements=set()) # ensure we've got some kind of filter, and it's to exclude nobody.
             dataset_id = DatasetKey(game_id=game_id, full_file=from_source)
     # 3. Whether we use a file for source or not, we then consider any specification of a player ID, session ID, or date range.
         # a. Case where specific player ID was given
@@ -175,7 +168,7 @@ class OGDCommands:
         # b. Case where player ID file was given
         elif player_id_file is not None and player_id_file != "":
             file_path = Path(player_id_file)
-            with open(file_path) as player_file:
+            with open(file_path, encoding="UTF-8") as player_file:
                 reader = csv.reader(player_file)
                 file_contents = list(reader) # this gives list of lines, each line a list
                 names = set(chain.from_iterable(file_contents)) # so, convert to single list
@@ -189,7 +182,7 @@ class OGDCommands:
         # d. Case where session ID file was given
         elif session_id_file is not None and session_id_file != "":
             file_path = Path(session_id_file)
-            with open(file_path) as session_file:
+            with open(file_path, encoding="UTF-8") as session_file:
                 reader = csv.reader(session_file)
                 file_contents = list(reader) # this gives list of lines, each line a list
                 names = set(chain.from_iterable(file_contents)) # so, convert to single list
@@ -234,7 +227,8 @@ class OGDCommands:
             game_cfg=generator_config,
             custom_game_stores=game_source_mapping[game_id],
             custom_data_directory=repository)
-        if req.Interface.Connector.IsOpen:
+        # HACK : another place where we're just hardcoded to only use the first interface in the Interfaces collection
+        if list(req.Interfaces.values())[0].Connector.IsOpen:
             export_manager : ExportManager = ExportManager(config=config)
             result         : RequestResult = export_manager.ExecuteRequest(request=req)
             success = result.Status == ResultStatus.SUCCESS
@@ -250,3 +244,22 @@ class OGDCommands:
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***
+
+    @staticmethod
+    def _setupFilters(game_id:str) -> DatasetFilterCollection:
+        ret_val : DatasetFilterCollection = DatasetFilterCollection()
+
+        # TODO : Add a way to configure what to exclude, rather than just hardcoding. So we can easily choose to leave out certain events.
+        exclude_rows : Optional[Set[str]]
+        match game_id:
+            case 'BLOOM':
+                exclude_rows = {'algae_growth_end', 'algae_growth_begin'}
+            case 'THERMOLAB' | 'THERMOVR':
+                exclude_rows = {'nudge_hint_displayed', 'nudge_hint_hidden'}
+            case 'LAKELAND':
+                exclude_rows = {'CUSTOM.24'}
+            case _:
+                exclude_rows = None
+        ret_val.Events.EventNames = SetFilter(mode=FilterMode.EXCLUDE, set_elements=exclude_rows)
+
+        return ret_val
