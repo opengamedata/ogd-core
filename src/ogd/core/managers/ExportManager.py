@@ -292,7 +292,7 @@ class ExportManager:
                     event_filters=_evt_filt
                 )
 
-        ret_val = request.Interface.GetEventCollection(filters=filters)
+        ret_val = request.Interface.GetEventCollection(filters=filters, fallbacks={"app_id":request.GameID})
 
         time_delta = datetime.now() - start
         if ret_val is not None:
