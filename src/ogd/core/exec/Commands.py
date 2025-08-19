@@ -19,13 +19,11 @@ from ogd.core.managers.ExportManager import ExportManager
 from ogd.core.requests.Request import Request
 from ogd.core.requests.RequestResult import RequestResult, ResultStatus
 from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
-from ogd.core.configs.GameStoreConfig import GameStoreConfig
 from ogd.core.configs.CoreConfig import CoreConfig
 from ogd.common.configs.DataTableConfig import DataTableConfig
 from ogd.common.configs.storage.FileStoreConfig import FileStoreConfig
 from ogd.common.configs.storage.DatasetRepositoryConfig import DatasetRepositoryConfig
 from ogd.common.filters.collections.DatasetFilterCollection import DatasetFilterCollection
-from ogd.common.filters.collections.EventFilterCollection import EventFilterCollection
 from ogd.common.filters.SetFilter import SetFilter
 from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.common.models.enums.FilterMode import FilterMode
