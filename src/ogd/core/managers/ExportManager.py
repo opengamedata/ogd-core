@@ -290,7 +290,8 @@ class ExportManager:
                     event_filters=_evt_filt
                 )
 
-        ret_val = request.Interface.GetEventCollection(filters=filters, fallbacks={"app_id":request.GameID})
+        # HACK : we're just using the first interface in dict, which we need to do more correctly down the road.
+        ret_val = list(request.Interfaces.values())[0].GetEventCollection(filters=filters, fallbacks={"app_id":request.GameID})
 
         time_delta = datetime.now() - start
         if ret_val is not None:
