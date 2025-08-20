@@ -206,7 +206,7 @@ class GameStoreConfig(Schema):
 
     @staticmethod
     def _parseEventsFrom(unparsed_elements:Map) -> List[DataTableConfig]:
-        ret_val : List[DataTableConfig] = []
+        ret_val : List[DataTableConfig]
 
         raw_elems = GameStoreConfig.ParseElement(
             unparsed_elements=unparsed_elements,
@@ -216,9 +216,12 @@ class GameStoreConfig(Schema):
             remove_target=True
         )
         if raw_elems:
+            ret_val = []
             for config in raw_elems:
                 as_dict = conversions.ConvertToType(config, to_type=dict)
                 ret_val.append(DataTableConfig.FromDict(name="EventSource", unparsed_elements=as_dict))
+        elif set(unparsed_elements.keys()) == {"source", "database", "table", "schema"}:
+            ret_val = [DataTableConfig.FromDict(name="EventSource", unparsed_elements=unparsed_elements)]
         else:
             ret_val = GameStoreConfig._DEFAULT_EVENTS_FROM
 
