@@ -1,5 +1,4 @@
 # import standard libraries
-import json
 from typing import Dict, Final, List, LiteralString, Optional, Self
 # import local files
 from ogd.common.schemas.Schema import Schema
@@ -8,7 +7,6 @@ from ogd.common.configs.storage.DataStoreConfig import DataStoreConfig
 from ogd.common.configs.storage.BigQueryConfig import BigQueryConfig
 from ogd.common.configs.storage.FileStoreConfig import FileStoreConfig
 from ogd.common.configs.storage.DatasetRepositoryConfig import DatasetRepositoryConfig
-from ogd.common.schemas.tables.TableSchema import TableSchema
 from ogd.common.schemas.tables.EventTableSchema import EventTableSchema
 from ogd.common.schemas.tables.FeatureTableSchema import FeatureTableSchema
 from ogd.common.schemas.locations.DatabaseLocationSchema import DatabaseLocationSchema
@@ -105,7 +103,6 @@ class GameStoreConfig(Schema):
         unparsed_elements : Map = other_elements or {}
 
         self._game_id     : str             = game_id     or name
-        # TODO : use parsing functions
         self._events_from : List[DataTableConfig] = events_from or self._parseEventsFrom(unparsed_elements=unparsed_elements)
         self._events_to   : List[DataTableConfig] = events_to   or self._parseEventsTo(unparsed_elements=unparsed_elements) # TODO : in addition to parsing, fall back on default dest being the standard output to repo at ./data/
         self._feats_from  : List[DataTableConfig] = feats_from  or self._parseFeatsFrom(unparsed_elements=unparsed_elements) # TODO : in addition to parsing, fall back on default source being same store as events, just a different table schema
@@ -123,8 +120,6 @@ class GameStoreConfig(Schema):
         :rtype: str
         """
         return self._game_id
-
-    # TODO : add props to acces the different parts
 
     @property
     def EventsFrom(self) -> List[DataTableConfig]:

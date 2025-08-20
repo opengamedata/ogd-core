@@ -178,7 +178,7 @@ class ExportManager:
             # 1. Process the slice.
                 start = datetime.now()
                 Logger.Log(f"Processing slice [{i+1}/{len(slices)}]...", logging.INFO, depth=2)
-                self._processSlice(next_slice_data=_next_slice_data, id_mode=request.Range.IDMode, ids=ids)
+                self._processSlice(next_slice_data=_next_slice_data, id_mode=IDMode.SESSION, ids=next_slice_ids)
                 time_delta = datetime.now() - start
                 Logger.Log(f"Processing time for slice [{i+1}/{len(slices)}]: {time_delta} to handle {len(_next_slice_data)} events", logging.INFO, depth=2)
 
@@ -263,35 +263,18 @@ class ExportManager:
 
         Logger.Log(f"Retrieving slice [{slice_num}/{slice_count}]...", logging.INFO, depth=2)
         start : datetime = datetime.now()
-        # HACK : setting to skip algae and nudge hint events here directly
-        # TODO : Add a way to configure what to exclude at higher level, here. So we can easily choose to leave out certain events.
-        exclude_rows : Optional[Set[str]]
-        match request.GameID:
-            case 'BLOOM':
-                exclude_rows = {'algae_growth_end', 'algae_growth_begin'}
-            case 'THERMOLAB' | 'THERMOVR':
-                exclude_rows = {'nudge_hint_displayed', 'nudge_hint_hidden'}
-            case 'LAKELAND':
-                exclude_rows = {'CUSTOM.24'}
-            case _:
-                exclude_rows = None
-        _evt_filt = EventFilterCollection(
-            event_name_filter=SetFilter(mode=FilterMode.EXCLUDE, set_elements=exclude_rows) if exclude_rows else NoFilter()
+        slice_filters = DatasetFilterCollection(
+            id_filters=IDFilterCollection(
+                session_filter=SetFilter(mode=FilterMode.INCLUDE, set_elements=next_slice_ids),
+                player_filter=request.Filters.IDFilters.Players,
+                app_filter=request.Filters.IDFilters.AppIDs
+            ),
+            sequence_filters=request.Filters.Sequences,
+            version_filters=request.Filters.Versions,
+            event_filters=request.Filters.Events
         )
-        match request.Range.IDMode:
-            case IDMode.SESSION:
-                filters = DatasetFilterCollection(
-                    id_filters=IDFilterCollection(session_filter=SetFilter(mode=FilterMode.INCLUDE, set_elements=set(next_slice_ids))),
-                    event_filters=_evt_filt
-                )
-            case IDMode.USER:
-                filters = DatasetFilterCollection(
-                    id_filters=IDFilterCollection(player_filter=SetFilter(mode=FilterMode.INCLUDE, set_elements=set(next_slice_ids))),
-                    event_filters=_evt_filt
-                )
-
         # HACK : we're just using the first interface in dict, which we need to do more correctly down the road.
-        ret_val = list(request.Interfaces.values())[0].GetEventCollection(filters=filters, fallbacks={"app_id":request.GameID})
+        ret_val = list(request.Interfaces.values())[0].GetEventCollection(filters=slice_filters, fallbacks={"app_id":request.GameID})
 
         time_delta = datetime.now() - start
         if ret_val is not None:
