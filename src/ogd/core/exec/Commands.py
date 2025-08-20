@@ -68,7 +68,7 @@ class OGDCommands:
         try:
             event_schema  = LoggingSpecificationSchema.FromFile(schema_name=game, schema_path=Path("src") / "ogd" / "games" / game / "schemas")
             generator_cfg = GeneratorCollectionConfig.FromFile( schema_name=game, schema_path=Path("src") / "ogd" / "games" / game / "schemas")
-            table_schema = config.GameSourceMap[game].EventsFrom[0].TableStructure or EventTableSchema.Default()
+            table_schema = config.GameSourceMap[game].EventsFrom[0].TableSchema or EventTableSchema.Default()
             readme = Readme(event_collection=event_schema, generator_collection=generator_cfg, table_schema=table_schema)
             print(readme.CustomReadmeSource)
         except Exception as err: # pylint: disable=broad-exception-caught
