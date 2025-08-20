@@ -1,11 +1,9 @@
 # import standard libraries
 import cProfile
 import pstats
-import os
 import sys
 from argparse import Namespace
 from pathlib import Path
-from typing import List
 
 # import 3rd-party libraries
 
@@ -56,7 +54,7 @@ if args is not None:
             print(f"Invalid Command {cmd}!")
             success = False
 else:
-    print(f"Need to enter a command!")
+    print("Need to enter a command!")
     success = False
 if config.WithProfiling:
     profiler.disable()
