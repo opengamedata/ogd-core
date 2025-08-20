@@ -4,7 +4,6 @@ import csv
 import logging
 import traceback
 from argparse import Namespace
-from datetime import date
 from itertools import chain
 from pathlib import Path
 from typing import List, Optional, Set
@@ -72,7 +71,7 @@ class OGDCommands:
             table_schema = config.GameSourceMap[game].EventsFrom[0].TableStructure or EventTableSchema.Default()
             readme = Readme(event_collection=event_schema, generator_collection=generator_cfg, table_schema=table_schema)
             print(readme.CustomReadmeSource)
-        except Exception as err:
+        except Exception as err: # pylint: disable=broad-exception-caught
             msg = f"Could not print information for {game}: {type(err)} {str(err)}"
             Logger.Log(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
@@ -98,7 +97,7 @@ class OGDCommands:
             table_schema = EventTableSchema.FromFile(schema_name=f"{config.GameSourceMap[game].EventsFrom[0].TableName}.json")
             readme = Readme(event_collection=event_schema, generator_collection=generator_cfg, table_schema=table_schema)
             readme.ToFile(path=path)
-        except Exception as err:
+        except Exception as err: # pylint: disable=broad-exception-caught
             msg = f"Could not create a readme for {game}: {type(err)} {str(err)}"
             Logger.Log(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
@@ -213,9 +212,10 @@ class OGDCommands:
             )
         ]
         # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
-        # TODO : re-enable multi-output option
-        # if config.DebugLevel == "DEBUG":
-        #     _cfg = DataTableConfig(name="DEBUG", all_elements={"database":"DEBUG", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
+        if config.DebugLevel == "DEBUG":
+            cfg = DataTableConfig(name="DEBUG", store_name="Debug", schema_name=None, table_location=None)
+            game_source_mapping[game_id].EventsTo.append(cfg)
+            game_source_mapping[game_id].FeaturesTo.append(cfg)
 
     # 4. Once we have the parameters parsed out, construct the request.
         req = Request(
