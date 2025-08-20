@@ -211,15 +211,17 @@ class GameStoreConfig(Schema):
         raw_elems = GameStoreConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=["events_from"],
-            to_type=list,
+            to_type=[list, dict],
             default_value=None,
             remove_target=True
         )
-        if raw_elems:
+        if isinstance(raw_elems, list):
             ret_val = []
             for config in raw_elems:
                 as_dict = conversions.ConvertToType(config, to_type=dict)
                 ret_val.append(DataTableConfig.FromDict(name="EventSource", unparsed_elements=as_dict))
+        elif isinstance(raw_elems, dict):
+            ret_val = [DataTableConfig.FromDict(name="EventSource", unparsed_elements=raw_elems)]
         elif set(unparsed_elements.keys()) == {"source", "database", "table", "schema"}:
             ret_val = [DataTableConfig.FromDict(name="EventSource", unparsed_elements=unparsed_elements)]
         else:
@@ -238,10 +240,12 @@ class GameStoreConfig(Schema):
             default_value=None,
             remove_target=True
         )
-        if raw_elems:
+        if isinstance(raw_elems, list):
             for config in raw_elems:
                 as_dict = conversions.ConvertToType(config, to_type=dict)
                 ret_val.append(DataTableConfig.FromDict(name="EventDestination", unparsed_elements=as_dict))
+        elif isinstance(raw_elems, dict):
+            ret_val = [DataTableConfig.FromDict(name="EventDestination", unparsed_elements=raw_elems)]
         else:
             ret_val = GameStoreConfig._DEFAULT_EVENTS_TO
 
@@ -258,10 +262,12 @@ class GameStoreConfig(Schema):
             default_value=None,
             remove_target=True
         )
-        if raw_elems:
+        if isinstance(raw_elems, list):
             for config in raw_elems:
                 as_dict = conversions.ConvertToType(config, to_type=dict)
-                ret_val.append(DataTableConfig.FromDict(name="EventSource", unparsed_elements=as_dict))
+                ret_val.append(DataTableConfig.FromDict(name="FeatureSource", unparsed_elements=as_dict))
+        elif isinstance(raw_elems, dict):
+            ret_val = [DataTableConfig.FromDict(name="FeatureSource", unparsed_elements=raw_elems)]
         else:
             ret_val = GameStoreConfig._DEFAULT_FEATS_FROM
 
@@ -278,10 +284,12 @@ class GameStoreConfig(Schema):
             default_value=None,
             remove_target=True
         )
-        if raw_elems:
+        if isinstance(raw_elems, list):
             for config in raw_elems:
                 as_dict = conversions.ConvertToType(config, to_type=dict)
-                ret_val.append(DataTableConfig.FromDict(name="EventSource", unparsed_elements=as_dict))
+                ret_val.append(DataTableConfig.FromDict(name="FeatureDestination", unparsed_elements=as_dict))
+        elif isinstance(raw_elems, dict):
+            ret_val = [DataTableConfig.FromDict(name="FeatureDestination", unparsed_elements=raw_elems)]
         else:
             ret_val = GameStoreConfig._DEFAULT_FEATS_TO
 
