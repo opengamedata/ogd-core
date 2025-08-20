@@ -236,7 +236,7 @@ class GameStoreConfig(Schema):
         raw_elems = GameStoreConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=["events_to"],
-            to_type=list,
+            to_type=[list, dict],
             default_value=None,
             remove_target=True
         )
@@ -258,7 +258,7 @@ class GameStoreConfig(Schema):
         raw_elems = GameStoreConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=["feats_from"],
-            to_type=list,
+            to_type=[list, dict],
             default_value=None,
             remove_target=True
         )
@@ -280,7 +280,7 @@ class GameStoreConfig(Schema):
         raw_elems = GameStoreConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=["feats_to"],
-            to_type=list,
+            to_type=[list, dict],
             default_value=None,
             remove_target=True
         )

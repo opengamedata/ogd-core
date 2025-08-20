@@ -141,7 +141,7 @@ class OGDCommands:
         )
         game_source_mapping = config.GameSourceMap
         repository : DatasetRepositoryConfig = DatasetRepositoryConfig.Default()
-        dataset_id : Optional[DatasetKey | str] = None
+        dataset_id : Optional[DatasetKey] = None
 
         _games_path  = Path(games.__file__) if Path(games.__file__).is_dir() else Path(games.__file__).parent
         generator_config  : GeneratorCollectionConfig  = GeneratorCollectionConfig.FromFile(schema_name=f"{game_id}.json", schema_path=_games_path / game_id / "schemas")
@@ -173,7 +173,7 @@ class OGDCommands:
             dataset_id = DatasetKey(game_id=game_id, full_file=from_source)
     # 3. Whether we use a file for source or not, we then consider any specification of a player ID, session ID, or date range.
         # a. Case where specific player ID was given
-        if player_id is not None and player_id != "":
+        elif player_id is not None and player_id != "":
             filters.IDFilters.Players = SetFilter(mode=FilterMode.INCLUDE, set_elements={player_id})
             dataset_id = DatasetKey(game_id=game_id, player_id=player_id)
         # b. Case where player ID file was given
@@ -222,7 +222,7 @@ class OGDCommands:
                                 schema_name=None,
                                 table_location=None,
                                 store_config=FileStoreConfig(name="OutputFile", location=destination / game_id / f"{dataset_id}_features.tsv", file_credential=None),
-                                table_schema=FeatureTableSchema.Default()
+                                table_schema=FeatureTableSchema.FromFile(schema_name="OGD_FEATURE_FILE")
             )
         ]
         # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
@@ -237,6 +237,7 @@ class OGDCommands:
             filters=filters,
             global_cfg=config,
             game_cfg=generator_config,
+            custom_dataset_key=dataset_id,
             custom_game_stores=game_source_mapping[game_id],
             custom_data_directory=repository)
         # HACK : another place where we're just hardcoded to only use the first interface in the Interfaces collection
