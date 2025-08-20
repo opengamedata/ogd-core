@@ -8,7 +8,6 @@ from typing import Optional, Set
 # import 3rd-party libraries
 
 # import local files
-from ogd.core.requests.Request import ExporterRange
 from ogd.common.filters.RangeFilter import RangeFilter
 from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.common.models.enums.FilterMode import FilterMode
@@ -54,32 +53,31 @@ class OGDGenerators:
 
     # retrieve/calculate date range.
     @staticmethod
+    # pylint: disable-next=unsupported-binary-operation
     def GenDateFilter(game:str, monthly:bool, start_date:str|date, end_date:Optional[str|date]) -> RangeFilter:
-        """Use a pair of date strings to create an `ExporterRange` for use with an interface.
+        """Use a pair of date strings to create a RangeFilter for use with an interface.
 
         Also allows the range to be specified as "monthly,"
         i.e. to treat the "start date" as a specification of a full month for the range.
         Note that `ExporterRange` objects carry data about the sessions contained within the range,
         so an interface is required in order to create the session list.
 
-        :param game: The specific game for which a date range is generated
-        :type game: str
-        :param interface: An interface to use for generation of the `ExporterRange`.
-        :type interface: EventInterface
-        :param monthly: Whether the range should cover a full month, or use the exact given start and end.
-        :type monthly: bool
-        :param start_date: A string representing the first day of the range in MM/DD/YYYY format, or the month to use for the range in MM/YYYY format.
-        :type start_date: str
-        :param end_date: A string representing the last day of the range in MM/DD/YYYY format, or None (if using a full month range)
-        :type end_date: Optional[str]
-        :raises ValueError: If using full month range, and `start_date` does not have a correct format.
-        :return: An `ExporterRange` object representing the given range, as well as the sessions available for that range via the given interface.
-        :rtype: ExporterRange
-
         .. todo:: Don't include game as param, it's only used in outputs, which should not be included here.
         .. todo:: Add some try-except logic around the `int(...)` calls.
         .. todo:: Add logic to check for yyyymmdd in addition to mmddyyyy.
         .. todo:: Add logic to check for `-` separators, in addition to `/`.
+
+        :param game: _description_
+        :type game: str
+        :param monthly: _description_
+        :type monthly: bool
+        :param start_date: _description_
+        :type start_date: str | date
+        :param end_date: _description_
+        :type end_date: Optional[str | date]
+        :raises ValueError: _description_
+        :return: _description_
+        :rtype: RangeFilter
         """
         _from : datetime
         _to   : datetime

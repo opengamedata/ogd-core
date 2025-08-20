@@ -124,14 +124,15 @@ class OGDCommands:
         """
         success : bool = False
 
-        game_id = args.game
-        from_source = args.from_source
-        session_id = args.session
-        session_id_file = args.session_id_file
-        player_id = args.player
-        player_id_file = args.player_id_file
+        # pull vars from args, for autocomplete and type-hinting purposes
+        game_id         : str            = args.game
+        from_source     : Optional[str]  = args.from_source           if args.from_source     else None
+        session_id      : Optional[str]  = args.session               if args.session         else None
+        session_id_file : Optional[Path] = Path(args.session_id_file) if args.session_id_file else None
+        player_id       : Optional[str]  = args.player                if args.session_id_file else None
+        player_id_file  : Optional[Path] = Path(args.player_id_file)  if args.player_id_file  else None
 
-        filters      : DatasetFilterCollection = OGDCommands._setupFilters(game_id=game_id)
+        filters      : DatasetFilterCollection = DatasetFilterCollection()
         export_modes : Set[ExportMode] = OGDGenerators.GenModes(
             with_events=with_events, with_features=with_features,
             no_session_file=args.no_session_file,
@@ -144,6 +145,19 @@ class OGDCommands:
 
         _games_path  = Path(games.__file__) if Path(games.__file__).is_dir() else Path(games.__file__).parent
         generator_config  : GeneratorCollectionConfig  = GeneratorCollectionConfig.FromFile(schema_name=f"{game_id}.json", schema_path=_games_path / game_id / "schemas")
+
+        # TODO : Add a way to configure what to exclude, rather than just hardcoding. So we can easily choose to leave out certain events.
+        exclude_rows : Optional[Set[str]]
+        match game_id:
+            case 'BLOOM':
+                exclude_rows = {'algae_growth_end', 'algae_growth_begin'}
+            case 'THERMOLAB' | 'THERMOVR':
+                exclude_rows = {'nudge_hint_displayed', 'nudge_hint_hidden'}
+            case 'LAKELAND':
+                exclude_rows = {'CUSTOM.24'}
+            case _:
+                exclude_rows = None
+        filters.Events.EventNames = SetFilter(mode=FilterMode.EXCLUDE, set_elements=exclude_rows)
 
     # 2. figure out the interface and range
         if from_source is not None and from_source != "":
@@ -242,22 +256,3 @@ class OGDCommands:
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***
-
-    @staticmethod
-    def _setupFilters(game_id:str) -> DatasetFilterCollection:
-        ret_val : DatasetFilterCollection = DatasetFilterCollection()
-
-        # TODO : Add a way to configure what to exclude, rather than just hardcoding. So we can easily choose to leave out certain events.
-        exclude_rows : Optional[Set[str]]
-        match game_id:
-            case 'BLOOM':
-                exclude_rows = {'algae_growth_end', 'algae_growth_begin'}
-            case 'THERMOLAB' | 'THERMOVR':
-                exclude_rows = {'nudge_hint_displayed', 'nudge_hint_hidden'}
-            case 'LAKELAND':
-                exclude_rows = {'CUSTOM.24'}
-            case _:
-                exclude_rows = None
-        ret_val.Events.EventNames = SetFilter(mode=FilterMode.EXCLUDE, set_elements=exclude_rows)
-
-        return ret_val
