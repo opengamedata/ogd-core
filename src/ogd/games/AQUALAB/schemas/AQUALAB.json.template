@@ -753,7 +753,7 @@
             },
             "SessionDurationPerJob": {
                 "enabled": true,
-                "type": "SessionDuration",
+                "type": "SessionDurationPerJob",
                 "description": "N/A",
                 "threshold": 60,
                 "return_type": "timedelta",
@@ -788,15 +788,16 @@
                     }
                 }
             },
-            "JobModeling": {
-                "enabled": true,
-                "type": "JobModeling",
-                "count": "level_range",
-                "prefix": "job",
-                "description": "Number of times the player entered the modeling mechanic during a job",
-                "return_type": "timedelta",
-                "subfeatures": {
-                    "Time": {
+            "layer does not play or is afk, in seconds",
+                        "return_type": "float"
+                    },
+                    "MaxIdle": {
+                        "description": "The maximum idle time per job",
+                        "return_type": "timedelta"
+                    }
+                }
+            },
+            "
                         "description": "Time spent in modeling during a job",
                         "return_type": "timedelta"
                     }
