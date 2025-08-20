@@ -1,25 +1,19 @@
 # import standard libraries
 import abc
 from pathlib import Path
-from typing import Dict, List, Optional, Set
-# import 3rd-party libraries
-from deprecated import deprecated
+from typing import Dict, Optional, Set
 # import local files
 from ogd.core.configs.CoreConfig import CoreConfig
 from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.configs.GameStoreConfig import GameStoreConfig
 from ogd.common.configs.storage.DatasetRepositoryConfig import DatasetRepositoryConfig
-from ogd.common.configs.DataTableConfig import DataTableConfig
 from ogd.common.filters.collections.DatasetFilterCollection import DatasetFilterCollection
-from ogd.common.models.enums.IDMode import IDMode
 from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.common.storage.interfaces.Interface import Interface
 from ogd.common.storage.interfaces.InterfaceFactory import InterfaceFactory
 from ogd.common.storage.outerfaces.Outerface import Outerface
 from ogd.common.storage.outerfaces.OuterfaceFactory import OuterfaceFactory
 from ogd.common.schemas.datasets.DatasetSchema import DatasetKey
-from ogd.common.utils.Logger import Logger
-from ogd.common.utils.typing import Date, Map
 
 class Request(abc.ABC):
     """Request class

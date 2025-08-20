@@ -8,11 +8,12 @@ import math
 # import subprocess
 import traceback
 from datetime import datetime
-from typing import List, Type, Optional, Set
+from typing import List, Type, Optional
 
 ## import local files
-from ogd.common.filters import *
-from ogd.common.filters.collections import *
+from ogd.common.filters.SetFilter import SetFilter
+from ogd.common.filters.collections.DatasetFilterCollection import DatasetFilterCollection
+from ogd.common.filters.collections.IDFilterCollection import IDFilterCollection
 from ogd.common.models.Event import Event
 from ogd.common.models.EventSet import EventSet
 from ogd.common.models.FeatureSet import FeatureSet
@@ -96,7 +97,7 @@ class ExportManager:
         except ValueError as err:
             msg = f"Failed to execute data request {str(request)}, an invalid value was found:\n{str(err)}\n{traceback.format_exc()}"
             ret_val.RequestErrored(msg=msg)
-        except Exception as err:
+        except Exception as err: # pylint: disable=broad-exception-caught
             msg = f"Failed to execute data request {str(request)}, an unexpected error occurred:\n{type(err)} {str(err)}\n{traceback.format_exc()}"
             ret_val.RequestErrored(msg=msg)
         finally:
