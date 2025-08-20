@@ -55,7 +55,7 @@ class Request(abc.ABC):
         self._global_cfg   : CoreConfig                = global_cfg
         repository         : DatasetRepositoryConfig   = self._toRepository(data_directory=custom_data_directory)
         self._game_stores  : GameStoreConfig           = custom_game_stores or self._global_cfg.GameSourceMap.get(self._game_id, GameStoreConfig.Default())
-        self._dataset_key   : DatasetKey               = custom_dataset_key or DatasetKey(game_id=self.GameID, from_date=self._filters.Sequences.Timestamps.Min, to_date=self._filters.Sequences.Timestamps.Max)
+        self._dataset_key  : DatasetKey                = custom_dataset_key or DatasetKey(game_id=self.GameID, from_date=self._filters.Sequences.Timestamps.Min, to_date=self._filters.Sequences.Timestamps.Max)
         self._interfaces   : Dict[str, Interface]      = {
             source.Name : InterfaceFactory.FromConfig(config=source, fail_fast=self._global_cfg.FailFast) \
             for source in self._game_stores.EventsFrom
