@@ -103,10 +103,10 @@ class GameStoreConfig(Schema):
         unparsed_elements : Map = other_elements or {}
 
         self._game_id     : str             = game_id     or name
-        self._events_from : List[DataTableConfig] = events_from or self._parseEventsFrom(unparsed_elements=unparsed_elements)
-        self._events_to   : List[DataTableConfig] = events_to   or self._parseEventsTo(unparsed_elements=unparsed_elements) # TODO : in addition to parsing, fall back on default dest being the standard output to repo at ./data/
-        self._feats_from  : List[DataTableConfig] = feats_from  or self._parseFeatsFrom(unparsed_elements=unparsed_elements) # TODO : in addition to parsing, fall back on default source being same store as events, just a different table schema
-        self._feats_to    : List[DataTableConfig] = feats_to    or self._parseFeatsTo(unparsed_elements=unparsed_elements) # TODO : in addition to parsing, fall back on default dest being the standard output to repo at ./data/
+        self._events_from : List[DataTableConfig] = events_from if events_from is not None else self._parseEventsFrom(unparsed_elements=unparsed_elements)
+        self._events_to   : List[DataTableConfig] = events_to   if events_to   is not None else self._parseEventsTo(unparsed_elements=unparsed_elements) # TODO : in addition to parsing, fall back on default dest being the standard output to repo at ./data/
+        self._feats_from  : List[DataTableConfig] = feats_from  if feats_from  is not None else self._parseFeatsFrom(unparsed_elements=unparsed_elements) # TODO : in addition to parsing, fall back on default source being same store as events, just a different table schema
+        self._feats_to    : List[DataTableConfig] = feats_to    if feats_to    is not None else self._parseFeatsTo(unparsed_elements=unparsed_elements) # TODO : in addition to parsing, fall back on default dest being the standard output to repo at ./data/
 
         super().__init__(name=name, other_elements=other_elements)
 
