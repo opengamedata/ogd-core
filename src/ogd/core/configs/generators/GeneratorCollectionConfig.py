@@ -2,6 +2,8 @@
 import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Self, Set
+# 3rd-party imports
+from deprecated import deprecated
 # import local files
 from ogd.common.configs.Config import Config
 from ogd.core.configs.generators.DetectorMapConfig import DetectorMapConfig
@@ -151,8 +153,9 @@ class GeneratorCollectionConfig(Config):
         """
         return self.Detectors.IteratedDetectors
     @property
+    @deprecated("Use the IteratedDetectors propoerty instead")
     def PerCountDetectors(self) -> Dict[str, DetectorConfig]:
-        """Legacy alias for IteratedDetectors property
+        """Property for the dictionary of iterated (per-custom-count) detectors.
         """
         return self.Detectors.IteratedDetectors
 
@@ -178,7 +181,7 @@ class GeneratorCollectionConfig(Config):
 
     @property
     def ExtractorNames(self) -> List[str]:
-        """Property for the compiled list of all feature names.
+        """Property for the compiled list of all extractor names.
         """
         ret_val : List[str] = []
         ret_val = [extractor.Name for extractor in self.AggregateExtractors.values()] \
@@ -186,8 +189,9 @@ class GeneratorCollectionConfig(Config):
                 + [extractor.Name for extractor in self.LegacyPerLevelFeatures.values()]
         return ret_val
     @property
+    @deprecated("Use the ExtractorNames property instead")
     def FeatureNames(self) -> List[str]:
-        """Legacy alias of ExtractorNames, although technicallly this is also the list of names of extracted features
+        """Property for the compiled list of all extractor names, although technicallly this is also the list of names of extracted features
         """
         return self.ExtractorNames
 
@@ -203,8 +207,9 @@ class GeneratorCollectionConfig(Config):
         """
         return self.Extractors.IteratedExtractors
     @property
+    @deprecated("Use the IteratedExtractors property instead")
     def PerCountFeatures(self) -> Dict[str,IteratedConfig]:
-        """Legacy alias for IteratedExtractors
+        """Property for the dictionary of per-custom-count features.
         """
         return self.IteratedExtractors
 
@@ -404,6 +409,18 @@ class GeneratorCollectionConfig(Config):
         return ret_val
 
     def ExtractorEnabled(self, feature_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
+        """Function to check whether a feature with given name is enabled for the given iteration and extraction modes.
+
+        :param feature_name: _description_
+        :type feature_name: str
+        :param iter_mode: _description_
+        :type iter_mode: IterationMode
+        :param extract_mode: _description_
+        :type extract_mode: ExtractionMode
+        :raises ValueError: _description_
+        :return: _description_
+        :rtype: bool
+        """
         if self.Extractors.LegacyMode:
             return feature_name == "legacy"
         ret_val : bool
@@ -423,8 +440,9 @@ class GeneratorCollectionConfig(Config):
             ret_val = False
         return ret_val
 
+    @deprecated("Use the ExtractorEnabled property instead")
     def FeatureEnabled(self, feature_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
-        """Legacy alias for ExtractorEnabled
+        """Function to check whether a feature with given name is enabled for the given iteration and extraction modes.
 
         :param feature_name: _description_
         :type feature_name: str

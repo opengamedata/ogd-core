@@ -1,6 +1,8 @@
 # import standard libraries
 import logging
 from typing import Dict, Optional, Self
+# 3rd-party Imports
+from deprecated import deprecated
 # import local files
 from ogd.common.configs.Config import Config
 from ogd.core.configs.generators.AggregateConfig import AggregateConfig
@@ -94,10 +96,16 @@ class ExtractorMapConfig(Config):
 
     @property
     def IteratedExtractors(self) -> Dict[str, IteratedConfig]:
+        """A dictionary for all the extractor configurations that are iterated by game units
+
+        :return: _description_
+        :rtype: Dict[str, IteratedConfig]
+        """
         return self._iterated_extractors
     @property
+    @deprecated("Use the IteratedExtractors property instead")
     def PerCountFeatures(self) -> Dict[str, IteratedConfig]:
-        """Legacy alias for IteratedExtractors
+        """A dictionary for all the extractor configurations that are iterated by game units
 
         :return: _description_
         :rtype: Dict[str, IteratedConfig]

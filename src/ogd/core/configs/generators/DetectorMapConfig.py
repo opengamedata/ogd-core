@@ -1,6 +1,8 @@
 # import standard libraries
 import logging
 from typing import Dict, Optional, Self
+# 3rd-party Imports
+from deprecated import deprecated
 # import local files
 from ogd.common.configs.Config import Config
 from ogd.core.configs.generators.DetectorConfig import DetectorConfig
@@ -69,10 +71,16 @@ class DetectorMapConfig(Config):
 
     @property
     def IteratedDetectors(self) -> Dict[str, DetectorConfig]:
+        """A dictionary for all the detector configurations that are iterated by game units
+
+        :return: _description_
+        :rtype: Dict[str, DetectorConfig]
+        """
         return self._iterated_detectors
     @property
+    @deprecated("Use the IteratedDetectors property instead")
     def PerCountDetectors(self) -> Dict[str, DetectorConfig]:
-        """A legacy alias for the IteratedDetectors property
+        """A dictionary for all the detector configurations that are iterated by game units
 
         :return: _description_
         :rtype: Dict[str, DetectorConfig]
