@@ -14,39 +14,54 @@ from .utils import _getIndexNameFromEvent
 class JobsAttempted(PerCountFeature):
     
     PUZZLE_INDEX_MAP = {
-        "lv1-battery": 0,
-        "lv1-thermometer": 1, 
-        "lv1-data_logger": 2,
-        "lv1-turbine": 3,
-        "lv1-solar": 4,
+        "lv0-battery": 0,
+        "lv0-thermometer": 1,
+        "lv0-data_logger": 2,
+        "lv0-turbine": 3,
+        "lv0-solar": 4,
 
-        "lv2-battery": 5,
-        "lv2-thermometer": 6,
-        "lv2-data_logger": 7,
-        "lv2-turbine": 8,
-        "lv2-solar": 9,
+        "lv1-battery": 5,
+        "lv1-thermometer": 6, 
+        "lv1-data_logger": 7,
+        "lv1-turbine": 8,
+        "lv1-solar": 9,
+
+        "lv2-battery": 10,
+        "lv2-thermometer": 11,
+        "lv2-data_logger": 12,
+        "lv2-turbine": 13,
+        "lv2-solar": 14,
         
-        "lv3-battery": 10,
-        "lv3-thermometer": 11,
-        "lv3-data_logger": 12,
-        "lv3-turbine": 13,
-        "lv3-solar": 14,
+        "lv3-battery": 15,
+        "lv3-thermometer": 16,
+        "lv3-data_logger": 17,
+        "lv3-turbine": 18,
+        "lv3-solar": 19,
         
-        "lv4-battery": 15,
-        "lv4-thermometer": 16,
-        "lv4-data_logger": 17,
-        "lv4-turbine": 18,
-        "lv4-solar": 19,
+        "lv4-battery": 20,
+        "lv4-thermometer": 21,
+        "lv4-data_logger": 22,
+        "lv4-turbine": 23,
+        "lv4-solar": 24,
+
+        "lv5-battery": 25,
+        "lv5-thermometer": 26,
+        "lv5-data_logger": 27,
+        "lv5-turbine": 28,
+        "lv5-solar": 29,
     }
 
-    PUZZLE_LIST = ["lv1-battery", "lv1-thermometer", "lv1-data_logger", "lv1-turbine", "lv1-solar", "lv2-battery", "lv2-thermometer", "lv2-data_logger", "lv2-turbine", "lv2-solar", "lv3-battery", "lv3-thermometer", "lv3-data_logger", "lv3-turbine", "lv3-solar", "lv4-battery", "lv4-thermometer", "lv4-data_logger", "lv4-turbine", "lv4-solar"]
+    @classmethod
+    def _get_puzzle_list(cls) -> List[str]:
+        """Generate PUZZLE_LIST from PUZZLE_INDEX_MAP to ensure consistency."""
+        return [puzzle for puzzle, _ in sorted(cls.PUZZLE_INDEX_MAP.items(), key=lambda x: x[1])]
 
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
 
         if self.CountIndex is not None:
             self.puzzle_index = self.CountIndex
-            self.puzzle_name = self.PUZZLE_LIST[self.CountIndex]
+            self.puzzle_name = self._get_puzzle_list()[self.CountIndex]
         else:
             raise ValueError("JobsAttempted was not given a count index!")
             
