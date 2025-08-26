@@ -11,6 +11,7 @@ from ogd.core.generators.extractors.Feature import Feature
 from ogd.games import WEATHER_STATION
 from ogd.games.WEATHER_STATION.detectors import *
 from ogd.games.WEATHER_STATION.features import *
+from ogd.core.generators.extractors.builtin import CountEvent
 # from ogd.games.PENGUINS.DBExport import scene_map
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
@@ -40,13 +41,13 @@ class WeatherStationLoader(GeneratorLoader):
         :type feature_overrides: Optional[List[str]]
         """
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
-        self._region_map : List[Dict[str, Any]] = []
+        # self._region_map : List[Dict[str, Any]] = []
 
         # Load Weather Station jobs export and map job names to integer values
-        _dbexport_path = Path(WEATHER_STATION.__file__) if Path(WEATHER_STATION.__file__).is_dir() else Path(WEATHER_STATION.__file__).parent
-        with open(_dbexport_path / "DBExport.json", "r") as file:
-            export = json.load(file)
-            self._region_map = export.get("regions", [])
+        # _dbexport_path = Path(WEATHER_STATION.__file__) if Path(WEATHER_STATION.__file__).is_dir() else Path(WEATHER_STATION.__file__).parent
+        # with open(_dbexport_path / "DBExport.json", "r") as file:
+        #     export = json.load(file)
+        #     self._region_map = export.get("regions", [])
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @staticmethod
@@ -57,12 +58,20 @@ class WeatherStationLoader(GeneratorLoader):
         ret_val : Optional[Feature] = None
         if extractor_params._count_index == None:
             match feature_type:
+                case "ActiveTime":
+                    ret_val = ActiveTime.ActiveTime(params=extractor_params, idle_threshold=schema_args.get("threshold", 30))
+                case "TopJobCompletionDestinations":
+                    ret_val = TopJobCompletionDestinations.TopJobCompletionDestinations(params=extractor_params)
+                case "LevelCompleteCount":
+                    ret_val = CountEvent.CountEvent(params=extractor_params, target=schema_args.get("target", "level_complete"))
                 case _:
                     Logger.Log(f"'{feature_type}' is not a valid aggregate feature for Weather Station.")
         # Per-count features
         # level attempt features
         else:
             match feature_type:
+                case "JobsAttempted":
+                    ret_val = JobsAttempted.JobsAttempted(params=extractor_params)
                 case _:
                     Logger.Log(f"'{feature_type}' is not a valid per-count feature for Weather Station.")
         return ret_val
