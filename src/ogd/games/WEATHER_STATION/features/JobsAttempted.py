@@ -8,6 +8,7 @@ from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
+from .utils import _getIndexNameFromEvent
 
 # lv1-jobs-attempted
 class JobsAttempted(PerCountFeature):
@@ -62,7 +63,7 @@ class JobsAttempted(PerCountFeature):
 
     
     def _validateEventCountIndex(self, event: Event):
-        index_name = self._getIndexNameFromEvent(event)
+        index_name = _getIndexNameFromEvent(event)
         if index_name is not None and index_name in self.PUZZLE_INDEX_MAP:
             return self.CountIndex == self.PUZZLE_INDEX_MAP[index_name]
         return False
@@ -74,7 +75,7 @@ class JobsAttempted(PerCountFeature):
 
     def _updateFromEvent(self, event: Event) -> None:
         
-        index_name = self._getIndexNameFromEvent(event)
+        index_name = _getIndexNameFromEvent(event)
 
         # PerCountFeature.WarningMessage(index_name)
 
@@ -112,15 +113,6 @@ class JobsAttempted(PerCountFeature):
 
     def Subfeatures(self) -> List[str]:
         return ["job-name", "num-starts", "num-completes", "percent-complete", "avg-time-per-attempt",  "std-dev-per-attempt", "job-difficulties"]
-
-    def _getIndexNameFromEvent(self, event: Event) -> str:
-        level = event.GameState.get("level", None)
-        puzzle = event.EventData.get("puzzle", None)
-        if puzzle is None:
-            return None
-        # Convert puzzle enum to lowercase for mapping
-        puzzle_lower = puzzle.lower()
-        return f"lv{level}-{puzzle_lower}"
 
     @staticmethod
     def MinVersion() -> Optional[str]:
