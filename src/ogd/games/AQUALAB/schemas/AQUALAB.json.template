@@ -1281,9 +1281,13 @@
                 "description": "Play Locations",
                 "return_type": "List[bool]",
                 "subfeatures": {
-                    "LocalTime": {
+                    "SessionLocalTimes": {
                         "description": "An indicator of whether play happened during normal school hours or not",
                         "return_type": "datetime"
+                    },
+                    "SchoolToHomeConversion": {
+                        "description": "An indicator of whether play happened during normal school hours first, and non-school hours in a later session",
+                        "return_type": "bool"
                     }
                 }
             },
