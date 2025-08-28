@@ -1445,7 +1445,7 @@
                         "description": "Total idle time in the journal.",
                         "return_type": "timedelta"
                     },
-                    "IdleSeconds": {
+                    "Idle-Seconds": {
                         "description": "Idle time in the journal, in seconds.",
                         "return_type": "float"
                     }
