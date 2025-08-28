@@ -90,11 +90,7 @@ class EventList(Extractor):
 
             if event.EventName in self._details_map:
                 param_name = self._details_map[event.EventName][0]
-
-                try:
-                    next_event["event_primary_detail"] = event.EventData[param_name]
-                except KeyError as err:
-                    raise KeyError(f"Event of type {event.EventName} did not have parameter {param_name}, valid parameters are {event.EventData.keys()}")
+                next_event["event_primary_detail"] = event.EventData.get(param_name, event.GameState.get(param_name, "NOT FOUND"))
 
             self._event_list.append(next_event)
 
