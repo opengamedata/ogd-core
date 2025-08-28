@@ -1437,7 +1437,7 @@
                         "description": "Total active time in the journal.",
                         "return_type": "timedelta"
                     },
-                    "ActiveSeconds": {
+                    "Active-Seconds": {
                         "description": "Active time in the journal, in seconds.",
                         "return_type": "float"
                     },
