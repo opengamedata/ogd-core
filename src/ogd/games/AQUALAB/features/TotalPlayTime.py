@@ -20,7 +20,7 @@ class TotalPlayTime(Extractor):
         self._active_time: timedelta = timedelta(0)
         self._active_time_seconds: timedelta = timedelta(0)
     def Subfeatures(self) -> List[str]:
-        return ["Seconds", "Active", "Active - Seconds", "Idle", "Idle - Seconds"]
+        return ["Seconds", "Active", "Active-Seconds", "Idle", "Idle-Seconds"]
     
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
