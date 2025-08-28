@@ -26,15 +26,15 @@ on:
       month_year:
         description: "Month/Year: the month(s) and year(s) to export (comma-separated). Only used if 'monthly' is true."
         required: false
-        default: "['01/2021']"
+        default: "['01/2025']"
       start_date:
         description: "Start Date: the start date for the export"
         required: false
-        default: "01/01/2021"
+        default: "01/01/2025"
       end_date:
         description: "End Date: the end date for the export"
         required: false
-        default: "01/01/2021"
+        default: "01/01/2025"
       upload_to_ogd:
         type: boolean
         description: "Upload to OGD: if true, the exported files will be uploaded to the Open Game Data website, else they will be uploaded to GitHub as an artifact of the GH Action."
