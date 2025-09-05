@@ -27,7 +27,6 @@ class GameStoreConfig(Schema):
     - `TableConfig` : A schema indicating the structure of the table containing the given game's data.
 
     TODO : use a TableConfig for the table_schema instead of just the name of the schema, like we do with source_schema.
-    TODO : Implement and use a smart Load(...) function of TableConfig to load schema from given name, rather than FromFile.
     """
 
     _DEFAULT_GAME_ID     : Final[LiteralString] = "UNKNOWN GAME"
@@ -37,7 +36,7 @@ class GameStoreConfig(Schema):
         schema_name="DefaultTable",
         table_location=DatabaseLocationSchema.Default(),
         store_config=BigQueryConfig.Default(),
-        table_schema=EventTableSchema.FromFile(schema_name="OPENGAMEDATA_BQ")
+        table_schema=EventTableSchema.Load(schema_name="OPENGAMEDATA_BQ")
     )]
     _DEFAULT_EVENTS_TO   : Final[List[DataTableConfig]] = [DataTableConfig(
         name="DefaultEventDest",
@@ -45,7 +44,7 @@ class GameStoreConfig(Schema):
         schema_name="DefaultTable",
         table_location=None,
         store_config=FileStoreConfig.Default(),
-        table_schema=EventTableSchema.FromFile(schema_name="OGD_EVENTS_FILE")
+        table_schema=EventTableSchema.Load(schema_name="OGD_EVENTS_FILE")
     )]
     _DEFAULT_FEATS_FROM  : Final[List[DataTableConfig]] = [DataTableConfig(
         name="DefaultFeatSource",
@@ -53,7 +52,7 @@ class GameStoreConfig(Schema):
         schema_name="DefaultTable",
         table_location=DatabaseLocationSchema.Default(),
         store_config=BigQueryConfig.Default(),
-        table_schema=FeatureTableSchema.FromFile(schema_name="OPENGAMEDATA_BQ")
+        table_schema=FeatureTableSchema.Load(schema_name="OPENGAMEDATA_BQ")
     )]
     _DEFAULT_FEATS_TO    : Final[List[DataTableConfig]] = [DataTableConfig(
         name="DefaultFeatDest",
@@ -61,7 +60,7 @@ class GameStoreConfig(Schema):
         schema_name="DefaultTable",
         table_location=None,
         store_config=DatasetRepositoryConfig.Default(),
-        table_schema=FeatureTableSchema.FromFile(schema_name="OGD_EVENTS_FILE")
+        table_schema=FeatureTableSchema.Load(schema_name="OGD_EVENTS_FILE")
     )]
 
     # *** BUILT-INS & PROPERTIES ***
