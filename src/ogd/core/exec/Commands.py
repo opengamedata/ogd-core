@@ -66,8 +66,8 @@ class OGDCommands:
         :rtype: bool
         """
         try:
-            event_schema  = LoggingSpecificationSchema.FromFile(schema_name=game, schema_path=Path("src") / "ogd" / "games" / game / "schemas")
-            generator_cfg = GeneratorCollectionConfig.FromFile( schema_name=game, schema_path=Path("src") / "ogd" / "games" / game / "schemas")
+            event_schema  = LoggingSpecificationSchema.Load(schema_name=game)
+            generator_cfg = GeneratorCollectionConfig.Load( schema_name=game)
             table_schema = config.GameSourceMap[game].EventsFrom[0].TableSchema or EventTableSchema.Default()
             readme = Readme(event_collection=event_schema, generator_collection=generator_cfg, table_schema=table_schema)
             print(readme.CustomReadmeSource)
@@ -92,9 +92,9 @@ class OGDCommands:
         """
         path = destination / game
         try:
-            event_schema  = LoggingSpecificationSchema.FromFile(schema_name=game)
-            generator_cfg = GeneratorCollectionConfig.FromFile(schema_name=game, schema_path=Path("src") / "ogd" / "games" / game / "schemas")
-            table_schema = EventTableSchema.FromFile(schema_name=f"{config.GameSourceMap[game].EventsFrom[0].TableName}.json")
+            event_schema  = LoggingSpecificationSchema.Load(schema_name=game)
+            generator_cfg = GeneratorCollectionConfig.Load(schema_name=game)
+            table_schema = EventTableSchema.Load(schema_name=f"{config.GameSourceMap[game].EventsFrom[0].TableName}.json")
             readme = Readme(event_collection=event_schema, generator_collection=generator_cfg, table_schema=table_schema)
             readme.ToFile(path=path)
         except Exception as err: # pylint: disable=broad-exception-caught
@@ -144,7 +144,7 @@ class OGDCommands:
         dataset_id : Optional[DatasetKey] = None
 
         _games_path  = Path(games.__file__) if Path(games.__file__).is_dir() else Path(games.__file__).parent
-        generator_config  : GeneratorCollectionConfig  = GeneratorCollectionConfig.FromFile(schema_name=f"{game_id}.json", schema_path=_games_path / game_id / "schemas")
+        generator_config  : GeneratorCollectionConfig  = GeneratorCollectionConfig.Load(schema_name=f"{game_id}.json")
 
         # TODO : Add a way to configure what to exclude, rather than just hardcoding. So we can easily choose to leave out certain events.
         exclude_rows : Optional[Set[str]]
@@ -168,7 +168,7 @@ class OGDCommands:
                     schema_name=None,
                     table_location=None,
                     store_config=FileStoreConfig(name="SourceFile", location=from_source, file_credential=None),
-                    table_schema=EventTableSchema.FromFile(schema_name="OGD_EVENT_FILE") )
+                    table_schema=EventTableSchema.Load(schema_name="OGD_EVENT_FILE") )
             ]
             dataset_id = DatasetKey(game_id=game_id, full_file=from_source)
     # 3. Whether we use a file for source or not, we then consider any specification of a player ID, session ID, or date range.
@@ -213,7 +213,7 @@ class OGDCommands:
                                 schema_name=None,
                                 table_location=None,
                                 store_config=FileStoreConfig(name="OutputFile", location=destination / game_id / f"{dataset_id}.tsv", file_credential=None),
-                                table_schema=EventTableSchema.FromFile(schema_name="OGD_EVENT_FILE")
+                                table_schema=EventTableSchema.Load(schema_name="OGD_EVENT_FILE")
             )
         ]
         game_source_mapping[game_id].FeaturesTo = [
@@ -222,7 +222,7 @@ class OGDCommands:
                                 schema_name=None,
                                 table_location=None,
                                 store_config=FileStoreConfig(name="OutputFile", location=destination / game_id / f"{dataset_id}_features.tsv", file_credential=None),
-                                table_schema=FeatureTableSchema.FromFile(schema_name="OGD_FEATURE_FILE")
+                                table_schema=FeatureTableSchema.Load(schema_name="OGD_FEATURE_FILE")
             )
         ]
         # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
