@@ -327,30 +327,6 @@ class GeneratorCollectionConfig(Config):
 
     # *** PUBLIC STATICS ***
 
-    @classmethod
-    def FromFile(cls, schema_name:str, schema_path:Optional[Path] = None, search_templates:bool=True) -> "GeneratorCollectionConfig":
-        """Function to get a GeneratorCollectionConfig from a file
-
-        :param game_id: _description_
-        :type game_id: str
-        :param schema_path: _description_, defaults to None
-        :type schema_path: Optional[Path], optional
-        :param search_templates: _description_, defaults to True
-        :type search_templates: bool, optional
-        :raises ValueError: _description_
-        :return: _description_
-        :rtype: GeneratorCollectionConfig
-        """
-        ret_val : Config
-
-        game_id = schema_name.split('.')[0] # the 'schema name' is meant to match the game ID. We do want to strip off any file types, so only take string up to first '.'
-        schema_path = schema_path or cls._DEFAULT_GAME_FOLDER / game_id / "schemas"
-        ret_val = cls._fromFile(schema_name=game_id, schema_path=schema_path, search_templates=search_templates)
-        if isinstance(ret_val, GeneratorCollectionConfig):
-            return ret_val
-        else:
-            raise ValueError("The result of the class _fromFile function was not a GeneratorCollectionConfig!")
-
     # *** PUBLIC METHODS ***
 
     def GetCountRange(self, count:Any) -> range:
@@ -542,5 +518,18 @@ class GeneratorCollectionConfig(Config):
     @staticmethod
     def _parseOtherRanges(unparsed_elements:Map) -> Dict[str, range]:
         return {key : range(val.get('min', 0), val.get('max', 1)) for key,val in unparsed_elements.items() if key.endswith("_range")}
+
+    @classmethod
+    def _loadDirectories(cls, schema_name:str) -> List[str | Path]:
+        """Private function that can be optionally overridden to define additional directories in which cls.Load(...) searches for a file from which to load an instance of the class.
+
+        These extra directories are treated as optional places to search,
+        and so have a lower priority than the main search paths (./, ~/, etc.)
+
+        :return: A list of nonstandard directories in which to search for a file from which to load an instance of the class.
+        :rtype: List[str | Path]
+        """
+        game_id = schema_name.split(".")[0] if schema_name else "UNKNOWN_GAME"
+        return [cls._DEFAULT_GAME_FOLDER / game_id / "schemas"]
 
     # *** PRIVATE METHODS ***
