@@ -36,7 +36,7 @@ class GameStoreConfig(Schema):
         schema_name="DefaultTable",
         table_location=DatabaseLocationSchema.Default(),
         store_config=BigQueryConfig.Default(),
-        table_schema=EventTableSchema.Load(schema_name="OPENGAMEDATA_BQ")
+        table_schema=EventTableSchema.Load(schema_name="OPENGAMEDATA_BIGQUERY")
     )]
     _DEFAULT_EVENTS_TO   : Final[List[DataTableConfig]] = [DataTableConfig(
         name="DefaultEventDest",
@@ -44,7 +44,7 @@ class GameStoreConfig(Schema):
         schema_name="DefaultTable",
         table_location=None,
         store_config=FileStoreConfig.Default(),
-        table_schema=EventTableSchema.Load(schema_name="OGD_EVENTS_FILE")
+        table_schema=EventTableSchema.Load(schema_name="OGD_EVENT_FILE")
     )]
     _DEFAULT_FEATS_FROM  : Final[List[DataTableConfig]] = [DataTableConfig(
         name="DefaultFeatSource",
@@ -52,7 +52,7 @@ class GameStoreConfig(Schema):
         schema_name="DefaultTable",
         table_location=DatabaseLocationSchema.Default(),
         store_config=BigQueryConfig.Default(),
-        table_schema=FeatureTableSchema.Load(schema_name="OPENGAMEDATA_BQ")
+        table_schema=FeatureTableSchema.Load(schema_name="OPENGAMEDATA_BIGQUERY")
     )]
     _DEFAULT_FEATS_TO    : Final[List[DataTableConfig]] = [DataTableConfig(
         name="DefaultFeatDest",
@@ -60,7 +60,7 @@ class GameStoreConfig(Schema):
         schema_name="DefaultTable",
         table_location=None,
         store_config=DatasetRepositoryConfig.Default(),
-        table_schema=FeatureTableSchema.Load(schema_name="OGD_EVENTS_FILE")
+        table_schema=FeatureTableSchema.Load(schema_name="OGD_FEATURE_FILE")
     )]
 
     # *** BUILT-INS & PROPERTIES ***
