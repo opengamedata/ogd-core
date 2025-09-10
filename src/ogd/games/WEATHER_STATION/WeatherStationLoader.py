@@ -64,6 +64,10 @@ class WeatherStationLoader(GeneratorLoader):
                     ret_val = TopJobCompletionDestinations.TopJobCompletionDestinations(params=extractor_params)
                 case "LevelCompleteCount":
                     ret_val = CountEvent.CountEvent(params=extractor_params, target=schema_args.get("target", "level_complete"))
+                case "PuzzleCompletionTime":
+                    ret_val = PuzzleCompletionTime.PuzzleCompletionTime(params=extractor_params)
+                case "QuitCount":
+                    ret_val = QuitCount.QuitCount(params=extractor_params)
                 case _:
                     Logger.Log(f"'{feature_type}' is not a valid aggregate feature for Weather Station.")
         # Per-count features

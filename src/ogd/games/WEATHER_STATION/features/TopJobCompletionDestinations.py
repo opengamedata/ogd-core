@@ -21,7 +21,7 @@ class TopJobCompletionDestinations(Feature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["start_puzzle", "complete_puzzle"]
+        return ["complete_puzzle"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
@@ -36,8 +36,8 @@ class TopJobCompletionDestinations(Feature):
             self.cur_session = session_id
             self.previous_completed_puzzle = None
 
-        # If the previous puzzle was completed, add the current puzzle to the completion pairs, regardless of whether it was completed or started
-        if self.previous_completed_puzzle != None and self.previous_completed_puzzle != puzzle_name:
+        # If the previous puzzle was completed and current event is also a puzzle completion, add to completion pairs
+        if self.previous_completed_puzzle != None and self.previous_completed_puzzle != puzzle_name and event.EventName == "complete_puzzle":
             self.puzzle_completion_pairs[self.previous_completed_puzzle][puzzle_name].append(session_id)
             self.previous_completed_puzzle = None # Reset the previous completed puzzle
    
