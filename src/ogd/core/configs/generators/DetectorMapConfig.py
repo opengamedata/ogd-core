@@ -64,8 +64,8 @@ class DetectorMapConfig(Config):
         :param other_elements: _description_, defaults to None
         :type other_elements: Optional[Map], optional
         """
-        self._iterated_detectors  : Dict[str, DetectorConfig] = percount_detectors or self._parseIteratedDetectors(unparsed_elements=other_elements or {}, schema_name=name)
-        self._aggregate_detectors : Dict[str, DetectorConfig] = aggregate_detectors or self._parseAggregateDetectors(unparsed_elements=other_elements or {}, schema_name=name)
+        self._iterated_detectors  : Dict[str, DetectorConfig] = percount_detectors  if percount_detectors  is not None else self._parseIteratedDetectors(unparsed_elements=other_elements or {}, schema_name=name)
+        self._aggregate_detectors : Dict[str, DetectorConfig] = aggregate_detectors if aggregate_detectors is not None else self._parseAggregateDetectors(unparsed_elements=other_elements or {}, schema_name=name)
 
         super().__init__(name=name, other_elements=other_elements)
 

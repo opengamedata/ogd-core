@@ -41,8 +41,8 @@ class SubfeatureConfig(Schema):
         """
         unparsed_elements : Map = other_elements or {}
         
-        self._return_type : str = return_type or self._parseReturnType(unparsed_elements=unparsed_elements, schema_name=name)
-        self._description : str = description or self._parseDescription(unparsed_elements=unparsed_elements, schema_name=name)
+        self._return_type : str = return_type if return_type is not None else self._parseReturnType(unparsed_elements=unparsed_elements, schema_name=name)
+        self._description : str = description if description is not None else self._parseDescription(unparsed_elements=unparsed_elements, schema_name=name)
 
         super().__init__(name=name, other_elements=other_elements)
 

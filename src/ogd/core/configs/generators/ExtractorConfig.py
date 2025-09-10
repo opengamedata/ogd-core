@@ -67,8 +67,8 @@ class ExtractorConfig(GeneratorConfig):
         """
         unparsed_elements : Map = other_elements or {}
 
-        self._subfeatures : Dict[str, SubfeatureConfig] = subfeatures or ExtractorConfig._parseSubfeatures(unparsed_elements=unparsed_elements, schema_name=name)
-        self._return_type : str                         = return_type or ExtractorConfig._parseReturnType(unparsed_elements=unparsed_elements, schema_name=name)
+        self._subfeatures : Dict[str, SubfeatureConfig] = subfeatures if subfeatures is not None else ExtractorConfig._parseSubfeatures(unparsed_elements=unparsed_elements, schema_name=name)
+        self._return_type : str                         = return_type if return_type is not None else ExtractorConfig._parseReturnType(unparsed_elements=unparsed_elements, schema_name=name)
 
         # Don't explicitly pass in other params, let them be parsed from other_elements.
         super().__init__(name=name, enabled=enabled, type_name=type_name, description=description, other_elements=unparsed_elements)

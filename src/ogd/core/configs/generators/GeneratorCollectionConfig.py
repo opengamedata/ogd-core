@@ -114,8 +114,8 @@ class GeneratorCollectionConfig(Config):
 
     # 1. define instance vars
         self._game_id            : str                = game_id or name
-        self._detector_map       : DetectorMapConfig  = detector_map  or self._parseDetectorMap(unparsed_elements=unparsed_elements, schema_name=name)
-        self._extractor_map      : ExtractorMapConfig = extractor_map or self._parseExtractorMap(unparsed_elements=unparsed_elements, schema_name=name)
+        self._detector_map       : DetectorMapConfig  = detector_map  if detector_map  is not None else self._parseDetectorMap(unparsed_elements=unparsed_elements, schema_name=name)
+        self._extractor_map      : ExtractorMapConfig = extractor_map if extractor_map is not None else self._parseExtractorMap(unparsed_elements=unparsed_elements, schema_name=name)
         self._subunit_range      : Optional[range]    = subunit_range
         self._other_ranges       : Dict[str, range]   = other_ranges
 

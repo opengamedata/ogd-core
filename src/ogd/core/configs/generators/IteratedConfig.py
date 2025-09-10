@@ -60,8 +60,8 @@ class IteratedConfig(ExtractorConfig):
         """
         unparsed_elements : Map = other_elements or {}
 
-        self._count  : int | str = count  or self._parseCount(unparsed_elements=unparsed_elements, schema_name=name)
-        self._prefix : str       = prefix or self._parsePrefix(unparsed_elements=unparsed_elements, schema_name=name)
+        self._count  : int | str = count  if count  is not None else self._parseCount(unparsed_elements=unparsed_elements, schema_name=name)
+        self._prefix : str       = prefix if prefix is not None else self._parsePrefix(unparsed_elements=unparsed_elements, schema_name=name)
 
         super().__init__(name=name, return_type=return_type, subfeatures=subfeatures, enabled=enabled, type_name=type_name, description=description, other_elements=unparsed_elements)
 

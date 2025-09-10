@@ -63,14 +63,14 @@ class CoreConfig(Schema):
         """
         unparsed_elements : Map = other_elements or {}
 
-        self._log_file       : bool               = log_file       or self._parseLogFile(unparsed_elements=unparsed_elements, schema_name=name)
-        self._batch_size     : int                = batch_size     or self._parseBatchSize(unparsed_elements=unparsed_elements, schema_name=name)
-        self._dbg_level      : int                = dbg_level      or self._parseDebugLevel(unparsed_elements=unparsed_elements, schema_name=name)
-        self._fail_fast      : bool               = fail_fast      or self._parseFailFast(unparsed_elements=unparsed_elements, schema_name=name)
-        self._with_profiling : bool               = with_profiling or self._parseProfiling(unparsed_elements=unparsed_elements, schema_name=name)
-        self._file_idx       : RepositoryIndexingConfig   = file_idx     or self._parseFileIndexing(unparsed_elements=unparsed_elements, schema_name=name)
-        self._data_src       : Dict[str, DataStoreConfig] = data_src     or self._parseDataSources(unparsed_elements=unparsed_elements, schema_name=name)
-        self._game_src_map   : Dict[str, GameStoreConfig] = game_src_map or self._parseGameSourceMap(unparsed_elements=unparsed_elements, schema_name=name)
+        self._log_file       : bool                       = log_file       if log_file       is not None else self._parseLogFile(unparsed_elements=unparsed_elements, schema_name=name)
+        self._batch_size     : int                        = batch_size     if batch_size     is not None else self._parseBatchSize(unparsed_elements=unparsed_elements, schema_name=name)
+        self._dbg_level      : int                        = dbg_level      if dbg_level      is not None else self._parseDebugLevel(unparsed_elements=unparsed_elements, schema_name=name)
+        self._fail_fast      : bool                       = fail_fast      if fail_fast      is not None else self._parseFailFast(unparsed_elements=unparsed_elements, schema_name=name)
+        self._with_profiling : bool                       = with_profiling if with_profiling is not None else self._parseProfiling(unparsed_elements=unparsed_elements, schema_name=name)
+        self._file_idx       : RepositoryIndexingConfig   = file_idx       if file_idx       is not None else self._parseFileIndexing(unparsed_elements=unparsed_elements, schema_name=name)
+        self._data_src       : Dict[str, DataStoreConfig] = data_src       if data_src       is not None else self._parseDataSources(unparsed_elements=unparsed_elements, schema_name=name)
+        self._game_src_map   : Dict[str, GameStoreConfig] = game_src_map   if game_src_map   is not None else self._parseGameSourceMap(unparsed_elements=unparsed_elements, schema_name=name)
         
         # Set up data store configs and table schemas for each game source mapping
         for game, game_cfg in self._game_src_map.items():

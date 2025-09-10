@@ -50,9 +50,9 @@ class GeneratorConfig(Config):
         self._type_name   : str
         self._description : str
 
-        self._enabled     = enabled     or GeneratorConfig._parseEnabled(unparsed_elements=unparsed_elements, schema_name=name)
-        self._type_name   = type_name   or GeneratorConfig._parseType(unparsed_elements=unparsed_elements, schema_name=name)
-        self._description = description or GeneratorConfig._parseDescription(unparsed_elements=unparsed_elements, schema_name=name)
+        self._enabled     = enabled     if enabled     is not None else self._parseEnabled(unparsed_elements=unparsed_elements, schema_name=name)
+        self._type_name   = type_name   if type_name   is not None else self._parseType(unparsed_elements=unparsed_elements, schema_name=name)
+        self._description = description if description is not None else self._parseDescription(unparsed_elements=unparsed_elements, schema_name=name)
 
         super().__init__(name=name, other_elements=unparsed_elements)
 

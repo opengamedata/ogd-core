@@ -79,10 +79,10 @@ class ExtractorMapConfig(Config):
         """
         unparsed_elements : Map = other_elements or {}
 
-        self._legacy_mode           : bool                       = legacy_mode                or self._parseLegacyMode(unparsed_elements=unparsed_elements, schema_name=name)
-        self._legacy_extractors     : Dict[str, IteratedConfig]  = legacy_perlevel_extractors or self._parsePerLevelExtractors(unparsed_elements=unparsed_elements, schema_name=name)
-        self._iterated_extractors   : Dict[str, IteratedConfig]  = iterated_extractors        or self._parseIteratedExtractors(unparsed_elements=unparsed_elements, schema_name=name)
-        self._aggregate_feats       : Dict[str, AggregateConfig] = aggregate_extractors       or self._parseAggregateExtractors(unparsed_elements=unparsed_elements, schema_name=name)
+        self._legacy_mode           : bool                       = legacy_mode                if legacy_mode                is not None else self._parseLegacyMode(unparsed_elements=unparsed_elements, schema_name=name)
+        self._legacy_extractors     : Dict[str, IteratedConfig]  = legacy_perlevel_extractors if legacy_perlevel_extractors is not None else self._parsePerLevelExtractors(unparsed_elements=unparsed_elements, schema_name=name)
+        self._iterated_extractors   : Dict[str, IteratedConfig]  = iterated_extractors        if iterated_extractors        is not None else self._parseIteratedExtractors(unparsed_elements=unparsed_elements, schema_name=name)
+        self._aggregate_feats       : Dict[str, AggregateConfig] = aggregate_extractors       if aggregate_extractors       is not None else self._parseAggregateExtractors(unparsed_elements=unparsed_elements, schema_name=name)
 
         super().__init__(name=name, other_elements=other_elements)
 
