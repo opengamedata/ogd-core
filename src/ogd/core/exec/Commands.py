@@ -203,7 +203,7 @@ class OGDCommands:
         # e. Default case where we use date range
         else:
             start_date = parse(timestr=args.start_date, dayfirst=False).date()
-            end_date   = parse(timestr=args.end_date, dayfirst=False).date()
+            end_date   = parse(timestr=args.end_date, dayfirst=False).date() if args.end_date is not None else start_date
             filters.Sequences.Timestamps = OGDGenerators.GenDateFilter(game=game_id, monthly=args.monthly, start_date=start_date, end_date=end_date)
             dataset_id = DatasetKey(game_id=game_id, from_date=start_date, to_date=end_date)
     # 3. set up the outerface, based on the range and dataset_id.
