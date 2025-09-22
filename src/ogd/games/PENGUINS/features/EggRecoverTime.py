@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
 class EggRecoverTime(SessionFeature):
@@ -40,7 +40,7 @@ class EggRecoverTime(SessionFeature):
             else: 
                 Logger.Log("Got an 'egg_recovered' with no preceding 'egg_lost' event!", logging.WARN)
     
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

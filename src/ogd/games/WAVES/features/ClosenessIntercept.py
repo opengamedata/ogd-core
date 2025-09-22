@@ -2,14 +2,14 @@
 from ogd.common.models import Event
 from typing import Any, List, Optional
 # import locals
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 
-class ClosenessIntercept(Feature):
+class ClosenessIntercept(Extractor):
     def __init__(self, params:GeneratorParameters):
         Feature.__init__(self, params=params)
 
@@ -43,7 +43,7 @@ class ClosenessIntercept(Feature):
     #         self._features.setValByIndex(feature_name='closenessR2', index=lvl, new_value=r_sq)
         pass
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

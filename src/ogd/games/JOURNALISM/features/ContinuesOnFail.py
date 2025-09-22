@@ -9,7 +9,7 @@ from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class ContinuesOnFail(SessionFeature):
     def __init__(self, params:GeneratorParameters):
@@ -39,7 +39,7 @@ class ContinuesOnFail(SessionFeature):
         pass
 
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         if(feature._name =="QuitType"):
             self._quit_type = feature._vals
         elif(feature._name == "TotalFails"):

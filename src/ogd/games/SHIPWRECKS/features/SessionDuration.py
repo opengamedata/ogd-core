@@ -5,7 +5,7 @@ from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 
 class SessionDuration(SessionFeature):
@@ -31,7 +31,7 @@ class SessionDuration(SessionFeature):
         else:
             self._session_duration = (event.Timestamp - self._client_start_time).total_seconds()
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

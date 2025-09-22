@@ -4,7 +4,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class LeftHandMovesCount(SessionFeature):
 
@@ -34,7 +34,7 @@ class LeftHandMovesCount(SessionFeature):
                 self._left_hand_move_count += 1
             self._last_hand_action = action
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

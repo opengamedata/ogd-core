@@ -6,7 +6,7 @@ from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class NPuzzleAttempted(SessionFeature):
     def __init__(self, params:GeneratorParameters):
@@ -25,7 +25,7 @@ class NPuzzleAttempted(SessionFeature):
     def _updateFromEvent(self, event:Event) -> None:
         self._levels_started += 1
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

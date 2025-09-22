@@ -6,7 +6,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 # import local files
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.models.Event import Event
 
 # BUG: quizstart and quizend don't match. Using "wellsdidit" save code to inspect it.
@@ -14,8 +14,8 @@ from ogd.common.models.Event import Event
 class SurveyTime(PerCountFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
-    :param Feature: Base class for a Custom Feature class.
-    :type Feature: _type_
+    :param Extractor: Base class for a Custom Feature class.
+    :type Extractor: _type_
     """
     def __init__(self, params=GeneratorParameters):
         super().__init__(params=params)
@@ -50,7 +50,7 @@ class SurveyTime(PerCountFeature):
         raise(NotImplementedError("Haven't implemented the function due to bugs"))
         return
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         
         return
 

@@ -1,16 +1,16 @@
 from typing import Any, List
 # import locals
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
-class TotalHelpCount(Feature):
+class TotalHelpCount(Extractor):
     """_summary_
 
-    :param Feature: _description_
-    :type Feature: _type_
+    :param Extractor: _description_
+    :type Extractor: _type_
     """
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
@@ -28,7 +28,7 @@ class TotalHelpCount(Feature):
     def _updateFromEvent(self, event:Event) -> None:
         self._count += 1
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -4,7 +4,7 @@ import logging
 from typing import List, Optional
 # import locals
 from ogd.common.models.Event import Event
-from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.enums import ExtractionMode
 from ogd.common.utils.Logger import Logger
 
 ## @class ExtractorParams
@@ -14,7 +14,7 @@ class GeneratorParameters:
     so that we don't need to change the param list for hundreds of individual
     extractor subclasses every time something changes.
     """
-    def __init__(self, name:str, description:str, mode:ExtractionMode, count_index:Optional[int]):
+    def __init__(self, name:str, description:str, mode:ExtractionMode.ExtractionMode, count_index:Optional[int]):
         self._name = name
         self._desc = description
         self._mode = mode
@@ -30,7 +30,7 @@ class Generator(abc.ABC):
     ## Abstract function to get a list of event types the Feature wants.
     @classmethod
     @abc.abstractmethod
-    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode.ExtractionMode) -> List[str]:
         """ Abstract function to get a list of event types the Feature wants.
             The types of event accepted by a feature are a responsibility of the Feature's developer,
             so this is a required part of interface instead of a config item in the schema.
@@ -42,7 +42,7 @@ class Generator(abc.ABC):
 
     @classmethod
     @abc.abstractmethod
-    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode.ExtractionMode) -> List[str]:
         """Base function for getting any features a second-order feature depends upon.
         By default, no dependencies.
         Any feature intended to be second-order should override this function.
@@ -66,9 +66,30 @@ class Generator(abc.ABC):
 
     def __init__(self, params:GeneratorParameters):
         self._params = params
+        self._event_count        : int = 0
+        self._initial_app_id     : Optional[str] = None
+        self._initial_user_id    : Optional[str] = None
+        self._initial_session_id : Optional[str] = None
 
     def __str__(self):
         return f"{self.Name} : {self.Description}"
+
+    @property
+    def Name(self) -> str:
+        return self._params._name
+
+    @property
+    def Description(self) -> str:
+        return self._params._desc
+
+    @property
+    def ExtractMode(self) -> ExtractionMode.ExtractionMode:
+        return self._params._mode
+
+    @property
+    def CountIndex(self) -> Optional[int]:
+        return self._params._count_index
+
 
     # *** PUBLIC STATICS ***
 
@@ -111,46 +132,33 @@ class Generator(abc.ABC):
         return None
 
     @staticmethod
-    def AvailableModes() -> List[ExtractionMode]:
+    def AvailableModes() -> List[ExtractionMode.ExtractionMode]:
         """List of ExtractionMode supported by the Extractor
 
         Base function to give a list of which ExtractionModes an extractor will handle.
         :return: _description_
         :rtype: List[ExtractionMode]
         """
-        return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR]
+        return [ExtractionMode.ExtractionMode.POPULATION, ExtractionMode.ExtractionMode.PLAYER, ExtractionMode.ExtractionMode.SESSION, ExtractionMode.ExtractionMode.DETECTOR]
 
     # *** PUBLIC METHODS ***
 
     @classmethod
-    def EventFilter(cls, mode:ExtractionMode) -> List[str]:
+    def EventFilter(cls, mode:ExtractionMode.ExtractionMode) -> List[str]:
         return cls._eventFilter(mode=mode)
 
     @classmethod
-    def FeatureFilter(cls, mode:ExtractionMode) -> List[str]:
+    def FeatureFilter(cls, mode:ExtractionMode.ExtractionMode) -> List[str]:
         return cls._featureFilter(mode=mode)
 
     def UpdateFromEvent(self, event:Event):
         if self._validateEvent(event=event):
+            if self._event_count == 0:
+                self._initial_app_id     = event.AppID
+                self._initial_user_id    = event.UserID
+                self._initial_session_id = event.SessionID
             self._updateFromEvent(event=event)
-
-    # *** PROPERTIES ***
-
-    @property
-    def Name(self) -> str:
-        return self._params._name
-
-    @property
-    def Description(self) -> str:
-        return self._params._desc
-
-    @property
-    def ExtractionMode(self) -> ExtractionMode:
-        return self._params._mode
-
-    @property
-    def CountIndex(self) -> Optional[int]:
-        return self._params._count_index
+            self._event_count += 1
 
     # *** PRIVATE STATICS ***
 
@@ -199,7 +207,7 @@ class Generator(abc.ABC):
         :return: True if the given event type is in this feature's list, otherwise false.
         :rtype: bool
         """
-        _deps = self.EventFilter(mode=self.ExtractionMode)
+        _deps = self.EventFilter(mode=self.ExtractMode)
         if event_type in _deps or 'all_events' in _deps:
             return True
         else:

@@ -5,14 +5,14 @@ from typing import Any, Final, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.models.Event import Event
 
 class LastInteraction(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
-    :param Feature: Base class for a Custom Feature class.
-    :type Feature: _type_
+    :param Extractor: Base class for a Custom Feature class.
+    :type Extractor: _type_
     """
     NO_SENSE : Final[str] = 'tunic.historicalsociety.closet.intro'
 
@@ -36,7 +36,7 @@ class LastInteraction(SessionFeature):
 
         return
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

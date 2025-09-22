@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Optional, Type
 from ogd.core.generators.extractors.builtin.BuiltinExtractor import BuiltinExtractor
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.models.Event import Event
 from ogd.common.utils.Logger import Logger
 
@@ -66,11 +66,11 @@ class CountEvent(BuiltinExtractor):
             self._count += 1
         return
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         """_summary_
 
         :param feature: _description_
-        :type feature: FeatureData
+        :type feature: Feature
         """
         return
 

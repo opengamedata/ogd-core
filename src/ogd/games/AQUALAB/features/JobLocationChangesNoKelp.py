@@ -7,7 +7,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class JobLocationChangesNoKelp(PerJobFeature):
 
@@ -50,7 +50,7 @@ class JobLocationChangesNoKelp(PerJobFeature):
             self._by_task[task_id] = self._current_count
             self._current_count = 0
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

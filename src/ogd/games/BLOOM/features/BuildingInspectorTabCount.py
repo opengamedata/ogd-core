@@ -4,10 +4,10 @@ from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.common.models.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 
-class BuildingInspectorTabCount(Feature):
+class BuildingInspectorTabCount(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self._counter: Counter = Counter()
@@ -30,7 +30,7 @@ class BuildingInspectorTabCount(Feature):
             # Increment the counter for the current building type on tab click
             self._counter[self._building_type] += 1
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:
