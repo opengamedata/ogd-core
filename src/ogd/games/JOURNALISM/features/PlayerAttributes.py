@@ -8,7 +8,7 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
-
+import json
 
 
 
@@ -54,7 +54,7 @@ class PlayerAttributes(SessionFeature):
         # Note that this function runs once on each Event whose name matches one of the strings returned by _eventFilter()
         #
         # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
-        self._current_stats = event.game_state["current_stats"]
+        self._current_stats = json.loads(event.game_state["current_stats"])
         
         
         
@@ -92,12 +92,12 @@ class PlayerAttributes(SessionFeature):
         # note the code above is redundant, we could just return [self._found_click] to get the same result;
         # the more-verbose code is here for illustrative purposes.
         
-        return [self._current_stats]
+        return [self._current_stats, self._current_stats[0], self._current_stats[1], self._current_stats[2], self._current_stats[3], self._current_stats[4], self._current_stats[5]]
 
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return []
+        return ["research", "resourcefulness", "endurance", "tech", "social", "trust"]
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
         return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION] # >>> delete any modes you don't want run for your Feature. <<<
