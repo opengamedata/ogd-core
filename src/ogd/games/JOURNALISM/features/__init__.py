@@ -10,6 +10,7 @@ __all__ = [
     "SkillSequenceCount",
     "TotalLevelTime",
     "PlayerAttributes",
+    "WinningAttributes",
     "FinalAttributes",
     "StoryAlignment",
     "QuitLevel",
@@ -55,6 +56,7 @@ from . import SkillSequenceCount
 from . import TotalLevelTime
 from . import FinalAttributes
 from . import PlayerAttributes
+from . import WinningAttributes
 from . import StoryAlignment
 from . import QuitLevel
 from . import QuitType
