@@ -2,13 +2,13 @@
 import logging
 from typing import Optional
 # import locals
-from utils.Logger import Logger
-from extractors.Extractor import ExtractorParameters
+from ogd.common.utils.Logger import Logger
+from ogd.core.generators.Generator import GeneratorParameters
 from extractors.features.PerCountFeature import PerCountFeature
-from schemas.Event import Event
+from ogd.common.models.Event import Event
 
 class PerDifficultyFeature(PerCountFeature):
-    def __init__(self, params:ExtractorParameters, diff_map: dict, difficulty_type):
+    def __init__(self, params:GeneratorParameters, diff_map: dict, difficulty_type):
         super().__init__(params=params)
         self._difficulty_type = difficulty_type
         self._diff_map = diff_map

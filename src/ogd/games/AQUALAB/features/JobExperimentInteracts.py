@@ -2,30 +2,30 @@
 import logging
 from typing import Any, List, Optional
 # import locals
-from utils.Logger import Logger
-from extractors.Extractor import ExtractorParameters
-from games.AQUALAB.features.PerJobFeature import PerJobFeature
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
+from ogd.common.utils.Logger import Logger
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
 
 class JobExperimentInteracts(PerJobFeature):
 
-    def __init__(self, params:ExtractorParameters, job_map:dict):
+    def __init__(self, params:GeneratorParameters, job_map:dict):
         super().__init__(params=params, job_map=job_map)
         self._active = False
         self._count = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["add_environment", "remove_environment", "add_critter", "remove_critter", "receive_fact", "begin_experiment", "end_experiment"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if(event.EventName == "begin_experiment"):
             self._active = True
         if(event.EventName == "end_experiment"):
@@ -38,7 +38,7 @@ class JobExperimentInteracts(PerJobFeature):
             self._count += 1
 
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

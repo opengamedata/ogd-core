@@ -2,7 +2,7 @@
 from datetime import datetime, timedelta
 import logging, warnings
 from typing import Any, List, Optional
-from games.AQUALAB.features.PerJobFeature import PerJobFeature
+from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 # import locals
 from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
