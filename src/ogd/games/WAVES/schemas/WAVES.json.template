@@ -1,0 +1,598 @@
+{
+    "level_range": { "min":0, "max":34 },
+
+    "events": {
+        "COMPLETE.0": {
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "enum(COMPLETE)",
+                    "description": "N/A"
+                },
+                "amplitude_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "wavelength_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "offset_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "amplitude_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "wavelength_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "offset_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "closeness": {
+                    "type": "float",
+                    "description": "N/A"
+                }
+            }
+        },
+        "SUCCEED.0": {
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "enum(SUCCEED)",
+                    "description": "N/A"
+                },
+                "amplitude_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "wavelength_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "offset_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "amplitude_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "wavelength_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "offset_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "closeness": {
+                    "type": "float",
+                    "description": "N/A"
+                }
+            }
+        },
+        "FAIL.0": {
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "enum(FAIL)",
+                    "description": "N/A"
+                },
+                "amplitude_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "wavelength_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "offset_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "amplitude_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "wavelength_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "offset_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "closeness": {
+                    "type": "float",
+                    "description": "N/A"
+                }
+            }
+        },
+        "CUSTOM.1": {
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "enum(SLIDER_MOVE_RELEASE)",
+                    "description": "N/A"
+                },
+                "slider": {
+                    "enum": [
+                        "AMPLITUDE",
+                        "OFFSET",
+                        "WAVELENGTH"
+                    ]
+                },
+                "wave": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "begin_val": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "end_val": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "min_val": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "max_val": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "ave_val": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "begin_closeness": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "end_closeness": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "drag_length_ticks": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "direction_shifts": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "stdev_val": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "correct_val": {
+                    "type": "float",
+                    "description": "N/A"
+                }
+            }
+        },
+        "CUSTOM.2": {
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "enum(ARROW_MOVE_RELEASE)",
+                    "description": "N/A"
+                },
+                "slider": {
+                    "enum": [
+                        "AMPLITUDE",
+                        "OFFSET",
+                        "WAVELENGTH"
+                    ]
+                },
+                "wave": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "begin_val": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "end_val": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "closeness": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "correct_val": {
+                    "type": "float",
+                    "description": "N/A"
+                }
+            }
+        },
+        "CUSTOM.3": {
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "enum(QUESTION_ANSWER)",
+                    "description": "N/A"
+                },
+                "answer": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "answered": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "question": {
+                    "type": "int",
+                    "description": "N/A"
+                }
+            }
+        },
+        "CUSTOM.4": {
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "enum(RESET_BTN_PRESS)",
+                    "description": "N/A"
+                },
+                "amplitude_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "wavelength_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "offset_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "amplitude_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "wavelength_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "offset_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "closeness": {
+                    "type": "float",
+                    "description": "N/A"
+                }
+            }
+        },
+        "CUSTOM.5": {
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "enum(MENU_BUTTON)",
+                    "description": "N/A"
+                }
+            }
+        },
+        "CUSTOM.6": {
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "enum(SKIP_BUTTON)",
+                    "description": "N/A"
+                }
+            }
+        },
+        "CUSTOM.7": {
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "enum(DISMISS_MENU_BUTTON)",
+                    "description": "N/A"
+                }
+            }
+        }
+    },
+
+    "features": {
+        "per_count": {
+            "BeginCount": {
+                "type": "BeginCount",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"int",
+                "description": "number of times a player 'began' the level. [count of 'BEGIN' events]"
+            },
+            "Completed": {
+                "type": "Completed",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"bool",
+                "description": "whether the level was completed or not [bool whether 'COMPLETE' event was found]",
+                "subfeatures": {
+                    "Count":{"return_type":"int", "description":"number of times a player 'completed' the level. [count of 'COMPLETE' events]"}
+                }
+            },
+            "MenuButtonCount": {
+                "type": "MenuButtonCount",
+                "enabled": false,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"int",
+                "description": "number of times the player returned to the main menu. [count of 'MENU_BUTTON' events]"
+            },
+            "SucceedCount": {
+                "type": "SucceedCount",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"int",
+                "description": "number of times a 'SUCCEED' event occurs. [count of 'SUCCEED' events]"
+            },
+            "TotalFails": {
+                "type": "TotalFails",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"int",
+                "description": "number of 'Fail' events across a level"
+            },
+            "TotalLevelTime": {
+                "type": "TotalLevelTime",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type": "timedelta",
+                "description": "time spent on a level [sum of differences in time between 'BEGIN' and 'COMPLETE' event(s)]"
+            },
+            "TotalResets": {
+                "type": "TotalResets",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"int",
+                "description": "number of times the user pressed the 'reset' button across a level"
+            },
+            "TotalSkips": {
+                "type": "TotalSkips",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"int",
+                "description": "number of times the player chose to skip the level (only allowed if they already completed the level once)"
+            },
+            "FirstMoveType": {
+                "type": "FirstMoveType",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type": "char",
+                "description": "A character indicating what type of slider move a player made first. A = Amplitude, W = Wavelength, O = Offset, null = No moves"
+            },
+            "AmplitudeGoodMoveCount": {
+                "type": "AmplitudeGoodMoveCount",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"int",
+                "description": "number of amplitude moves that brought amplitude closer to the correct value"
+            },
+            "OffsetGoodMoveCount": {
+                "type": "OffsetGoodMoveCount",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"int",
+                "description": "number of offset moves that brought offset closer to the correct value"
+            },
+            "WavelengthGoodMoveCount": {
+                "type": "WavelengthGoodMoveCount",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"int",
+                "description": "number of wavelength moves that brought wavelength closer to the correct value"
+            },
+            "PercentAmplitudeMoves": {
+                "type": "PercentAmplitudeMoves",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type": "float",
+                "description": "percent of total moves that were amplitude adjustments in a level"
+            },
+            "PercentOffsetMoves": {
+                "type": "PercentOffsetMoves",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type": "float",
+                "description": "percent of total moves that were offset adjustments in a level"
+            },
+            "PercentWavelengthMoves": {
+                "type": "PercentWavelengthMoves",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type": "float",
+                "description": "percent of total moves that were wavelength adjustments in a level"
+            },
+            "PercentAmplitudeGoodMoves": {
+                "type": "PercentAmplitudeGoodMoves",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type": "float",
+                "description": "percent of amplitude moves that brought amplitude closer to the correct value"
+            },
+            "PercentOffsetGoodMoves": {
+                "type": "PercentOffsetGoodMoves",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type": "float",
+                "description": "percent of wavelength moves that brought wavelength closer to the correct value"
+            },
+            "PercentWavelengthGoodMoves": {
+                "type": "PercentWavelengthGoodMoves",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type": "float",
+                "description": "percent of wavelength moves that brought wavelength closer to the correct value"
+            },
+            "SliderAverageRange": {
+                "type": "SliderAverageRange",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type": "float",
+                "description": "difference between max and min values of a slider move, averaged together across a level"
+            },
+            "SliderAverageStandardDeviations": {
+                "type": "SliderAverageStandardDeviations",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type": "float",
+                "description": "Average of stdev_val for all slider moves in a level"
+            },
+            "TotalArrowMoves": {
+                "type": "TotalArrowMoves",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"int",
+                "description": "arrow moves across a given level [count of 'ARROW_MOVE_RELEASE' events]"
+            },
+            "TotalMoveTypeChanges": {
+                "type": "TotalMoveTypeChanges",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"int",
+                "description": "number of times the player changes between 'Arrow' and 'Slider' move types across a level"
+            },
+            "TotalSliderMoves": {
+                "type": "TotalSliderMoves",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"int",
+                "description": "slider moves across a given level [count of 'SLIDER_MOVE_RELEASE' events]"
+            },
+
+            "QuestionAnswered" : {
+                "enabled": true,
+                "count" : 4,
+                "prefix": "QA",
+                "return_type": "int",
+                "description" : "The answer the user gave to a given question (or -1 if unanswered)"
+            },
+            "QuestionCorrect"  : {
+                "enabled": true,
+                "count" : 4,
+                "prefix": "QA",
+                "return_type": "int",
+                "description" : "0 if user answered the question incorrectly, 1 if answered correctly, -1 if unanswered"
+            },
+            "TimeToAnswerMS"   : {
+                "enabled": false,
+                "count" : 4,
+                "prefix": "QA",
+                "return_type": "int",
+                "description" : "The time, in milliseconds, taken by the player before answering the question"
+            },
+
+
+
+            "SequenceLevel": {
+                "type": "SequenceLevel",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"str",
+                "description": "Sequence of slider interactions (e.g. 'wow' for Wavelength, Offset, Wavelength)"
+            }
+        },
+
+        "aggregate":{
+            "SessionID": {
+                "type": "SessionID",
+                "enabled": true,
+                "return_type": "str",
+                "description":"The player's session ID number for this play session"
+            },
+            "PersistentSessionID": {
+                "type": "PersistentSessionID",
+                "enabled": true,
+                "return_type": "str",
+                "description":"The session ID for the player's device, persists across multiple players using the same device."
+            },
+            "AverageFails" : {
+                "enabled": true,
+                "return_type": "float",
+                "description": "totalFails averaged over all levels"
+            },
+            "AverageLevelTime" :  {
+                "enabled": true,
+                "return_type": "float",
+                "description":"totalLevelTime averaged over all levels"
+            },
+            "AverageMoveTypeChanges" : {
+                "enabled": true,
+                "return_type": "float",
+                "description": "totalMoveTypeChanges averaged over all levels"
+            },
+            "AverageSliderMoves" :  {
+                "enabled": true,
+                "return_type": "float",
+                "description":"totalSliderMoves averaged over all levels"
+            },
+            "OverallPercentAmplitudeMoves" : {
+                "enabled": true,
+                "return_type": "float",
+                "description": "Percent of total moves that were amplitude adjustments over a whole session"
+            },
+            "OverallPercentOffsetMoves" :  {
+                "enabled": true,
+                "return_type": "float",
+                "description":"Percent of total moves that were offset adjustments over a whole session"
+            },
+            "OverallPercentWavelengthMoves" :  {
+                "enabled": true,
+                "return_type": "float",
+                "description":"Percent of total moves that were wavelength adjustments over a whole session"
+            },
+            "OverallSliderAverageRange" : {
+                "enabled": true,
+                "return_type": "float",
+                "description": "Average range of slider moves over a whole session"
+            },
+            "OverallSliderAverageStandardDeviations" : {
+                "enabled": true,
+                "return_type": "float",
+                "description": "Average standard deviation of slider moves over a whole sessioin"
+            },
+            "SessionSucceedCount": {
+                "type": "CountEvent",
+                "enabled": true,
+                "return_type":"int",
+                "description": "number of times a 'SUCCEED' event occurs, across the whole session. [count of 'SUCCEED' events]",
+                "target": "SUCCEED.0"
+            }
+        }
+    },
+
+    "config": {
+    	"SUPPORTED_VERS": [4]
+	}
+}

@@ -4,21 +4,21 @@ import logging
 from datetime import datetime
 from typing import Any, Callable, List, Type, Optional, Set
 ## import local files
-from ogd.core.extractors.registries.DetectorRegistry import DetectorRegistry
-from ogd.core.extractors.ExtractorLoader import ExtractorLoader
+from ogd.core.registries.DetectorRegistry import DetectorRegistry
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.processors.DetectorProcessor import DetectorProcessor
 from ogd.core.processors.EventProcessor import EventProcessor
-from ogd.core.schemas.Event import Event, EventSource
-from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.utils import utils
-from ogd.core.utils.Logger import Logger
-from ogd.core.utils.utils import ExportRow
+from ogd.common.models.Event import Event, EventSource
+from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.utils import utils
+from ogd.common.utils.Logger import Logger
+from ogd.common.utils.typing import ExportRow
 
 ## @class EventProcessor
 #  Class to manage data for a csv events file.
 class EventManager:
     def __init__(self, game_schema: GameSchema, trigger_callback:Callable[[Event], None],
-                 LoaderClass:Optional[Type[ExtractorLoader]], feature_overrides:Optional[List[str]]=None):
+                 LoaderClass:Optional[Type[GeneratorLoader]], feature_overrides:Optional[List[str]]=None):
         """Constructor for EventManager.
         Just creates empty list of lines and generates list of column names.
         """

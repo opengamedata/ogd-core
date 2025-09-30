@@ -36,12 +36,6 @@
             "type": "json"
         },
         {
-            "name": "geo",
-            "readable": "Geo",
-            "description": "A record of the user's geographic information",
-            "type": "json"
-        },
-        {
             "name": "platform",
             "readable": "Platform",
             "description": "The platform on which the app was built",

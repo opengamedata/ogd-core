@@ -1,0 +1,41 @@
+name: "Configure t_config.py file"
+author: Luke Swanson
+description: "Given a set of appropriate inputs, this action prepares the t_config.py file for running an ogd-common testbed."
+branding:
+  icon: 'clipboard'
+  color: 'blue'
+inputs:
+  verbose_output:
+    description: "Whether to output extra debugging lines from tests."
+    required: false
+    default: "False"
+  with_configs:
+    description: "Whether to run the Config tests."
+    required: false
+    default: "False"
+  remote_url:
+    description: "The URL for calls to a remote instance of the Hello API"
+    required: False
+    default: "127.0.0.1:5000"
+  config_path:
+    description: "Local path to test config folder"
+    required: false
+    default: 'tests/config'
+runs:
+  using: "composite"
+  steps:
+    - name: Set up config
+      run: cp ${{ inputs.config_path }}/t_config.py.template ${{ inputs.config_path }}/t_config.py 
+      shell: bash
+    - name: Set Output Verbosity
+      run: sed -i 's@"VERBOSE"\s*:\s*False@"VERBOSE":${{ inputs.verbose_output }}@g' ${{ inputs.config_path }}/t_config.py
+      shell: bash
+    - name: Set Config test(s) to run or not
+      run: sed -i 's@"CONFIGS"\s*:\s*True@"CONFIGS":${{ inputs.with_configs }}@g'    ${{ inputs.config_path }}/t_config.py
+      shell: bash
+    - name: Set Games test(s) to run or not
+      run: sed -i 's@"GAMES"\s*:\s*True@"GAMES":${{ inputs.with_schemas }}@g'        ${{ inputs.config_path }}/t_config.py
+      shell: bash
+    - name: Set the remote address
+      run: sed -i 's@"address_placeholder"@"${{ inputs.remote_url }}"@g'             ${{ inputs.config_path }}/t_config.py
+      shell: bash
