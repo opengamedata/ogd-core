@@ -6,12 +6,12 @@ from typing import Any, Final, List, Optional
 # import local files
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.FeatureData import FeatureData
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 
 
 

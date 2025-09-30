@@ -522,6 +522,27 @@
             "description": "N/A",
             "event_data": {
             }
+        },
+        "survey_submitted": {
+            "description": "When the player completes an in-game survey and submits their response to the server",
+            "event_data": {
+                "display_event_id": {
+                    "type": "str",
+                    "description": "An ID/name for the survey that was submitted"
+                },
+                "package_config_id": {
+                    "type": "str",
+                    "description": "An ID/name for the package of surveys that the submitted survey came from"
+                },
+                "responses": {
+                    "type": "List[Dict]",
+                    "description": "A list of individual response objects",
+                    "details": {
+                        "prompt" : "str",
+                        "response" : "int"
+                    }
+                }
+            }
         }
     },
     "detectors": {
@@ -571,6 +592,15 @@
     },
     "features": {
         "per_count": {
+    
+            "FollowedAdvice": {
+                "enabled": true,
+                "type": "FollowedAdvice",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "followed advice during a job",
+                "return_type": "bool"
+            },
             "JobActiveTime": {
                 "enabled": true,
                 "type": "JobActiveTime",
@@ -592,6 +622,22 @@
                         "return_type": "timedelta"
                     }
                 }
+            },
+            "JobAttempted": {
+                "enabled": true,
+                "type": "JobAttempted",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Indicator for whether the player ever entered into the given job",
+                "return_type": "bool"
+            },
+            "JobTotalAttempts": {
+                "enabled": true,
+                "type": "JobTotalAttempts",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "The total number of players who attempted the job.",
+                "return_type": "int"
             },
             "JobCompletionTime": {
                 "enabled": true,
@@ -639,6 +685,14 @@
                 "description": "Number of times player talked with guide during a job",
                 "return_type": "int"
             },
+            "JobName": {
+                "enabled": true,
+                "type": "JobName",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "The name of the job associated with job0, job1, etc.",
+                "return_type": "str"
+            },
             "JobHelpCount": {
                 "enabled": false,
                 "type": "JobHelpCount",
@@ -664,6 +718,73 @@
                     "ByTask": {
                         "description": "Change counts leading up to each completed task",
                         "return_type": "int"
+                    }
+                }
+            },
+            "JobLocationChangesNoKelp": {
+                "enabled": true,
+                "type": "JobLocationChangesNoKelp",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "N/A",
+                "return_type": "int",
+                "subfeatures": {
+                    "ByTask": {
+                        "description": "N/A",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "JobRecommendationReceived": {
+                "enabled": true,
+                "type": "JobRecommendationReceived",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Number of times player received a job recommendation",
+                "return_type": "int"
+            },
+            "LeftJob": {
+                "enabled": true,
+                "type": "LeftJob",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Job left off on by player",
+                "return_type": "int"
+            },
+            "SessionDurationPerJob": {
+                "enabled": true,
+                "type": "SessionDurationPerJob",
+                "description": "N/A",
+                "threshold": 60,
+                "return_type": "timedelta",
+                "subfeatures": {
+                    "Total": {
+                        "description": "The total play time per job",
+                        "return_type": "timedelta"
+                    },
+                    "Seconds": {
+                        "description": "The total play time per job, whether active or idle, in seconds",
+                        "return_type": "float"
+                    },
+                    "Active": {
+                        "description": "The active play time per job, i.e. play without any gaps above the threshold, as a timedelta",
+                        "return_type": "timedelta"
+                    },
+                    "ActiveSeconds": {
+                        "description": "The active play time per job, i.e. play without any gaps above the threshold, in seconds",
+                        "return_type": "float"
+                    },
+                    "Idle": {
+                        "description": "The idle time per job i.e. player does not play or is afk",
+                        "return_type": "timedelta"
+                    },
+                    "IdleSeconds": {
+                        "description": "The idle time per job i.e. player does not play or is afk, in seconds",
+                        "return_type": "float"
+                    },
+                    "MaxIdle": {
+                        "description": "The maximum idle time per job",
+                        "return_type": "timedelta"
                     }
                 }
             },
@@ -702,8 +823,14 @@
                 "type": "JobTasksCompleted",
                 "count": "level_range",
                 "prefix": "job",
-                "description": "Number of tasks completed for a given job",
-                "return_type": "int"
+                "description": "List of tasks completed for a given job",
+                "return_type": "List[str]",
+                "subfeatures": {
+                    "Count": {
+                        "description": "Number of tasks completed for the given job",
+                        "return_type": "int"
+                    }
+                }
             },
             "JobsAttempted": {
                 "type": "JobsAttempted",
@@ -758,6 +885,328 @@
                 "description": "The human-readable version of the name for a given region",
                 "return_type": "str"
             },
+            "SuccessfulAdvice": {
+                "enabled": true,
+                "type": "SuccessfulAdvice",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "successfully followed advice during a job",
+                "return_type": "bool"
+            },
+            "SurveyCompleted":{
+                "enabled": true,
+                "type": "SurveyCompleted",
+                "count": 14,
+                "prefix": "svy",
+                "description": "Survey completed during a job",
+                "return_type": "bool",
+                "subfeatures": {
+                    "Name": {
+                        "description": "String name of the survey",
+                        "return_type": "string"
+                    },
+                    "Responses": {
+                        "description": "",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "DemographicItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "demographics",
+                "retest": false,
+                "count": 4,
+                "prefix": "dem",
+                "description": "Responses to each item on the demographics survey",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "AffectItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "affective",
+                "retest": true,
+                "count": 2,
+                "prefix": "aff",
+                "description": "Responses to each item on the affective state survey",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Retest": {
+                        "description": "The response the player gave upon taking the survey a second time",
+                        "return_type": "int | str"
+                    },
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "ScienceEfficacyItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "science-efficacy",
+                "retest": true,
+                "count": 7,
+                "prefix": "scieff",
+                "description": "Responses to each item on the science self-efficacy survey",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Retest": {
+                        "description": "The response the player gave upon taking the survey a second time",
+                        "return_type": "int | str"
+                    },
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "ScienceIdentityItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "science-identity",
+                "retest": true,
+                "count": 4,
+                "prefix": "sciid",
+                "description": "Responses to each item on the science identity survey",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Retest": {
+                        "description": "The response the player gave upon taking the survey a second time",
+                        "return_type": "int | str"
+                    },
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "ScienceInterestItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "science-interest",
+                "retest": true,
+                "count": 4,
+                "prefix": "sciint",
+                "description": "Responses to each item on the science interest survey",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Retest": {
+                        "description": "The response the player gave upon taking the survey a second time",
+                        "return_type": "int | str"
+                    },
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "HansonInterestsItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "interest-items-hanson-2021",
+                "retest": false,
+                "count": 12,
+                "prefix": "int",
+                "description": "Responses to each item on the Hanson interests survey",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "Values1ItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "values-1",
+                "retest": false,
+                "count": 3,
+                "prefix": "val1",
+                "description": "Responses to each item on the values survey, part 1",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "Values2ItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "values-2",
+                "retest": false,
+                "count": 3,
+                "prefix": "val2",
+                "description": "Responses to each item on the values survey, part 2",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "Values3ItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "values-3",
+                "retest": false,
+                "count": 3,
+                "prefix": "val3",
+                "description": "Responses to each item on the values survey, part 3",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "Values4ItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "values-4",
+                "retest": false,
+                "count": 3,
+                "prefix": "val4",
+                "description": "Responses to each item on the values survey, part 4",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "Values5ItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "values-5",
+                "retest": false,
+                "count": 3,
+                "prefix": "val5",
+                "description": "Responses to each item on the values survey, part 5",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "Values6ItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "values-6",
+                "retest": false,
+                "count": 3,
+                "prefix": "val6",
+                "description": "Responses to each item on the values survey, part 6",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "Values7ItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "values-7",
+                "retest": false,
+                "count": 3,
+                "prefix": "val7",
+                "description": "Responses to each item on the values survey, part 7",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "EnjoymentItemResponses":{
+                "enabled": true,
+                "type": "SurveyItemResponse",
+                "target": "enjoyment",
+                "retest": false,
+                "count": 7,
+                "prefix": "ejy",
+                "description": "Responses to each item on the enjoyment survey",
+                "return_type": "int | str",
+                "subfeatures": {
+                    "Prompt": {
+                        "description": "The full text content of the prompt",
+                        "return_type": "string"
+                    },
+                    "Count": {
+                        "description": "The number of times the player responded to this survey",
+                        "return_type": "int"
+                    }
+                }
+            },
             "SyncCompletionTime": {
                 "enabled": true,
                 "type": "SyncCompletionTime",
@@ -768,6 +1217,28 @@
             }
         },
         "aggregate": {
+            "ExperimentalCondition": {
+                "enabled": true,
+                "type": "ExperimentalCondition",
+                "description": "Returns the first event branch",
+                "return_type": "str"
+            },
+            "PlayedNonexperimentalVersion": {
+                "enabled": true,
+                "type": "PlayedNonexperimentalVersion",
+                "description": "True if the player ever had an event in a non-experimental branch.",
+                "return_type": "str"
+            },
+            "TotalJobRecommendationReceived": {
+                "enabled": true,
+                "type": "TotalJobRecommendationReceived",
+                "description": "Count of total recommendations received",
+                "target": "recommended_job",
+                "return_type": "int",
+                "subfeatures": [
+                    "SpecificRecommendations"
+                ]
+            },
             "ActiveJobs": {
                 "enabled": true,
                 "type": "ActiveJobs",
@@ -799,25 +1270,25 @@
                 "return_type": "list[str]"
             },
             "PlayerSummary": {
-                "enabled": false,
+                "enabled": true,
                 "type": "PlayerSummary",
                 "description": "Summary of player statistics (active session time, jobs completed, number of sessions)",
                 "return_type": "dict"
             },
             "PlayLocations": {
-                "enabled": false,
+                "enabled": true,
                 "type": "PlayLocations",
-                "description": "An indicator of whether play happened during normal school hours or not",
+                "description": "Play Locations",
                 "return_type": "List[bool]",
                 "subfeatures": {
                     "LocalTime": {
-                        "description": "The actual local time when each session started",
+                        "description": "An indicator of whether play happened during normal school hours or not",
                         "return_type": "datetime"
                     }
                 }
             },
             "PopulationSummary": {
-                "enabled": false,
+                "enabled": true,
                 "type": "PopulationSummary",
                 "description": "Summary of population statistics (active session time, average jobs completed count, average session count)",
                 "return_type": "dict"
@@ -833,7 +1304,33 @@
                 "type": "SessionDuration",
                 "description": "Time spent playing in a given session",
                 "threshold": 60,
-                "return_type": "timedelta"
+                "return_type": "timedelta",
+                "subfeatures": {
+                    "Seconds": {
+                        "description": "The total play time, whether active or idle, in seconds",
+                        "return_type": "float"
+                    },
+                    "Active": {
+                        "description": "The active play time, i.e. play without any gaps above the threshold, as a timedelta",
+                        "return_type": "timedelta"
+                    },
+                    "ActiveSeconds": {
+                        "description": "The active play time, i.e. play without any gaps above the threshold, in seconds",
+                        "return_type": "float"
+                    },
+                    "Idle": {
+                        "description": "The total time spent idle",
+                        "return_type": "float"
+                    },
+                    "IdleSeconds": {
+                        "description": "The idle time, in seconds",
+                        "return_type": "timedelta"
+                    },
+                    "MaxIdle": {
+                        "description": "The longest time spent idle",
+                        "return_type": "float"
+                    }
+                }
             },
             "SessionID": {
                 "enabled": false,
@@ -900,6 +1397,55 @@
                 "type": "TotalPlayTime",
                 "description": "Total time the player had the game open, based on sum total of SessionDurations.",
                 "return_type": "timedelta"
+            },
+            "TotalSessionTime": {
+                "enabled": true,
+                "type": "TotalSessionTime",
+                "description": "Total time spent playing in a given session",
+                "threshold": 30,
+                "return_type": "timedelta"
+            },
+            "TotalPopulationTime": {
+                "enabled": true,
+                "type": "TotalPopulationTime",
+                "description": "Total population playing in a given session",
+                "threshold": 30,
+                "return_type": "timedelta"
+            },
+            "TotalPlayerTime": {
+                "enabled": true,
+                "type": "TotalPlayerTime",
+                "description": "Total players playing in a given session",
+                "threshold": 30,
+                "return_type": "timedelta"
+            },
+            "TimeInJournal": {
+                "enabled": true,
+                "type": "TimeInJournal",
+                "description": "Tracks total, active, and idle time spent in the journal.",
+                "return_type": "timedelta",
+                "subfeatures": {
+                    "Seconds": {
+                        "description": "Total time spent in the journal, in seconds.",
+                        "return_type": "float"
+                    },
+                    "Active": {
+                        "description": "Total active time in the journal.",
+                        "return_type": "timedelta"
+                    },
+                    "ActiveSeconds": {
+                        "description": "Active time in the journal, in seconds.",
+                        "return_type": "float"
+                    },
+                    "Idle": {
+                        "description": "Total idle time in the journal.",
+                        "return_type": "timedelta"
+                    },
+                    "IdleSeconds": {
+                        "description": "Idle time in the journal, in seconds.",
+                        "return_type": "float"
+                    }
+                }
             },
             "UserAvgSessionDuration": {
                 "enabled": true,

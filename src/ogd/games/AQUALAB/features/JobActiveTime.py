@@ -3,12 +3,12 @@ import logging
 from datetime import timedelta
 from typing import Any, List, Optional
 # import locals
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.FeatureData import FeatureData
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
 
 class JobActiveTime(PerJobFeature):
 
@@ -54,7 +54,10 @@ class JobActiveTime(PerJobFeature):
         if event.EventName == "accept_job":
             self._last_start_time = event.timestamp
         elif event.EventName == "switch_job":
-            new_job = event.GameState.get('job_name', event.EventData.get('job_name', None))['string_value']
+            new_job = event.GameState.get('job_name', event.EventData.get('job_name', None))
+            if isinstance(new_job, dict):
+                new_job = new_job['string_value']
+
             if new_job is None:
                 raise KeyError("Could not find key 'job_name' in GameState or EventData!")
             old_job = event.EventData["prev_job_name"]
@@ -100,7 +103,10 @@ class JobActiveTime(PerJobFeature):
     def _validateEventCountIndex(self, event:Event):
         ret_val : bool = False
 
-        _current_job = event.GameState.get('job_name', event.EventData.get('job_name', None))['string_value']
+        _current_job = event.GameState.get('job_name', event.EventData.get('job_name', None))
+        if isinstance(_current_job, dict):
+            _current_job = _current_job['string_value']
+
         if _current_job is None:
             raise KeyError("Could not find key 'job_name' in GameState or EventData!")
         if self._job_map.get(_current_job, None) is not None:

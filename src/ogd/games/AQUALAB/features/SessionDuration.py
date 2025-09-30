@@ -5,10 +5,10 @@ from typing import Any, List
 # import locals
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
-from ogd.core.models.Event import Event, EventSource
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.FeatureData import FeatureData
-from ogd.core.utils.Logger import Logger
+from ogd.common.models.Event import Event, EventSource
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
+from ogd.common.utils.Logger import Logger
 
 class SessionDuration(SessionFeature):
 
@@ -20,8 +20,10 @@ class SessionDuration(SessionFeature):
         self.idle_time = timedelta(0)
         self.total_session_time = timedelta(0)
         # self._session_duration = 0
+
     def Subfeatures(self) -> List[str]:
-            return ["Total", "Seconds", "Active", "ActiveSeconds", "Idle" "IdleSeconds", "MaxIdle"]
+            return ["Seconds", "Active", "ActiveSeconds", "Idle", "IdleSeconds", "MaxIdle"]
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
@@ -35,6 +37,7 @@ class SessionDuration(SessionFeature):
         if event.EventSource == EventSource.GAME:
             if self.previous_time is not None:
                 self.total_session_time += (event.Timestamp - self.previous_time)
+                # TODO : this should be based on threshold, not hardcoded to 1 minute
                 if (event.Timestamp - self.previous_time) > timedelta(minutes=1):
                     self.idle_time += (event.Timestamp - self.previous_time)
                     if self.max_idle < (event.Timestamp - self.previous_time):

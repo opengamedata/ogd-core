@@ -5,10 +5,10 @@ from typing import Any, List
 # import locals
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
-from ogd.core.schemas.Event import Event, EventSource
-from ogd.core.schemas.ExtractionMode import ExtractionMode
-from ogd.core.schemas.FeatureData import FeatureData
-from ogd.core.utils.Logger import Logger
+from ogd.common.models.Event import Event, EventSource
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
+from ogd.common.utils.Logger import Logger
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 
 
@@ -23,7 +23,7 @@ class SessionDuration(PerJobFeature):
         self.total_session_time = timedelta(0)
         # self._session_duration = 0
     def Subfeatures(self) -> List[str]:
-            return ["Total", "Seconds", "Active", "ActiveSeconds", "Idle" "IdleSeconds", "MaxIdle"]
+            return ["Total", "Seconds", "Active", "ActiveSeconds", "Idle", "IdleSeconds", "MaxIdle"]
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode:ExtractionMode) -> List[str]:

@@ -1,0 +1,40 @@
+name: "Upload Export to Website"
+author: Luke Swanson
+description: "Given location of an export, upload the files to a server via scp."
+branding:
+  icon: 'chevrons-up'
+  color: 'blue'
+inputs:
+  game:
+   description: "The game whose data was exported."
+   required: true
+  host:
+   description: "The web host to which files should be uploaded."
+   required: true
+  remote_user:
+   description: "The user that should access the host for upload."
+   required: true
+  remote_key:
+   description: "The key for SSH access to the host."
+   required: true
+  source_path:
+   description: "The local path to the file for upload."
+   required: true
+  remote_data_path:
+   description: "The remote path of the data folder."
+   required: false
+   default: "/var/www/opengamedata/data"
+runs:
+  using: "composite"
+  steps:
+  - name: "Set up key"
+    run: |
+      mkdir -p ~/.ssh
+      echo '${{ inputs.remote_key }}' >> ./key.txt
+      chmod 600 ./key.txt
+    shell: bash
+  - name: "Do upload"
+    run: |
+      ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ inputs.remote_user }}@${{ inputs.host }} "cd ${{ inputs.remote_data_path }}; mkdir -p ${{ inputs.game }}"
+      scp -o StrictHostKeyChecking=no -i ./key.txt ${{ inputs.source_path }}/* ${{ inputs.remote_user }}@${{ inputs.host }}:${{ inputs.remote_data_path }}/${{ inputs.game }}/
+    shell: bash

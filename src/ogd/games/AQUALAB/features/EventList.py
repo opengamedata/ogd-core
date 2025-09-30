@@ -5,9 +5,9 @@ from typing import Any, List, Optional
 # import locals
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.FeatureData import FeatureData
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
 
 class EventList(Feature):
 
@@ -70,13 +70,17 @@ class EventList(Feature):
         return []
 
     def _updateFromEvent(self, event:Event) -> None:
+        _job_name = event.GameState.get('job_name', event.EventData.get('job_name', "UNDEFINED"))
+        if isinstance(_job_name, dict):
+            _job_name = _job_name['string_value']
+
         if event.UserID:
             next_event = {
                 "name": event.EventName,
                 "user_id": event.UserID,
                 "session_id": event.SessionID,
                 "timestamp": event.Timestamp.isoformat(),
-                "job_name": event.GameState.get('job_name', event.EventData.get('job_name', "UNDEFINED"))['string_value'],
+                "job_name": _job_name,
                 "index": event.EventSequenceIndex,
                 "event_primary_detail": None
             }
@@ -86,11 +90,7 @@ class EventList(Feature):
 
             if event.EventName in self._details_map:
                 param_name = self._details_map[event.EventName][0]
-
-                try:
-                    next_event["event_primary_detail"] = event.EventData[param_name]
-                except KeyError as err:
-                    raise KeyError(f"Event of type {event.EventName} did not have parameter {param_name}, valid parameters are {event.EventData.keys()}")
+                next_event["event_primary_detail"] = event.EventData.get(param_name, event.GameState.get(param_name, "NOT FOUND"))
 
             self._event_list.append(next_event)
 

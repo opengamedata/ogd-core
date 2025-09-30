@@ -66,6 +66,10 @@
          "description": "When the player starts a new game (at present, this happens automatically at launch, but in the future the player may launch a new game from a menu).",
          "event_data": {}
       },
+      "game_complete": {
+         "description": "When the player completes the last level of the game, thus completing the game itself.",
+         "event_data": {}
+      },
       "level_preview_displayed": {
          "description": "When the system displays a preview of the upcoming level to the player, including the target score and allowed time.",
          "event_data": {
@@ -522,11 +526,6 @@
                "type":"str",
                "description":"An identifier for the specific survey."
             }
-         }
-      },
-      "game_complete": {
-         "description": "When the player completes the game",
-         "event_data": {
          }
       }
    }

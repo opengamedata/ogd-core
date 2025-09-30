@@ -4,12 +4,12 @@ import logging
 from datetime import timedelta
 from typing import Any, List, Optional
 # import locals
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.FeatureData import FeatureData
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
 
 class JobCompletionTime(PerJobFeature):
 
@@ -47,7 +47,10 @@ class JobCompletionTime(PerJobFeature):
                 self._time += (event.timestamp - self._job_start_time).total_seconds()
                 self._job_start_time = None
             else:
-                _completed_job = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))['string_value']
+                _completed_job = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
+                if isinstance(_completed_job, dict):
+                    _completed_job = _completed_job['string_value']
+
                 callstack = [f"{_getFilename(inspect.stack()[i].filename)}.{inspect.stack()[i].function}" for i in range(min(11, len(inspect.stack())))]
                 Logger.Log(f"In {callstack}:\n  {event.user_id} ({event.session_id}) completed job {_completed_job} with no active start time!", logging.DEBUG)
 

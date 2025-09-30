@@ -1,29 +1,29 @@
 # import standard libraries
-import itertools
-import json
+from datetime import timedelta
 from pathlib import Path
 from typing import Any, Callable, Dict, Final, List, Optional
 
-from ogd.games.BLOOM.features import AverageActiveTime, CountyUnlockCount, FailCount, PersistedThroughFailure
 # import local files
-from . import features
 from ogd.games import BLOOM
+from ogd.games.BLOOM.detectors import * 
+from ogd.games.BLOOM.features import *
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.games.BLOOM.detectors import * 
-from ogd.games.BLOOM.features import *
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.utils.utils import loadJSONFile
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.utils.utils import loadJSONFile
+from ogd.games.BLOOM.features import PersistThroughFailure
+from . import features
 
-#EXPORT_PATH : Final[str] = "games/BLOOM/DBExport.json"
+# EXPORT_PATH : Final[str] = "games/BLOOM/DBExport.json"
 
 ## @class BloomLoader
 #  Extractor subclass for extracting features from Bloomlab game data.
 class BloomLoader(GeneratorLoader):
+    """Class for loading Bloom generator instances."""
 
     # *** BUILT-INS & PROPERTIES ***
 
@@ -41,53 +41,140 @@ class BloomLoader(GeneratorLoader):
         :type feature_overrides: Optional[List[str]]
         """
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
-        data = None
 
-    """        # Load Bloomlab jobs export and map job names to integer values
-            _dbexport_path = Path(BLOOM.__file__) if Path(BLOOM.__file__).is_dir() else Path(BLOOM.__file__).parent
-            with open(_dbexport_path / "DBExport.json", "r") as file:
-                export = json.load(file)"""
-
-
+    # Load Bloomlab jobs export and map job names to integer values
+    # _dbexport_path = Path(BLOOM.__file__) if Path(BLOOM.__file__).is_dir() else Path(BLOOM.__file__).parent
+    # with open(_dbexport_path / "DBExport.json", "r") as file:
+    # export = json.load(file)
 
    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     @staticmethod
     def _getFeaturesModule():
         return features
+    
+    def _loadFeature(self, feature_type: str, extractor_params: GeneratorParameters, schema_args: Dict[str, Any]) -> Optional[Feature]:
+        ret_val: Optional[Feature] = None
 
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
-        ret_val : Feature
         # First run through aggregate features
-        if extractor_params._count_index == None:
+        if extractor_params._count_index is None:
             match feature_type:
                 case "ActiveTime":
                     ret_val = ActiveTime.ActiveTime(params=extractor_params, idle_threshold=schema_args.get("threshold", 30))
-                case "NumberOfSessionsPerPlayer":
-                    ret_val = NumberOfSessionsPerPlayer.NumberOfSessionsPerPlayer(params=extractor_params)
+                case "AlertCount":
+                    ret_val = AlertCount.AlertCount(params=extractor_params)
+                case "ActiveCounties":
+                    ret_val = ActiveCounties.ActiveCounties(params=extractor_params)
+                case "AlertResponseCount":
+                    ret_val = AlertResponseCount.AlertResponseCount(params=extractor_params)
+                case "AlertReviewCount":
+                    ret_val = AlertReviewCount.AlertReviewCount(params=extractor_params)
                 case "AverageActiveTime":
                     ret_val = AverageActiveTime.AverageActiveTime(params=extractor_params)
+                case "AverageBuildingInspectTime":
+                    ret_val = AverageBuildingInspectTime.AverageBuildingInspectTime(params=extractor_params)
+                case "AverageEconomyViewTime":
+                    ret_val = AverageEconomyViewTime.AverageEconomyViewTime(params=extractor_params)
+                case "AveragePhosphorusViewTime":
+                    ret_val = AveragePhosphorusViewTime.AveragePhosphorusViewTime(params=extractor_params)
+                case "BloomAlertCount":
+                    ret_val = BloomAlertCount.BloomAlertCount(params=extractor_params)
+                case "BuildingUnlockCount":
+                    ret_val = BuildingUnlockCount.BuildingUnlockCount(params=extractor_params)
+                case "EconomyViewUnlocked":
+                    ret_val = EconomyViewUnlocked.EconomyViewUnlocked(params=extractor_params)
+                case "FailCount":
+                    ret_val = FailCount.FailCount(params=extractor_params)
+
+                case "GameCompletionStatus":
+                    ret_val = GameCompletionStatus.GameCompletionStatus(params=extractor_params)
+                case "NumberOfSessionsPerPlayer":
+                    ret_val = NumberOfSessionsPerPlayer.NumberOfSessionsPerPlayer(params=extractor_params)
+                case "SucceededThroughFailure":
+                    ret_val = SucceededThroughFailure.SucceededThroughFailure(params=extractor_params)
                 case "CountyUnlockCount":
                     ret_val = CountyUnlockCount.CountyUnlockCount(params=extractor_params)
-                case "FailCount":
-                    ret_val = FailCount.FailCount(params=extractor_params)       
-                case "PersistedThroughFailure":
-                    ret_val = PersistedThroughFailure.PersistedThroughFailure(params=extractor_params)
+                case "PersistThroughFailure":
+                    ret_val = PersistThroughFailure.PersistThroughFailure(params=extractor_params)
+                case "PersistenceTime":
+                    ret_val = PersistenceTime.PersistenceTime(params=extractor_params)
+                case "PhosphorusViewUnlocked":
+                    ret_val = PhosphorusViewUnlocked.PhosphorusViewUnlocked(params=extractor_params)
+                case "PlayerSummary":
+                    ret_val = PlayerSummary.PlayerSummary(params=extractor_params)
+                case "PopulationSummary":
+                    ret_val = PopulationSummary.PopulationSummary(params=extractor_params)
+                case "PolicyUnlocked":
+                    ret_val = PolicyUnlocked.PolicyUnlocked(params=extractor_params)
+                case "QuitOnBloomFail":
+                    ret_val = QuitOnBloomFail.QuitOnBloomFail(params=extractor_params)
+                case "QuitOnCityFail":
+                    ret_val = QuitOnCityFail.QuitOnCityFail(params=extractor_params)
+                case "QuitOnBankruptcy":
+                    ret_val = QuitOnBankruptcy.QuitOnBankruptcy(params=extractor_params)
+                case "TopCountySwitchDestinations":
+                    ret_val = TopCountySwitchDestinations.TopCountySwitchDestinations(params=extractor_params)
+                case "TopCountyCompletionDestinations":
+                    ret_val = TopCountyCompletionDestinations.TopCountyCompletionDestinations(params=extractor_params)
+                case "BuildingInspectorTabCount": 
+                    ret_val = BuildingInspectorTabCount.BuildingInspectorTabCount(params=extractor_params)
+                case "GoodPolicyCount":
+                    ret_val = GoodPolicyCount.GoodPolicyCount(params=extractor_params)
+                # case "PhosphorusViewTime":
+                #     ret_val = PhosphorusViewTime.PhosphorusViewTime(params=extractor_params)
+                # case "InspectorResponseCount":
+                #     ret_val = InspectorResponseCount.InspectorResponseCount(params=extractor_params)
                 case _:
-                    raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature type for Bloom.")
-        # then run through per-count features.
+                    ret_val = None
+
+        # Then run through per-county features.
         else:
             match feature_type:
+                case "CountyUnlockTime":
+                    ret_val = CountyUnlockTime.CountyUnlockTime(params=extractor_params)
+                case "CountyBloomAlertCount":
+                    ret_val = CountyBloomAlertCount.CountyBloomAlertCount(params=extractor_params)
+                case "CountyBuildCount":
+                    ret_val = CountyBuildCount.CountyBuildCount(params=extractor_params)
+                case "CountyFailCount":
+                    ret_val = CountyFailCount.CountyFailCount(params=extractor_params)
+                case "CountyFinalPolicySettings":
+                    ret_val = CountyFinalPolicySettings.CountyFinalPolicySettings(params=extractor_params)
+                case "CountyLatestMoney":
+                    ret_val = CountyLatestMoney.CountyLatestMoney(params=extractor_params)
+                case "CountyPolicyChangeCount":
+                    ret_val = CountyPolicyChangeCount.CountyPolicyChangeCount(params=extractor_params)
+                
+                case "JobsAttempted":
+                    ret_val = JobsAttempted.JobsAttempted(params=extractor_params)
+                    
                 case _:
-                    raise NotImplementedError(f"'{feature_type}' is not a valid per-count feature type for Bloom.")
+                    ret_val = None
+
         return ret_val
 
     def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         ret_val : Detector
         match detector_type:
+            case "AlertClickThrough":
+                _max_rate = schema_args.get("max_rate", AlertClickThrough.AlertClickThrough.DEFAULT_MAX_RATE)
+                ret_val = AlertClickThrough.AlertClickThrough(params=extractor_params, trigger_callback=trigger_callback, max_reading_rate=_max_rate)
+            case "AlertFollowedByInspect":
+                _inspect_threshold = timedelta(seconds=schema_args.get("threshold", 15))
+                ret_val = AlertFollowedByInspect.AlertFollowedByInspect(params=extractor_params, trigger_callback=trigger_callback, inspect_time_threshold=_inspect_threshold)
+            case "AlertFollowedByPolicy":
+                _policy_threshold = timedelta(seconds=schema_args.get("threshold", 30))
+                ret_val = AlertFollowedByPolicy.AlertFollowedByPolicy(params=extractor_params, trigger_callback=trigger_callback, policy_time_threshold=_policy_threshold)
+            case "CutsceneClickThrough":
+                _max_rate = schema_args.get("max_rate", CutsceneClickThrough.CutsceneClickThrough.DEFAULT_MAX_RATE)
+                ret_val = CutsceneClickThrough.CutsceneClickThrough(params=extractor_params, trigger_callback=trigger_callback, max_reading_rate=_max_rate)
+            case "GoodPolicyCombo":
+                _budget_threshold = schema_args.get("threshold", 150)
+                ret_val = GoodPolicyCombo.GoodPolicyCombo(params=extractor_params, trigger_callback=trigger_callback, surplus_budget_threshold=_budget_threshold)
             case _:
                 raise NotImplementedError(f"'{detector_type}' is not a valid detector for Bloom.")
         return ret_val
+
 
     # @staticmethod
     # def GetBloomLabCount(db_export_path:Path=Path(".") / "ogd" / "games" / "BLOOM"):

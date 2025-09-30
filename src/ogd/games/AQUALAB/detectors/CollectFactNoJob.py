@@ -6,8 +6,8 @@ from typing import Callable, List
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
 
 class CollectFactNoJob(Detector):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
@@ -37,7 +37,9 @@ class CollectFactNoJob(Detector):
         :param event: _description_
         :type event: Event
         """
-        self._current_job = event.GameState.get('job_name', event.EventData.get('job_name', None))['string_value']
+        self._current_job = event.GameState.get('job_name', event.EventData.get('job_name', None))
+        if isinstance(self._current_job, dict):
+            self._current_job = self._current_job['string_value']
         if self._current_job is None:
             raise KeyError("Could not find key 'job_name' in GameState or EventData!")
         if self._current_job == "no-active-job":

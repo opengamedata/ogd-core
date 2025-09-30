@@ -4,12 +4,12 @@ import logging
 from collections import defaultdict
 from typing import Any, List, Optional
 # import locals
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.FeatureData import FeatureData
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
 
 class TopJobCompletionDestinations(Feature):
 
@@ -30,7 +30,10 @@ class TopJobCompletionDestinations(Feature):
         return []
 
     def _updateFromEvent(self, event:Event) -> None:
-        _job_name = event.GameState.get('job_name', event.EventData.get('job_name', None))['string_value']
+        _job_name = event.GameState.get('job_name', event.EventData.get('job_name', None))
+        if isinstance(_job_name, dict):
+            _job_name = _job_name['string_value']
+
         if _job_name is None:
             raise KeyError("Could not find key 'job_name' in GameState or EventData!")
         if self._validate_job(_job_name):
@@ -69,7 +72,7 @@ class TopJobCompletionDestinations(Feature):
             # Logger.Log(f"For TopJobCompletionDestinations, sorted dests as: {json.dumps(dests)}")
 
         # TODO: figure out if we really need to dump to string, or if we can assume things get stringified as needed elsewhere.
-        return [json.dumps(ret_val)]
+        return [ret_val]
 
     # *** Optionally override public functions. ***
     @staticmethod

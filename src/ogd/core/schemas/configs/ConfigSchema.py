@@ -3,15 +3,15 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, Optional, Type
 # import local files
-from ogd.core.schemas.configs.IndexingSchema import FileIndexingSchema
-from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
-from ogd.core.schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
-from ogd.core.schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
-from ogd.core.schemas.configs.data_sources.FileSourceSchema import FileSourceSchema
-from ogd.core.schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
+from ogd.common.schemas.configs.IndexingSchema import FileIndexingSchema
+from ogd.common.schemas.configs.GameSourceSchema import GameSourceSchema
+from ogd.common.schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
+from ogd.common.schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
+from ogd.common.schemas.configs.data_sources.FileSourceSchema import FileSourceSchema
+from ogd.common.schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
 from ogd.core.schemas.configs.LegacyConfigSchema import LegacyConfigSchema
-from ogd.core.schemas.Schema import Schema
-from ogd.core.utils.Logger import Logger
+from ogd.common.schemas.Schema import Schema
+from ogd.common.utils.Logger import Logger
 
 class ConfigSchema(Schema):
     """Dumb struct containing properties for each standard OGD-core config item.
@@ -24,13 +24,14 @@ class ConfigSchema(Schema):
         :param all_elements: A dictionary mapping config item names to their configured values. These will be checked and made available through the ConfigSchema properties.
         :type all_elements: Dict[str, Any]
         """
-        self._log_file   : bool
-        self._batch_size : int
-        self._dbg_level  : int
-        self._fail_fast  : bool
-        self._file_idx   : FileIndexingSchema
-        self._data_src   : Dict[str, DataSourceSchema]
-        self._game_src_map : Dict[str, GameSourceSchema]
+        self._log_file       : bool
+        self._batch_size     : int
+        self._dbg_level      : int
+        self._fail_fast      : bool
+        self._with_profiling : bool
+        self._file_idx       : FileIndexingSchema
+        self._data_src       : Dict[str, DataSourceSchema]
+        self._game_src_map   : Dict[str, GameSourceSchema]
 
         self._legacy_elems : LegacyConfigSchema = LegacyConfigSchema(name=f"{name} Legacy", all_elements=all_elements)
         if "LOG_FILE" in all_elements.keys():
@@ -53,6 +54,11 @@ class ConfigSchema(Schema):
         else:
             self._fail_fast = False
             Logger.Log(f"{name} config does not have a 'FAIL_FAST' element; defaulting to fail_fast={self._fail_fast}", logging.WARN)
+        if "WITH_PROFILING" in all_elements.keys():
+            self._with_profiling = ConfigSchema._parseProfiling(all_elements["WITH_PROFILING"])
+        else:
+            self._with_profiling = False
+            Logger.Log(f"{name} config does not have a 'WITH_PROFILING' element; defaulting to with_profiling={self._fail_fast}", logging.WARN)
         if "FILE_INDEXING" in all_elements.keys():
             self._file_idx = ConfigSchema._parseFileIndexing(all_elements["FILE_INDEXING"])
         else:
@@ -112,6 +118,13 @@ class ConfigSchema(Schema):
         Whether to fail the export on errors due to bad data, or ignore the bad data and continue processing.
         """
         return self._fail_fast
+
+    @property
+    def WithProfiling(self) -> bool:
+        """
+        Whether to track and include profiling data in the output or not.
+        """
+        return self._with_profiling
 
     @property
     def FileIndexConfig(self) -> FileIndexingSchema:
@@ -207,6 +220,25 @@ class ConfigSchema(Schema):
         else:
             ret_val = False
             Logger.Log(f"Config fail fast was unexpected type {type(fail_fast)}, defaulting to False.", logging.WARN)
+        return ret_val
+
+    @staticmethod
+    def _parseProfiling(with_profiling) -> bool:
+        ret_val : bool
+        if isinstance(with_profiling, bool):
+            ret_val = with_profiling
+        elif isinstance(with_profiling, str):
+            match with_profiling.upper():
+                case "TRUE":
+                    ret_val = True
+                case "FALSE":
+                    ret_val = False
+                case _:
+                    ret_val = False
+                    Logger.Log(f"Config with_profiling had unexpected value {with_profiling}, defaulting to False.", logging.WARN)
+        else:
+            ret_val = False
+            Logger.Log(f"Config with_profiling was unexpected type {type(with_profiling)}, defaulting to False.", logging.WARN)
         return ret_val
 
     @staticmethod

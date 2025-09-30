@@ -1,3 +1,5 @@
+"""Initializer for Penguins features"""
+
 __all__ = [
     "ActivityCompleted",
     "ActivityDuration",
@@ -57,5 +59,3 @@ from . import ActivityDuration
 from . import RegionDuration
 from . import RegionEnterCount
 from . import WaddlePerRegion
-
-

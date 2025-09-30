@@ -6,8 +6,8 @@ from typing import Callable, Final, List, Optional, Union
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
 
 
 class SceneChangeFrequently(Detector):
@@ -73,7 +73,9 @@ class SceneChangeFrequently(Detector):
             self._found = True
             self._time_spent = self._time_spent / timedelta(seconds=1)
             self._sess_id = event.SessionID
-            self._job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))['string_value']
+            self._job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
+            if isinstance(self._job_name, dict):
+                self._job_name = self._job_name['string_value']
         return
 
     def _trigger_condition(self) -> bool:

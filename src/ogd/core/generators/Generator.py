@@ -3,9 +3,9 @@ import abc
 import logging
 from typing import List, Optional
 # import locals
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.utils.Logger import Logger
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.utils.Logger import Logger
 
 ## @class ExtractorParams
 class GeneratorParameters:
@@ -45,7 +45,7 @@ class Generator(abc.ABC):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         """Base function for getting any features a second-order feature depends upon.
         By default, no dependencies.
-        Any feature intented to be second-order should override this function.
+        Any feature intended to be second-order should override this function.
 
         :return: _description_
         :rtype: List[str]

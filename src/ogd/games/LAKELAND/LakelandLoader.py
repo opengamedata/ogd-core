@@ -4,22 +4,52 @@ from typing import Any, Callable, Dict, List, Optional
 from . import features
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.legacy.LegacyLoader import LegacyLoader
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.games.LAKELAND.features.LakelandExtractor import LakelandExtractor
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.utils.Logger import Logger
+from ogd.games.LAKELAND.features import *
 
-class LakelandLoader(LegacyLoader):
+
+
+class LakelandLoader(GeneratorLoader):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
-        return LakelandExtractor(params=extractor_params, game_schema=self._game_schema, session_id=self._session_id)
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
+        ret_val: Optional[Feature] = None
 
-    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
-        raise NotImplementedError(f"'{detector_type}' is not a valid feature for Lakeland.")
+        # First run through aggregate features
+        match feature_type:
+            case "PersistenceTime":
+                # ret_val = PersistenceTime.PersistenceTime(params=extractor_params)
+                pass
+            case "HouseBuildCount":
+                ret_val = HouseBuildCount.HouseBuildCount(params=extractor_params)
+            case "DairyBuildCount":
+                ret_val = DairyBuildCount.DairyBuildCount(params=extractor_params)
+            case "CropBuildCount":
+                ret_val = CropBuildCount.CropBuildCount(params=extractor_params)
+            case "TotalBuildCount":
+                ret_val = TotalBuildCount.TotalBuildCount(params=extractor_params)
+            case "HoversBeforeCropPlacement":
+                ret_val = HoversBeforeCropPlacement.HoversBeforeCropPlacement(params=extractor_params)
+            case "TotalEventsPerSession":
+                ret_val = TotalEventsPerSession.TotalEventsPerSession(params=extractor_params)
+            case "TotalSessionTime":
+                threshold = schema_args.get("threshold", 50)
+                ret_val = TotalSessionTime.TotalSessionTime(params=extractor_params, threshold=threshold)
+            case _:
+                ret_val = None
+
+        return ret_val
+
+    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Optional[Detector]:
+        Logger.Log(f"'{detector_type}' is not a valid feature for Lakeland.")
+        return None
 
     @staticmethod
     def _getFeaturesModule():

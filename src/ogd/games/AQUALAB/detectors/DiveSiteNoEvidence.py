@@ -5,8 +5,8 @@ from typing import Any, Callable, List, Optional
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
 
 class DiveSiteNoEvidence(Detector):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
@@ -52,7 +52,9 @@ class DiveSiteNoEvidence(Detector):
 
         if self._in_dive and self._last_evidence_time is not None and not self._has_triggered:
             self._time_since_evidence = (event.Timestamp - self._last_evidence_time).total_seconds()
-        self._current_job = event.GameState.get('job_name', event.EventData.get('job_name'))['string_value']
+        self._current_job = event.GameState.get('job_name', event.EventData.get('job_name'))
+        if isinstance(self._current_job, dict):
+            self._current_job = self._current_job['string_value']
         return
     
     def _trigger_condition(self) -> bool:

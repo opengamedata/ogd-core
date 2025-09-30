@@ -6,9 +6,9 @@ from time import time
 from datetime  import timedelta, datetime
 # import local files
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.FeatureData import FeatureData
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
@@ -76,7 +76,7 @@ class GameComplete(SessionFeature):
         #       The number of instances of each Feature may vary, depending on the configuration and the unit of analysis at which this CustomFeature is run.
         # print(feature._vals)
         # print(feature._player_id)
-        if(feature._vals[0]==True):
+        if(feature.ExportMode == self.ExtractionMode and feature._vals[0]==True):
             self._boolean_log.append(feature._vals[0])
 
         # print("-----")

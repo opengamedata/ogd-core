@@ -8,9 +8,10 @@ from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.games.SHADOWSPECT.features import *
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.utils.Logger import Logger
 
 ## @class ShadowspectExtractor
 #  Extractor subclass for extracting features from Shadowspects game data.
@@ -22,27 +23,36 @@ class ShadowspectLoader(GeneratorLoader):
     def _getFeaturesModule():
         return features
 
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
-        ret_val : Feature
-        match feature_type:
-            case "MoveShapeCount":
-                ret_val = MoveShapeCount.MoveShapeCount(params=extractor_params)
-            case "SessionID":
-                ret_val = SessionID.SessionID(params=extractor_params, session_id=self._session_id)
-            case "FunnelByUser":
-                ret_val = FunnelByUser.FunnelByUser(params=extractor_params)
-            case "LevelsOfDifficulty":
-                ret_val = LevelsOfDifficulty.LevelsOfDifficulty(params=extractor_params)
-            case "SequenceBetweenPuzzles":
-                ret_val = SequenceBetweenPuzzles.SequenceBetweenPuzzles(params=extractor_params)
-            case "SequenceWithinPuzzles":
-                ret_val = SequenceWithinPuzzles.SequenceWithinPuzzles(params=extractor_params)
-            case _:
-                raise NotImplementedError(f"'{feature_type}' is not a valid feature for Shadowspect.")
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
+        ret_val : Optional[Feature] = None
+        if extractor_params._count_index is None:
+        # Put all aggregate-level features here
+        # The will sanity-check that we haven't configured a per-count to run at aggregate level.
+            match feature_type:
+                case "SessionID":
+                    ret_val = SessionID.SessionID(params=extractor_params, session_id=self._session_id)
+                case "FunnelByUser":
+                    ret_val = FunnelByUser.FunnelByUser(params=extractor_params)
+                case "LevelsOfDifficulty":
+                    ret_val = LevelsOfDifficulty.LevelsOfDifficulty(params=extractor_params)
+                case "SequenceBetweenPuzzles":
+                    ret_val = SequenceBetweenPuzzles.SequenceBetweenPuzzles(params=extractor_params)
+                case "SequenceWithinPuzzles":
+                    ret_val = SequenceWithinPuzzles.SequenceWithinPuzzles(params=extractor_params)
+                case _:
+                    Logger.Log(f"'{feature_type}' is not a valid aggregate feature for Shadowspect.")
+        else:
+            # put per-count features, such as per-level features, here.
+            match feature_type:
+                case "MoveShapeCount":
+                    ret_val = MoveShapeCount.MoveShapeCount(params=extractor_params)
+                case _:
+                    Logger.Log(f"'{feature_type}' is not a valid per-count feature for Shadowspect.")
         return ret_val
 
-    def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
-        raise NotImplementedError(f"'{detector_type}' is not a valid detector for Shadowspect.")
+    def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Optional[Detector]:
+        Logger.Log(f"'{detector_type}' is not a valid detector for Shadowspect.")
+        return None
 
     ## Constructor for the ShadowspectExtractor class.
     def __init__(self, player_id:str, session_id: str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]=None):

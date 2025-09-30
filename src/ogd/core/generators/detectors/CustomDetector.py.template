@@ -4,7 +4,9 @@ from typing import Any, Callable, List, Optional
 # import local files
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
-from ogd.core.models.Event import Event
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
 
 class CustomDetector(Detector):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
@@ -55,13 +57,13 @@ class CustomDetector(Detector):
         # the more-verbose code is here for illustrative purposes.
         return False
 
-    def _trigger_event(self) -> Optional[Event]:
+    def _trigger_event(self) -> Optional[DetectorEvent]:
         """_summary_
 
         :return: _description_
         :rtype: List[Any]
         """
-        ret_val : Event = self.GenerateEvent(session_id="Not Implemented", app_id="Not Implemented", timestamp=datetime.now(),
+        ret_val : DetectorEvent = self.GenerateEvent(session_id="Not Implemented", app_id="Not Implemented", timestamp=datetime.now(),
                                         event_name="CustomDetector", event_data={})
         # >>> use state variables to generate the detector's event. <<<
         # >>> definitely don't return all these "Not Implemented" things, unless you really find that useful... <<<
@@ -76,8 +78,8 @@ class CustomDetector(Detector):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, name:str, description:str, count_index:int, trigger_callback:Callable[[Event], None]):
-        super().__init__(name=name, description=description, count_index=count_index, trigger_callback=trigger_callback)
+    def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None]):
+        super().__init__(params=params, trigger_callback=trigger_callback)
         # >>> create/initialize any variables to track detector state <<<
         #
         # e.g. To track whether detector found a click event yet:

@@ -1,3 +1,5 @@
+"""Initializer for Shipwrecks features"""
+
 __all__ = [
     "ActiveJobs",
     "EventList",

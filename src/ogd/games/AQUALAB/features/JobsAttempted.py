@@ -3,14 +3,14 @@ import logging
 from datetime import datetime, timedelta
 from statistics import stdev
 from typing import Any, List, Optional
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
 # import locals
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.models.Event import Event
-from ogd.core.models.enums.ExtractionMode import ExtractionMode
-from ogd.core.models.FeatureData import FeatureData
+from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
+from ogd.common.models.FeatureData import FeatureData
 
 class JobsAttempted(Feature):
 
@@ -60,7 +60,10 @@ class JobsAttempted(Feature):
                 # self._time += (self._prev_timestamp - self._job_start_time).total_seconds()
                 # self._job_start_time = event.Timestamp
 
-        _current_job = event.GameState.get('job_name', event.EventData.get('job_name', None))['string_value']
+        _current_job = event.GameState.get('job_name', event.EventData.get('job_name', None))
+        if isinstance(_current_job, dict):
+            _current_job = _current_job['string_value']
+
         if _current_job is None:
             raise KeyError("Could not find key 'job_name' in GameState or EventData!")
         if self._validate_job(_current_job):

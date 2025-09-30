@@ -57,7 +57,22 @@ The elements (member variables) of each Event object, available to programmers w
 
 ## Logged Events  
 
-The individual fields encoded in the *event_data* Event element for each type of event logged by the game.  
+The individual fields encoded in the *game_state* and *user_data* Event element for all event types, and the fields in the *event_data* Event element for each individual event type logged by the game.  
+
+### Enums  
+
+| **Name** | **Values** |
+| ---      | ---        |  
+
+### Game State  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
+
+### User Data  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
 
 ### **headset_on**
 
@@ -66,11 +81,7 @@ Happens when the user puts on the headset, effectively a 'resume' event
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
-| ---      | ---      | ---             | ---         |
-
-#### Other Elements
-
-- None  
+| ---      | ---      | ---             | ---         |  
 
 ### **start**
 
@@ -80,11 +91,7 @@ When the game actually starts
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| seconds_from_launch | float | The game time elapsed since the game app was launched | |
-
-#### Other Elements
-
-- None  
+| seconds_from_launch | float | The game time elapsed since the game app was launched | |  
 
 ### **language_selected**
 
@@ -95,11 +102,7 @@ When the player selects a language from the game menu
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | language | str | The language the player selected to use | |
-| seconds_from_launch | float | The game time elapsed since the game app was launched | |
-
-#### Other Elements
-
-- None  
+| seconds_from_launch | float | The game time elapsed since the game app was launched | |  
 
 ### **scene_change**
 
@@ -110,11 +113,7 @@ When the player completes a scene, advancing to the next. Removed in version 2.
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | scene_name | enum(ICE, VOYAGER, NOTHING, EXTREME, EARTH, CREDITS) |  | |
-| seconds_from_launch | float | The game time elapsed since the game app was launched | |
-
-#### Other Elements
-
-- None  
+| seconds_from_launch | float | The game time elapsed since the game app was launched | |  
 
 ### **scene_begin**
 
@@ -125,11 +124,7 @@ When the player starts a new scene. Added in version 2
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | scene_name | enum(ICE, VOYAGER, NOTHING, EXTREME, EARTH, CREDITS) | The scene the player is starting | |
-| seconds_from_launch | float | The game time elapsed since the game app was launched | |
-
-#### Other Elements
-
-- None  
+| seconds_from_launch | float | The game time elapsed since the game app was launched | |  
 
 ### **scene_end**
 
@@ -140,11 +135,7 @@ When the player finishes a scene, before advancing to the next. Added in version
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | scene_name | enum(ICE, VOYAGER, NOTHING, EXTREME, EARTH, CREDITS) | The scene the player just completed | |
-| seconds_from_launch | float | The game time elapsed since the game app was launched | |
-
-#### Other Elements
-
-- None  
+| seconds_from_launch | float | The game time elapsed since the game app was launched | |  
 
 ### **new_object_displayed**
 
@@ -163,11 +154,7 @@ When a new object is displayed in the scene
 | rotY | float |  | |
 | rotZ | float |  | |
 | rotW | float |  | |
-| seconds_from_launch | float | The game time elapsed since the game app was launched | |
-
-#### Other Elements
-
-- None  
+| seconds_from_launch | float | The game time elapsed since the game app was launched | |  
 
 ### **object_assigned**
 
@@ -178,11 +165,7 @@ When the game assigns a target for the user to look at/select with their reticle
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | object | str | The ID of the assigned object | |
-| seconds_from_launch | float | The game time elapsed since the game app was launched | |
-
-#### Other Elements
-
-- None  
+| seconds_from_launch | float | The game time elapsed since the game app was launched | |  
 
 ### **object_selected**
 
@@ -193,11 +176,7 @@ When the player selects a gaze point object with their reticle
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | gaze_point_name | str |  | |
-| seconds_from_launch | float | The game time elapsed since the game app was launched | |
-
-#### Other Elements
-
-- None  
+| seconds_from_launch | float | The game time elapsed since the game app was launched | |  
 
 ### **caption_displayed**
 
@@ -208,11 +187,7 @@ When the captions for a voiceover are initially displayed
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | caption | str |  | |
-| seconds_from_launch | float | The game time elapsed since the game app was launched | |
-
-#### Other Elements
-
-- None  
+| seconds_from_launch | float | The game time elapsed since the game app was launched | |  
 
 ### **script_audio_started**
 
@@ -223,11 +198,7 @@ When a voiceover audio clip begins
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | caption | str |  | |
-| seconds_from_launch | float | The game time elapsed since the game app was launched | |
-
-#### Other Elements
-
-- None  
+| seconds_from_launch | float | The game time elapsed since the game app was launched | |  
 
 ### **script_audio_complete**
 
@@ -237,11 +208,7 @@ When a voiceover audio clip ends
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| seconds_from_launch | float | The game time elapsed since the game app was launched | |
-
-#### Other Elements
-
-- None  
+| seconds_from_launch | float | The game time elapsed since the game app was launched | |  
 
 ### **failed**
 
@@ -251,11 +218,7 @@ When a player fails a scene and must re-start the scene
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| seconds_from_launch | float | The game time elapsed since the game app was launched | |
-
-#### Other Elements
-
-- None  
+| seconds_from_launch | float | The game time elapsed since the game app was launched | |  
 
 ## Detected Events  
 
@@ -269,7 +232,17 @@ The features/metrics calculated from this game's event logs by OpenGameData when
 
 **ScenesEncountered** : *List[str]*, *Aggregate feature*   
 The set of all scenes the player encountered.  
+  
 
+## Other Elements  
+
+Other (potentially non-standard) elements specified in the game's schema, which may be referenced by event/feature processors.  
+
+### Other Ranges  
+
+Extra ranges specified in the game's schema, which may be referenced by event/feature processors.  
+
+level_range : range(1, 6)
 
 No changelog prepared
 
