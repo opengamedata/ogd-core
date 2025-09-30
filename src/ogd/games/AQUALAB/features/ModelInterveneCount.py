@@ -42,4 +42,4 @@ class ModelInterveneCount(PerJobFeature):
     # *** Optionally override public functions. ***
     @staticmethod
     def MinVersion() -> Optional[str]:
-        return
+        return "3"
