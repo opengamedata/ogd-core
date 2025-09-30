@@ -18,7 +18,9 @@ class PerDifficultyFeature(PerCountFeature):
     def _validateEventCountIndex(self, event:Event):
         ret_val : bool = False
 
-        _current_job = event.EventData.get('job_name', "UNKNOWN JOB")['string_value']
+        _current_job = event.EventData.get('job_name', "UNKNOWN JOB")
+        if isinstance(_current_job, dict):
+            _current_job = _current_job['string_value']
        # print(_current_job)
         if self._diff_map[_current_job][self._difficulty_type] == self.CountIndex:
             ret_val = True
