@@ -271,7 +271,7 @@ class ExportManager:
             case 'BLOOM':
                 _exclude_rows = ['algae_growth_end', 'algae_growth_begin']
             case 'THERMOLAB' | 'THERMOVR':
-                _exclude_rows = ['nudge_hint_displayed', 'nudge_hint_hidden', 'simulation_data', 'viewport_data', 'left_hand_data', 'right_hand_data']
+                _exclude_rows = ['nudge_hint_displayed', 'nudge_hint_hidden', 'simulation_data']
             case 'LAKELAND':
                 _exclude_rows = ['CUSTOM.24']
             case _:
