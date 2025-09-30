@@ -47,6 +47,7 @@ class JobArgumentationFails(PerJobFeature):
         if(self._success_count > self._leave_count):
             return [0]
         else:
+            # TODO : this logic is suspect, need to look into it
             return [(self._leave_count + 1) - self._success_count]
         
 
