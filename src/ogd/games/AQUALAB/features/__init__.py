@@ -56,6 +56,7 @@ __all__ = [
     "SessionDuration",
     "SessionDurationPerJob",
     "SessionGuideCount",
+    "SessionHelpCount",
     "SessionID",
     "SessionJobsCompleted",
     "SuccessfulAdvice",
@@ -145,6 +146,7 @@ from . import SessionJobsCompleted
 from . import SessionDuration
 from . import SessionDurationPerJob
 from . import SessionGuideCount
+from . import SessionHelpCount
 from . import SessionID
 from . import SessionJobsCompleted
 from . import SuccessfulAdvice

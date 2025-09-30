@@ -125,6 +125,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = SessionDurationPerJob.SessionDuration(params=extractor_params, threshold=int(schema_args.get("threshold", 60)))
                 case "SessionGuideCount":
                     ret_val = SessionGuideCount.SessionGuideCount(params=extractor_params)
+                case "SessionHelpCount":
+                    ret_val = SessionHelpCount.SessionHelpCount(params=extractor_params)
                 case "SessionID":
                     ret_val = SessionID.SessionID(params=extractor_params, session_id=self._session_id)
                 case "SessionJobsCompleted":
@@ -151,12 +153,6 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = TotalCoralTime.TotalCoralTime(params=extractor_params)
                 case "TotalDiveTime":
                     ret_val = TotalDiveTime.TotalDiveTime(params=extractor_params)
-                case "TotalGuideCount":
-                    ret_val = TotalGuideCount.TotalGuideCount(params=extractor_params)
-                case "TotalHelpCount":
-                    ret_val = TotalHelpCount.TotalHelpCount(params=extractor_params)
-                case "TotalPlayTime":
-                    ret_val = TotalPlayTime.TotalPlayTime(params=extractor_params)
                 case "TotalExperimentationTime":
                     ret_val = TotalExperimentationTime.TotalExperimentationTime(params=extractor_params)
                 case "TimeInJournal":
@@ -196,6 +192,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = JobArgumentationFails.JobArgumentationFails(params=extractor_params, job_map=self._job_map)
                 case "JobArgumentationNoReject":
                     ret_val = JobArgumentationNoReject.JobArgumentationNoReject(params=extractor_params, job_map=self._job_map)
+                case "SessionHelpCount":
+                    ret_val = SessionHelpCount.SessionHelpCount(params=extractor_params)
                 case "JobArgumentationSuccessRatio":
                     ret_val = JobArgumentationSuccessRatio.JobArgumentationSuccessRatio(params=extractor_params, job_map=self._job_map)
                 case "JobArgumentationSuccessRatioPerDifficulty":
