@@ -699,7 +699,7 @@
                 "return_type": "timedelta"
             },
             "JobDiveSitesCount": {
-                "enabled": false,
+                "enabled": true,
                 "type": "JobDiveSitesCount",
                 "count": "level_range",
                 "prefix": "job",
@@ -707,7 +707,7 @@
                 "return_type": "int"
             },
             "JobDiveTime": {
-                "enabled": false,
+                "enabled": true,
                 "type": "JobDiveTime",
                 "count": "level_range",
                 "prefix": "job",
@@ -1275,7 +1275,7 @@
                 }
             },
             "SyncCompletionTime": {
-                "enabled": false,
+                "enabled": true,
                 "type": "SyncCompletionTime",
                 "count": "level_range",
                 "prefix": "job",
@@ -1331,7 +1331,7 @@
                 "return_type": "list"
             },
             "JobsCompleted": {
-                "enabled": false,
+                "enabled": true,
                 "type": "JobsCompleted",
                 "description": "List of completed jobs for a player",
                 "return_type": "list[str]"
@@ -1361,13 +1361,13 @@
                 "return_type": "dict"
             },
             "SessionDiveSitesCount": {
-                "enabled": false,
+                "enabled": true,
                 "type": "SessionDiveSitesCount",
                 "description": "Time spent playing in a given session",
                 "return_type": "int"
             },
             "SessionDuration": {
-                "enabled": false,
+                "enabled": true,
                 "type": "SessionDuration",
                 "description": "Time spent playing in a given session",
                 "threshold": 60,
@@ -1406,7 +1406,7 @@
                 "return_type": "str"
             },
             "SwitchJobsCount": {
-                "enabled": false,
+                "enabled": true,
                 "type": "SwitchJobsCount",
                 "description": "Number of times player switched jobs before completion",
                 "return_type": "int"
@@ -1424,19 +1424,19 @@
                 "return_type": "str"
             },
             "TotalArgumentationTime": {
-                "enabled": false,
+                "enabled": true,
                 "type": "TotalArgumentationTime",
                 "description": "Total time spent in argumentation",
                 "return_type": "timedelta"
             },
             "TotalDiveTime": {
-                "enabled": false,
+                "enabled": true,
                 "type": "TotalDiveTime",
                 "description": "Total time spent in dive sites",
                 "return_type": "timedelta"
             },
             "TotalExperimentationTime": {
-                "enabled": false,
+                "enabled": true,
                 "type": "TotalExperimentationTime",
                 "description": "Total time spent in experimentation",
                 "return_type": "timedelta"
@@ -1515,13 +1515,13 @@
                 }
             },
             "UserAvgSessionDuration": {
-                "enabled": false,
+                "enabled": true,
                 "type": "UserAvgSessionDuration",
                 "description": "Average session duration for a user.",
                 "return_type": "float"
             },
             "UserTotalSessionDuration": {
-                "enabled": false,
+                "enabled": true,
                 "type": "UserTotalSessionDuration",
                 "description": "Total duration of all sessions for a user.",
                 "return_type": "timedelta"
