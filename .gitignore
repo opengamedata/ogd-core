@@ -1,7 +1,9 @@
 # Specific things in this project that shouldn't go to git:
+*-data/
 data/
 config/*.json
 config/config.py
+config/config.py.new
 src/ogd/games/*/schemas/*.json
 tests/config/t_config.py
 /*.png
