@@ -188,10 +188,20 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = JobActiveTime.JobActiveTime(params=extractor_params, job_map=self._job_map)
                 case "JobArgumentation":
                     ret_val = JobArgumentation.JobArgumentation(params=extractor_params, job_map=self._job_map)
+                case "JobArgumentationFails":
+                    ret_val = JobArgumentationFails.JobArgumentationFails(params=extractor_params, job_map=self._job_map)
+                case "JobArgumentationNoReject":
+                    ret_val = JobArgumentationNoReject.JobArgumentationNoReject(params=extractor_params, job_map=self._job_map)
+                case "JobArgumentationSuccessRatio":
+                    ret_val = JobArgumentationSuccessRatio.JobArgumentationSuccessRatio(params=extractor_params, job_map=self._job_map)
+                case "JobArgumentationSuccessRatioPerDifficulty":
+                    ret_val = JobArgumentationSuccessRatioPerDifficulty.JobArgumentationSuccessRatioPerDifficulty(params=extractor_params, diff_map=self._diff_map, difficulty_type=schema_args.get("difficulty_type"))
                 case "JobArgumentationRejects":
                     ret_val = JobArgumentationRejects.JobArgumentationRejects(params=extractor_params, job_map=self._job_map)
                 case "JobTriesInArgument":
                     ret_val = JobTriesInArgument.JobTriesInArgument(params=extractor_params, job_map=self._job_map)
+                case "JobTriesInArgumentPerDifficulty":
+                    ret_val = JobTriesInArgumentPerDifficulty.JobTriesInArgumentPerDifficulty(params=extractor_params, diff_map=self._diff_map, difficulty_type=schema_args.get("difficulty_type"))
                 case "JobTotalAttempts":
                     ret_val = JobTotalAttempts.JobTotalAttempts(params=extractor_params, job_map=self._job_map)
                 case "JobAttempted":

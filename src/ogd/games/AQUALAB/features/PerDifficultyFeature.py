@@ -4,7 +4,7 @@ from typing import Optional
 # import locals
 from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
-from extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.common.models.Event import Event
 
 class PerDifficultyFeature(PerCountFeature):

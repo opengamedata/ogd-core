@@ -12,6 +12,10 @@ __all__ = [
     "FollowedAdvice",
     "JobActiveTime",
     "JobArgumentation",
+    "JobArgumentationFails",
+    "JobArgumentationNoReject",
+    "JobArgumentationSuccessRatio",
+    "JobArgumentationSuccessRatioPerDifficulty",
     "JobArgumentationRejects",
     "JobAttempted",
     "JobTotalAttempts",
@@ -36,6 +40,7 @@ __all__ = [
     "JobStarted",
     "JobTasksCompleted",
     "JobTriesInArgument",
+    "JobTriesInArgumentPerDifficulty",
     "QuitJob",
     "ModelExportCount",
     "ModelInterveneCount",
@@ -95,6 +100,10 @@ from . import PlayedNonexperimentalVersion
 from . import FollowedAdvice
 from . import JobActiveTime
 from . import JobArgumentation
+from . import JobArgumentationFails
+from . import JobArgumentationNoReject
+from . import JobArgumentationSuccessRatio
+from . import JobArgumentationSuccessRatioPerDifficulty
 from . import JobArgumentationRejects
 from . import JobAttempted
 from . import JobTotalAttempts
@@ -120,6 +129,7 @@ from . import JobRecommendationReceived
 from . import JobStarted
 from . import JobTasksCompleted
 from . import JobTriesInArgument
+from . import JobTriesInArgumentPerDifficulty
 from . import QuitJob
 from . import ModelExportCount
 from . import ModelInterveneCount
