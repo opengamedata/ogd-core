@@ -63,7 +63,7 @@ settings = {
     "GAME_SOURCE_MAP":
     {
         "ALL_YOU_CAN_ET":       { "source":"OPENGAMEDATA_BQ",    "database":"all_you_can_et",       "table":"all_you_can_et_daily",       "schema":"OPENGAMEDATA_BIGQUERY" },
-        "AQUALAB":              { "source":"AQUALAB_BQ",         "database":"analytics_271167280",  "table":"events",                     "schema":"FIREBASE" },
+        "AQUALAB":              { "source":"OPENGAMEDATA_BQ",    "database":"aqualab",              "table":"aqualab_daily",              "schema":"OPENGAMEDATA_BIGQUERY" },
         "BACTERIA":             { "source":"OPENGAMEDATA_BQ",    "database":"bacteria",             "table":"bacteria_daily",             "schema":"OPENGAMEDATA_BIGQUERY" },
         "BALLOON":              { "source":"OPENGAMEDATA_BQ",    "database":"balloon",              "table":"balloon_daily",              "schema":"OPENGAMEDATA_BIGQUERY" },
         "BLOOM":                { "source":"OPENGAMEDATA_BQ",    "database":"bloom",                "table":"bloom_daily",                "schema":"OPENGAMEDATA_BIGQUERY" },
