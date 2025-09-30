@@ -13,6 +13,7 @@ class JobRecommendationReceived(PerJobFeature):
     def __init__(self, params:GeneratorParameters, job_map:dict):
         super().__init__(params=params, job_map=job_map)
         self.recommendation_received = 0
+        self.specific_recommendation_received = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -25,16 +26,22 @@ class JobRecommendationReceived(PerJobFeature):
 
     def _updateFromEvent(self, event:Event) -> None:
         job_name = event.EventData.get("attempted_job_name", None)
+        recommended_job_name = event.EventData.get("recommended_job_name")
         if job_name == self.TargetJobName:
             self.recommendation_received += 1
+            if recommended_job_name != "":
+                self.specific_recommendation_received += 1
 
     def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self.recommendation_received]
+        return [self.recommendation_received, self.specific_recommendation_received]
 
     # *** Optionally override public functions. ***
     @staticmethod
     def MinVersion() -> Optional[str]:
         return "1"
+
+    def Subfeatures(self) -> List[str]:
+        return ["SpecificRecommendations"]

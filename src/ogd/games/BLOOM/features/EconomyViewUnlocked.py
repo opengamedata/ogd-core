@@ -1,39 +1,35 @@
-# import libraries
-from typing import Any, Dict, List, Optional
+from typing import Any, List
+
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 
-class BuildCount(Feature):
+class EconomyViewUnlocked(Feature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        self.build_counts: Dict[str, int] = {}
+        self.unlock_count = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
-        return ["click_execute_build"]
+        return ["view_unlocked"]
 
     @classmethod
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        county_name = event.GameState.get("current_county", None)
-        if county_name:
-            if county_name not in self.build_counts:
-                self.build_counts[county_name] = 1
-            else:
-                self.build_counts[county_name] += 1
+        _view = event.EventData.get("view_type")
+        if _view == "ECONOMY_VIEW":
+            self.unlock_count += 1
 
-    def _updateFromFeatureData(self, feature: FeatureData):
-        pass
+    def _updateFromFeatureData(self, feature: FeatureData) -> None:
+        return
 
     def _getFeatureValues(self) -> List[Any]:
-        total_build_count = sum(self.build_counts.values())
-        return [total_build_count, self.build_counts]
+        return [self.unlock_count > 0, max(self.unlock_count - 1, 0)]
 
     def Subfeatures(self) -> List[str]:
-        return ["Breakdown"]
+        return ["Repeats"]

@@ -45,7 +45,7 @@ class Generator(abc.ABC):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         """Base function for getting any features a second-order feature depends upon.
         By default, no dependencies.
-        Any feature intented to be second-order should override this function.
+        Any feature intended to be second-order should override this function.
 
         :return: _description_
         :rtype: List[str]

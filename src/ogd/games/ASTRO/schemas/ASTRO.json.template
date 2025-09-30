@@ -1,0 +1,1000 @@
+{
+   "TODO" : [
+      "event for unlocking access level"
+   ],
+
+   "enums" : {
+      "StarIDs" : ["METEOR_AREA", "TODO : Fill in the rest"],
+      "DocumentIDs" : ["TODO"],
+      "PostItIDs" : ["TODO"],
+      "Tools" : ["PARALLAX", "COLOR", "TEMPERATURE", "MAGNITUDE", "SPECTOGRAPH", "RADIO"],
+      "MagnitudeSettings" : ["ABSOLUTE", "RELATIVE"],
+      "Wavelengths" : ["VISIBLE", "BLUE", "INFRARED"],
+      "Elements" : ["HYDROGEN", "TODO : Fill in the rest"],
+      "Categories" : ["APPARENT_MAGNITUDE", "LUMINOSITY_CLASS", "SPECTRAL_TYPE", "SPECTRAL_ELEMENTS"],
+      "ApparentMagnitudes" : ["VERY_BRIGHT", "BRIGHT", "TODO: fill in the rest"],
+      "LuminosityClasses" : ["TODO"],
+      "SpectralTypes" : ["TODO"],
+      "Directions" : ["UP", "DOWN", "LEFT", "RIGHT"],
+      "Sides" : ["FRONT", "BACK"],
+      "CameraViews" : ["DOCUMENTS", "INSTRUMENTS", "MAP", "FREE"]
+   },
+   "structures" : {
+      "Star" : {
+         "star_id" : {
+            "type" : "StarID",
+            "description" : "The name of the star"
+         },
+         "constellation" : {
+            "type" : "str",
+            "description" : "The name of the constellation containing the star. TODO : does each star have a singular constellation?"
+         },
+         "coordinates" : {
+            "type" : "str",
+            "description" : "The string containing the coordinates of the star, as displayed to the user in the TODO : what's the name of that tool?"
+         },
+         "distance" : {
+            "type" : "float",
+            "description" : "The distance to the star"
+         },
+         "color" : {
+            "type" : "float",
+            "description" : "The color index of the star. This corresponds to an astronomical measurement derived from magnitude in blue and visible light.  Color index is represented as a floating point number from about -1 to +10"
+         },
+         "temperature" : {
+            "type" : "float",
+            "description" : "The temperature of the star"
+         },
+         "visible_magnitude" : {
+            "type" : "float",
+            "description" : "The apparent brightness of the star, in the visible spectrum, as observed from earth"
+         },
+         "blue_magnitude" : {
+            "type" : "float",
+            "description" : "The apparent brightness of the star, in the blue spectrum, as observed from earth"
+         },
+         "infrared_magnitude" : {
+            "type" : "float",
+            "description" : "The apparent brightness of the star, in the infrared spectrum, as observed from earth"
+         },
+         "absolute_magnitude" : {
+            "type" : "float",
+            "description" : "The absolute brightness of the star, derived from the distance and apparent brightnesses."
+         },
+         "spectral_elements" : {
+            "type" : "List[Elements]",
+            "description" : "A list of elements in the star, as observed on the spectrograph."
+         },
+         "is_highlighted" : {
+            "type" : "bool",
+            "description" : "Whether the star is currently highlighted in the UI, particularly if the star's constellation is highlighted"
+         },
+         "identification" : {
+            "type" : "Optional[Dict]",
+            "description" : "A subdictionary with a 'category' mapped to the identification category assigned on the star, a 'classification' mapped to the specific classification (or null if the player has not made a classification), and a 'correct_classification' mapped to the actual correct classification. The entire 'identification' element is mapped to null if there is no identification assigned to the given star for the current level."
+         }
+      },
+      "PuzzleRow" : {
+         "name" : {
+            "type" : "str",
+            "description" : "The name of the star whose details are to be filled into the row"
+         },
+         "coordinates" : {
+            "type" : "Dict",
+            "description" : "A sub-dictionary with a 'value' element mapped to the currently-set value (or null if not set), and a 'correct_value' element mapped to the true string value of the star's actual coordinates."
+         },
+         "<other>" : {
+            "type" : "Dict",
+            "description" : "The other possible PuzzleRow elements are 'color', 'apparent_magnitude', 'blue_magnitude', 'infrared_magnitude', 'absolute_magnitude', TODO : fill in others. Each of these is a sub-dictionary with a 'value' element mapped to the currently-set value (or null if not set), and a 'correct_value' element mapped to the true value for the star."
+         }
+      }
+   },
+   "game_state" : {
+      "seconds_from_launch" : {
+         "type" : "float",
+         "description" : "The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*."
+      },
+      "current_level" : {
+         "type" : "int",
+         "description" : "The current level the player is on"
+      },
+      "unlocked_tools" : {
+         "type" : "List[Tools]",
+         "description" : "A list of currently-available tools the player can use in the current level."
+      },
+      "unlocked_wavelengths" : {
+         "type" : "List[Wavelengths]",
+         "description" : "A list of currently-available wavelength settings the player can use in the current level."
+      },
+      "telescope_orientation" : {
+         "type" : "Tuple[float, 4]",
+         "description" : "The current orientation of the telescope within the current skydome area."
+      },
+      "locator_proximity_level" : {
+         "type" : "int",
+         "description" : ""
+      },
+      "wavelength_setting" : {
+         "type" : "Wavelength",
+         "description" : "The currently-set wavelength on the viewport."
+      },
+      "magnitude_setting" : {
+         "type" : "MagnitudeSettings",
+         "description" : "Whether the magnitude readout is currently set to absolute or relative"
+      },
+      "selected_star" : {
+         "type" : "Optional[Star]",
+         "description" : "The details of the currently-selected star in the viewport, or null if none is selected"
+      },
+      "id_points_needed" : {
+         "type" : "int",
+         "description" : "The number of points the player needs to complete the identification phase of the current level"
+      },
+      "id_points_earned" : {
+         "type" : "int",
+         "description" : "The number of points the player needs to complete the identification phase of the current level"
+      },
+      "documents" : {
+         "type" : "Optional[List[DocumentIDs]]",
+         "description" : "A list of documents currently visible in the document view, or null if the player has not yet reached the document view phase."
+      },
+      "logic_puzzle" : {
+         "type" : "Optional[List[PuzzleRow]]",
+         "description" : "The details of the logic puzzle for the current level, or null if the player is not currently in the logic puzzle phase"
+      }
+   },
+
+   "events": {
+      "session_start": {
+         "description": "When the app is started and the gameplay session is assigned a session ID",
+         "event_data": {
+         }
+      },
+      "game_start": {
+         "description": "When a game is actually loaded/started, showing the player the main interface and tools.",
+         "event_data": {
+            "from_resume" : {
+               "type" : "bool",
+               "description" : "Indicator for whether the game was a brand new start, or resumed from the menu."
+            }
+         }
+      },
+      "click_new_game": {
+         "description": "When the player clicks the button for a new game. This should bring the 'new game' menu",
+         "event_data": {
+         }
+      },
+      "click_resume_game": {
+         "description": "When the player clicks the button for a new game. This should bring up the 'resume' game menu",
+         "event_data": {
+         }
+      },
+      "click_options_menu": {
+         "description": "When the player clicks the button to open the options menu, from the main menu",
+         "event_data": {
+         }
+      },
+      "click_free_play": {
+         "description": "When the player clicks the button to open the free play menu",
+         "event_data": {
+         }
+      },
+      "pause_game": {
+         "description": "When the player presses the spacebar or escape key to pause the game",
+         "event_data": {
+         }
+      },
+      "unpause_game": {
+         "description": "When the player presses the spacebar or escape key to un-pause the game",
+         "event_data": {
+         }
+      },
+      "switch_player_view": {
+         "description": "When the player clicks to set their camera to a new view angle",
+         "event_data": {
+            "view_id" : {
+               "type" : "CameraViews",
+               "description" : "The camera view the player switched to"
+            }
+         }
+      },
+      "click_begin_level": {
+         "description": "When the player clicks a level to start",
+         "event_data": {
+            "level_id" : {
+               "type" : "int",
+               "description" : "The number of the level the player selected"
+            }
+         }
+      },
+      "cutscene_start": {
+         "description": "When a game cutscene is triggered",
+         "event_data": {
+            "cutscene_id" : {
+               "type" : "str",
+               "description" : "The ID for the specific cutscene."
+            }
+         }
+      },
+      "cutscene_end": {
+         "description": "When a game cutscene is completed",
+         "event_data": {
+            "cutscene_id" : {
+               "type" : "str",
+               "description" : "The ID for the specific cutscene."
+            }
+         }
+      },
+      "dialogue_audio_start": {
+         "description": "When an in-game dialog voiceover clip starts",
+         "event_data": {
+            "line_id" : {
+               "type" : "str",
+               "description" : "The ID of the line, which can be matched against the text display events."
+            },
+            "line_content" : {
+               "type" : "str",
+               "description" : "The actual text content of the line being spoken."
+            },
+            "speaker_id" : {
+               "type" : "str",
+               "description" : "The name of the speaking character."
+            }
+         }
+      },
+      "dialogue_audio_end": {
+         "description": "When an in-game dialog voiceover clip ends",
+         "event_data": {
+            "line_id" : {
+               "type" : "str",
+               "description" : "The ID of the line, which can be matched against the text display events."
+            },
+            "speaker_id" : {
+               "type" : "str",
+               "description" : "The name of the speaking character."
+            }
+         }
+      },
+      "dialog_text_displayed": {
+         "description": "When an in-game dialog line is displayed to the player.",
+         "event_data": {
+            "line_id" : {
+               "type" : "str",
+               "description" : "The ID of the line, which can be matched against the audio playback events."
+            },
+            "line_content" : {
+               "type" : "str",
+               "description" : "The actual text content of the line being spoken."
+            },
+            "speaker_id" : {
+               "type" : "str",
+               "description" : "The name of the speaking character."
+            }
+         }
+      },
+      "skip_dialog_line": {
+         "description": "When the player hits the key to skip the current dialog line",
+         "event_data": {
+            "line_id" : {
+               "type" : "str",
+               "description" : "The ID of the line, which can be matched against the audio playback and text display events."
+            },
+            "speaker_id" : {
+               "type" : "str",
+               "description" : "The name of the speaking character."
+            }
+         }
+      },
+      "hint_displayed": {
+         "description": "When a hint is displayed to the user, such as instruction on how to use a particular tool.",
+         "event_data": {
+            "hint_id" : {
+               "type" : "str",
+               "description" : "The ID of the hint."
+            },
+            "text_content" : {
+               "type" : "str",
+               "description" : "The actual text content of the hint."
+            }
+         }
+      },
+      "hint_hidden": {
+         "description": "When a hint is hidden.",
+         "event_data": {
+            "hint_id" : {
+               "type" : "str",
+               "description" : "The ID of the hint."
+            }
+         }
+      },
+      "star_assigned": {
+         "description": "When a star is assigned for identification or part of a logic puzzle. These typically come in bunches, as constellations are generally assigned together.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star that was assigned."
+            }
+         }
+      },
+      "star_highlighted": {
+         "description": "When a star is highlighted, typically because it was assigned to a player, but sometimes due to a mouse hover.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star that was highlighted."
+            }
+         }
+      },
+      "star_unhighlighted": {
+         "description": "When a highlighted star's highlight goes away.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star that was highlighted."
+            }
+         }
+      },
+      "hover_star": {
+         "description": "When a player hovers their mouse over a star, and the mouse pointer switches to indicate the player can select the star.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star that was highlighted."
+            }
+         }
+      },
+      "click_select_star": {
+         "description": "When a player clicks to select a specific star. The event_data contains the same elements as are defined for the 'Star' structure above.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star"
+            },
+            "constellation" : {
+               "type" : "str",
+               "description" : "The name of the constellation containing the star."
+            },
+            "coordinates" : {
+               "type" : "str",
+               "description" : "The string containing the coordinates of the star, as displayed to the user in the compass tool"
+            },
+            "distance" : {
+               "type" : "float",
+               "description" : "The distance to the star"
+            },
+            "color" : {
+               "type" : "float",
+               "description" : "The color index of the star. This corresponds to an astronomical measurement derived from magnitude in blue and visible light.  Color index is represented as a floating point number from about -1 to +10"
+            },
+            "temperature" : {
+               "type" : "float",
+               "description" : "The temperature of the star"
+            },
+            "visible_magnitude" : {
+               "type" : "float",
+               "description" : "The apparent brightness of the star, in the visible spectrum, as observed from earth"
+            },
+            "blue_magnitude" : {
+               "type" : "float",
+               "description" : "The apparent brightness of the star, in the blue spectrum, as observed from earth"
+            },
+            "infrared_magnitude" : {
+               "type" : "float",
+               "description" : "The apparent brightness of the star, in the infrared spectrum, as observed from earth"
+            },
+            "absolute_magnitude" : {
+               "type" : "float",
+               "description" : "The absolute brightness of the star, derived from the distance and apparent brightnesses."
+            },
+            "spectral_elements" : {
+               "type" : "List[Elements]",
+               "description" : "A list of elements in the star, as observed on the spectrograph."
+            },
+            "is_highlighted" : {
+               "type" : "bool",
+               "description" : "Whether the star is currently highlighted in the UI, particularly if the star's constellation is highlighted"
+            },
+            "identification" : {
+               "type" : "Optional[Dict]",
+               "description" : "A subdictionary with a 'category' mapped to the identification category assigned on the star, a 'classification' mapped to the specific classification (or null if the player has not made a classification), and a 'correct_classification' mapped to the actual correct classification. The entire 'identification' element is mapped to null if there is no identification assigned to the given star for the current level."
+            }
+         }
+      },
+      "access_level_unlocked": {
+         "description": "When the player unlocks a new access level, which typically corresponds to unlocking one or more tools.",
+         "event_data": {
+            "access_level" : {
+               "type" : "int",
+               "description" : "The access level that was unlocked."
+            }
+         }
+      },
+      "tool_unlocked": {
+         "description": "When a new tool is unlocked for the player to use.",
+         "event_data": {
+            "tool_id" : {
+               "type" : "Tools",
+               "description" : "The name of the tool that was unlocked."
+            }
+         }
+      },
+      "wavelength_filter_unlocked": {
+         "description": "When a new wavelength filter setting is unlocked.",
+         "event_data": {
+            "tool_id" : {
+               "type" : "Wavelength",
+               "description" : "The type of wavelength that was unlocked."
+            }
+         }
+      },
+      "turn_telescope": {
+         "description": "When the player rotates the telescope view to a new orientation. The event occurs when the rotation completes.",
+         "event_data": {
+            "direction" : {
+               "type" : "Directions",
+               "description" : "The direction in which the player rotated the view"
+            },
+            "new_orientation" : {
+               "type" : "Tuple[float, 4]",
+               "description" : "The new orientation of the telescope within the current skydome area. The initial orientation when the rotation began is captured by the orientation in game_state."
+            }
+         }
+      },
+      "telescope_view_assigned": {
+         "description": "When the game assigns a new telescope view containing a constellation the player is meant to locate.",
+         "event_data": {
+            "constellation_id" : {
+               "type" : "str",
+               "description" : "The name of the constellation that was assigned for the player to find."
+            },
+            "goal_orientation" : {
+               "type" : "Tuple[float, 4]",
+               "description" : "The telescope orientation that the player must reach to 'locate' the constellation."
+            }
+         }
+      },
+      "locator_closer": {
+         "description": "When the locator indicator activates a new light to show the telescope view has gotten closer to the target.",
+         "event_data": {
+            "new_proximity" : {
+               "type" : "int",
+               "description" : "The proximity level, which is the number of locator lights that are active after the new light activated (out of 4)."
+            }
+         }
+      },
+      "locator_further": {
+         "description": "When the locator indicator deactivates a light to show the telescope view has gotten further from the target.",
+         "event_data": {
+            "new_proximity" : {
+               "type" : "int",
+               "description" : "The proximity level, which is the number of locator lights that are active after the light deactivated (out of 4)."
+            }
+         }
+      },
+      "found_telescope_view": {
+         "description": "When the player successfully locates the constellation by reaching the correct telescope orientation.",
+         "event_data": {
+            "constellation_id" : {
+               "type" : "str",
+               "description" : "The name of the constellation that was assigned for the player to find."
+            },
+            "constellation_stars" : {
+               "type" : "List[str]",
+               "description" : "The names of the stars (i.e. the star IDs) in the constellation."
+            }
+         }
+      },
+      "constellation_identification_assigned": {
+         "description": "When the system assigns the player a new identification task for a constellation.",
+         "event_data": {
+            "constellation_id" : {
+               "type" : "str",
+               "description" : "The name of the constellation that was assigned for the player to find."
+            },
+            "constellation_stars" : {
+               "type" : "List[str]",
+               "description" : "The names of the stars (i.e. the star IDs) in the constellation."
+            },
+            "points_needed" : {
+               "type" : "int",
+               "description" : "The number of correct identifications the player needs to make to complete the identification task."
+            },
+            "identification_category" : {
+               "type" : "Categories",
+               "description" : "The category of identification task."
+            }
+         }
+      },
+      "click_open_reference_guide": {
+         "description": "When the player clicks on the reference guide notebook to open the reference view.",
+         "event_data": {
+            "page_id" : {
+               "type" : "str",
+               "description" : "The initial page of the reference guide when it opens."
+            }
+         }
+      },
+      "click_dismiss_reference_guide": {
+         "description": "When the player clicks on the 'x' button to close the guide notebook view.",
+         "event_data": {
+            "page_id" : {
+               "type" : "str",
+               "description" : "The page of the reference guide when the player closed it."
+            }
+         }
+      },
+      "zoom_reference_guide": {
+         "description": "When the player clicks to switch to the zoomed-in, 'full-screen' view of the guide notebook.",
+         "event_data": {
+            "page_id" : {
+               "type" : "str",
+               "description" : "The page of the reference guide the player zoomed on."
+            }
+         }
+      },
+      "unzoom_reference_guide": {
+         "description": "When the player clicks to switch to the zoomed-out, 'regular' view of the guide notebook.",
+         "event_data": {
+            "page_id" : {
+               "type" : "str",
+               "description" : "The page of the reference guide the player zoomed out from."
+            }
+         }
+      },
+      "select_reference_guide_tab": {
+         "description": "When the player clicks on a tab of the reference guide to switch to the first page of the tabbed section.",
+         "event_data": {
+            "tab_id" : {
+               "type" : "str",
+               "description" : "The name of the tab the player switched to."
+            },
+            "new_page_id" : {
+               "type" : "str",
+               "description" : "The new page of the reference guide that the player turned to."
+            }
+         }
+      },
+      "turn_reference_guide_page": {
+         "description": "When the player clicks to navigate to either the next or previous guide page.",
+         "event_data": {
+            "direction" : {
+               "type" : "Directions",
+               "description" : "Whether the player turned the page left or right (up and down are not options here)."
+            },
+            "new_page_id" : {
+               "type" : "str",
+               "description" : "The new page of the reference guide that the player turned to."
+            }
+         }
+      },
+      "select_classification": {
+         "description": "When the selects a classification for the currently-selected star on one of the classification category pages of the reference guide.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star that is currently selected, for which the player is selecting a classification."
+            },
+            "category" : {
+               "type" : "Categories",
+               "description" : "The identification category within which the player is selecting a classification. Note, the spectral elements category will not appear here, because selections of elements is captured by the `toggle_spectral_element` event."
+            },
+            "classification" : {
+               "type" : "ApparentMagnitudes | LuminosityClasses | SpectralTypes",
+               "description" : "The specific classification the player selected."
+            }
+         }
+      },
+      "toggle_spectral_element": {
+         "description": "When the player clicks to select or deselect a spectral element in the spectral element page of the reference guide.",
+         "event_data": {
+            "toggled_on" : {
+               "type" : "bool",
+               "description" : "True if the element was selected by the toggle, or false if deselected."
+            },
+            "element" : {
+               "type" : "Elements",
+               "description" : "The specific element that was toggled."
+            },
+            "new_spectral_selection" : {
+               "type" : "List[Elements]",
+               "description" : "The updated list of selected spectral elements after the new toggle occurred."
+            }
+         }
+      },
+      "submit_star_identification": {
+         "description": "When the player clicks to submit their identification of a particular star.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star that is currently selected, for which the player is submitting a classification."
+            },
+            "category" : {
+               "type" : "Categories",
+               "description" : "The identification category within which the player selected a classification."
+            },
+            "classification" : {
+               "type" : "ApparentMagnitudes | LuminosityClasses | SpectralTypes | List[SpectralElements]",
+               "description" : "The specific classification the player is submitting."
+            }
+         }
+      },
+      "star_identification_accepted": {
+         "description": "When a submitted star identification is accepted.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star whose identification was accepted."
+            },
+            "category" : {
+               "type" : "Categories",
+               "description" : "The identification category of the star identification. The specific classification can be inferred from the star ID, since each star has one correct classification within any given category."
+            },
+            "earned_point" : {
+               "type" : "bool",
+               "description" : "Whether the identification submission & acceptance contributed a point towards the player completing the identification phase of the current level."
+            }
+         }
+      },
+      "star_identification_rejected": {
+         "description": "When the player's submission of a star identification is incorrect.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star whose identification was rejected."
+            },
+            "category" : {
+               "type" : "Categories",
+               "description" : "The identification category of the star identification."
+            },
+            "classification" : {
+               "type" : "ApparentMagnitudes | LuminosityClasses | SpectralTypes | List[SpectralElements]",
+               "description" : "The specific (incorrect) classification of the star that was rejected."
+            },
+            "correct_classification" : {
+               "type" : "ApparentMagnitudes | LuminosityClasses | SpectralTypes | List[SpectralElements]",
+               "description" : "The specific classification that would have been correct (this can be inferred from the star ID, but in this case is included for convenience when analyzing how far off the player's submission was)."
+            }
+         }
+      },
+      "points_needed_displayed": {
+         "description": "When the game displays (or updates) the number of points the player still needs to complete the identification phase.",
+         "event_data": {
+            "points_needed" : {
+               "type" : "int",
+               "description" : "The total number of points the player needs to pass the identification phase."
+            },
+            "points_earned" : {
+               "type" : "int",
+               "description" : "The number of points the player has earned so far. Then the remaining points needed is just the points_needed minus points_earned."
+            }
+         }
+      },
+      "select_wavelength_mode": {
+         "description": "When the changes the mode of the wavelength view.",
+         "event_data": {
+            "new_mode" : {
+               "type" : "Wavelengths",
+               "description" : "The new wavelength the player selected."
+            }
+         }
+      },
+      "toggle_magnitude_mode": {
+         "description": "When the switches the mode of the magnitude tool between absolute and relative.",
+         "event_data": {
+            "new_mode" : {
+               "type" : "MagnitudeSettings",
+               "description" : "Whether the player toggled the mode to ABSOLUTE or RELATIVE."
+            }
+         }
+      },
+      "start_radio_adjust": {
+         "description": "When the player begins to click and drag to adjust the radio frequency.",
+         "event_data": {
+            "radio_frequency" : {
+               "type" : "int",
+               "description" : "The initial frequency when the player started to adjust the frequency."
+            }
+         }
+      },
+      "end_radio_adjust": {
+         "description": "When the player releases the radio dial at a new frequency.",
+         "event_data": {
+            "radio_frequency" : {
+               "type" : "int",
+               "description" : "The new frequency the player set."
+            }
+         }
+      },
+      "radio_secret_found": {
+         "description": "When the player releases the radio dial at one of the preset 'secrets' on the radio dial, which plays a repeated message.",
+         "event_data": {
+            "message_id" : {
+               "type" : "str",
+               "description" : "The ID of the specific secret message the player discovered."
+            },
+            "radio_frequency" : {
+               "type" : "int",
+               "description" : "The frequency where the secret was found."
+            }
+         }
+      },
+      "telescope_stencil_displayed": {
+         "description": "When the game displays a 'stencil' overlay of a particular constellation to highlight the stars of the constellation the player needs to locate. This corresponds to a telescope_view_assigned event when the player is transitioning to the logic puzzle phase of a level.",
+         "event_data": {
+            "constellation_id" : {
+               "type" : "str",
+               "description" : "The ID (name) of the specific constellation."
+            },
+            "constellation" : {
+               "type" : "List[StarID]",
+               "description" : "The list of stars that are contained in the constellation."
+            },
+            "connected_stars" : {
+               "type" : "List[Tuple[StarID, StarID]]",
+               "description" : "A list of star pairs that are connected in the stencil overlay."
+            }
+         }
+      },
+      "logic_puzzle_start": {
+         "description": "When the player is moved into the logic puzzle phase of a level.",
+         "event_data": {
+            "puzzle_id" : {
+               "type" : "str",
+               "description" : "The ID of the specific logic puzzle being introduced."
+            },
+            "puzzle_info" : {
+               "type" : "List[str]",
+               "description" : "The list 'info' bullet points displayed in the interface during the given logic puzzle."
+            },
+            "puzzle_contents" : {
+               "type" : "List[PuzzleRow]",
+               "description" : "A representation of the intial table of puzzle data."
+            }
+         }
+      },
+      "logic_puzzle_complete": {
+         "description": "When the player has completed the full table of puzzle data and finishes the puzzle.",
+         "event_data": {
+            "puzzle_id" : {
+               "type" : "str",
+               "description" : "The ID of the specific logic puzzle the player completed."
+            }
+         }
+      },
+      "select_puzzle_cell": {
+         "description": "When the player selects a cell in the puzzle data table. If a tool value has already been loaded, this will trigger a 'transfer' of the loaded value to the selected cell.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The row name of the selected cell, which corresponds to the name of the star whose details are given in the row."
+            },
+            "tool_id" : {
+               "type" : "Tools",
+               "description" : "The column name of the selected cell, which corresponds to the tool whose value can be transferred into that column."
+            },
+            "value" : {
+               "type" : "Optional[float | str]",
+               "description" : "The value currently in the selected cell, or null if no value has been transferred to that cell yet."
+            }
+         }
+      },
+      "click_tool_load": {
+         "description": "When the player clicks the 'load' button for a given tool. If a puzzle cell is currently selected, this will trigger a 'transfer' of the loaded value to the selected cell.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the currently-selected star, whose value is being loaded."
+            },
+            "tool_id" : {
+               "type" : "Tools",
+               "description" : "The name of the tool whose value is being loaded."
+            },
+            "value" : {
+               "type" : "float | str",
+               "description" : "The current value being loaded from the tool."
+            }
+         }
+      },
+      "transfer_value_to_cell": {
+         "description": "When a tool value is transferred to a specific cell of the logic puzzle. This occurs when the player has both selected a cell and loaded a tool value.",
+         "event_data": {
+            "star_id" : {
+               "type" : "StarID",
+               "description" : "The name of the star corresponding to the selected cell. i.e. the name of the star the player (presumably) believes the value comes from"
+            },
+            "source_star" : {
+               "type" : "StarID",
+               "description" : "The actual star whose value is being transferred to the cell. It is possible to transfer a value from a star to an incorrect row."
+            },
+            "tool_id" : {
+               "type" : "Tools",
+               "description" : "The name of the tool whose value is being transferred to the cell. This is, by construction, also the column to which the value is transferred, since players are not able to load values to an incorrect column.."
+            },
+            "value" : {
+               "type" : "float | str",
+               "description" : "The actual value being transferred to the cell."
+            }
+         }
+      },
+      "click_submit_puzzle": {
+         "description": "When the player clicks the submit button to send their completed puzzle data table.",
+         "event_data": {
+            "puzzle_id" : {
+               "type" : "str",
+               "description" : "The ID of the specific logic puzzle being submitted."
+            },
+            "puzzle_contents" : {
+               "type" : "List[PuzzleRow]",
+               "description" : "A representation of the submitted table of puzzle data."
+            }
+         }
+      },
+      "logic_puzzle_accepted": {
+         "description": "When the player has submitted a correct puzzle data table, and the submission is accepted.",
+         "event_data": {
+            "puzzle_id" : {
+               "type" : "str",
+               "description" : "The ID of the specific logic puzzle that was accepted. The content of the accepted submission can be inferred from the actual correct values for the puzzle."
+            }
+         }
+      },
+      "logic_puzzle_rejected": {
+         "description": "When the player has submitted an incorrect table of puzzle data, and their submission is rejected.",
+         "event_data": {
+            "puzzle_id" : {
+               "type" : "str",
+               "description" : "The ID of the specific logic puzzle for which the submission was rejected."
+            },
+            "incorrect_stars" : {
+               "type" : "List[StarID]",
+               "description" : "A list of which rows contained incorrect values. The actual contents can be obtained from the preceding submission event."
+            },
+            "new_puzzle_contents" : {
+               "type" : "List[PuzzleRow]",
+               "description" : "A representation of the puzzle data table after rejection. Any rows that had incorrect entries are cleared."
+            }
+         }
+      },
+      "new_document_received": {
+         "description": "When the player receives a new document, such as a postcard, in the document board.",
+         "event_data": {
+            "document_id" : {
+               "type" : "DocumentIDs",
+               "description" : "The ID of the specific document the player received."
+            },
+            "text_content" : {
+               "type" : "str",
+               "description" : "The content of the document text."
+            }
+         }
+      },
+      "click_document_flip": {
+         "description": "When the player clicks to flip over the document they are viewing.",
+         "event_data": {
+            "document_id" : {
+               "type" : "DocumentIDs",
+               "description" : "The ID of the specific document the player is viewing."
+            },
+            "to_side" : {
+               "type" : "Sides",
+               "description" : "Whether the player is flipping to the front or back of the document."
+            },
+            "text_content" : {
+               "type" : "str",
+               "description" : "The content of the document text on whichever side the player is flipping to. For most (or all?) documents, the content is an empty string for one side."
+            }
+         }
+      },
+      "click_view_document": {
+         "description": "When the player clicks on a document, such as a postcard, in the document board, bringing it up to view in detail.",
+         "event_data": {
+            "document_id" : {
+               "type" : "DocumentIDs",
+               "description" : "The ID of the specific document the player viewed."
+            },
+            "text_content" : {
+               "type" : "str",
+               "description" : "The content of the document text."
+            }
+         }
+      },
+      "click_dismiss_document": {
+         "description": "When the player clicks the button to dismiss the detail view of a document.",
+         "event_data": {
+            "document_id" : {
+               "type" : "DocumentIDs",
+               "description" : "The ID of the specific document the player finished viewing."
+            }
+         }
+      },
+      "new_postit_received": {
+         "description": "When the player receives a new post-it in the document board.",
+         "event_data": {
+            "postit_id" : {
+               "type" : "PostItIDs",
+               "description" : "The ID of the specific post-it the player received."
+            },
+            "text_content" : {
+               "type" : "str",
+               "description" : "The content of the post-it text."
+            }
+         }
+      },
+      "click_dismiss_postit": {
+         "description": "When the player clicks the button to dismiss the detail view of a post-it they've just received.",
+         "event_data": {
+            "postit_id" : {
+               "type" : "PostItIDs",
+               "description" : "The ID of the specific postit the player finished viewing."
+            }
+         }
+      },
+      "grab_postit": {
+         "description": "When the player clicks to grab and move a post-it around the document board.",
+         "event_data": {
+            "postit_id" : {
+               "type" : "PostItIDs",
+               "description" : "The ID of the specific postit the player is moving."
+            }
+         }
+      },
+      "place_postit": {
+         "description": "When the player clicks to release a post-it at a new position on the document board.",
+         "event_data": {
+            "postit_id" : {
+               "type" : "PostItIDs",
+               "description" : "The ID of the specific postit the player is moving."
+            },
+            "postit_coordinates" : {
+               "type" : "tuple[float, float]",
+               "description" : "The x, y coordinates of the location where the player placed the post-it."
+            },
+            "target_id" : {
+               "type" : "DocumentIDs | 'BOARD'",
+               "description" : "The ID of the document the player placed the post-it onto, attempting to match the post-it to the relevant document. If the player placed the post-it onto a blank spot on the board, this value is the string 'BOARD', rather than a document ID string."
+            },
+            "correct_target" : {
+               "type" : "DocumentIDs",
+               "description" : "The ID of the document the post-it is intended to match with."
+            }
+         }
+      },
+      "postit_match_accepted": {
+         "description": "When the player has placed the post-it onto a document, and made a correct match.",
+         "event_data": {
+            "postit_id" : {
+               "type" : "PostItIDs",
+               "description" : "The ID of the specific postit the player successfully matched to a document. The document ID can be inferred as the correct document for the given post-it."
+            }
+         }
+      },
+      "postit_match_rejected": {
+         "description": "When the player has placed the post-it onto a document, but it is not the right match for the post-it and the player gets a message indicating the match was incorrect. If the player put the post-it on the board, rather than on a document, there is no rejection.",
+         "event_data": {
+            "postit_id" : {
+               "type" : "PostItIDs",
+               "description" : "The ID of the specific postit the player incorrectly matched to a document."
+            },
+            "target_id" : {
+               "type" : "DocumentIDs",
+               "description" : "The ID of the document the player placed the post-it onto, which was not a correct match for the post-it."
+            },
+            "correct_target" : {
+               "type" : "DocumentIDs",
+               "description" : "The ID of the document the post-it is intended to match with."
+            }
+         }
+      }
+   },
+   "features": {
+      "per_count": {
+      },
+      "aggregate": {
+      }
+   },
+
+   "config": {
+      "SUPPORTED_VERS": [1]
+   }
+}
+
