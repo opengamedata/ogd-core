@@ -2,12 +2,12 @@
 import logging
 from typing import Any, List, Optional
 # import locals
-from utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
+from ogd.common.models.FeatureData import FeatureData
 
 class JobExperimentBegins(PerJobFeature):
 
@@ -19,21 +19,14 @@ class JobExperimentBegins(PerJobFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
-        return ["begin_experiment", "end_experiment", "receive_fact"]
+        return ["begin_experiment"]
 
     @classmethod
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event:Event) -> None:
-        if(event.EventName == "begin_experiment"):
-            self._found = True
-        elif(event.EventName == "end_experiment"):
-            self._found = False
-        elif(event.EventName == "receive_fact"):
-            self._count += 1
-    
-
+        self._count += 1
 
     def _updateFromFeatureData(self, feature:FeatureData):
         return
