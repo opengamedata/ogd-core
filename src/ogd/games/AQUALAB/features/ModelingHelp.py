@@ -2,11 +2,10 @@
 from datetime import datetime, timedelta
 import logging, warnings
 from typing import Any, List, Optional
-from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 # import locals
+from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
-from extractors.features.Feature import Feature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
