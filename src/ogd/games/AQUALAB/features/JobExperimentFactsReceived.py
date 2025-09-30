@@ -14,7 +14,7 @@ class JobExperimentFactsReceived(PerJobFeature):
     def __init__(self, params:GeneratorParameters, job_map:dict):
         super().__init__(params=params, job_map=job_map)
         self._n_facts = 0
-        self._found = False
+        self._experimenting = False
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -28,14 +28,12 @@ class JobExperimentFactsReceived(PerJobFeature):
     def _updateFromEvent(self, event:Event) -> None:
         match event.EventName:
             case "begin_experiment":
-                self._found = True
+                self._experimenting = True
             case "end_experiment":
-                self._found = False
+                self._experimenting = False
             case "receive_fact":
-                if self._found == True:
+                if self._experimenting == True:
                     self._n_facts += 1
-    
-
 
     def _updateFromFeatureData(self, feature:FeatureData):
         return
