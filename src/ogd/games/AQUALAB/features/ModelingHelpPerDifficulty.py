@@ -23,19 +23,21 @@ class ModelingHelpPerDifficulty(PerDifficultyFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
-        return ["ask_for_help", "begin_model"]
+        return ["ask_for_help", "begin_model", "end_model"]
 
     @classmethod
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event:Event) -> None:
-        if(event.EventName == "begin_model"):
-            self._found = True
-        if(self._found == True and event.EventName == "ask_for_help"):
-            self._help = True
-
-        
+        match event.EventName:
+            case "begin_model":
+                self._found = True
+            case "end_model":
+                self._found = False
+            case "ask_for_help":
+                if self._found == True:
+                    self._help = True
 
     def _updateFromFeatureData(self, feature:FeatureData):
         return
