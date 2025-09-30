@@ -26,12 +26,14 @@ class JobExperimentFactsReceived(PerJobFeature):
         return []
 
     def _updateFromEvent(self, event:Event) -> None:
-        if(event.EventName == "begin_experiment"):
-            self._found = True
-        if(event.EventName == "end_experiment"):
-            self._found = False
-        if(self._found == True):
-            self._n_facts += 1
+        match event.EventName:
+            case "begin_experiment":
+                self._found = True
+            case "end_experiment":
+                self._found = False
+            case "receive_fact":
+                if self._found == True:
+                    self._n_facts += 1
     
 
 
