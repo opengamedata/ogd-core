@@ -101,8 +101,6 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = PlayedNonexperimentalVersion.PlayedNonexperimentalVersion(params=extractor_params)
                 case "JobsCompleted":
                     ret_val = JobsCompleted.JobsCompleted(params=extractor_params, player_id=self._player_id)
-                case "JobTriesInArgument":
-                    ret_val = JobTriesInArgument.JobTriesInArgument(params=extractor_params, job_map=self._job_map)
                 case "JobQuitsPerComplete":
                     ret_val = JobQuitsPerComplete.JobQuitsPerComplete(params=extractor_params)
                 case "JobPlayTime":
@@ -192,6 +190,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = JobArgumentation.JobArgumentation(params=extractor_params, job_map=self._job_map)
                 case "JobArgumentationRejects":
                     ret_val = JobArgumentationRejects.JobArgumentationRejects(params=extractor_params, job_map=self._job_map)
+                case "JobTriesInArgument":
+                    ret_val = JobTriesInArgument.JobTriesInArgument(params=extractor_params, job_map=self._job_map)
                 case "JobTotalAttempts":
                     ret_val = JobTotalAttempts.JobTotalAttempts(params=extractor_params, job_map=self._job_map)
                 case "JobAttempted":
