@@ -1330,11 +1330,27 @@
                 "description": "List of key events that happened in a player's session(s)",
                 "return_type": "list"
             },
+            "JobQuitsPerComplete": {
+                "enabled": true,
+                "type": "JobQuitsPerComplete",
+                "description": "Ratio of jobs quit to jobs completed.",
+                "return_type": "list"
+            },
             "JobsCompleted": {
                 "enabled": true,
                 "type": "JobsCompleted",
                 "description": "List of completed jobs for a player",
-                "return_type": "list[str]"
+                "return_type": "list[str]",
+                "subfeatures": {
+                    "UniqueCount" : {
+                        "description": "The number of unique jobs that were completed",
+                        "return_type": "int"
+                    },
+                    "Names" : {
+                        "description": "The names of completed jobs, in order of completion",
+                        "return_type": "List[str]"
+                    }
+                }
             },
             "PlayerSummary": {
                 "enabled": true,
@@ -1457,6 +1473,12 @@
                 "enabled": true,
                 "type": "TotalHelpCount",
                 "description": "Number of times player clicked the help button throughout the session",
+                "return_type": "int"
+            },
+            "TotalJobQuits": {
+                "enabled": true,
+                "type": "TotalJobQuits",
+                "description": "Number of times player quit a job",
                 "return_type": "int"
             },
             "TotalPlayTime": {

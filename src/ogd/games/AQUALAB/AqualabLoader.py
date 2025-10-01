@@ -100,7 +100,7 @@ class AqualabLoader(GeneratorLoader):
                 case "PlayedNonexperimentalVersion":
                     ret_val = PlayedNonexperimentalVersion.PlayedNonexperimentalVersion(params=extractor_params)
                 case "JobsCompleted":
-                    ret_val = JobsCompleted.JobsCompleted(params=extractor_params, player_id=self._player_id)
+                    ret_val = JobsCompleted.JobsCompleted(params=extractor_params)
                 case "JobQuitsPerComplete":
                     ret_val = JobQuitsPerComplete.JobQuitsPerComplete(params=extractor_params)
                 case "JobPlayTime":
