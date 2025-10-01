@@ -192,8 +192,6 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = JobArgumentationFails.JobArgumentationFails(params=extractor_params, job_map=self._job_map)
                 case "JobArgumentationNoReject":
                     ret_val = JobArgumentationNoReject.JobArgumentationNoReject(params=extractor_params, job_map=self._job_map)
-                case "SessionHelpCount":
-                    ret_val = SessionHelpCount.SessionHelpCount(params=extractor_params)
                 case "JobArgumentationSuccessRatio":
                     ret_val = JobArgumentationSuccessRatio.JobArgumentationSuccessRatio(params=extractor_params, job_map=self._job_map)
                 case "JobArgumentationSuccessRatioPerDifficulty":
