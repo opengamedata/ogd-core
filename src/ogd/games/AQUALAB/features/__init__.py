@@ -58,7 +58,6 @@ __all__ = [
     "SessionGuideCount",
     "SessionHelpCount",
     "SessionID",
-    "SessionJobsCompleted",
     "SuccessfulAdvice",
     "SurveyCompleted",
     "SurveyItemResponse",
@@ -76,7 +75,6 @@ __all__ = [
     "TotalExperimentationTime",
     "TotalGuideCount",
     "TotalHelpCount",
-    "TimeInJournal",
     "TotalJobRecommendationReceived",
     "TotalKelpTime",
     "TotalModelingTime",
@@ -118,7 +116,6 @@ from . import JobHelpCount
 from . import JobLocationChanges
 from . import JobLocationChangesNoKelp
 from . import JobQuitsPerComplete
-from . import TimeInJournal
 from . import JobModeling
 from . import JobName
 from . import JobPlayTime
@@ -148,7 +145,6 @@ from . import SessionDurationPerJob
 from . import SessionGuideCount
 from . import SessionHelpCount
 from . import SessionID
-from . import SessionJobsCompleted
 from . import SuccessfulAdvice
 from . import SurveyCompleted
 from . import SurveyItemResponse
