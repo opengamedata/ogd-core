@@ -60,4 +60,4 @@ class JobModeling(PerJobFeature):
 
     @staticmethod
     def MinVersion() -> Optional[str]:
-        return "1"
+        return "3"
