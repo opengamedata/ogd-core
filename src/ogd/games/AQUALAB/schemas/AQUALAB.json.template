@@ -1334,7 +1334,17 @@
                 "enabled": true,
                 "type": "JobsCompleted",
                 "description": "List of completed jobs for a player",
-                "return_type": "list[str]"
+                "return_type": "list[str]",
+                "subfeatures": {
+                    "UniqueCount" : {
+                        "description": "The number of unique jobs that were completed",
+                        "return_type": "int"
+                    },
+                    "Names" : {
+                        "description": "The names of completed jobs, in order of completion",
+                        "return_type": "List[str]"
+                    }
+                }
             },
             "PlayerSummary": {
                 "enabled": true,
