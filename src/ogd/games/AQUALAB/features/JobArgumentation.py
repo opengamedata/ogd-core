@@ -60,4 +60,4 @@ class JobArgumentation(PerJobFeature):
 
     @staticmethod
     def MinVersion() -> Optional[str]:
-        return "1"
+        return "3"

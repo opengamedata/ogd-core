@@ -2,21 +2,21 @@
 from datetime import datetime, timedelta
 import logging, warnings
 from typing import Any, List, Optional
-from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
+from ogd.games.AQUALAB.features.PerDifficultyFeature import PerDifficultyFeature
 # import locals
 from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from extractors.features.Feature import Feature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 
 
-class ModelExportCount(PerJobFeature):
+class ModelExportCountPerDifficulty(PerDifficultyFeature):
 
-    def __init__(self, params:GeneratorParameters, job_map:dict):
-        self._job_map = job_map
-        super().__init__(params=params, job_map= job_map)
+    def __init__(self, params:GeneratorParameters, diff_map:dict, difficulty_type:Optional[str]):
+        super().__init__(params=params, diff_map=diff_map, difficulty_type=difficulty_type)
+        self._diff_map = diff_map
         self._count = 0
         
 
