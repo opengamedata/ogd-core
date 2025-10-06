@@ -457,7 +457,7 @@
         "trigger_scan" : {
             "description": "When the player clicks to trigger a scan while in Margo's scanning mode. This event occurs even if there is no valid scanning target highlighted.",
             "event_data": {
-                TODO
+                "TODO" : "fill in details"
             }
         },
         "object_scanned" : {
@@ -483,7 +483,7 @@
                         "pos_y": "float",
                         "pos_z": "float"
                     },
-                    "description": "The position at which Margo was held when the scan triggered."
+                    "description": "The position at which Margo was held when the capture triggered."
                 },
                 "margo_orientation": {
                     "type": "List[float]",
@@ -493,7 +493,7 @@
                         "rot_z": "float",
                         "rot_w": "float"
                     },
-                    "description": "The direction Margo was pointed when the scan triggered."
+                    "description": "The direction Margo was pointed when the capture triggered."
                 }
             }
         },
@@ -577,30 +577,30 @@
             }
         },
         "click_margo_sync": {
-            "description": "When the player clicks the button to sync Margo with the computer in the tent."
+            "description": "When the player clicks the button to sync Margo with the computer in the tent.",
             "event_data": {
-                TODO
+                "TODO" : "fill in details"
             }
         },
 
         "display_penguin_population": {
-            "TODO"
+            "TODO" : "fill in details"
         },
         "display_penguin_data": {
-            "TODO"
+            "TODO" : "fill in details"
         },
 
         "penguin_highlighted": {
-            TODO
+            "TODO" : "fill in details"
         },
         "penguin_unhighlighted": {
-            TODO
+            "TODO" : "fill in details"
         },
         "warp_point_highlighted": {
-            TODO
+            "TODO" : "fill in details"
         },
         "warp_point_unhighlighted": {
-            TODO
+            "TODO" : "fill in details"
         },
         "object_highlighted": {
             "description": "When an object is highlighted, indicating the player should move the object, or place another object on it.",
@@ -627,7 +627,7 @@
                     "description": "Indicator of whether the object was a normal object, or an object destination."
                 }
             }
-        },
+        }
     },
     "features": {
         "per_count": {},
