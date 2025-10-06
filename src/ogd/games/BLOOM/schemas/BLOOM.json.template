@@ -306,7 +306,7 @@
             }
          }
       },
-      "dialog_start": {
+      "dialogue_start": {
          "description": "When an in-game dialog scene begins, whether a part of a tutorial, the result of the player clicking a dialog notification, or clicking a warning notification",
          "event_data": {
             "node_id" : {
@@ -319,7 +319,7 @@
             }
          }
       },
-      "dialog_end": {
+      "dialogue_end": {
          "description": "When an in-game dialog scene completes, whether it was triggered as a part of a tutorial, the result of the player clicking a dialog notification, or clicking a warning notification",
          "event_data": {
             "node_id" : {
@@ -892,7 +892,7 @@
             }
          }
       },
-      "click_execute_build": {
+      "execute_build_queue": {
          "description": "When the player clicks to complete the building of all buildings in the build queue.",
          "event_data": {
             "built_items" : {
@@ -1062,6 +1062,12 @@
    },
    "detectors": {
       "aggregate": {
+         "AlertClickThrough": {
+            "type": "AlertClickThrough",
+            "enabled": true,
+            "description": "Detector for cases where the player checked an alert, but clicked through the character lines too quickly to have read them",
+            "threshold": 520
+         },
          "AlertFollowedByInspect": {
             "type": "AlertFollowedByInspect",
             "enabled": true,
@@ -1073,6 +1079,12 @@
             "enabled": true,
             "description": "Detector for cases where the player checked an alert, and quickly followed with a policy adjustment to alleviate the issue",
             "threshold": 30
+         },
+         "CutsceneClickThrough": {
+            "type": "CutsceneClickThrough",
+            "enabled": true,
+            "description": "Detector for cases where the player reached a cutscene, but clicked through the cutscene pages too quickly to have read them",
+            "threshold": 520
          },
          "GoodPolicyCombo": {
                "type": "GoodPolicyCombo",
@@ -1170,6 +1182,13 @@
                "DECLININGPOP_SUBSIDIZE_MILK"
             ]
          },
+         "AlertClickThroughCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "description": "Counter for the number of times a player clicked rapidly through an alert dialog",
+            "target": "alert_click_through",
+            "return_type": "int"
+         },
          "AlertReviewCount": {
             "enabled": true,
             "type": "AlertReviewCount",
@@ -1210,7 +1229,7 @@
             "enabled": true,
             "type": "CountEvent",
             "description": "Count of builds",
-            "target": "click_execute_build",
+            "target": "execute_build_queue",
             "return_type": "int"
          },
          "BuildingUnlockCount": {
@@ -1230,6 +1249,20 @@
             "enabled": true,
             "type": "CountyUnlockCount",
             "description": "Number of counties unlocked",
+            "return_type": "int"
+         },
+         "CutsceneCount": {
+            "enabled": true,
+            "type": "CountEvent",
+            "target": "cutscene_start",
+            "description": "Count of cutscenes encountered",
+            "return_type": "int"
+         },
+         "CutsceneClickThroughCount": {
+            "type": "CountEvent",
+            "enabled": true,
+            "target": "cutscene_click_through",
+            "description": "Counter for the number of times a player clicked rapidly through a cutscene",
             "return_type": "int"
          },
          "DairyInspectionCount": {

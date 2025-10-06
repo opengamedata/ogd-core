@@ -3,6 +3,10 @@
         "min": 0,
         "max": 56
     },
+    "diff_range":{
+      "min": 0,
+      "max": 5
+    },
     "task_range": {
         "min": 0,
         "max": 235
@@ -522,6 +526,27 @@
             "description": "N/A",
             "event_data": {
             }
+        },
+        "survey_submitted": {
+            "description": "When the player completes an in-game survey and submits their response to the server",
+            "event_data": {
+                "display_event_id": {
+                    "type": "str",
+                    "description": "An ID/name for the survey that was submitted"
+                },
+                "package_config_id": {
+                    "type": "str",
+                    "description": "An ID/name for the package of surveys that the submitted survey came from"
+                },
+                "responses": {
+                    "type": "List[Dict]",
+                    "description": "A list of individual response objects",
+                    "details": {
+                        "prompt" : "str",
+                        "response" : "int"
+                    }
+                }
+            }
         }
     },
     "detectors": {
@@ -571,7 +596,6 @@
     },
     "features": {
         "per_count": {
-    
             "FollowedAdvice": {
                 "enabled": true,
                 "type": "FollowedAdvice",
@@ -580,8 +604,40 @@
                 "description": "followed advice during a job",
                 "return_type": "bool"
             },
-            "JobActiveTime": {
+            "JobTriesInArgument" : {
                 "enabled": true,
+                "type": "JobTriesInArgument",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "",
+                "return_type": "int"
+            },
+            "JobTriesInArgumentPerDifficulty": {
+                "enabled":true,
+                "type": "JobTriesInArgumentPerDifficulty",
+                "count": "diff_range",
+                "prefix": "diff",
+                "description": "",
+                "return_type": "int"
+            },
+            "JobPriorComplete": {
+                "enabled": false,
+                "type": "JobPriorComplete",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "",
+                "return_type": "list"
+            },
+            "JobPriorAttempt": {
+                "enabled": false,
+                "type": "JobPriorAttempt",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "",
+                "return_type": "list"
+            },
+            "JobActiveTime": {
+                "enabled": false,
                 "type": "JobActiveTime",
                 "count": "level_range",
                 "prefix": "job",
@@ -602,8 +658,40 @@
                     }
                 }
             },
-            "JobCompletionTime": {
+            "JobAttempted": {
                 "enabled": true,
+                "type": "JobAttempted",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Indicator for whether the player ever entered into the given job",
+                "return_type": "bool"
+            },
+            "JobTotalAttempts": {
+                "enabled": true,
+                "type": "JobTotalAttempts",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "The total number of players who attempted the job.",
+                "return_type": "int"
+            },
+            "JobArgumentationRejects": {
+                "enabled": true,
+                "type": "JobArgumentationRejects",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Number of fact_rejected per job",
+                "return_type": "float"
+            },
+            "JobArgumentationFails": {
+                "enabled": true,
+                "type": "JobArgumentationFails",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Number of times argumentation left per job",
+                "return_type": "float"
+            },
+            "JobCompletionTime": {
+                "enabled": false,
                 "type": "JobCompletionTime",
                 "count": "level_range",
                 "prefix": "job",
@@ -716,7 +804,7 @@
             },
             "SessionDurationPerJob": {
                 "enabled": true,
-                "type": "SessionDuration",
+                "type": "SessionDurationPerJob",
                 "description": "N/A",
                 "threshold": 60,
                 "return_type": "timedelta",
@@ -786,7 +874,29 @@
                 "type": "JobTasksCompleted",
                 "count": "level_range",
                 "prefix": "job",
-                "description": "Number of tasks completed for a given job",
+                "description": "List of tasks completed for a given job",
+                "return_type": "List[str]",
+                "subfeatures": {
+                    "Count": {
+                        "description": "Number of tasks completed for the given job",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "JobArgumentationSuccessRatio" : {
+                "enabled": true,
+                "type": "JobArgumentationSuccessRatio",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Ratio of facts accepted against total facts submitted",
+                "return_type": "float"
+            },
+            "JobArgumentationNoReject" : {
+                "enabled": true,
+                "type": "JobArgumentationNoReject",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Whether or not a job was completed with zero rejected facts",
                 "return_type": "int"
             },
             "JobsAttempted": {
@@ -1177,17 +1287,24 @@
             "ExperimentalCondition": {
                 "enabled": true,
                 "type": "ExperimentalCondition",
-                "count": "level_range",
-                "prefix": "job",
                 "description": "Returns the first event branch",
+                "return_type": "str"
+            },
+            "PlayedNonexperimentalVersion": {
+                "enabled": true,
+                "type": "PlayedNonexperimentalVersion",
+                "description": "True if the player ever had an event in a non-experimental branch.",
                 "return_type": "str"
             },
             "TotalJobRecommendationReceived": {
                 "enabled": true,
-                "type": "CountEvent",
+                "type": "TotalJobRecommendationReceived",
                 "description": "Count of total recommendations received",
                 "target": "recommended_job",
-                "return_type": "int"
+                "return_type": "int",
+                "subfeatures": [
+                    "SpecificRecommendations"
+                ]
             },
             "ActiveJobs": {
                 "enabled": true,
@@ -1220,13 +1337,13 @@
                 "return_type": "list[str]"
             },
             "PlayerSummary": {
-                "enabled": false,
+                "enabled": true,
                 "type": "PlayerSummary",
                 "description": "Summary of player statistics (active session time, jobs completed, number of sessions)",
                 "return_type": "dict"
             },
             "PlayLocations": {
-                "enabled": false,
+                "enabled": true,
                 "type": "PlayLocations",
                 "description": "Play Locations",
                 "return_type": "List[bool]",
@@ -1238,7 +1355,7 @@
                 }
             },
             "PopulationSummary": {
-                "enabled": false,
+                "enabled": true,
                 "type": "PopulationSummary",
                 "description": "Summary of population statistics (active session time, average jobs completed count, average session count)",
                 "return_type": "dict"

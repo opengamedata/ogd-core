@@ -4,6 +4,7 @@ __all__ = [
     "PerCountyFeature",
     "PerPolicyFeature",           
     "ActiveTime",
+    "ActiveCounties",
     "AlertCount",
     "AlertResponseCount",
     "AlertReviewCount",
@@ -12,7 +13,6 @@ __all__ = [
     "AverageEconomyViewTime",
     "AveragePhosphorusViewTime",
     "BloomAlertCount",
-    "BuildCount",
     "BuildingUnlockCount",
     "CountyBloomAlertCount",
     "CountyBuildCount",
@@ -22,6 +22,7 @@ __all__ = [
     "CountyUnlockCount",
     "EconomyViewUnlocked",
     "FailCount",
+    "JobsAttempted",
     "GameCompletionStatus",
     "NumberOfSessionsPerPlayer",
     "PersistThroughFailure",
@@ -29,18 +30,22 @@ __all__ = [
     "CountyPolicyChangeCount",
     "PersistenceTime",
     "PhosphorusViewUnlocked",
+    "PlayerSummary", 
+    "PopulationSummary",
     "PolicyUnlocked",
     "CountyUnlockTime",
     "QuitOnBloomFail", 
     "QuitOnCityFail",
     "QuitOnBankruptcy",
+    "TopCountySwitchDestinations",
+    "TopCountyCompletionDestinations",
     "BuildingInspectorTabCount",
     "GoodPolicyCount",
     # "PhosphorusViewTime",
     # "InspectorResponseCount"
 ]
 
-
+from . import ActiveCounties
 from . import PerCountyFeature
 from . import PerPolicyFeature
 from . import ActiveTime
@@ -52,7 +57,6 @@ from . import AverageBuildingInspectTime
 from . import AverageEconomyViewTime
 from . import AveragePhosphorusViewTime
 from . import BloomAlertCount
-from . import BuildCount
 from . import BuildingUnlockCount
 from . import CountyBloomAlertCount
 from . import CountyBuildCount
@@ -62,6 +66,7 @@ from . import CountyLatestMoney
 from . import CountyUnlockCount
 from . import EconomyViewUnlocked
 from . import FailCount
+from . import JobsAttempted
 from . import GameCompletionStatus
 from . import NumberOfSessionsPerPlayer
 from . import PersistThroughFailure
@@ -69,11 +74,15 @@ from . import SucceededThroughFailure
 from . import CountyPolicyChangeCount
 from . import PersistenceTime
 from . import PhosphorusViewUnlocked
+from . import PlayerSummary
+from . import PopulationSummary
 from . import PolicyUnlocked
 from . import CountyUnlockTime
 from . import QuitOnBloomFail
 from . import QuitOnCityFail
 from . import QuitOnBankruptcy
+from . import TopCountySwitchDestinations
+from . import TopCountyCompletionDestinations
 from . import BuildingInspectorTabCount
 from . import GoodPolicyCount
 # from . import PhosphorusViewTime

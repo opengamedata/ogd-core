@@ -1,0 +1,34 @@
+# import libraries
+import logging
+from typing import Optional
+# import locals
+from ogd.common.utils.Logger import Logger
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
+from ogd.common.models.Event import Event
+
+class PerDifficultyFeature(PerCountFeature):
+    def __init__(self, params:GeneratorParameters, diff_map: dict, difficulty_type):
+        super().__init__(params=params)
+        self._difficulty_type = difficulty_type
+        self._diff_map = diff_map
+
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
+
+    def _validateEventCountIndex(self, event:Event):
+        ret_val : bool = False
+
+        _current_job = event.EventData.get('job_name', "UNKNOWN JOB")
+        if isinstance(_current_job, dict):
+            _current_job = _current_job['string_value']
+       # print(_current_job)
+        if self._diff_map[_current_job][self._difficulty_type] == self.CountIndex:
+            ret_val = True
+        
+        return ret_val
+
+    # *** Optionally override public functions. ***
+
+    @staticmethod
+    def MinVersion() -> Optional[str]:
+        return "3"

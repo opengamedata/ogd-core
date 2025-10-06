@@ -129,10 +129,9 @@ class JobsAttempted(Feature):
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
         return ["job-name", "num-starts", "num-completes", "percent-complete", "avg-time-per-attempt", "std-dev-per-attempt", "job-difficulties"]
-
     @staticmethod
     def MinVersion() -> Optional[str]:
-        return "1"
+        return "3"
 
     # *** Other local functions
     def _validate_job(self, job_data):

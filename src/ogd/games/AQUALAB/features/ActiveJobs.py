@@ -53,12 +53,12 @@ class ActiveJobs(Feature):
         if (self._last_started_id is not None) and (self._current_user_code not in self._active_jobs[self._last_started_id]):
             ret_val[self._last_started_id].append(self._current_user_code) # whatever last event was, assume player left off there.
 
-        return [json.dumps(ret_val)]
+        return [ret_val]
 
     # *** Optionally override public functions. ***
     @staticmethod
     def MinVersion() -> Optional[str]:
-        return "1"
+        return "3"
 
     # *** Other local functions
     def _validate_job(self, job_data):
