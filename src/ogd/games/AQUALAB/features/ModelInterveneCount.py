@@ -12,7 +12,7 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.Feature import Feature
 
 
-class ModelInterveneCount(Extractor):
+class ModelInterveneCount(PerJobFeature):
 
     def __init__(self, params:GeneratorParameters, job_map:dict):
         self._job_map = job_map
