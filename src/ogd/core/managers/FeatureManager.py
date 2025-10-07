@@ -122,7 +122,7 @@ class FeatureManager:
     # TODO: make this function take list of events, and do the loop over events as low in the hierarchy as possible, which technically should be faster.
     def ProcessEvent(self, event:Event) -> None:
         # 1. process at population level.
-        # NOTE: removed the skipping of unrequested modes because second-order features may need feats at levels not requested for final export.
+        # NOTE: We don't skip modes that were not requested for final export, because second-order features may need them.
         if self._population is not None and self._players is not None and self._sessions is not None:
             self._population.ProcessEvent(event=event)
             # 2. process at player level, adding player if needed.
@@ -180,7 +180,7 @@ class FeatureManager:
                     session.ProcessFeatures(feature_list=sess_data.Features)
             Logger.Log(f"Time to process Feature Data: {datetime.now() - start}", logging.INFO, depth=3)
         else:
-            Logger.Log("Skipped processing of Feature, no feature Processors available!", logging.INFO, depth=3)
+            Logger.Log("Skipped second-order FeatureData processing, no feature Processors available!", logging.INFO, depth=3)
 
     #new
     # def GetPopulationFeature(self) -> List[Feature]:
