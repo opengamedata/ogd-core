@@ -152,7 +152,7 @@ class OGDCommands:
             case 'BLOOM':
                 exclude_rows = {'algae_growth_end', 'algae_growth_begin'}
             case 'THERMOLAB' | 'THERMOVR':
-                exclude_rows = {'nudge_hint_displayed', 'nudge_hint_hidden'}
+                exclude_rows = {'nudge_hint_displayed', 'nudge_hint_hidden', 'simulation_data'}
             case 'LAKELAND':
                 exclude_rows = {'CUSTOM.24'}
             case _:
