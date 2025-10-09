@@ -8,7 +8,7 @@ import math
 # import subprocess
 import traceback
 from datetime import datetime
-from typing import List, Type, Optional
+from typing import Dict, List, Type, Optional
 
 ## import local files
 from ogd.common.filters.SetFilter import SetFilter
@@ -20,6 +20,10 @@ from ogd.common.models.FeatureSet import FeatureSet
 from ogd.common.models.enums.ExportMode import ExportMode
 from ogd.common.models.enums.FilterMode import FilterMode
 from ogd.common.models.enums.IDMode import IDMode
+from ogd.common.storage.interfaces.Interface import Interface
+from ogd.common.storage.outerfaces.Outerface import Outerface
+from ogd.common.storage.interfaces.InterfaceFactory import InterfaceFactory
+from ogd.common.storage.outerfaces.OuterfaceFactory import OuterfaceFactory
 from ogd.common.utils.Logger import Logger
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.managers.EventManager import EventManager
@@ -47,6 +51,9 @@ class ExportManager:
         :type settings: [type]
         """
         self._config      : CoreConfig = config
+        self._interfaces  : Dict[str, Interface] = {}
+        self._events_out  : Dict[str, Outerface] = {}
+        self._feats_out   : Dict[str, Outerface] = {}
         self._event_mgr   : Optional[EventManager]   = None
         self._feat_mgr    : Optional[FeatureManager] = None
         self._debug_count : int                      = 0
@@ -123,9 +130,9 @@ class ExportManager:
 
         In particular, this function:
         1. Sets up loader class
-        2. Sets up event manager
-        3. Sets up feature manager
-        4. Opens request outerfaces
+        2. Sets up interfaces & outerfaces
+        3. Sets up event manager
+        4. Sets up feature manager
         :param request: The export request being processed
         :type request: Request
         """
@@ -133,18 +140,30 @@ class ExportManager:
         load_class = ExportManager._loadLoaderClass(request.GameID)
         if load_class is None:
             # If game doesn't have an extractor, make sure we don't try to export it.
-            request.RemoveExportMode(ExportMode.DETECTORS)
-            request.RemoveExportMode(ExportMode.SESSION)
-            request.RemoveExportMode(ExportMode.PLAYER)
-            request.RemoveExportMode(ExportMode.POPULATION)
+            for mode in {ExportMode.DETECTORS, ExportMode.SESSION, ExportMode.PLAYER, ExportMode.POPULATION}:
+                request.RemoveExportMode(mode)
 
-    # 2. Set up EventManager, assuming it was requested.
+    # 2. Set up I/O
+        self._interfaces = {
+            source.Name : InterfaceFactory.FromConfig(config=source, fail_fast=request.Config.FailFast) \
+            for source in request.GameStores.EventsFrom
+        }
+        self._events_out = {
+            dest.Name : OuterfaceFactory.FromConfig(config=dest, export_modes=request.ExportModes, repository=request.Repository, dataset_id=request.DatasetID) \
+            for dest in (request.GameStores.EventsTo)
+        }
+        self._feats_out = {
+            dest.Name : OuterfaceFactory.FromConfig(config=dest, export_modes=request.ExportModes, repository=request.Repository, dataset_id=request.DatasetID) \
+            for dest in (request.GameStores.FeaturesTo)
+        }
+
+    # 3. Set up EventManager, assuming it was requested.
         if request.ExportRawEvents or request.ExportProcessedEvents:
             self._event_mgr = EventManager(generator_cfg=request.Generators, LoaderClass=load_class,
                                            trigger_callback=self._receiveEventTrigger, feature_overrides=None)
         else:
             Logger.Log("Event data not requested, skipping event manager.", logging.INFO, depth=1)
-    # 3. Set up FeatureManager, assuming it was requested.
+    # 4. Set up FeatureManager, assuming it was requested.
         if request.ExportSessions or request.ExportPlayers or request.ExportPopulation:
             self._feat_mgr = FeatureManager(generator_config=request.Generators, LoaderClass=load_class, feature_overrides=None)
         else:
@@ -162,7 +181,7 @@ class ExportManager:
         :rtype: List[Slice]
         """
         # HACK : we're just using the first interface in dict, which we need to do more correctly down the road.
-        sess_ids = list(request.Interfaces.values())[0].AvailableIDs(mode=IDMode.SESSION, filters=request.Filters) or []
+        sess_ids = list(self._interfaces.values())[0].AvailableIDs(mode=IDMode.SESSION, filters=request.Filters) or []
         _num_sess = len(sess_ids)
         _slice_size = self._config.BatchSize
         Logger.Log(f"With slice size = {_slice_size}, there are {math.ceil(_num_sess / _slice_size)} slices", logging.INFO, depth=1)
@@ -195,12 +214,12 @@ class ExportManager:
         if self._feat_mgr is not None:
             if request.ExportPopulation:
                 _pop_feats = FeatureSet(features=self._feat_mgr.PopulationFeatures, filters=DatasetFilterCollection())
-                for outerface in request.Outerfaces.values():
+                for outerface in self._feats_out.values():
                     outerface.WriteFeatures(features=_pop_feats, mode=ExportMode.POPULATION)
                 self._feat_mgr.ClearPopulationLines()
             if request.ExportPlayers:
                 _player_feats = FeatureSet(features=self._feat_mgr.PlayerFeatures, filters=DatasetFilterCollection())
-                for outerface in request.Outerfaces.values():
+                for outerface in self._feats_out.values():
                     outerface.WriteFeatures(features=_player_feats, mode=ExportMode.PLAYER)
                 self._feat_mgr.ClearPlayerLines()
         else:
@@ -324,31 +343,31 @@ class ExportManager:
     def _outputHeaders(self, request:Request):
         if self._event_mgr is not None:
             if request.ExportRawEvents:
-                for outerface in request.Outerfaces.values():
+                for outerface in self._events_out.values():
                     outerface.WriteHeader(header=self._event_mgr.ColumnNames, mode=ExportMode.EVENTS)
             else:
                 Logger.Log("Event log not requested, skipping events output.", logging.INFO, depth=1)
             if request.ExportProcessedEvents:
-                for outerface in request.Outerfaces.values():
+                for outerface in self._events_out.values():
                     outerface.WriteHeader(header=self._event_mgr.ColumnNames, mode=ExportMode.DETECTORS)
             else:
                 Logger.Log("Event log not requested, skipping events output.", logging.INFO, depth=1)
         if self._feat_mgr is not None:
             if request.ExportSessions:
                 cols = self._feat_mgr.SessionFeatureNames
-                for outerface in request.Outerfaces.values():
+                for outerface in self._feats_out.values():
                     outerface.WriteHeader(header=cols, mode=ExportMode.SESSION)
             else:
                 Logger.Log("Session features not requested, skipping session_features file.", logging.INFO, depth=1)
             if request.ExportPlayers:
                 cols = self._feat_mgr.PlayerFeatureNames
-                for outerface in request.Outerfaces.values():
+                for outerface in self._feats_out.values():
                     outerface.WriteHeader(header=cols, mode=ExportMode.PLAYER)
             else:
                 Logger.Log("Player features not requested, skipping player_features file.", logging.INFO, depth=1)
             if request.ExportPopulation:
                 cols = self._feat_mgr.PopulationFeatureNames
-                for outerface in request.Outerfaces.values():
+                for outerface in self._feats_out.values():
                     outerface.WriteHeader(header=cols, mode=ExportMode.POPULATION)
             else:
                 Logger.Log("Population features not requested, skipping population_features file.", logging.INFO, depth=1)
@@ -370,13 +389,13 @@ class ExportManager:
             if request.ExportRawEvents:
                 Logger.Log(f"Retrieving game Events for slice [{slice_num}/{slice_count}]...", logging.INFO, depth=2)
                 _events = self._event_mgr.GameEvents
-                for outerface in request.Outerfaces.values():
+                for outerface in self._events_out.values():
                     outerface.WriteEvents(events=_events, mode=ExportMode.EVENTS)
         # 2. Output combined raw & detected events, if requested
             if request.ExportProcessedEvents:
                 Logger.Log(f"Retrieving all Events for slice [{slice_num}/{slice_count}]...", logging.INFO, depth=2)
                 _events = self._event_mgr.AllEvents
-                for outerface in request.Outerfaces.values():
+                for outerface in self._events_out.values():
                     outerface.WriteEvents(events=_events, mode=ExportMode.DETECTORS)
             self._event_mgr.ClearLines()
         else:
@@ -386,7 +405,7 @@ class ExportManager:
             if request.ExportSessions:
                 Logger.Log(f"Retrieving game Events for slice [{slice_num}/{slice_count}]...", logging.INFO, depth=2)
                 _sess_feats = FeatureSet(features=self._feat_mgr.SessionFeatures, filters=DatasetFilterCollection())
-                for outerface in request.Outerfaces.values():
+                for outerface in self._feats_out.values():
                     outerface.WriteFeatures(features=_sess_feats, mode=ExportMode.SESSION)
                 self._feat_mgr.ClearSessionLines()
         else:

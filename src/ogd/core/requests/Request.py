@@ -9,10 +9,6 @@ from ogd.core.configs.GameStoreConfig import GameStoreConfig
 from ogd.common.configs.storage.DatasetRepositoryConfig import DatasetRepositoryConfig
 from ogd.common.filters.collections.DatasetFilterCollection import DatasetFilterCollection
 from ogd.common.models.enums.ExportMode import ExportMode
-from ogd.common.storage.interfaces.Interface import Interface
-from ogd.common.storage.interfaces.InterfaceFactory import InterfaceFactory
-from ogd.common.storage.outerfaces.Outerface import Outerface
-from ogd.common.storage.outerfaces.OuterfaceFactory import OuterfaceFactory
 from ogd.common.schemas.datasets.DatasetSchema import DatasetKey
 
 class Request(abc.ABC):
@@ -53,18 +49,9 @@ class Request(abc.ABC):
         self._filters      : DatasetFilterCollection   = filters
         self._generators   : GeneratorCollectionConfig = game_cfg
         self._global_cfg   : CoreConfig                = global_cfg
-        repository         : DatasetRepositoryConfig   = self._toRepository(data_directory=custom_data_directory)
         self._game_stores  : GameStoreConfig           = custom_game_stores or self._global_cfg.GameSourceMap.get(self._game_id, GameStoreConfig.Default())
         self._dataset_key  : DatasetKey                = custom_dataset_key or DatasetKey(game_id=self.GameID, from_date=self._filters.Sequences.Timestamps.Min, to_date=self._filters.Sequences.Timestamps.Max)
-        self._interfaces   : Dict[str, Interface]      = {
-            source.Name : InterfaceFactory.FromConfig(config=source, fail_fast=self._global_cfg.FailFast) \
-            for source in self._game_stores.EventsFrom
-        }
-        self._outerfaces  : Dict[str, Outerface]       = {
-            dest.Name : OuterfaceFactory.FromConfig(config=dest, export_modes=exporter_modes, repository=repository, dataset_id=self._dataset_key) \
-            for dest in (self._game_stores.EventsTo + self._game_stores.FeaturesTo)
-
-        }
+        self._repository   : DatasetRepositoryConfig   = self._toRepository(data_directory=custom_data_directory)
 
     ## String representation of a request. Just gives game id, and date range.
     def __str__(self):
@@ -89,6 +76,21 @@ class Request(abc.ABC):
         return self._generators
 
     @property
+    def DatasetID(self) -> DatasetKey:
+        return self._dataset_key
+
+    @property
+    def Config(self) -> CoreConfig:
+        return self._global_cfg
+
+    @property
+    def GameStores(self) -> GameStoreConfig:
+        return self._game_stores
+
+    @property
+    def ExportModes(self) -> Set[ExportMode]:
+        return self._exports
+    @property
     def ExportRawEvents(self) -> bool:
         return ExportMode.EVENTS in self._exports
     @property
@@ -109,17 +111,11 @@ class Request(abc.ABC):
         return self._filters
 
     @property
-    def Interfaces(self) -> Dict[str, Interface]:
-        return self._interfaces
-
-    @property
-    def Outerfaces(self) -> Dict[str, Outerface]:
-        return self._outerfaces
+    def Repository(self) -> DatasetRepositoryConfig:
+        return self._repository
 
     def RemoveExportMode(self, mode:ExportMode):
         self._exports.discard(mode)
-        for outerface in self.Outerfaces.values():
-            outerface.RemoveExportMode(mode=mode)
 
     @staticmethod
     def _toRepository(data_directory:Optional[DatasetRepositoryConfig | Dict | Path | str]) -> DatasetRepositoryConfig: # pylint: disable=unsupported-binary-operation
