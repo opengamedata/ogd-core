@@ -32,35 +32,27 @@ class GameStoreConfig(Schema):
     _DEFAULT_GAME_ID     : Final[LiteralString] = "UNKNOWN GAME"
     _DEFAULT_EVENTS_FROM : Final[List[DataTableConfig]] = [DataTableConfig(
         name="DefaultEventSource",
-        store_name="DefaultStore",
-        schema_name="DefaultTable",
-        table_location=DatabaseLocationSchema.Default(),
-        store_config=BigQueryConfig.Default(),
-        table_schema=EventTableSchema.Load(schema_name="OPENGAMEDATA_BIGQUERY")
+        store=BigQueryConfig.Default(),
+        table_schema=EventTableSchema.Load(schema_name="OPENGAMEDATA_BIGQUERY"),
+        table_location=DatabaseLocationSchema.Default()
     )]
     _DEFAULT_EVENTS_TO   : Final[List[DataTableConfig]] = [DataTableConfig(
         name="DefaultEventDest",
-        store_name="DefaultStore",
-        schema_name="DefaultTable",
-        table_location=None,
-        store_config=FileStoreConfig.Default(),
-        table_schema=EventTableSchema.Load(schema_name="OGD_EVENT_FILE")
+        store=FileStoreConfig.Default(),
+        table_schema=EventTableSchema.Load(schema_name="OGD_EVENT_FILE"),
+        table_location=None
     )]
     _DEFAULT_FEATS_FROM  : Final[List[DataTableConfig]] = [DataTableConfig(
         name="DefaultFeatSource",
-        store_name="DefaultStore",
-        schema_name="DefaultTable",
-        table_location=DatabaseLocationSchema.Default(),
-        store_config=BigQueryConfig.Default(),
-        table_schema=FeatureTableSchema.Load(schema_name="OPENGAMEDATA_BIGQUERY")
+        store=BigQueryConfig.Default(),
+        table_schema=FeatureTableSchema.Load(schema_name="OPENGAMEDATA_BIGQUERY"),
+        table_location=DatabaseLocationSchema.Default()
     )]
     _DEFAULT_FEATS_TO    : Final[List[DataTableConfig]] = [DataTableConfig(
         name="DefaultFeatDest",
-        store_name="DefaultStore",
-        schema_name="DefaultTable",
-        table_location=None,
-        store_config=DatasetRepositoryConfig.Default(),
-        table_schema=FeatureTableSchema.Load(schema_name="OGD_FEATURE_FILE")
+        store=DatasetRepositoryConfig.Default(),
+        table_schema=FeatureTableSchema.Load(schema_name="OGD_FEATURE_FILE"),
+        table_location=None
     )]
 
     # *** BUILT-INS & PROPERTIES ***
