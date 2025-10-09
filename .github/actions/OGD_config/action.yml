@@ -53,10 +53,10 @@ runs:
       run: sed -i 's/hostname/${{inputs.sql_host}}/g' config/config.py
       shell: bash
     - name: Set SSH username
-      run: sed -i 's/WCER AD User/${{inputs.ssh_user}}/g' config/config.py
+      run: sed -i 's/Remote User/${{inputs.ssh_user}}/g' config/config.py
       shell: bash
     - name: Set SSH password
-      run: sed -i 's/WCER AD Password/${{inputs.ssh_pass}}/g' config/config.py
+      run: sed -i 's/Remote Password/${{inputs.ssh_pass}}/g' config/config.py
       shell: bash
     - name: Set Logger level
       run: sed -i 's/INFO/${{inputs.log_level}}/g' config/config.py

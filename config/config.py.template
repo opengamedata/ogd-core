@@ -44,8 +44,8 @@ settings = {
             "DB_USER" : "username",
             "DB_PW"   : "password",
             "SSH_HOST": "hostname",
-            "SSH_USER": "WCER AD User",
-            "SSH_PASS": "WCER AD Password",
+            "SSH_USER": "Remote User",
+            "SSH_PASS": "Remote Password",
             "SSH_PORT": 22
         },
         "LOGGER": {
@@ -55,8 +55,8 @@ settings = {
             "DB_USER" : "username",
             "DB_PW"   : "password",
             "SSH_HOST": "hostname",
-            "SSH_USER": "WCER AD User",
-            "SSH_PASS": "WCER AD Password",
+            "SSH_USER": "Remote User",
+            "SSH_PASS": "Remote Password",
             "SSH_PORT": 22
         },
         "LOCAL_FILE": {
