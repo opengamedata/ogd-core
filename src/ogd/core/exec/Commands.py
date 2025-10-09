@@ -164,11 +164,10 @@ class OGDCommands:
             # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
             game_source_mapping[game_id].EventsFrom = [
                 DataTableConfig(name="FILE SOURCE",
-                    store_name=None,
-                    schema_name=None,
-                    table_location=None,
-                    store_config=FileStoreConfig(name="SourceFile", location=from_source, file_credential=None),
-                    table_schema=EventTableSchema.Load(schema_name="OGD_EVENT_FILE") )
+                    store=FileStoreConfig(name="SourceFile", location=from_source, file_credential=None),
+                    table_schema=EventTableSchema.Load(schema_name="OGD_EVENT_FILE"),
+                    table_location=None
+                )
             ]
             dataset_id = DatasetKey(game_id=game_id, full_file=from_source)
     # 3. Whether we use a file for source or not, we then consider any specification of a player ID, session ID, or date range.
@@ -209,25 +208,21 @@ class OGDCommands:
     # 3. set up the outerface, based on the range and dataset_id.
         game_source_mapping[game_id].EventsTo = [
             DataTableConfig(name="EventDestination",
-                                store_name=None,
-                                schema_name=None,
-                                table_location=None,
-                                store_config=FileStoreConfig(name="OutputFile", location=destination / game_id / f"{dataset_id}.tsv", file_credential=None),
-                                table_schema=EventTableSchema.Load(schema_name="OGD_EVENT_FILE")
+                store=FileStoreConfig(name="OutputFile", location=destination / game_id / f"{dataset_id}.tsv", file_credential=None),
+                table_schema=EventTableSchema.Load(schema_name="OGD_EVENT_FILE"),
+                table_location=None
             )
         ]
         game_source_mapping[game_id].FeaturesTo = [
             DataTableConfig(name="FeatDestination",
-                                store_name=None,
-                                schema_name=None,
-                                table_location=None,
-                                store_config=FileStoreConfig(name="OutputFile", location=destination / game_id / f"{dataset_id}_features.tsv", file_credential=None),
-                                table_schema=FeatureTableSchema.Load(schema_name="OGD_FEATURE_FILE")
+                store=FileStoreConfig(name="OutputFile", location=destination / game_id / f"{dataset_id}_features.tsv", file_credential=None),
+                table_schema=FeatureTableSchema.Load(schema_name="OGD_FEATURE_FILE"),
+                table_location=None
             )
         ]
         # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
         if config.DebugLevel == "DEBUG":
-            cfg = DataTableConfig(name="DEBUG", store_name="Debug", schema_name=None, table_location=None)
+            cfg = DataTableConfig(name="DEBUG", store="Debug", table_schema=None, table_location=None)
             game_source_mapping[game_id].EventsTo.append(cfg)
             game_source_mapping[game_id].FeaturesTo.append(cfg)
 
