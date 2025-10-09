@@ -108,12 +108,12 @@ class OGDGenerators:
                 _from = datetime.combine(date=start_date, time=time())
             # get ending point
             if end_date is None:
-                _to = _from
+                _to = _from.replace(hour=23, minute=59, second=59)
             elif isinstance(end_date, str):
                 _to   = datetime.strptime(end_date, "%m/%d/%Y") if end_date is not None else _from
                 _to = _to.replace(hour=23, minute=59, second=59)
             else:
-                _to = datetime.combine(date=end_date, time=time())
+                _to = datetime.combine(date=end_date, time=time(hour=23, minute=59, second=59))
             # check that we didn't try to stop before we started
             if _from > _to:
                 raise ValueError(f"Invalid date range, start date of {_from} is after end date of {_to}!")
