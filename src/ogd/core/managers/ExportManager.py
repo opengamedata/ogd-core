@@ -115,6 +115,57 @@ class ExportManager:
 
     # *** PRIVATE STATICS ***
 
+    @staticmethod
+    def _loadLoaderClass(game_id:str) -> Optional[Type[GeneratorLoader]]:
+        _loader_class: Optional[Type[GeneratorLoader]] = None
+        match game_id:
+            case "AQUALAB":
+                from ogd.games.AQUALAB.AqualabLoader import AqualabLoader
+                _loader_class = AqualabLoader
+            case "CRYSTAL":
+                from ogd.games.CRYSTAL.CrystalLoader import CrystalLoader
+                _loader_class = CrystalLoader
+            case "ICECUBE":
+                from ogd.games.ICECUBE.IcecubeLoader import IcecubeLoader
+                _loader_class = IcecubeLoader
+            case "JOURNALISM":
+                from ogd.games.JOURNALISM.JournalismLoader import JournalismLoader
+                _loader_class = JournalismLoader
+            case "JOWILDER":
+                from ogd.games.JOWILDER.JowilderLoader import JowilderLoader
+                _loader_class = JowilderLoader
+            case "LAKELAND":
+                from ogd.games.LAKELAND.LakelandLoader import LakelandLoader
+                _loader_class = LakelandLoader
+            case "MAGNET":
+                from ogd.games.MAGNET.MagnetLoader import MagnetLoader
+                _loader_class = MagnetLoader
+            case "SHADOWSPECT":
+                from ogd.games.SHADOWSPECT.ShadowspectLoader import ShadowspectLoader
+                _loader_class = ShadowspectLoader
+            case "SHIPWRECKS":
+                from ogd.games.SHIPWRECKS.ShipwrecksLoader import ShipwrecksLoader
+                _loader_class = ShipwrecksLoader
+            case "THERMOLAB":
+                from ogd.games.THERMOLAB.ThermoLabLoader import ThermoLabLoader
+                _loader_class = ThermoLabLoader
+            case "WAVES":
+                from ogd.games.WAVES.WaveLoader import WaveLoader
+                _loader_class = WaveLoader
+            case "PENGUINS":
+                from ogd.games.PENGUINS.PenguinsLoader import PenguinsLoader
+                _loader_class = PenguinsLoader
+            case "BLOOM":
+                from ogd.games.BLOOM.BloomLoader import BloomLoader
+                _loader_class = BloomLoader
+            case _:
+                if game_id in {"BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MASHOPOLIS", "TRANSFORMATION_QUEST", "WEATHER_STATION", "WIND"}:
+                    # all games with data but no extractor.
+                    pass
+                else:
+                    Logger.Log(f"ExportManager Got an unrecognized game ID ({game_id})! Attempting export anyway...", logging.WARNING)
+        return _loader_class
+
     # *** PRIVATE METHODS ***
 
     def _receiveEventTrigger(self, event:Event) -> None:
@@ -227,57 +278,6 @@ class ExportManager:
         time_delta = datetime.now() - start
         Logger.Log(f"Output time for population: {time_delta}", logging.INFO, depth=2)
 
-    @staticmethod
-    def _loadLoaderClass(game_id:str) -> Optional[Type[GeneratorLoader]]:
-        _loader_class: Optional[Type[GeneratorLoader]] = None
-        match game_id:
-            case "AQUALAB":
-                from ogd.games.AQUALAB.AqualabLoader import AqualabLoader
-                _loader_class = AqualabLoader
-            case "CRYSTAL":
-                from ogd.games.CRYSTAL.CrystalLoader import CrystalLoader
-                _loader_class = CrystalLoader
-            case "ICECUBE":
-                from ogd.games.ICECUBE.IcecubeLoader import IcecubeLoader
-                _loader_class = IcecubeLoader
-            case "JOURNALISM":
-                from ogd.games.JOURNALISM.JournalismLoader import JournalismLoader
-                _loader_class = JournalismLoader
-            case "JOWILDER":
-                from ogd.games.JOWILDER.JowilderLoader import JowilderLoader
-                _loader_class = JowilderLoader
-            case "LAKELAND":
-                from ogd.games.LAKELAND.LakelandLoader import LakelandLoader
-                _loader_class = LakelandLoader
-            case "MAGNET":
-                from ogd.games.MAGNET.MagnetLoader import MagnetLoader
-                _loader_class = MagnetLoader
-            case "SHADOWSPECT":
-                from ogd.games.SHADOWSPECT.ShadowspectLoader import ShadowspectLoader
-                _loader_class = ShadowspectLoader
-            case "SHIPWRECKS":
-                from ogd.games.SHIPWRECKS.ShipwrecksLoader import ShipwrecksLoader
-                _loader_class = ShipwrecksLoader
-            case "THERMOLAB":
-                from ogd.games.THERMOLAB.ThermoLabLoader import ThermoLabLoader
-                _loader_class = ThermoLabLoader
-            case "WAVES":
-                from ogd.games.WAVES.WaveLoader import WaveLoader
-                _loader_class = WaveLoader
-            case "PENGUINS":
-                from ogd.games.PENGUINS.PenguinsLoader import PenguinsLoader
-                _loader_class = PenguinsLoader
-            case "BLOOM":
-                from ogd.games.BLOOM.BloomLoader import BloomLoader
-                _loader_class = BloomLoader
-            case _:
-                if game_id in {"BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MASHOPOLIS", "TRANSFORMATION_QUEST", "WEATHER_STATION", "WIND"}:
-                    # all games with data but no extractor.
-                    pass
-                else:
-                    Logger.Log(f"ExportManager Got an unrecognized game ID ({game_id})! Attempting export anyway...", logging.WARNING)
-        return _loader_class
-
     def _loadSlice(self, request:Request, next_slice_ids:List[str], slice_num:int, slice_count:int) -> Optional[EventSet]:
         ret_val : Optional[EventSet]
 
@@ -293,8 +293,8 @@ class ExportManager:
             version_filters=request.Filters.Versions,
             event_filters=request.Filters.Events
         )
-        # HACK : we're just using the first interface in dict, which we need to do more correctly down the road.
-        ret_val = list(request.Interfaces.values())[0].GetEventCollection(filters=slice_filters, fallbacks={"app_id":request.GameID})
+        # HACK : we're just loading data from the first interface in dict, and ignoring others. We need to do more correctly down the road.
+        ret_val = list(self._interfaces.values())[0].GetEventCollection(filters=slice_filters, fallbacks={"app_id":request.GameID})
 
         time_delta = datetime.now() - start
         if ret_val is not None:
