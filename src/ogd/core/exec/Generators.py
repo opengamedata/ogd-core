@@ -54,7 +54,7 @@ class OGDGenerators:
     # retrieve/calculate date range.
     @staticmethod
     # pylint: disable-next=unsupported-binary-operation
-    def GenDateFilter(game:str, monthly:bool, start_date:str|date, end_date:Optional[str|date]) -> RangeFilter:
+    def GenDateFilter(game:str, monthly:bool, start_date:str|date, end_date:Optional[str|date]) -> RangeFilter[datetime]:
         """Use a pair of date strings to create a RangeFilter for use with an interface.
 
         Also allows the range to be specified as "monthly,"
@@ -118,4 +118,4 @@ class OGDGenerators:
             if _from > _to:
                 raise ValueError(f"Invalid date range, start date of {_from} is after end date of {_to}!")
             Logger.Log(f"Exporting from {str(_from)} to {str(_to)} of data for {game}...", logging.INFO)
-        return RangeFilter(mode=FilterMode.INCLUDE, minimum=_from, maximum=_to)
+        return RangeFilter[datetime](mode=FilterMode.INCLUDE, minimum=_from, maximum=_to)
