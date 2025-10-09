@@ -277,6 +277,12 @@ class ExportManager:
             Logger.Log("Skipping feature output for post-process, no FeatureManager exists!", logging.DEBUG, depth=3)
         time_delta = datetime.now() - start
         Logger.Log(f"Output time for population: {time_delta}", logging.INFO, depth=2)
+        for interface in self._interfaces.values():
+            interface.Connector.Close()
+        for outerface in self._events_out.values():
+            outerface.Connector.Close()
+        for outerface in self._feats_out.values():
+            outerface.Connector.Close()
 
     def _loadSlice(self, request:Request, next_slice_ids:List[str], slice_num:int, slice_count:int) -> Optional[EventSet]:
         ret_val : Optional[EventSet]
