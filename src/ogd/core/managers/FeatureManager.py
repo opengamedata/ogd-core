@@ -60,8 +60,9 @@ class FeatureManager:
     def FeatureLines(self) -> List[ExportRow]:
         start = datetime.now()
         self._try_update()
+        ret_val = self._latest_features.FeatureLines(schema=None)
         Logger.Log(f"Time to retrieve all feature lines: {datetime.now() - start}", logging.INFO, depth=2)
-        return self._latest_features.FeatureLines
+        return ret_val
 
     @property
     def PopulationFeatureNames(self) -> List[str]:
@@ -77,7 +78,7 @@ class FeatureManager:
     def PopulationLines(self) -> List[ExportRow]:
         start = datetime.now()
         self._try_update()
-        ret_val = self._latest_features.PopulationLines
+        ret_val = self._latest_features.PopulationLines(schema=None)
         Logger.Log(f"Time to retrieve Population lines: {datetime.now() - start} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val
 
@@ -95,7 +96,7 @@ class FeatureManager:
     def PlayerLines(self) -> List[ExportRow]:
         start   : datetime = datetime.now()
         self._try_update()
-        ret_val = self._latest_features.PlayerLines
+        ret_val = self._latest_features.PlayerLines(schema=None)
         Logger.Log(f"Time to retrieve Player lines: {datetime.now() - start} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val
 
@@ -114,7 +115,7 @@ class FeatureManager:
     def SessionLines(self) -> List[ExportRow]:
         start   : datetime = datetime.now()
         self._try_update()
-        ret_val = self._latest_features.SessionLines
+        ret_val = self._latest_features.SessionLines(schema=None)
         time_delta = datetime.now() - start
         Logger.Log(f"Time to retrieve Session lines: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val
