@@ -122,7 +122,7 @@ class OGDCommands:
         :return: _description_
         :rtype: bool
         """
-        success : bool = False
+        ret_val : bool = False
 
         # pull vars from args, for autocomplete and type-hinting purposes
         game_id         : str            = args.game
@@ -235,17 +235,16 @@ class OGDCommands:
             custom_dataset_key=dataset_id,
             custom_game_stores=game_source_mapping[game_id],
             custom_data_directory=repository)
-        # HACK : another place where we're just hardcoded to only use the first interface in the Interfaces collection
-        if list(req.Interfaces.values())[0].Connector.IsOpen:
-            export_manager : ExportManager = ExportManager(config=config)
-            result         : RequestResult = export_manager.ExecuteRequest(request=req)
-            success = result.Status == ResultStatus.SUCCESS
-            level = logging.INFO if success else logging.ERROR
-            Logger.Log(message=result.Message, level=level)
-            Logger.Log(f"Total data request execution time: {result.Duration}", logging.INFO)
-            # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
-                            # {'req':req, 'feature_exporter':feature_exporter}, {})
-        return success
+
+        export_manager : ExportManager = ExportManager(config=config)
+        result         : RequestResult = export_manager.ExecuteRequest(request=req)
+        ret_val = result.Successful
+
+        Logger.Log(message=result.Message, level=logging.INFO if result.Successful else logging.ERROR)
+        Logger.Log(f"Total data request execution time: {result.Duration}", logging.INFO)
+        # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
+                        # {'req':req, 'feature_exporter':feature_exporter}, {})
+        return ret_val
 
     # *** PUBLIC METHODS ***
 

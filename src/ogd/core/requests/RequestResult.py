@@ -51,6 +51,10 @@ class RequestResult:
         return self._status
 
     @property
+    def Successful(self) -> bool:
+        return self._status == ResultStatus.SUCCESS
+
+    @property
     def Message(self) -> str:
         return self._message
 
