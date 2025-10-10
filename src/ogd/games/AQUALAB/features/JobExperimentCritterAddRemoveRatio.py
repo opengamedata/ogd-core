@@ -37,7 +37,7 @@ class JobExperimentCritterAddRemoveRatio(PerJobFeature):
         
 
 
-    def _updateFromFeaturef, feature:FeatFeature
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

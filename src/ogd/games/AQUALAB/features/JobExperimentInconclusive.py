@@ -28,7 +28,7 @@ class JobExperimentInconclusive(PerJobFeature):
         if(event.EventData["node_id"]["string_value"] =="partner.talk.experiment.behavior.idle.nothingLeft.2"):
             self._inconclusive = 1
 #partner.talk.experiment.behavior.idle.nothingLeft.2
-    def _updateFromFeaturef, feature:FeatFeature
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

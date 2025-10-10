@@ -33,12 +33,8 @@ class ModelingInteracts(PerJobFeature):
 
     def _updateFromEvent(self, event:Event) -> None:
         self._count += 1
-        
 
-
-        
-
-    def _updateFromFeaturef, feature:FeatFeature
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
