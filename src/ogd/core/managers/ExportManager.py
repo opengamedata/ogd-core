@@ -380,7 +380,7 @@ class ExportManager:
 
     def _outputSlice(self, request:Request, slice_num:int, slice_count:int):
         """
-        Output all genearted data for a slice's-worth of raw data
+        Output all generated data for a slice's-worth of raw data
 
         TODO : Find better solution that does not involve discarding session features, which likely messes up some second-order features.
         :param request: _description_
