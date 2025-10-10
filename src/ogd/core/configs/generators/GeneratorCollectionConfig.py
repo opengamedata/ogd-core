@@ -1,10 +1,12 @@
 # import standard libraries
+import inspect
 import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Self, Set
 # 3rd-party imports
 from deprecated import deprecated
 # import local files
+from ogd import games
 from ogd.common.configs.Config import Config
 from ogd.core.configs.generators.DetectorMapConfig import DetectorMapConfig
 from ogd.core.configs.generators.ExtractorMapConfig import ExtractorMapConfig
@@ -35,7 +37,7 @@ class GeneratorCollectionConfig(Config):
                                             iterated_extractors=_DEFAULT_XTOR_ITERATED, aggregate_extractors=_DEFAULT_XTOR_AGGREGATES, other_elements={})
     _DEFAULT_LEVEL_RANGE = None
     _DEFAULT_OTHER_RANGES = {}
-    _DEFAULT_GAME_FOLDER = Path("./") / "ogd" / "games"
+    _DEFAULT_GAME_FOLDER = Path(games.__file__) if Path(games.__file__).is_dir() else Path(games.__file__).parent
     @property
     def _DEFAULT_LEGACY_CONFIG(self) -> AggregateConfig:
         return AggregateConfig.FromDict("legacy", {"type":"legacy", "return_type":None, "description":"", "enabled":True})
