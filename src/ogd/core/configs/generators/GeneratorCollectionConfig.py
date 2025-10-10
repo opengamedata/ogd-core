@@ -306,7 +306,7 @@ class GeneratorCollectionConfig(Config):
         :rtype: GeneratorCollectionConfig
         """
     # 1. define local vars
-        _game_id      : str              = name
+        _game_id      : str              = name.split(".")[0]
         _level_range  : Optional[range]  = cls._parseLevelRange(unparsed_elements=unparsed_elements)
         _other_ranges : Dict[str, range] = cls._parseOtherRanges(unparsed_elements=unparsed_elements)
 
