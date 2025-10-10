@@ -7,7 +7,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 
 """
@@ -37,7 +37,7 @@ class JobExperimentCritterAddRemoveRatio(PerJobFeature):
         
 
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeaturef, feature:FeatFeature
         return
 
     def _getFeatureValues(self) -> List[Any]:

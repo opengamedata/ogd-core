@@ -7,7 +7,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class JobExperimentInconclusive(PerJobFeature):
 
@@ -28,7 +28,7 @@ class JobExperimentInconclusive(PerJobFeature):
         if(event.EventData["node_id"]["string_value"] =="partner.talk.experiment.behavior.idle.nothingLeft.2"):
             self._inconclusive = 1
 #partner.talk.experiment.behavior.idle.nothingLeft.2
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeaturef, feature:FeatFeature
         return
 
     def _getFeatureValues(self) -> List[Any]:

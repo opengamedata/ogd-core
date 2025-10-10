@@ -6,10 +6,10 @@ from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 # import locals
 from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
-from extractors.features.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 
 class ModelingInteracts(PerJobFeature):
@@ -38,7 +38,7 @@ class ModelingInteracts(PerJobFeature):
 
         
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeaturef, feature:FeatFeature
         return
 
     def _getFeatureValues(self) -> List[Any]:
