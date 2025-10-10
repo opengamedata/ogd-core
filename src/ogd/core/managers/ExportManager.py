@@ -280,9 +280,11 @@ class ExportManager:
         for interface in self._interfaces.values():
             interface.Connector.Close()
         for outerface in self._events_out.values():
-            outerface.Connector.Close()
+            if outerface.Connector:
+                outerface.Connector.Close()
         for outerface in self._feats_out.values():
-            outerface.Connector.Close()
+            if outerface.Connector:
+                outerface.Connector.Close()
 
     def _loadSlice(self, request:Request, next_slice_ids:List[str], slice_num:int, slice_count:int) -> Optional[EventSet]:
         ret_val : Optional[EventSet]
