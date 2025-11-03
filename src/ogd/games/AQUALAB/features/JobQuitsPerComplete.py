@@ -37,7 +37,7 @@ class JobQuitsPerComplete(Feature):
             if feature.Name == "TotalJobQuits":
                 self._total_job_quits = feature.FeatureValues[0]
             elif feature.Name == "JobsCompleted":
-                self._jobs_completed = feature.FeatureValues[0]
+                self._jobs_completed = feature.FeatureValues[1]
 
     def _getFeatureValues(self) -> List[Any]:
         if self._jobs_completed != 0:
