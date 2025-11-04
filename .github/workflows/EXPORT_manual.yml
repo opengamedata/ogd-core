@@ -1,0 +1,219 @@
+# Workflow to run monthly exports of data.
+name: Manual Export
+run-name: ${{ format('{0} - {1}', github.workflow, inputs.game) }}
+on:
+  workflow_dispatch:
+    inputs:
+      game:
+        description: "Game: the game(s) to be exported, comma-separated"
+        required: true
+        default: "['BACTERIA']"
+      with_events:
+        type: boolean
+        description: "Include Events: if true, export includes event data. Else, event data is skipped"
+        required: true
+        default: true
+      with_features:
+        type: boolean
+        description: "Include Features: if true, export includes feature data. Else, feature data is skipped"
+        required: true
+        default: true
+      monthly:
+        type: boolean
+        description: "Monthly: if true, use month/year. Else, use start and end dates"
+        required: true
+        default: true
+      month_year:
+        description: "Month/Year: the month(s) and year(s) to export (comma-separated). Only used if 'monthly' is true."
+        required: false
+        default: "['01/2025']"
+      start_date:
+        description: "Start Date: the start date for the export"
+        required: false
+        default: "01/01/2025"
+      end_date:
+        description: "End Date: the end date for the export"
+        required: false
+        default: "01/01/2025"
+      upload_to_ogd:
+        type: boolean
+        description: "Upload to OGD: if true, the exported files will be uploaded to the Open Game Data website, else they will be uploaded to GitHub as an artifact of the GH Action."
+        required: true
+        default: false
+      slice_size:
+        description: "Slice Size: the size of slices to use during export"
+        required: false
+        default: "1000"
+      log_level:
+        type: choice
+        description: "Log Level: what level of debugging output to log"
+        required: true
+        default: "INFO"
+        options:
+        - "DEBUG"
+        - "INFO"
+        - "WARNING"
+        - "ERROR"
+      # use_alternate_data_source:
+      #   type: boolean
+      #   description: "Use Alternate Data Source: if true, the data will be exported from the database configured with the items below."
+      #   required: true
+      #   default: false
+      # source_id:
+      #   type: choice
+      #   description: "Data Source ID: which available data source to use"
+      #   required: false
+      #   default: "OPENGAMEDATA_BQ"
+      #   options:
+      #   - "AQUALAB_BQ"
+      #   - "MASHOPOLIST_BQ"
+      #   - "SHADOWSPECT_BQ"
+      #   - "SHIPWRECKS_BQ"
+      #   - "OPENGAMEDATA_BQ"
+      #   - "OPENGAMEDATA_MYSQL"
+      #   - "LOGGER"
+      # database_name:
+      #   description: "Database Name: the name of the database within the data source, containing your game's data."
+      #   required: false
+      #   default: "aqualab_database"
+      # table_name:
+      #   description: "Table Name: the name of the table within the database, containing your game's data."
+      #   required: false
+      #   default: "daily"
+      # schema_id:
+      #   type: choice
+      #   description: "Table Schema ID: which available table schema your data source uses."
+      #   required: false
+      #   default: "OPENGAMEDATA_BIGQUERY"
+      #   options:
+      #   - "OPENGAMEDATA_BIGQUERY"
+      #   - "BIGQUERY"
+      #   - "FILEDDAY_MYSQL"
+      #   - "FIREBASE"
+      #   - "MASHOPOLIS_MYSQL"
+      #   - "OGD_EVENT_FILE"
+      #   - "OPENGAMEDATA_MYSQL"
+      #   - "SHIPWRECKS"
+
+jobs:
+  export_data:
+    name: Export Game
+    runs-on: ubuntu-22.04
+    timeout-minutes: 1440
+    strategy:
+      matrix:
+        game: ${{ FromJson(github.event.inputs.game) }}
+        month_year: ${{ FromJson(github.event.inputs.month_year) }}
+      fail-fast: false # we don't want to cancel just because one game fails.
+      max-parallel: 3
+
+    steps:
+
+    # 1. Local checkout & config
+    - uses: actions/checkout@v4
+    - name: Get Dependencies
+      uses: opengamedata/actions-setup-ogd-py-dependencies@v1.2
+      with:
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
+
+    # 2. Configure cloud & local environments
+    - name: Set up Google Cloud
+      uses: ./.github/actions/gCloud_setup
+      with:
+        game: ${{ matrix.game }}
+        ogd_id:  ${{ secrets.OGD_BQ_PROJECT_ID }}
+        ogd_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
+        mashopolis_id:  ${{ secrets.BQ_MASHOPOLIS_PROJECT_ID }}
+        mashopolis_key: ${{ secrets.BQ_MASHOPOLIS_JSON }}
+        shadowspect_id:  ${{ secrets.BQ_SHADOWSPECT_PROJECT_ID }}
+        shadowspect_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
+        shipwrecks_id:  ${{ secrets.BQ_SHIPWRECKS_PROJECT_ID }}
+        shipwrecks_key: ${{ secrets.BQ_SHIPWRECKS_JSON }}
+    - name: Set up Config File
+      uses: ./.github/actions/OGD_config
+      with:
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+        ssh_host: ${{vars.FD_STORE_HOST}}
+        ssh_user: ${{secrets.VPN_USER}}
+        ssh_pass: ${{secrets.VPN_PASS}}
+        slice_size: ${{ github.event.inputs.slice_size }}
+        log_level: ${{ github.event.inputs.log_level }}
+    # - name: Set up Alternate Data Source
+    #   if: github.event.inputs.use_alternate_data_source == 'true'
+    #   uses: ./.github/actions/set_custom_db
+    #   with:
+    #     game_id:       ${{ matrix.game }}
+    #     source_id:     ${{ github.event.inputs.source_id }}
+    #     database_name: ${{ github.event.inputs.database_name }}
+    #     table_name:    ${{ github.event.inputs.table_name }}
+    #     schema_id:     ${{ github.event.inputs.schema_id }}
+
+    # 3. Execute process
+    - name: Do Export of Month
+      if: github.event.inputs.monthly == 'true'
+      uses: ./.github/actions/export_custom_month
+      with:
+        game: ${{matrix.game}}
+        with_events: ${{ github.event.inputs.with_events }}
+        with_features: ${{ github.event.inputs.with_features }}
+        month_year: ${{matrix.month_year}}
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
+    - name: Do Export of Range
+      if: github.event.inputs.monthly == 'false'
+      uses: ./.github/actions/export_custom
+      with:
+        game: ${{matrix.game}}
+        with_events: ${{ github.event.inputs.with_events }}
+        with_features: ${{ github.event.inputs.with_features }}
+        start_date: ${{github.event.inputs.start_date}}
+        end_date: ${{github.event.inputs.end_date}}
+        python_version: ${{ vars.OGD_PYTHON_VERSION }}
+      # uses: ./.github/actions/export_custom
+      # with:
+      #   game: ${{matrix.game}}
+      #   start_date: ${{github.event.inputs.start_date}}
+      #   end_date: ${{github.event.inputs.end_date}}
+      #   events_only: false
+
+
+    # 4. Cleanup & complete
+    # If uploading file to server, need to get VPN connection in this case.
+    - name: Connect to VPN
+      if: github.event.inputs.upload_to_ogd == 'true'
+      uses: opengamedata/actions-openconnect-vpn@v1.1
+      with:
+        username: ${{ secrets.VPN_USER }}
+        password: ${{ secrets.VPN_PASS }}
+        endpoint: "soe.vpn.wisc.edu"
+    - name: Upload files to OpenGameData Website
+      if: github.event.inputs.upload_to_ogd == 'true'
+      uses: ./.github/actions/upload_export
+      with:
+        game: ${{ matrix.game }}
+        host: ${{ vars.FD_WEB_HOST }}
+        remote_user: ${{ secrets.VPN_USER }}
+        remote_key: ${{ secrets.VPN_KEY }}
+        source_path: ./data/${{ matrix.game }}
+        remote_data_path: "/var/www/opengamedata/data"
+    - name: Upload data as artifact
+      if: github.event.inputs.upload_to_ogd == 'false'
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{matrix.game}}_export_data
+        path: ./data/${{matrix.game}}/*.zip
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: log_data
+        path: ./*.log
+  
+  trigger_reindex:
+    name: Trigger File Reindex
+    if: github.event.inputs.upload_to_ogd == 'true'
+    needs: export_data
+    uses: ./.github/workflows/REINDEX_fileserver.yml
+    secrets: inherit
+    with:
+      FILE_SERVER: ${{ vars.FD_WEB_HOST }}
+      data_path: "/var/www/opengamedata/data"

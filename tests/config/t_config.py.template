@@ -1,0 +1,9 @@
+settings = {
+    "VERBOSE" : False,
+    "ENABLED" : {
+        "CONFIG":True,
+        "GAMES":True,
+    },
+    "REMOTE_ADDRESS" : "address_placeholder"
+}
+    

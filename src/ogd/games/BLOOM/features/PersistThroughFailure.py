@@ -10,6 +10,7 @@ class PersistThroughFailure(Feature):
         super().__init__(params=params)
         self.failed: bool = False
         self.persisted: int = 0
+        self.ever_failed: bool = False
 
     # Implement abstract functions
     @classmethod
@@ -17,7 +18,7 @@ class PersistThroughFailure(Feature):
         # List of player action events + lose_game for failure tracking
         return [
             "game_start", "select_policy_card", "click_build", 
-            "click_destroy", "click_undo", "click_execute_build", 
+            "click_destroy", "click_undo", "execute_build_queue", 
             "click_confirm_destroy", "lose_game"
         ]
 
@@ -29,9 +30,10 @@ class PersistThroughFailure(Feature):
         event_type = event.EventName
         if event_type == "lose_game":
             self.failed = True
+            self.ever_failed = True
         elif self.failed and event_type in [
             "game_start", "select_policy_card", "click_build", 
-            "click_destroy", "click_undo", "click_execute_build", 
+            "click_destroy", "click_undo", "execute_build_queue", 
             "click_confirm_destroy"
         ]:
             self.persisted += 1
@@ -41,9 +43,12 @@ class PersistThroughFailure(Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
+        if not self.ever_failed:
+            return [None]
         return [self.persisted > 0]
 
     # Subfeature "count"
+    # TODO : This isn't how subfeatures work, need to fix this.
     def _getSubfeatureValues(self) -> Dict[str, Any]:
         return {"count": self.persisted}
 

@@ -9,7 +9,10 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 
 class EchoRoomChange(Detector):
-    """Template file to serve as a guide for creating custom Feature subclasses for games.
+    """Simple working example of a detector for Aqualab.
+
+    Not intended for "real" usage.
+    Instead, use as a simple example for reviewing how to write event detectors.
 
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
@@ -25,7 +28,7 @@ class EchoRoomChange(Detector):
         :return: _description_
         :rtype: List[str]
         """
-        return ["room_changed"] # >>> fill in names of events this Feature should use for extraction. <<<
+        return ["room_changed"]
 
     def _updateFromEvent(self, event:Event) -> None:
         """_summary_
@@ -37,11 +40,7 @@ class EchoRoomChange(Detector):
         return
 
     def _trigger_condition(self) -> bool:
-        if self._found:
-            self._found = False
-            return True
-        else:
-            return False
+        return self._found
 
     def _trigger_event(self) -> DetectorEvent:
         """_summary_
@@ -49,5 +48,8 @@ class EchoRoomChange(Detector):
         :return: _description_
         :rtype: List[Any]
         """
+        # 1. Create Event
         ret_val : DetectorEvent = self.GenerateEvent(event_name="EchoRoomChange", event_data={})
+        # 2. Cleanup
+        self._found = False
         return ret_val

@@ -1,0 +1,82 @@
+name: "Setup Google Cloud Access"
+author: Luke Swanson
+description: "Given a game and a date range, this action will export last week's data for that game."
+branding:
+  icon: 'arrow-left'
+  color: 'orange'
+inputs:
+  game:
+   description: "The game with data to export."
+   required: true
+   default: 'AQUALAB'
+  ogd_id:
+   description: "The name of the OGD BQ project."
+   required: true
+  ogd_key:
+   description: "The access key of the OGD BQ project."
+   required: true
+  mashopolis_id:
+   description: "The name of the Mashopolis BQ project."
+   required: false
+   default: "UNKNOWN MASHOPOLIS BQ PROJECT"
+  mashopolis_key:
+   description: "The access key of the Mashopolis BQ project."
+   required: false
+   default: "UNKNOWN MASHOPOLIS BQ KEY"
+  shadowspect_id:
+   description: "The name of the Shadowspect BQ project."
+   required: false
+   default: "UNKNOWN SHADOWSPECT BQ PROJECT"
+  shadowspect_key:
+   description: "The access key of the Shadowspect BQ project."
+   required: false
+   default: "UNKNOWN SHADOWSPECT BQ KEY"
+  shipwrecks_id:
+   description: "The name of the Shipwrecks BQ project."
+   required: false
+   default: "UNKNOWN SHIPWRECKS BQ PROJECT"
+  shipwrecks_key:
+   description: "The access key of the Shipwrecks BQ project."
+   required: false
+   default: "UNKNOWN SHIPWRECKS BQ KEY"
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Google Cloud SDK for OGD
+      uses: google-github-actions/auth@v2
+      with:
+        project_id: ${{ inputs.ogd_id }}
+        credentials_json: ${{ inputs.ogd_key }}
+        # export_default_credentials: true
+    # - if: ${{ inputs.source_id == 'AQUALAB_BQ' }}
+    #   name: Set up Cloud SDK for Aqualab
+    #   uses: google-github-actions/setup-gcloud@v0
+    #   with:
+    #     project_id: ${{ secrets.BQ_AQUALAB_PROJECT_ID }}
+    #     service_account_key: ${{ secrets.BQ_AQUALAB_JSON }}
+    #     export_default_credentials: true
+    - if: ${{ inputs.game == 'MASHOPOLIS' }}
+      name: Set up Google Cloud SDK for Mashopolis
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: ${{ inputs.mashopolis_id }}
+        service_account_key: ${{ inputs.mashopolis_key }}
+        export_default_credentials: true
+    - if: ${{ inputs.game == 'SHADOWSPECT' }}
+      name: Set up Google Cloud SDK for Shadowspect
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: ${{ inputs.shadowspect_id }}
+        service_account_key: ${{ inputs.shadowspect_key }}
+        export_default_credentials: true
+    - if: ${{ inputs.game == 'SHIPWRECKS' }}
+      name: Set up Google Cloud SDK for Shipwrecks
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: ${{ inputs.shipwrecks_id }}
+        service_account_key: ${{ inputs.shiprwrecks_key }}
+        export_default_credentials: true
+    # - name: Set up Cloud SDK
+    #   uses: google-github-actions/setup-gcloud@v2
+    #   with:
+    #     version: '>= 363.0.0'

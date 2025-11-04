@@ -941,6 +941,12 @@ Count of dairy inspections
 
 target : dairy_inspector_displayed  
 
+**TotalPolicyChangeCount** : *int*, *Aggregate feature*   
+Total count of policy changes  
+*Other elements*:  
+
+target : select_policy_card  
+
 **EconomyViewCount** : *int*, *Aggregate feature*   
 Count of times the player viewed the economy view  
 *Other elements*:  
@@ -1003,6 +1009,10 @@ Latest money per county
 
 **CountyFailCount** : *int*, *Per-count feature*   
 Number of failures per county  
+  
+
+**CountyUnlockTime** : *int*, *Per-count feature*   
+Time to unlock county  
   
 
 ## Other Elements  

@@ -5,6 +5,7 @@ import numpy as np
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.Event import Event
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
 
 orderMapping = {'1. One Box': 1, '2. Separated Boxes': 2, '3. Rotate a Pyramid': 3, '4. Match Silhouettes': 4, '5. Removing Objects': 5, '6. Stretch a Ramp': 6, '7. Max 2 Boxes': 7, '8. Combine 2 Ramps': 8, '9. Scaling Round Objects': 9,
                 'Square Cross-Sections': 10, 'Bird Fez': 11, 'Pi Henge': 12, '45-Degree Rotations': 13,  'Pyramids are Strange': 14, 'Boxes Obscure Spheres': 15, 'Object Limits': 16, 'Warm Up': 17, 'Angled Silhouette': 18,
@@ -26,24 +27,14 @@ class SequenceWithinPuzzles(SessionFeature):
         self._dictFigures = {}
         self._userPuzzleDict = dict()
 
-    def GetEventTypes(self) -> List[str]:
+    def _eventFilter(self) -> List[str]:
         return ["start_level", "puzzle_started", "create_shape", "delete_shape", "rotate_shape", "scale_shape", "move_shape", "check_solution", "puzzle_complete", "rotate_view", "undo_action", "redo_action", "snapshot", "disconnect","login_user", "exit_to_menu"]
 
-    def GetFeatureValues(self) -> List[Any]:
-        listReturn = []
-        listReturn.append(self._numPuzzles - 1)
-        emptyList = {}
-        for puzzle in listPuzzles:
-            if puzzle in self._userPuzzleDict.keys():
-                listReturn.append(json.dumps(self._userPuzzleDict[puzzle]))
-            else:
-                listReturn.append(emptyList)
-        return listReturn
-        
-    def Subfeatures(self) -> List[str]:
-        return listPuzzles
+    @classmethod
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
+        return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         appendEvent = False
         ignoreEvent = False
         currentEvent = {}
@@ -59,7 +50,6 @@ class SequenceWithinPuzzles(SessionFeature):
                 self._prevEvent["metadata"]["correct"] = False
             
             self._prevCheck = False
-                
                 
         if event.event_name == "start_level":
             self._activePuzzle = event.event_data["task_id"]["string_value"]
@@ -155,4 +145,18 @@ class SequenceWithinPuzzles(SessionFeature):
                 self._numPuzzles += 1
             
             self._prevEvent = currentEvent
+
+    def _getFeatureValues(self) -> List[Any]:
+        listReturn = []
+        listReturn.append(self._numPuzzles - 1)
+        emptyList = {}
+        for puzzle in listPuzzles:
+            if puzzle in self._userPuzzleDict.keys():
+                listReturn.append(json.dumps(self._userPuzzleDict[puzzle]))
+            else:
+                listReturn.append(emptyList)
+        return listReturn
+        
+    def Subfeatures(self) -> List[str]:
+        return listPuzzles
 

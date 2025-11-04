@@ -1,25 +1,33 @@
-name: "Export Yesterday's Data"
+name: "Export Previous Day of Data"
 author: Luke Swanson
-description: "Given a game, this action will export the yesterday's data for that game."
+description: "Given a game, this action will export yesterday's data for that game."
 branding:
-  icon: 'arrow-left'
-  color: 'orange'
+  icon: 'calendar'
+  color: 'purple'
 inputs:
   game:
-   description: "The game with data to export."
-   required: true
-   default: 'Crystal'
+    description: "The game with data to export."
+    required: true
+    default: 'AQUALAB'
+  python_version:
+    description: "Which version of Python to install on local GitHub Actions runner."
+    required: false
+    default: "3.12"
+
 runs:
   using: "composite"
   steps:
-    - name: Get yesterday, for export
-      run: |
-        YESTERDAY=$(date -d "$(date +%Y-%m-%d) -1 day" +'%m/%d/%Y')
-        echo "YESTERDAY=" $YESTERDAY >> $GITHUB_ENV
-      shell: bash
-    # - name: Clone code
-    #   uses: actions/checkout@v3
-    - name: Execute data export
-      run: python3.10 main.py export ${{ inputs.game }} ${{env.YESTERDAY}} ${{env.YESTERDAY}}
-      shell: bash
-      # python3.10 main.py export ${{ inputs.game }} 1/1/2021 1/2/2021
+  - name: Get yesterday, for export
+    run: |
+      YESTERDAY=$(date -d "$(date +%Y-%m-%d) -1 day" +'%m/%d/%Y')
+      echo "YESTERDAY=" $YESTERDAY >> $GITHUB_ENV
+    shell: bash
+  - name: Execute data export
+    uses: ./.github/actions/export_custom
+    with:
+      game: ${{ inputs.game }}
+      with_events: true
+      with_features: true
+      start_date: ${{ env.YESTERDAY }}
+      end_date: ${{ env.YESTERDAY }}
+      python_version: ${{ inputs.python_version }}

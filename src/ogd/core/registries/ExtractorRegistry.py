@@ -238,7 +238,9 @@ class ExtractorRegistry(GeneratorRegistry):
             for feature in order.values():
                 next_vals = feature.GetFeatureValues()
                 if len(next_vals) != len(feature.GetFeatureNames()):
-                    raise ValueError(f"Feature {feature.Name} lists {len(feature.GetFeatureNames())} feature names, but returns {len(next_vals)} values!")
+                    feat_list  = feature.GetFeatureNames()
+                    feat_names = ", ".join(feat_list) if len(feat_list) <= 5 else f"{', '.join(feat_list[:4])}, ..., {feat_list[-1]}"
+                    raise ValueError(f"Feature {feature.Name} lists {len(feat_list)} feature names ({feat_names}), but returns {len(next_vals)} values!")
                 ret_val += next_vals if next_vals != [] else [None]
         return ret_val
 
