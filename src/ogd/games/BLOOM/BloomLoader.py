@@ -1,4 +1,5 @@
 # import standard libraries
+from datetime import timedelta
 from pathlib import Path
 from typing import Any, Callable, Dict, Final, List, Optional
 
@@ -62,18 +63,29 @@ class BloomLoader(GeneratorLoader):
                     ret_val = ActiveTime.ActiveTime(params=extractor_params, idle_threshold=schema_args.get("threshold", 30))
                 case "AlertCount":
                     ret_val = AlertCount.AlertCount(params=extractor_params)
+                case "ActiveJobs":
+                    ret_val = ActiveJobs.ActiveJobs(params=extractor_params)
+                case "AlertResponseCount":
+                    ret_val = AlertResponseCount.AlertResponseCount(params=extractor_params)
                 case "AlertReviewCount":
                     ret_val = AlertReviewCount.AlertReviewCount(params=extractor_params)
                 case "AverageActiveTime":
                     ret_val = AverageActiveTime.AverageActiveTime(params=extractor_params)
+                case "AverageBuildingInspectTime":
+                    ret_val = AverageBuildingInspectTime.AverageBuildingInspectTime(params=extractor_params)
+                case "AverageEconomyViewTime":
+                    ret_val = AverageEconomyViewTime.AverageEconomyViewTime(params=extractor_params)
+                case "AveragePhosphorusViewTime":
+                    ret_val = AveragePhosphorusViewTime.AveragePhosphorusViewTime(params=extractor_params)
                 case "BloomAlertCount":
                     ret_val = BloomAlertCount.BloomAlertCount(params=extractor_params)
-                case "BuildCount":
-                    ret_val = BuildCount.BuildCount(params=extractor_params)
                 case "BuildingUnlockCount":
                     ret_val = BuildingUnlockCount.BuildingUnlockCount(params=extractor_params)
+                case "EconomyViewUnlocked":
+                    ret_val = EconomyViewUnlocked.EconomyViewUnlocked(params=extractor_params)
                 case "FailCount":
                     ret_val = FailCount.FailCount(params=extractor_params)
+
                 case "GameCompletionStatus":
                     ret_val = GameCompletionStatus.GameCompletionStatus(params=extractor_params)
                 case "NumberOfSessionsPerPlayer":
@@ -86,14 +98,32 @@ class BloomLoader(GeneratorLoader):
                     ret_val = PersistThroughFailure.PersistThroughFailure(params=extractor_params)
                 case "PersistenceTime":
                     ret_val = PersistenceTime.PersistenceTime(params=extractor_params)
+                case "PhosphorusViewUnlocked":
+                    ret_val = PhosphorusViewUnlocked.PhosphorusViewUnlocked(params=extractor_params)
+                case "PlayerSummary":
+                    ret_val = PlayerSummary.PlayerSummary(params=extractor_params)
+                case "PopulationSummary":
+                    ret_val = PopulationSummary.PopulationSummary(params=extractor_params)
+                case "PolicyUnlocked":
+                    ret_val = PolicyUnlocked.PolicyUnlocked(params=extractor_params)
                 case "QuitOnBloomFail":
                     ret_val = QuitOnBloomFail.QuitOnBloomFail(params=extractor_params)
                 case "QuitOnCityFail":
                     ret_val = QuitOnCityFail.QuitOnCityFail(params=extractor_params)
                 case "QuitOnBankruptcy":
                     ret_val = QuitOnBankruptcy.QuitOnBankruptcy(params=extractor_params)
-                case "BuildingInspectorTabCount":  # Add BuildingInspectorTabCount feature here
+                case "TopJobSwitchDestinations":
+                    ret_val = TopJobSwitchDestinations.TopJobSwitchDestinations(params=extractor_params)
+                case "TopJobCompletionDestinations":
+                    ret_val = TopJobCompletionDestinations.TopJobCompletionDestinations(params=extractor_params)
+                case "BuildingInspectorTabCount": 
                     ret_val = BuildingInspectorTabCount.BuildingInspectorTabCount(params=extractor_params)
+                case "GoodPolicyCount":
+                    ret_val = GoodPolicyCount.GoodPolicyCount(params=extractor_params)
+                # case "PhosphorusViewTime":
+                #     ret_val = PhosphorusViewTime.PhosphorusViewTime(params=extractor_params)
+                # case "InspectorResponseCount":
+                #     ret_val = InspectorResponseCount.InspectorResponseCount(params=extractor_params)
                 case _:
                     ret_val = None
 
@@ -114,6 +144,10 @@ class BloomLoader(GeneratorLoader):
                     ret_val = CountyLatestMoney.CountyLatestMoney(params=extractor_params)
                 case "CountyPolicyChangeCount":
                     ret_val = CountyPolicyChangeCount.CountyPolicyChangeCount(params=extractor_params)
+                
+                case "JobsAttempted":
+                    ret_val = JobsAttempted.JobsAttempted(params=extractor_params)
+                    
                 case _:
                     ret_val = None
 
@@ -122,6 +156,21 @@ class BloomLoader(GeneratorLoader):
     def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         ret_val : Detector
         match detector_type:
+            case "AlertClickThrough":
+                _max_rate = schema_args.get("max_rate", AlertClickThrough.AlertClickThrough.DEFAULT_MAX_RATE)
+                ret_val = AlertClickThrough.AlertClickThrough(params=extractor_params, trigger_callback=trigger_callback, max_reading_rate=_max_rate)
+            case "AlertFollowedByInspect":
+                _inspect_threshold = timedelta(seconds=schema_args.get("threshold", 15))
+                ret_val = AlertFollowedByInspect.AlertFollowedByInspect(params=extractor_params, trigger_callback=trigger_callback, inspect_time_threshold=_inspect_threshold)
+            case "AlertFollowedByPolicy":
+                _policy_threshold = timedelta(seconds=schema_args.get("threshold", 30))
+                ret_val = AlertFollowedByPolicy.AlertFollowedByPolicy(params=extractor_params, trigger_callback=trigger_callback, policy_time_threshold=_policy_threshold)
+            case "CutsceneClickThrough":
+                _max_rate = schema_args.get("max_rate", CutsceneClickThrough.CutsceneClickThrough.DEFAULT_MAX_RATE)
+                ret_val = CutsceneClickThrough.CutsceneClickThrough(params=extractor_params, trigger_callback=trigger_callback, max_reading_rate=_max_rate)
+            case "GoodPolicyCombo":
+                _budget_threshold = schema_args.get("threshold", 150)
+                ret_val = GoodPolicyCombo.GoodPolicyCombo(params=extractor_params, trigger_callback=trigger_callback, surplus_budget_threshold=_budget_threshold)
             case _:
                 raise NotImplementedError(f"'{detector_type}' is not a valid detector for Bloom.")
         return ret_val

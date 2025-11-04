@@ -9,7 +9,10 @@ __all__ = [
     "TaskCompleteCount",
     "ToolNudgeCount",
     "ToolSliderTime",
-
+    "SectionCompleteCount",
+    "TotalPlayTime",
+    "AnswerAttemptsCount",
+    "CorrectAnswerOnFirstGuess",
 ]
 
 from . import LabCompleteCount
@@ -20,3 +23,7 @@ from . import PlayMode
 from . import TaskCompleteCount
 from . import ToolNudgeCount
 from . import ToolSliderTime
+from . import SectionCompleteCount
+from . import TotalPlayTime
+from . import AnswerAttemptsCount
+from . import CorrectAnswerOnFirstGuess

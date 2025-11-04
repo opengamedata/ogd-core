@@ -3,20 +3,22 @@ import itertools
 import json
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
-# import local files
-from . import features
-from ogd.games import THERMOLAB
-from ogd.core.generators.detectors.Detector import Detector
-from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.core.generators.extractors.Feature import Feature
-from ogd.games.THERMOLAB.detectors import *
-from ogd.games.THERMOLAB.features import *
+# OGD imports
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.utils.utils import loadJSONFile
 from ogd.common.utils.Logger import Logger
+# import local files
+from ogd.core.generators.detectors.Detector import Detector
+from ogd.core.generators.Generator import GeneratorParameters
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
+from ogd.core.generators.extractors.Feature import Feature
+from ogd.games import THERMOLAB
+from ogd.games.THERMOLAB import features
+from ogd.games.THERMOLAB.detectors import *
+from ogd.games.THERMOLAB.features import *
+from . import features
 
 EXPORT_PATH = "games/THERMOLAB/DBExport.json"
 
@@ -65,10 +67,10 @@ class ThermoLabLoader(GeneratorLoader):
     def _getFeaturesModule():
         return features
 
-    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
-        ret_val : Optional[Feature] = None
+    def _loadFeature(self, feature_type: str, extractor_params: GeneratorParameters, schema_args: Dict[str, Any]) -> Optional[Feature]:
+        ret_val: Optional[Feature] = None
         # First run through aggregate features
-        if extractor_params._count_index == None:
+        if extractor_params._count_index is None:
             match feature_type:
                 case "PhasesReached":
                     ret_val = PhasesReached.PhasesReached(params=extractor_params)
@@ -78,6 +80,14 @@ class ThermoLabLoader(GeneratorLoader):
                     ret_val = TaskCompleteCount.TaskCompleteCount(params=extractor_params)
                 case "LabCompleteCount":
                     ret_val = LabCompleteCount.LabCompleteCount(params=extractor_params)
+                case "SectionCompleteCount":
+                    ret_val = SectionCompleteCount.SectionCompleteCount(params=extractor_params)
+                case "TotalPlayTime":
+                    ret_val = TotalPlayTime.TotalPlayTime(params=extractor_params)
+                case "AnswerAttemptsCount":
+                    ret_val = AnswerAttemptsCount.AnswerAttemptsCount(params=extractor_params)
+                case "CorrectAnswerOnFirstGuess":
+                    ret_val = CorrectAnswerOnFirstGuess.CorrectAnswerOnFirstGuess(params=extractor_params)
                 case "LeftHandMoves":
                     ret_val = LeftHandMoves.LeftHandMovesCount(params=extractor_params)
                 case "RightHandMoves":
@@ -95,11 +105,11 @@ class ThermoLabLoader(GeneratorLoader):
                     Logger.Log(f"'{feature_type}' is not a valid per-count feature type for ThermoLab.")
         return ret_val
 
-    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Optional[Detector]:
-        ret_val : Optional[Detector] = None
+    def _loadDetector(self, detector_type: str, extractor_params: GeneratorParameters, schema_args: Dict[str, Any], trigger_callback: Callable[[Event], None]) -> Optional[Detector]:
+        ret_val: Optional[Detector] = None
         match detector_type:
             case "player_move":
-                ret_val = player_move.player_move(params=extractor_params, trigger_callback=trigger_callback)
+                ret_val = SliderMove.SliderMove(params=extractor_params, trigger_callback=trigger_callback)
             case _:
                 Logger.Log(f"'{detector_type}' is not a valid detector for ThermoLab.")
         return ret_val

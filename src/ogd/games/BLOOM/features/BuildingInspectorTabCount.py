@@ -25,7 +25,7 @@ class BuildingInspectorTabCount(Feature):
     def _updateFromEvent(self, event: Event) -> None:
         if event.EventName == "click_inspect_building":
             # Update the building type when an inspection event occurs
-            self._building_type = event.EventData.get("building_type", "UNKNOWN")
+            self._building_type = event.EventData.get("building_type", "UNKNOWN").upper()
         elif event.EventName == "click_inspector_tab" and self._building_type:
             # Increment the counter for the current building type on tab click
             self._counter[self._building_type] += 1
@@ -46,4 +46,4 @@ class BuildingInspectorTabCount(Feature):
 
     def Subfeatures(self) -> List[str]:
         # Subfeatures for specific building types
-        return ["TotalTabCount", "CityTabCount", "DairyFarmTabCount", "GrainFarmTabCount", "StorageTabCount"]
+        return ["CityTabCount", "DairyFarmTabCount", "GrainFarmTabCount", "StorageTabCount"]

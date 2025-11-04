@@ -4,7 +4,7 @@ run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' &
 on:
   push:
     branches:
-    - master
+    - main
     paths:
     - 'src/ogd/games/BLOOM/schemas/BLOOM.json.template'
     - '.github/workflows/README_bloom.yml'
@@ -41,7 +41,7 @@ jobs:
         ssh_user: ${{secrets.VPN_USER}}
         ssh_pass: ${{secrets.VPN_PASS}}
     - name: Configure Git User
-      uses: opengamedata/actions-setup-fd-git@v1.0
+      uses: opengamedata/actions-setup-fd-git@v1.1
       with:
         username: "fieldday-service"
         email: "fieldday@office365.wisc.edu"
