@@ -41,8 +41,8 @@ __all__ = [
     "LevelTime",
     "SnippetsCollected", 
     "SnippetsSubmitted",
-    "CompletedSurvey"
-
+    "CompletedSurvey",
+    "PlayerProgression"
 ]
 
 from . import TextClickCount
@@ -86,3 +86,4 @@ from . import LevelTime
 from . import SnippetsCollected
 from . import SnippetsSubmitted
 from . import CompletedSurvey
+from . import PlayerProgression
