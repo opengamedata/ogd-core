@@ -72,12 +72,12 @@ class TopJobCompletionDestinations(Feature):
             # Logger.Log(f"For TopJobCompletionDestinations, sorted dests as: {json.dumps(dests)}")
 
         # TODO: figure out if we really need to dump to string, or if we can assume things get stringified as needed elsewhere.
-        return [json.dumps(ret_val)]
+        return [ret_val]
 
     # *** Optionally override public functions. ***
     @staticmethod
     def MinVersion() -> Optional[str]:
-        return "1"
+        return "3"
 
     # *** Other local functions
     def _validate_job(self, job_data):

@@ -1,3 +1,4 @@
+import logging
 from typing import Any, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
@@ -41,13 +42,13 @@ class SurveyCompleted(PerCountFeature):
         survey_name = event.EventData.get("display_event_id", None)
         
         if not survey_name:
-            Logger.Log("Missing display_event_id in survey event", level="WARNING")
+            Logger.Log("Missing display_event_id in survey event", level=logging.WARNING)
             return False
             
         try:
             expected_index = self.KNOWN_SURVEY_NAMES.index(survey_name)
         except ValueError:
-            Logger.Log(f"Unrecognized survey name: {survey_name}", level="WARNING")
+            Logger.Log(f"Unrecognized survey name: {survey_name}", level=logging.WARNING)
             return False
             
         return expected_index == self.CountIndex
@@ -60,13 +61,10 @@ class SurveyCompleted(PerCountFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._completed, self._responses]
+        return [self._completed, self.KNOWN_SURVEY_NAMES[self.CountIndex], self._responses]
 
     def Subfeatures(self) -> List[str]:
-        return ["Responses"]
-
-    def _getSubfeatureValues(self) -> List[Any]:
-        return [self._responses]
+        return ["Name", "Responses"]
 
     @staticmethod
     def MinVersion() -> Optional[str]:

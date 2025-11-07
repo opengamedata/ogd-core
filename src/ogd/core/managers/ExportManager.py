@@ -230,6 +230,9 @@ class ExportManager:
             case "WAVES":
                 from ogd.games.WAVES.WaveLoader import WaveLoader
                 _loader_class = WaveLoader
+            case "WEATHER_STATION":
+                from ogd.games.WEATHER_STATION.WeatherStationLoader import WeatherStationLoader
+                _loader_class = WeatherStationLoader
             case "PENGUINS":
                 from ogd.games.PENGUINS.PenguinsLoader import PenguinsLoader
                 _loader_class = PenguinsLoader
@@ -271,7 +274,7 @@ class ExportManager:
             case 'BLOOM':
                 _exclude_rows = ['algae_growth_end', 'algae_growth_begin']
             case 'THERMOLAB' | 'THERMOVR':
-                _exclude_rows = ['nudge_hint_displayed', 'nudge_hint_hidden']
+                _exclude_rows = ['nudge_hint_displayed', 'nudge_hint_hidden', 'simulation_data']
             case 'LAKELAND':
                 _exclude_rows = ['CUSTOM.24']
             case _:

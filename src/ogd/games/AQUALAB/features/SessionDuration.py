@@ -22,7 +22,7 @@ class SessionDuration(SessionFeature):
         # self._session_duration = 0
 
     def Subfeatures(self) -> List[str]:
-            return ["Seconds", "Active", "ActiveSeconds", "Idle" "IdleSeconds", "MaxIdle"]
+            return ["Seconds", "Active", "ActiveSeconds", "Idle", "IdleSeconds", "MaxIdle"]
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod

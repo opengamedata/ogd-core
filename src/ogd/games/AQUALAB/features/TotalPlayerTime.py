@@ -23,7 +23,7 @@ class TotalPlayerTime(SessionFeature):
         self.previous_player_id = None
  
     def Subfeatures(self) -> List[str]:
-        return ["Seconds", "Active", "ActiveSeconds", "Idle" "IdleSeconds"]
+        return ["Seconds", "Active", "ActiveSeconds", "Idle", "IdleSeconds"]
 
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
@@ -51,7 +51,7 @@ class TotalPlayerTime(SessionFeature):
                 f"Session or Player ID changed. Ignoring time contribution.\n"
                 f"Previous: (SessionID={self.previous_session_id}, PlayerID={self.previous_player_id}),\n"
                 f"Current: (SessionID={event.SessionID}, PlayerID={event.user_id})",
-                level=logging.INFO,
+                level=logging.DEBUG,
             )
             # Update IDs without updating time contributions
             self.previous_session_id = event.SessionID
