@@ -6,12 +6,12 @@ from typing import Any, Final, List, Optional, Dict
 # import locals
 from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
-class ActiveTime(Feature):
+class ActiveTime(Extractor):
     IDLE_LEVEL: Final[int] = 30
 
     def __init__(self, params: GeneratorParameters, active_threads: Optional[float] = None):
@@ -39,7 +39,7 @@ class ActiveTime(Feature):
         elif event.EventName == "unpause_game":
             self._client_start_time = event.Timestamp
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
@@ -60,12 +60,12 @@ from datetime import datetime, timedelta
 from typing import Any, Final, List, Optional
 # import locals
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event, EventSource
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
-class ActiveTime(Feature):
+class ActiveTime(Extractor):
     DEFAULT_IDLE_THRESHOLD: Final[timedelta] = timedelta(seconds=30)
 
     def __init__(self, params: GeneratorParameters, idle_threshold: Optional[int]):
@@ -111,7 +111,7 @@ class ActiveTime(Feature):
         elif event.EventName == "unpause_game":
             self.paused = False
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

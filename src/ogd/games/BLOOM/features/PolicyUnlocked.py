@@ -2,12 +2,12 @@ from collections import Counter
 from typing import Any, List
 
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
-class PolicyUnlocked(Feature):
+class PolicyUnlocked(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.policies_unlocked = Counter()
@@ -26,7 +26,7 @@ class PolicyUnlocked(Feature):
         if _policy:
             self.policies_unlocked[_policy.upper()] += 1
 
-    def _updateFromFeatureData(self, feature: FeatureData) -> None:
+    def _updateFromFeature(self, feature: Feature) -> None:
         return
 
     def _getFeatureValues(self) -> List[Any]:

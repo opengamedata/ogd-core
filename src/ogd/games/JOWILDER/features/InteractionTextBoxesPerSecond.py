@@ -10,7 +10,7 @@ from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.games.JOWILDER import Jowilder_Enumerators as je
 from ogd.games.JOWILDER.features.Interaction import clicks_track
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.models.Event import Event
 
 # NOTE: Assumptions are: 1. All click events occured in the order like xxxx111xx222x1x3. 2. Use "text_fqid" to identify interactions. 3. The first interaction "tunic.historicalsociety.closet.intro" makes no sense so we don't need to consider it. That is, there are 190 interactions in total, but we only count 189. And we should confirm that, this tunic.historicalsociety.closet.intro doesn't occur anywhere else.
@@ -18,8 +18,8 @@ from ogd.common.models.Event import Event
 class InteractionTextBoxesPerSecond(PerCountFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
-    :param Feature: Base class for a Custom Feature class.
-    :type Feature: _type_
+    :param Extractor: Base class for a Custom Feature class.
+    :type Extractor: _type_
     """
 
     def __init__(self, params: GeneratorParameters):
@@ -88,12 +88,12 @@ class InteractionTextBoxesPerSecond(PerCountFeature):
         
         return
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         if len(self._interaction_time) == 0:
             return
         if feature.CountIndex != self.CountIndex:
             return
-        _boxes = feature.FeatureValues[1]
+        _boxes = feature.Values[1]
         
         self._boxes_persecond = _boxes/np.mean(self._interaction_time)
         self._first_encounter = _boxes/self._interaction_time[0]

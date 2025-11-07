@@ -3,11 +3,11 @@ import abc
 from multiprocessing.sharedctypes import Value
 # import locals
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 
 ## @class PerLevelFeature
-class PerCountFeature(Feature):
+class PerCountFeature(Extractor):
     """PerLevelFeature
     Abstract base class for per-level game features.
     Works like a normal Feature, but checks if the given event has right "level"

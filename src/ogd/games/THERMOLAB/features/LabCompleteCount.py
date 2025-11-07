@@ -3,8 +3,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
-
+from ogd.common.models.Feature import Feature
 class LabCompleteCount(SessionFeature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
@@ -15,12 +14,9 @@ class LabCompleteCount(SessionFeature):
         return ["complete_lab"]  # Filter events where lab completion is recorded
 
     def _updateFromEvent(self, event: Event) -> None:
-        # Get the lab number (Index) from the EventData
-        lab_num = event.EventData.get("lab", {}).get("Index", None)
-        
-        # If a lab number is found, add it to the set of completed labs
-        if lab_num is not None:
-            self._completed_labs.add(lab_num)
+        lab = event.EventData.get("lab_name")
+        if event is not None and event.EventData.get("percent_complete", 0) >= 100:
+            self.complete_labs[lab] += 1
 
     def _getFeatureValues(self) -> List[Any]:
         # Return the count of unique labs completed (length of the set)
@@ -30,5 +26,5 @@ class LabCompleteCount(SessionFeature):
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return

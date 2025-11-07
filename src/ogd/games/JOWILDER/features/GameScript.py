@@ -4,14 +4,14 @@ from ogd.core.generators.Generator import GeneratorParameters
 # import local files
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.models.Event import Event
 
 class GameScript(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
-    :param Feature: Base class for a Custom Feature class.
-    :type Feature: _type_
+    :param Extractor: Base class for a Custom Feature class.
+    :type Extractor: _type_
     """
 
     TYPE : Final[Dict[int, str]] = {0: 'Dry', 1: 'No Humor', 2: 'No Snark', 3: 'Normal'}
@@ -42,7 +42,7 @@ class GameScript(SessionFeature):
 
         return
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

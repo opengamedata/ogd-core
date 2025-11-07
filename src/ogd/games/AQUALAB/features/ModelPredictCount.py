@@ -6,13 +6,13 @@ from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 # import locals
 from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 
-class ModelPredictCount(PerJobFeature):
+class ModelPredictCount(Extractor):
 
     def __init__(self, params:GeneratorParameters, job_map:dict):
         self._job_map = job_map
@@ -33,7 +33,7 @@ class ModelPredictCount(PerJobFeature):
         self._count += 1
         
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -1,15 +1,12 @@
 ## import standard libraries
 import abc
 import json
-import logging
 from datetime import datetime
-from typing import Any, Dict, List, Type, Optional
+from typing import List
 # import locals
-from ogd.common.models.FeatureData import FeatureData
-from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.common.models.Event import Event
 from ogd.common.utils.typing import ExportRow
-from ogd.common.utils.utils import Logger
 
 ## @class Processor
 class Processor(abc.ABC):
@@ -31,11 +28,8 @@ class Processor(abc.ABC):
 
     # *** BUILT-INS ***
 
-    def __init__(self, game_schema: GameSchema):
-        self._game_schema : GameSchema = game_schema
-
-    def __str__(self):
-        return f"Processor object for {self._game_schema.GameName} data"
+    def __init__(self, generator_cfg:GeneratorCollectionConfig):
+        self._generator_cfg : GeneratorCollectionConfig = generator_cfg
 
     # *** PUBLIC STATICS ***
 

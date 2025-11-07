@@ -4,12 +4,12 @@ from typing import Any, List, Optional
 # import locals
 from ogd.common.utils.Logger import Logger
 from ogd.core.generators.extractors.Extractor import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
-class AverageSessionTime(Feature):
+class AverageSessionTime(Extractor):
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._play_time: timedelta = timedelta(0)
@@ -27,13 +27,13 @@ class AverageSessionTime(Feature):
     def _updateFromEvent(self, event:Event) -> None:
         pass
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         if feature.ExportMode == ExtractionMode.SESSION:
             try:
-                self._play_time += feature.FeatureValues[0]
+                self._play_time += feature.Values[0]
                 self._session_count += 1
             except TypeError as err:
-                self.WarningMessage(f"TotalPlayTime for player {feature.PlayerID} got non-timedelta value of {feature.FeatureValues[0]}")
+                self.WarningMessage(f"TotalPlayTime for player {feature.PlayerID} got non-timedelta value of {feature.Values[0]}")
 
     def _getFeatureValues(self) -> List[Any]:
         return [self._play_time / self._session_count]

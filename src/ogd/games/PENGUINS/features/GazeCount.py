@@ -6,7 +6,7 @@ from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
 # gaze_dict = { 'BigRock00': 0, 'Bridge': 0, 'Bridge2': 0, 'BigRock01': 0, 'River3': 0, 'Inland2': 0, 'Sea4': 0, 'River2': 0,'Inland1': 0, 'Sea5': 0, 'Sea3': 0, 'River5': 0, 'River4': 0, 'Inland5': 0, 'Inland4': 0, 'Inland3': 0,'River1': 0, 'Sea2': 0, 'Sea1': 0}
@@ -36,7 +36,7 @@ class GazeCount(SessionFeature):
         
         self._gaze_dict[self._object_id]+=1
         
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

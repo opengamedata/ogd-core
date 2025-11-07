@@ -4,13 +4,13 @@ from statistics import mean, stdev
 from datetime import datetime, timedelta
 
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 
-class JobsAttempted(Feature):
+class JobsAttempted(Extractor):
     
     COUNTY_INDEX_MAP = {
         "Hillside": 0,
@@ -102,7 +102,7 @@ class JobsAttempted(Feature):
         #     self.player_won = True
 
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

@@ -7,7 +7,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.utils.Logger import Logger
 from time import sleep
@@ -32,7 +32,7 @@ class PlayerSummary(SessionFeature):
     def _updateFromEvent(self, event: Event) -> None:
         pass
        
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         # print(f"Processing feature: {feature}")
         player_id = feature.PlayerID
         if feature.ExportMode == ExtractionMode.PLAYER:
@@ -45,25 +45,25 @@ class PlayerSummary(SessionFeature):
                 }
 
             if feature.FeatureType == "CountyUnlockCount":
-                # print(f"Processing CountyUnlockCount for player {player_id}: {feature.FeatureValues[0]}")
+                # print(f"Processing CountyUnlockCount for player {player_id}: {feature.Values[0]}")
                 # print(feature)
-                self._summary[player_id]["counties_unlocked"] = feature.FeatureValues[0]
+                self._summary[player_id]["counties_unlocked"] = feature.Values[0]
 
             elif feature.FeatureType == "ActiveTime":
-                # print(f"Processing ActiveTime for player {player_id}: {feature.FeatureValues[1]}")
-                if isinstance(feature.FeatureValues[0], timedelta):
-                    self._summary[player_id]["active_time"] += feature.FeatureValues[0].total_seconds()
-                elif isinstance(feature.FeatureValues[0], str) and feature.FeatureValues[0] == "No events":
+                # print(f"Processing ActiveTime for player {player_id}: {feature.Values[1]}")
+                if isinstance(feature.Values[0], timedelta):
+                    self._summary[player_id]["active_time"] += feature.Values[0].total_seconds()
+                elif isinstance(feature.Values[0], str) and feature.Values[0] == "No events":
                     pass
                 else:
-                    raise ValueError(f"PlayerSummary got {feature.Name} feature with value {feature.FeatureValues[0]} of non-timedelta type {type(feature.FeatureValues[0])} in the {feature.FeatureNames[0]} column!")
+                    raise ValueError(f"PlayerSummary got {feature.Name} feature with value {feature.Values[0]} of non-timedelta type {type(feature.Values[0])} in the {feature.FeatureNames[0]} column!")
             elif feature.FeatureType == "GameCompletionStatus":
-                if feature.FeatureValues[0] == 'WIN':
+                if feature.Values[0] == 'WIN':
                     self._summary[player_id]["counties_unlocked"] += 1
                     # print(f"Updated summary for player {player_id}: {self._summary[player_id]}")
         elif feature.ExportMode == ExtractionMode.SESSION:
             if feature.FeatureType == "NumberOfSessionsPerPlayer":
-                # print(f"Processing Session for player {player_id}: {feature.FeatureValues[0]}")
+                # print(f"Processing Session for player {player_id}: {feature.Values[0]}")
                 self._summary[player_id]["sessions"].add(feature.SessionID)
                 self._summary[player_id]["num_sessions"] = len(self._summary[player_id]["sessions"])
 

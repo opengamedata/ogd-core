@@ -2,14 +2,14 @@ from collections import Counter
 from typing import Any, List, Optional
 
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from collections import defaultdict
 
 
-class TopJobSwitchDestinations(Feature):
+class TopCountySwitchDestinations(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.last_county_per_player = {}
@@ -36,7 +36,7 @@ class TopJobSwitchDestinations(Feature):
                 self.county_switch_pairs[from_county][to_county].append(player_id)
         self.last_county_per_player[player_id] = to_county
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

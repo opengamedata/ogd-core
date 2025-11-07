@@ -5,13 +5,13 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class Session_Language(SessionFeature):
     """_summary_
 
-    :param SessionFeature: _description_
-    :type SessionFeature: _type_
+    :param SessionExtractor: _description_
+    :type SessionExtractor: _type_
     """
     def __init__(self, params:GeneratorParameters):
         self._session_language = None
@@ -29,7 +29,7 @@ class Session_Language(SessionFeature):
     def _updateFromEvent(self, event:Event) -> None:
         self._session_language = event.EventData.get("language")
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

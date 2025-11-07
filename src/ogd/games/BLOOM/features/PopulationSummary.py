@@ -6,7 +6,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class PopulationSummary(SessionFeature):
 
@@ -27,17 +27,17 @@ class PopulationSummary(SessionFeature):
     def _updateFromEvent(self, event: Event) -> None:
         return
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         player_id = feature.PlayerID
 
         # print(f"Processing feature: {feature}")
         
         if feature.ExportMode == ExtractionMode.PLAYER:
             if feature.FeatureType == "CountyUnlockCount":
-                self._user_counties_unlocked[player_id] = feature.FeatureValues[0]
+                self._user_counties_unlocked[player_id] = feature.Values[0]
                 
             elif feature.FeatureType == "ActiveTime":
-                active_time = feature.FeatureValues[0]
+                active_time = feature.Values[0]
                 if isinstance(active_time, timedelta):
                     self._user_active_times[player_id].append(active_time.total_seconds())
                 elif isinstance(active_time, str) and active_time == "No events":
@@ -46,7 +46,7 @@ class PopulationSummary(SessionFeature):
                     raise ValueError(f"PopulationSummary got {feature.Name} feature with value {active_time} of non-timedelta type {type(active_time)} in the {feature.FeatureNames[0]} column!")
                     
             elif feature.FeatureType == "GameCompletionStatus":
-                if feature.FeatureValues[0] == 'WIN':
+                if feature.Values[0] == 'WIN':
                     self._user_counties_unlocked[player_id] += 1
                     
         elif feature.ExportMode == ExtractionMode.SESSION:

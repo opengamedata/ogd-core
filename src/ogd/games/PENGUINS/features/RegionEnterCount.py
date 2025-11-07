@@ -4,11 +4,11 @@ from typing import Any, Dict, List, Optional
 # import locals
 from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.games.PENGUINS.features.bases.PerRegionFeature import PerRegionFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 
 
@@ -31,7 +31,7 @@ class RegionEnterCount(PerCountFeature):
     def _updateFromEvent(self, event:Event) -> None:
         self._current_count += 1
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

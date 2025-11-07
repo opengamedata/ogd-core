@@ -4,13 +4,13 @@ from typing import Any, Dict, List, Optional
 # import locals
 from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
-class JobQuitsPerComplete(Feature):
+class JobQuitsPerComplete(Extractor):
 
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
@@ -32,12 +32,12 @@ class JobQuitsPerComplete(Feature):
     def _updateFromEvent(self, event:Event) -> None:
         return 
     
-    def _updateFromFeatureData(self, feature:FeatureData):
-        if feature.ExportMode == self.ExtractionMode:
+    def _updateFromFeature(self, feature:Feature):
+        if feature.ExportMode == self.ExtractMode:
             if feature.Name == "TotalJobQuits":
-                self._total_job_quits = feature.FeatureValues[0]
+                self._total_job_quits = feature.Values[0]
             elif feature.Name == "JobsCompleted":
-                self._jobs_completed = feature.FeatureValues[1]
+                self._jobs_completed = feature.Values[0]
 
     def _getFeatureValues(self) -> List[Any]:
         if self._jobs_completed != 0:
