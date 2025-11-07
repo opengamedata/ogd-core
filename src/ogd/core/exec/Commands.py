@@ -6,28 +6,32 @@ import traceback
 from argparse import Namespace
 from itertools import chain
 from pathlib import Path
-from typing import Any, List, Optional, Set, Tuple
+from typing import List, Optional, Set
 
 # import 3rd-party libraries
+from dateutil.parser import parse
 
 # import OGD files
 # from ogd.core.exec.Generators import OGDGenerators
-from ogd.common.interfaces.CSVInterface import CSVInterface
-from ogd.common.interfaces.EventInterface import EventInterface
-from ogd.common.interfaces.outerfaces.DataOuterface import DataOuterface
-from ogd.common.interfaces.outerfaces.DebugOuterface import DebugOuterface
-from ogd.common.interfaces.outerfaces.TSVOuterface import TSVOuterface
+from ogd import games
 from ogd.core.managers.ExportManager import ExportManager
-from ogd.common.models.enums.ExportMode import ExportMode
-from ogd.common.models.enums.IDMode import IDMode
-from ogd.core.requests.Request import ExporterRange, Request
+from ogd.core.requests.Request import Request
 from ogd.core.requests.RequestResult import RequestResult, ResultStatus
-from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
-from ogd.common.schemas.configs.GameSourceSchema import GameSourceSchema
-from ogd.common.schemas.games.GameSchema import GameSchema
-from ogd.common.schemas.tables.TableSchema import TableSchema
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
+from ogd.core.configs.CoreConfig import CoreConfig
+from ogd.common.configs.DataTableConfig import DataTableConfig
+from ogd.common.configs.storage.FileStoreConfig import FileStoreConfig
+from ogd.common.configs.storage.DatasetRepositoryConfig import DatasetRepositoryConfig
+from ogd.common.filters.collections.DatasetFilterCollection import DatasetFilterCollection
+from ogd.common.filters.SetFilter import SetFilter
+from ogd.common.models.enums.ExportMode import ExportMode
+from ogd.common.models.enums.FilterMode import FilterMode
+from ogd.common.models.DatasetKey import DatasetKey
+from ogd.common.schemas.tables.EventTableSchema import EventTableSchema
+from ogd.common.schemas.tables.FeatureTableSchema import FeatureTableSchema
+from ogd.common.schemas.events.LoggingSpecificationSchema import LoggingSpecificationSchema
 from ogd.common.utils.Logger import Logger
-from ogd.common.utils.Readme import Readme
+from ogd.games.Readme import Readme
 from .Generators import OGDGenerators
 
 
@@ -51,21 +55,23 @@ class OGDCommands:
         return True
 
     @staticmethod
-    def ShowGameInfo(config:ConfigSchema, game:str) -> bool:
+    def ShowGameInfo(config:CoreConfig, game:str) -> bool:
         """Function to print out info on a game from the game's schema.
-    This does a similar function to writeReadme, but is limited to the CSV metadata part
-    (basically what was in the schema, at one time written into the csv's themselves).
-    Further, the output is printed rather than written to file.
+
+        This does a similar function to writeReadme, but is limited to the CSV metadata part
+        (basically what was in the schema, at one time written into the csv's themselves).
+        Further, the output is printed rather than written to file.
 
         :return: True if game metadata was successfully loaded and printed, or False if an error occurred
         :rtype: bool
         """
         try:
-            game_schema = GameSchema.FromFile(game_id=game)
-            table_schema = TableSchema(schema_name=f"{config.GameSourceMap[game].TableSchema}.json")
-            readme = Readme(game_schema=game_schema, table_schema=table_schema)
+            event_schema  = LoggingSpecificationSchema.Load(schema_name=game)
+            generator_cfg = GeneratorCollectionConfig.Load( schema_name=game)
+            table_schema = config.GameSourceMap[game].EventsFrom[0].TableSchema or EventTableSchema.Default()
+            readme = Readme(event_collection=event_schema, generator_collection=generator_cfg, table_schema=table_schema)
             print(readme.CustomReadmeSource)
-        except Exception as err:
+        except Exception as err: # pylint: disable=broad-exception-caught
             msg = f"Could not print information for {game}: {type(err)} {str(err)}"
             Logger.Log(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
@@ -74,22 +80,24 @@ class OGDCommands:
             return True
 
     @staticmethod
-    def WriteReadme(config:ConfigSchema, game:str, destination:Path) -> bool:
+    def WriteReadme(config:CoreConfig, game:str, destination:Path) -> bool:
         """Function to write out the readme file for a given game.
-    This includes the CSV metadata (data from the schema, originally written into
-    the CSV files themselves), custom readme source, and the global changelog.
-    The readme is placed in the game's data folder.
+
+        This includes the CSV metadata (data from the schema, originally written into
+        the CSV files themselves), custom readme source, and the global changelog.
+        The readme is placed in the game's data folder.
 
         :return: _description_
         :rtype: bool
         """
         path = destination / game
         try:
-            game_schema = GameSchema.FromFile(game_id=game, schema_path=Path("src") / "ogd" / "games" / game / "schemas")
-            table_schema = TableSchema(schema_name=f"{config.GameSourceMap[game].TableSchema}.json")
-            readme = Readme(game_schema=game_schema, table_schema=table_schema)
-            readme.GenerateReadme(path=path)
-        except Exception as err:
+            event_schema  = LoggingSpecificationSchema.Load(schema_name=game)
+            generator_cfg = GeneratorCollectionConfig.Load(schema_name=game)
+            table_schema = EventTableSchema.Load(schema_name=f"{config.GameSourceMap[game].EventsFrom[0].TableName}.json")
+            readme = Readme(event_collection=event_schema, generator_collection=generator_cfg, table_schema=table_schema)
+            readme.ToFile(path=path)
+        except Exception as err: # pylint: disable=broad-exception-caught
             msg = f"Could not create a readme for {game}: {type(err)} {str(err)}"
             Logger.Log(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
@@ -99,9 +107,13 @@ class OGDCommands:
             return True
 
     @staticmethod
-    def RunExport(args:Namespace, config:ConfigSchema, destination:Path, with_events:bool = False, with_features:bool = False) -> bool:
+    def RunExport(args:Namespace, config:CoreConfig, destination:Path, with_events:bool = False, with_features:bool = False) -> bool:
         """Function to handle execution of export code.
+
         This is the main intended use of the program.
+
+        .. TODO:: Refactor "step 2" logic into smaller functions, probably a "get case", then pass in to a "get range" and "get dataset ID"
+        .. TODO:: Use DatasetKey here for the dataset name.
 
         :param events: _description_, defaults to False
         :type events: bool, optional
@@ -109,85 +121,130 @@ class OGDCommands:
         :type features: bool, optional
         :return: _description_
         :rtype: bool
-
-        .. todo:: Make use of destination parameter
-        .. todo:: Refactor "step 2" logic into smaller functions, probably a "get case", then pass in to a "get range" and "get dataset ID"
         """
-        success : bool = False
+        ret_val : bool = False
 
-        export_modes   : Set[ExportMode]
-        interface      : EventInterface
-        export_range   : ExporterRange
-        file_outerface : DataOuterface
-        dataset_id     : Optional[str] = None
+        # pull vars from args, for autocomplete and type-hinting purposes
+        game_id         : str            = args.game
+        from_source     : Optional[str]  = args.from_source           if args.from_source     else None
+        session_id      : Optional[str]  = args.session               if args.session         else None
+        session_id_file : Optional[Path] = Path(args.session_id_file) if args.session_id_file else None
+        player_id       : Optional[str]  = args.player                if args.session_id_file else None
+        player_id_file  : Optional[Path] = Path(args.player_id_file)  if args.player_id_file  else None
 
-    # 1. get exporter modes to run
-        export_modes = OGDGenerators.GenModes(with_events=with_events, with_features=with_features,
-                                              no_session_file=args.no_session_file, no_player_file=args.no_player_file, no_pop_file=args.no_pop_file)
-    # 2. figure out the interface and range; optionally set a different dataset_id
-        if args.file is not None and args.file != "":
+        filters      : DatasetFilterCollection = DatasetFilterCollection()
+        export_modes : Set[ExportMode] = OGDGenerators.GenModes(
+            with_events=with_events, with_features=with_features,
+            no_session_file=args.no_session_file,
+            no_player_file=args.no_player_file,
+            no_pop_file=args.no_pop_file
+        )
+        game_source_mapping = config.GameSourceMap
+        repository : DatasetRepositoryConfig = DatasetRepositoryConfig.Default()
+        dataset_id : Optional[DatasetKey] = None
+
+        _games_path  = Path(games.__file__) if Path(games.__file__).is_dir() else Path(games.__file__).parent
+        generator_config  : GeneratorCollectionConfig  = GeneratorCollectionConfig.Load(schema_name=f"{game_id}.json")
+
+        # TODO : Add a way to configure what to exclude, rather than just hardcoding. So we can easily choose to leave out certain events.
+        exclude_rows : Optional[Set[str]]
+        match game_id:
+            case 'BLOOM':
+                exclude_rows = {'algae_growth_end', 'algae_growth_begin'}
+            case 'THERMOLAB' | 'THERMOVR':
+                exclude_rows = {'nudge_hint_displayed', 'nudge_hint_hidden', 'simulation_data'}
+            case 'LAKELAND':
+                exclude_rows = {'CUSTOM.24'}
+            case _:
+                exclude_rows = None
+        filters.Events.EventNames = SetFilter(mode=FilterMode.EXCLUDE, set_elements=exclude_rows)
+
+    # 2. figure out the interface and range
+        if from_source is not None and from_source != "":
             # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
-            _ext = str(args.file).rsplit('.', maxsplit=1)[-1]
-            _cfg = GameSourceSchema(name="FILE SOURCE", all_elements={"schema":"OGD_EVENT_FILE"}, data_sources={})
-            interface = CSVInterface(game_id=args.game, config=_cfg, fail_fast=config.FailFast, filepath=Path(args.file), delim="\t" if _ext == 'tsv' else ',')
-            export_range = ExporterRange.FromIDs(source=interface, ids=interface.AllIDs() or [])
-        else:
-            interface = OGDGenerators.GenDBInterface(config=config, game=args.game)
+            game_source_mapping[game_id].EventsFrom = [
+                DataTableConfig(name="FILE SOURCE",
+                    store=FileStoreConfig(name="SourceFile", location=from_source, file_credential=None),
+                    table_schema=EventTableSchema.Load(schema_name="OGD_EVENT_FILE"),
+                    table_location=None
+                )
+            ]
+            dataset_id = DatasetKey(game_id=game_id, full_file=from_source)
+    # 3. Whether we use a file for source or not, we then consider any specification of a player ID, session ID, or date range.
         # a. Case where specific player ID was given
-            if args.player is not None and args.player != "":
-                export_range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.USER)
-                dataset_id = f"{args.game}_{args.player}"
+        elif player_id is not None and player_id != "":
+            filters.IDFilters.Players = SetFilter(mode=FilterMode.INCLUDE, set_elements={player_id})
+            dataset_id = DatasetKey(game_id=game_id, player_id=player_id)
         # b. Case where player ID file was given
-            elif args.player_id_file is not None and args.player_id_file != "":
-                file_path = Path(args.player_id_file)
-                with open(file_path) as player_file:
-                    reader = csv.reader(player_file)
-                    file_contents = list(reader) # this gives list of lines, each line a list
-                    names = list(chain.from_iterable(file_contents)) # so, convert to single list
-                    print(f"list of names: {list(names)}")
-                    export_range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.USER)
-                dataset_id = f"{args.game}_from_{file_path.name}"
+        elif player_id_file is not None and player_id_file != "":
+            file_path = Path(player_id_file)
+            with open(file_path, encoding="UTF-8") as player_file:
+                reader = csv.reader(player_file)
+                file_contents = list(reader) # this gives list of lines, each line a list
+                names = set(chain.from_iterable(file_contents)) # so, convert to single list
+                print(f"list of names: {list(names)}")
+                filters.IDFilters.Players = SetFilter(mode=FilterMode.INCLUDE, set_elements=names)
+            dataset_id = DatasetKey(game_id=game_id, player_id_file=file_path)
         # c. Case where specific session ID was given
-            elif args.session is not None and args.session != "":
-                export_range = ExporterRange.FromIDs(source=interface, ids=[args.session], id_mode=IDMode.SESSION)
-                dataset_id = f"{args.game}_{args.session}"
+        elif session_id is not None and session_id != "":
+            filters.IDFilters.Sessions = SetFilter(mode=FilterMode.INCLUDE, set_elements={session_id})
+            dataset_id = DatasetKey(game_id=game_id, session_id=session_id)
         # d. Case where session ID file was given
-            elif args.session_id_file is not None and args.session_id_file != "":
-                file_path = Path(args.session_id_file)
-                with open(file_path) as session_file:
-                    reader = csv.reader(session_file)
-                    file_contents = list(reader) # this gives list of lines, each line a list
-                    names = list(chain.from_iterable(file_contents)) # so, convert to single list
-                    print(f"list of sessions: {list(names)}")
-                    export_range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.SESSION)
-                dataset_id = f"{args.game}_from_{file_path.name}"
+        elif session_id_file is not None and session_id_file != "":
+            file_path = Path(session_id_file)
+            with open(file_path, encoding="UTF-8") as session_file:
+                reader = csv.reader(session_file)
+                file_contents = list(reader) # this gives list of lines, each line a list
+                names = set(chain.from_iterable(file_contents)) # so, convert to single list
+                print(f"list of sessions: {list(names)}")
+                filters.IDFilters.Sessions = SetFilter(mode=FilterMode.INCLUDE, set_elements=names)
+            dataset_id = DatasetKey(game_id=game_id, session_id_file=session_id_file)
         # e. Default case where we use date range
-            else:
-                export_range = OGDGenerators.GenDateRange(game=args.game, interface=interface, monthly=args.monthly, start_date=args.start_date, end_date=args.end_date)
+        else:
+            start_date = parse(timestr=args.start_date, dayfirst=False).date()
+            end_date   = parse(timestr=args.end_date, dayfirst=False).date() if args.end_date is not None else start_date
+            filters.Sequences.Timestamps = OGDGenerators.GenDateFilter(game=game_id, monthly=args.monthly, start_date=start_date, end_date=end_date)
+            dataset_id = DatasetKey(game_id=game_id, from_date=start_date, to_date=end_date)
     # 3. set up the outerface, based on the range and dataset_id.
-        _cfg = GameSourceSchema(name="FILE DEST", all_elements={"database":"FILE", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
-        file_outerface = TSVOuterface(game_id=args.game, config=_cfg, export_modes=export_modes, date_range=export_range.DateRange,
-                                    file_indexing=config.FileIndexConfig, dataset_id=dataset_id)
-        # file_outerface = TSVOuterface(game_id=args.game, config=_cfg, export_modes=export_modes, date_range=export_range.DateRange,
-        #                             file_indexing=config.FileIndexConfig, dataset_id=dataset_id, with_zipping=not args.no_zips)
-        outerfaces : Set[DataOuterface] = {file_outerface}
+        game_source_mapping[game_id].EventsTo = [
+            DataTableConfig(name="EventDestination",
+                store=FileStoreConfig(name="OutputFile", location=destination / game_id / f"{dataset_id}.tsv", file_credential=None),
+                table_schema=EventTableSchema.Load(schema_name="OGD_EVENT_FILE"),
+                table_location=None
+            )
+        ]
+        game_source_mapping[game_id].FeaturesTo = [
+            DataTableConfig(name="FeatDestination",
+                store=FileStoreConfig(name="OutputFile", location=destination / game_id / f"{dataset_id}_features.tsv", file_credential=None),
+                table_schema=FeatureTableSchema.Load(schema_name="OGD_FEATURE_FILE"),
+                table_location=None
+            )
+        ]
         # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
         if config.DebugLevel == "DEBUG":
-            _cfg = GameSourceSchema(name="DEBUG", all_elements={"database":"DEBUG", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
-            outerfaces.add(DebugOuterface(game_id=args.game, config=_cfg, export_modes=export_modes))
+            cfg = DataTableConfig(name="DEBUG", store="Debug", table_schema=None, table_location=None)
+            game_source_mapping[game_id].EventsTo.append(cfg)
+            game_source_mapping[game_id].FeaturesTo.append(cfg)
 
     # 4. Once we have the parameters parsed out, construct the request.
-        req = Request(range=export_range, exporter_modes=export_modes, interface=interface, outerfaces=outerfaces)
-        if req.Interface.IsOpen():
-            export_manager : ExportManager = ExportManager(config=config)
-            result         : RequestResult = export_manager.ExecuteRequest(request=req)
-            success = result.Status == ResultStatus.SUCCESS
-            level = logging.INFO if success else logging.ERROR
-            Logger.Log(message=result.Message, level=level)
-            Logger.Log(f"Total data request execution time: {result.Duration}", logging.INFO)
-            # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
-                            # {'req':req, 'feature_exporter':feature_exporter}, {})
-        return success
+        req = Request(
+            exporter_modes=export_modes,
+            filters=filters,
+            global_cfg=config,
+            game_cfg=generator_config,
+            custom_dataset_key=dataset_id,
+            custom_game_stores=game_source_mapping[game_id],
+            custom_data_directory=repository)
+
+        export_manager : ExportManager = ExportManager(config=config)
+        result         : RequestResult = export_manager.ExecuteRequest(request=req)
+        ret_val = result.Successful
+
+        Logger.Log(message=result.Message, level=logging.INFO if result.Successful else logging.ERROR)
+        Logger.Log(f"Total data request execution time: {result.Duration}", logging.INFO)
+        # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
+                        # {'req':req, 'feature_exporter':feature_exporter}, {})
+        return ret_val
 
     # *** PUBLIC METHODS ***
 

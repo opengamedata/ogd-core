@@ -6,7 +6,7 @@ from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class AverageSliderMoves(SessionFeature):
     def __init__(self, params:GeneratorParameters):
@@ -28,7 +28,7 @@ class AverageSliderMoves(SessionFeature):
         self._levels_encountered.add(event.GameState['level']) # set-add level to list, at end we will have set of all levels seen.
         self._slider_count += 1
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

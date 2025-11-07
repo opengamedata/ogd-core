@@ -3,7 +3,7 @@
 # import traceback
 # from typing import List, Dict, Type, Optional, Set
 # # import local files
-# from ogd.common.models.FeatureData import FeatureData
+# from ogd.common.models.Feature import Feature
 # from ogd.core.generators.GeneratorLoader import GeneratorLoader
 # from ogd.core.registries.ModelRegistry import ModelRegistry
 # from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
@@ -63,8 +63,8 @@
 #         ret_val = [self._playerID, self._sessionID] + self._registry.GetFeatureValues()
 #         return [ret_val]
 
-#     def _getFeatureData(self, order:int) -> List[FeatureData]:
-#         return self._registry.GetFeatureData(order=order, player_id=self._player_id, sess_id=self._session_id)
+#     def _getFeature(self, order:int) -> List[Feature]:
+#         return self._registry.GetFeature(order=order, player_id=self._player_id, sess_id=self._session_id)
     
 #     def trainModels(self):
 #         self._registry = self._clearLines()
@@ -74,10 +74,10 @@
 #             Logger.Log(f"Training failed : {e}", logging.ERROR)
 
 
-#     def _processFeature(self, feature: FeatureData): 
+#     def _processFeature(self, feature: Feature): 
 #         print("\n\n\nInside _processFeature of ModelProcessor")  
 #         self._registry = self._clearLines()
-#         self._registry._updateFromFeatureData(feature)
+#         self._registry._updateFromFeature(feature)
 
 #     # def modelOutput(self):
 #     #     self.modelInfo()
@@ -103,35 +103,34 @@
 import logging
 from typing import List, Type, Optional
 
-from ogd.common.models.FeatureData import FeatureData
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.registries.ModelRegistry import ModelRegistry
 from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.common.models.Event import Event
+from ogd.common.models.Feature import Feature
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.schemas.games.GameSchema import GameSchema
-from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import ExportRow
 
 class ModelProcessor(ExtractorProcessor):
-    def __init__(self, LoaderClass:Type[GeneratorLoader], game_schema: GameSchema, feature_overrides:Optional[List[str]]=None):
+    def __init__(self, LoaderClass:Type[GeneratorLoader], generator_cfg:GeneratorCollectionConfig, feature_overrides:Optional[List[str]]=None):
         self._player_id    : str = "population"
         self._session_id   : str = "population"
-        super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
+        super().__init__(LoaderClass=LoaderClass, generator_cfg=generator_cfg, feature_overrides=feature_overrides)
 
     def InitializeModels(self):
         self._registry = self._createRegistry()
-        self._registry._loadFromSchema(schema=self._game_schema, loader=self._loader, overrides=self._overrides)
+        self._registry.LoadGenerators(generator_cfg=self._generator_cfg, loader=self._loader, overrides=self._overrides)
             
-    def ProcessFeature(self, feature: FeatureData):
+    def ProcessFeatures(self, feature: Feature):
         # self._registry = self._createRegistry()
         if self._registry:
-            self._registry._updateFromFeatureData(feature)
+            self._registry.UpdateFromFeature(feature)
 
     def TrainModels(self):
         # self._registry = self._createRegistry()
         if self._registry:
-            self._registry._loadFromSchema(schema=self._game_schema, loader=self._loader, overrides=self._overrides)
+            self._registry.LoadGenerators(generator_cfg=self._generator_cfg, loader=self._loader, overrides=self._overrides)
 
     @property
     def _mode(self) -> ExtractionMode:
@@ -148,5 +147,5 @@ class ModelProcessor(ExtractorProcessor):
     def _sessionID(self) -> str: return self._session_id
     def _processEvent(self, event: Event): pass
     def _getLines(self) -> List[ExportRow]: return []
-    def _getFeatureData(self, order:int) -> List[FeatureData]: return []
+    def _getFeatures(self, order:int) -> List[Feature]: return []
     def _clearLines(self) -> None: self._registry = self._createRegistry()

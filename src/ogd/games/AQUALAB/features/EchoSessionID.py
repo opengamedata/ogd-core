@@ -5,7 +5,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class EchoSessionID(SessionFeature):
 
@@ -25,8 +25,8 @@ class EchoSessionID(SessionFeature):
     def _updateFromEvent(self, event:Event) -> None:
         return
 
-    def _updateFromFeatureData(self, feature:FeatureData):
-        self._session_id = feature.FeatureValues[0]
+    def _updateFromFeature(self, feature:Feature):
+        self._session_id = feature.Values[0]
 
     def _getFeatureValues(self) -> List[Any]:
         return [f"The sess ID is: {self._session_id}"]

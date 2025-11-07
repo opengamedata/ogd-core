@@ -1364,9 +1364,13 @@
                 "description": "Play Locations",
                 "return_type": "List[bool]",
                 "subfeatures": {
-                    "LocalTime": {
+                    "SessionLocalTimes": {
                         "description": "An indicator of whether play happened during normal school hours or not",
                         "return_type": "datetime"
+                    },
+                    "SchoolToHomeConversion": {
+                        "description": "An indicator of whether play happened during normal school hours first, and non-school hours in a later session",
+                        "return_type": "bool"
                     }
                 }
             },
@@ -1522,7 +1526,7 @@
                         "description": "Total active time in the journal.",
                         "return_type": "timedelta"
                     },
-                    "ActiveSeconds": {
+                    "Active-Seconds": {
                         "description": "Active time in the journal, in seconds.",
                         "return_type": "float"
                     },
@@ -1530,7 +1534,7 @@
                         "description": "Total idle time in the journal.",
                         "return_type": "timedelta"
                     },
-                    "IdleSeconds": {
+                    "Idle-Seconds": {
                         "description": "Idle time in the journal, in seconds.",
                         "return_type": "float"
                     }

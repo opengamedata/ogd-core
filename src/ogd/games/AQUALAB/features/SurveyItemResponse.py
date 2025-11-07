@@ -4,7 +4,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.common.utils.Logger import Logger
 
 class SurveyItemResponse(PerCountFeature):
@@ -60,13 +60,13 @@ class SurveyItemResponse(PerCountFeature):
             elif self._retest:
                 self._retest_response = _responses[self.CountIndex].get("response", None)
             else:
-                if self.ExtractionMode != ExtractionMode.POPULATION:
+                if self.ExtractMode != ExtractionMode.POPULATION:
                     Logger.Log(f"SurveyItemResponse feature for {self._target_survey} had an unexpected retest, for player {event.UserID}, session {event.SessionID}!", logging.WARN)
                     self._response = _responses[self.CountIndex].get("response", None)
         else:
             Logger.Log(f"SurveyItemResponse feature for {self._target_survey} got a survey_submitted event with fewer than {self.CountIndex} items, for player {event.UserID}, session {event.SessionID}!", logging.WARN)
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

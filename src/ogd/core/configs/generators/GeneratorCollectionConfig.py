@@ -1,15 +1,19 @@
 # import standard libraries
+import inspect
 import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Self, Set
+# 3rd-party imports
+from deprecated import deprecated
 # import local files
+from ogd import games
 from ogd.common.configs.Config import Config
-from ogd.common.configs.generators.DetectorMapConfig import DetectorMapConfig
-from ogd.common.configs.generators.ExtractorMapConfig import ExtractorMapConfig
-from ogd.common.configs.generators.AggregateConfig import AggregateConfig
-from ogd.common.configs.generators.DetectorConfig import DetectorConfig
-from ogd.common.configs.generators.IteratedConfig import IteratedConfig
-from ogd.common.configs.generators.ExtractorConfig import ExtractorConfig
+from ogd.core.configs.generators.DetectorMapConfig import DetectorMapConfig
+from ogd.core.configs.generators.ExtractorMapConfig import ExtractorMapConfig
+from ogd.core.configs.generators.AggregateConfig import AggregateConfig
+from ogd.core.configs.generators.DetectorConfig import DetectorConfig
+from ogd.core.configs.generators.IteratedConfig import IteratedConfig
+from ogd.core.configs.generators.ExtractorConfig import ExtractorConfig
 from ogd.common.models.enums.IterationMode import IterationMode
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.utils.Logger import Logger
@@ -33,7 +37,7 @@ class GeneratorCollectionConfig(Config):
                                             iterated_extractors=_DEFAULT_XTOR_ITERATED, aggregate_extractors=_DEFAULT_XTOR_AGGREGATES, other_elements={})
     _DEFAULT_LEVEL_RANGE = None
     _DEFAULT_OTHER_RANGES = {}
-    _DEFAULT_GAME_FOLDER = Path("./") / "ogd" / "games"
+    _DEFAULT_GAME_FOLDER = Path(games.__file__) if Path(games.__file__).is_dir() else Path(games.__file__).parent
     @property
     def _DEFAULT_LEGACY_CONFIG(self) -> AggregateConfig:
         return AggregateConfig.FromDict("legacy", {"type":"legacy", "return_type":None, "description":"", "enabled":True})
@@ -112,8 +116,8 @@ class GeneratorCollectionConfig(Config):
 
     # 1. define instance vars
         self._game_id            : str                = game_id or name
-        self._detector_map       : DetectorMapConfig  = detector_map  or self._parseDetectorMap(unparsed_elements=unparsed_elements)
-        self._extractor_map      : ExtractorMapConfig = extractor_map or self._parseExtractorMap(unparsed_elements=unparsed_elements)
+        self._detector_map       : DetectorMapConfig  = detector_map  if detector_map  is not None else self._parseDetectorMap(unparsed_elements=unparsed_elements, schema_name=name)
+        self._extractor_map      : ExtractorMapConfig = extractor_map if extractor_map is not None else self._parseExtractorMap(unparsed_elements=unparsed_elements, schema_name=name)
         self._subunit_range      : Optional[range]    = subunit_range
         self._other_ranges       : Dict[str, range]   = other_ranges
 
@@ -151,8 +155,9 @@ class GeneratorCollectionConfig(Config):
         """
         return self.Detectors.IteratedDetectors
     @property
+    @deprecated("Use the IteratedDetectors propoerty instead")
     def PerCountDetectors(self) -> Dict[str, DetectorConfig]:
-        """Legacy alias for IteratedDetectors property
+        """Property for the dictionary of iterated (per-custom-count) detectors.
         """
         return self.Detectors.IteratedDetectors
 
@@ -178,7 +183,7 @@ class GeneratorCollectionConfig(Config):
 
     @property
     def ExtractorNames(self) -> List[str]:
-        """Property for the compiled list of all feature names.
+        """Property for the compiled list of all extractor names.
         """
         ret_val : List[str] = []
         ret_val = [extractor.Name for extractor in self.AggregateExtractors.values()] \
@@ -186,8 +191,9 @@ class GeneratorCollectionConfig(Config):
                 + [extractor.Name for extractor in self.LegacyPerLevelFeatures.values()]
         return ret_val
     @property
+    @deprecated("Use the ExtractorNames property instead")
     def FeatureNames(self) -> List[str]:
-        """Legacy alias of ExtractorNames, although technicallly this is also the list of names of extracted features
+        """Property for the compiled list of all extractor names, although technicallly this is also the list of names of extracted features
         """
         return self.ExtractorNames
 
@@ -203,8 +209,9 @@ class GeneratorCollectionConfig(Config):
         """
         return self.Extractors.IteratedExtractors
     @property
+    @deprecated("Use the IteratedExtractors property instead")
     def PerCountFeatures(self) -> Dict[str,IteratedConfig]:
-        """Legacy alias for IteratedExtractors
+        """Property for the dictionary of per-custom-count features.
         """
         return self.IteratedExtractors
 
@@ -299,7 +306,7 @@ class GeneratorCollectionConfig(Config):
         :rtype: GeneratorCollectionConfig
         """
     # 1. define local vars
-        _game_id      : str              = name
+        _game_id      : str              = name.split(".")[0]
         _level_range  : Optional[range]  = cls._parseLevelRange(unparsed_elements=unparsed_elements)
         _other_ranges : Dict[str, range] = cls._parseOtherRanges(unparsed_elements=unparsed_elements)
 
@@ -321,30 +328,6 @@ class GeneratorCollectionConfig(Config):
         )
 
     # *** PUBLIC STATICS ***
-
-    @classmethod
-    def FromFile(cls, schema_name:str, schema_path:Optional[Path] = None, search_templates:bool=True) -> "GeneratorCollectionConfig":
-        """Function to get a GeneratorCollectionConfig from a file
-
-        :param game_id: _description_
-        :type game_id: str
-        :param schema_path: _description_, defaults to None
-        :type schema_path: Optional[Path], optional
-        :param search_templates: _description_, defaults to True
-        :type search_templates: bool, optional
-        :raises ValueError: _description_
-        :return: _description_
-        :rtype: GeneratorCollectionConfig
-        """
-        ret_val : Config
-
-        game_id = schema_name.split('.')[0] # the 'schema name' is meant to match the game ID. We do want to strip off any file types, so only take string up to first '.'
-        schema_path = schema_path or cls._DEFAULT_GAME_FOLDER / game_id / "schemas"
-        ret_val = cls._fromFile(schema_name=game_id, schema_path=schema_path, search_templates=search_templates)
-        if isinstance(ret_val, GeneratorCollectionConfig):
-            return ret_val
-        else:
-            raise ValueError("The result of the class _fromFile function was not a GeneratorCollectionConfig!")
 
     # *** PUBLIC METHODS ***
 
@@ -404,6 +387,18 @@ class GeneratorCollectionConfig(Config):
         return ret_val
 
     def ExtractorEnabled(self, feature_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
+        """Function to check whether a feature with given name is enabled for the given iteration and extraction modes.
+
+        :param feature_name: _description_
+        :type feature_name: str
+        :param iter_mode: _description_
+        :type iter_mode: IterationMode
+        :param extract_mode: _description_
+        :type extract_mode: ExtractionMode
+        :raises ValueError: _description_
+        :return: _description_
+        :rtype: bool
+        """
         if self.Extractors.LegacyMode:
             return feature_name == "legacy"
         ret_val : bool
@@ -423,8 +418,9 @@ class GeneratorCollectionConfig(Config):
             ret_val = False
         return ret_val
 
+    @deprecated("Use the ExtractorEnabled property instead")
     def FeatureEnabled(self, feature_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
-        """Legacy alias for ExtractorEnabled
+        """Function to check whether a feature with given name is enabled for the given iteration and extraction modes.
 
         :param feature_name: _description_
         :type feature_name: str
@@ -465,7 +461,7 @@ class GeneratorCollectionConfig(Config):
     # *** PRIVATE STATICS ***
 
     @staticmethod
-    def _parseDetectorMap(unparsed_elements:Map) -> DetectorMapConfig:
+    def _parseDetectorMap(unparsed_elements:Map, schema_name:Optional[str]=None) -> DetectorMapConfig:
         ret_val : DetectorMapConfig
 
         detector_map = GeneratorCollectionConfig.ParseElement(
@@ -473,14 +469,15 @@ class GeneratorCollectionConfig(Config):
             valid_keys=["detectors"],
             to_type=dict,
             default_value=GeneratorCollectionConfig._DEFAULT_DETECTOR_MAP,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
         ret_val = DetectorMapConfig.FromDict(name="DetectorMap", unparsed_elements=detector_map)
 
         return ret_val
 
     @staticmethod
-    def _parseExtractorMap(unparsed_elements:Map) -> ExtractorMapConfig:
+    def _parseExtractorMap(unparsed_elements:Map, schema_name:Optional[str]=None) -> ExtractorMapConfig:
         ret_val : ExtractorMapConfig
 
         feature_map = GeneratorCollectionConfig.ParseElement(
@@ -488,13 +485,14 @@ class GeneratorCollectionConfig(Config):
             valid_keys=["extractors", "features"],
             to_type=dict,
             default_value=GeneratorCollectionConfig._DEFAULT_EXTRACTOR_MAP,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
         ret_val = ExtractorMapConfig.FromDict(name="ExtractorMap", unparsed_elements=feature_map)
         return ret_val
 
     @staticmethod
-    def _parseLevelRange(unparsed_elements:Map) -> Optional[range]:
+    def _parseLevelRange(unparsed_elements:Map, schema_name:Optional[str]=None) -> Optional[range]:
         ret_val : Optional[range] = GeneratorCollectionConfig._DEFAULT_LEVEL_RANGE
 
         level_range = GeneratorCollectionConfig.ParseElement(
@@ -502,7 +500,8 @@ class GeneratorCollectionConfig(Config):
             valid_keys=["level_range"],
             to_type=dict,
             default_value=None,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
 
         if isinstance(level_range, dict):
@@ -521,5 +520,18 @@ class GeneratorCollectionConfig(Config):
     @staticmethod
     def _parseOtherRanges(unparsed_elements:Map) -> Dict[str, range]:
         return {key : range(val.get('min', 0), val.get('max', 1)) for key,val in unparsed_elements.items() if key.endswith("_range")}
+
+    @classmethod
+    def _loadDirectories(cls, schema_name:str) -> List[str | Path]:
+        """Private function that can be optionally overridden to define additional directories in which cls.Load(...) searches for a file from which to load an instance of the class.
+
+        These extra directories are treated as optional places to search,
+        and so have a lower priority than the main search paths (./, ~/, etc.)
+
+        :return: A list of nonstandard directories in which to search for a file from which to load an instance of the class.
+        :rtype: List[str | Path]
+        """
+        game_id = schema_name.split(".")[0] if schema_name else "UNKNOWN_GAME"
+        return [cls._DEFAULT_GAME_FOLDER / game_id / "schemas"]
 
     # *** PRIVATE METHODS ***

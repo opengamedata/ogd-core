@@ -3,14 +3,14 @@ from collections import defaultdict
 from statistics import stdev
 from typing import Any, List
 # import locals
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 
-class JobsAttempted(Feature):
+class JobsAttempted(Extractor):
 
     def __init__(self, params:GeneratorParameters, mission_map:dict):
         self._mission_map = mission_map
@@ -71,7 +71,7 @@ class JobsAttempted(Feature):
                     self._times.append((event.Timestamp - self._mission_start_time).total_seconds())
                     self._mission_start_time = None
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -2,8 +2,8 @@
 import logging
 from typing import Dict, Optional, Set
 # import local files
-from ogd.common.configs.generators.GeneratorConfig import GeneratorConfig
-from ogd.common.configs.generators.SubfeatureConfig import SubfeatureConfig
+from ogd.core.configs.generators.GeneratorConfig import GeneratorConfig
+from ogd.core.configs.generators.SubfeatureConfig import SubfeatureConfig
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import Map
@@ -67,8 +67,8 @@ class ExtractorConfig(GeneratorConfig):
         """
         unparsed_elements : Map = other_elements or {}
 
-        self._subfeatures : Dict[str, SubfeatureConfig] = subfeatures or ExtractorConfig._parseSubfeatures(unparsed_elements=unparsed_elements)
-        self._return_type : str                         = return_type or ExtractorConfig._parseReturnType(unparsed_elements=unparsed_elements)
+        self._subfeatures : Dict[str, SubfeatureConfig] = subfeatures if subfeatures is not None else ExtractorConfig._parseSubfeatures(unparsed_elements=unparsed_elements, schema_name=name)
+        self._return_type : str                         = return_type if return_type is not None else ExtractorConfig._parseReturnType(unparsed_elements=unparsed_elements, schema_name=name)
 
         # Don't explicitly pass in other params, let them be parsed from other_elements.
         super().__init__(name=name, enabled=enabled, type_name=type_name, description=description, other_elements=unparsed_elements)
@@ -90,17 +90,18 @@ class ExtractorConfig(GeneratorConfig):
     # *** PRIVATE STATICS ***
 
     @staticmethod
-    def _parseReturnType(unparsed_elements:Map) -> str:
+    def _parseReturnType(unparsed_elements:Map, schema_name:Optional[str]=None) -> str:
         return ExtractorConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=["return_type"],
             to_type=str,
             default_value=ExtractorConfig._DEFAULT_RETURN_TYPE,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
 
     @staticmethod
-    def _parseSubfeatures(unparsed_elements) -> Dict[str, SubfeatureConfig]:
+    def _parseSubfeatures(unparsed_elements, schema_name:Optional[str]=None) -> Dict[str, SubfeatureConfig]:
         ret_val : Dict[str, SubfeatureConfig]
 
         subfeatures = ExtractorConfig.ParseElement(
@@ -108,7 +109,9 @@ class ExtractorConfig(GeneratorConfig):
             valid_keys=["subfeatures"],
             to_type=dict,
             default_value=ExtractorConfig._DEFAULT_SUBFEATURES,
-            remove_target=True
+            remove_target=True,
+            optional_element=True,
+            schema_name=schema_name
         )
         if isinstance(subfeatures, dict):
             ret_val = {name:SubfeatureConfig.FromDict(name=name, unparsed_elements=elems) for name,elems in subfeatures.items()}

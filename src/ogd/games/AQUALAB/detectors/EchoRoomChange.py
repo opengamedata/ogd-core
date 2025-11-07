@@ -14,8 +14,8 @@ class EchoRoomChange(Detector):
     Not intended for "real" usage.
     Instead, use as a simple example for reviewing how to write event detectors.
 
-    :param Feature: Base class for a Custom Feature class.
-    :type Feature: _type_
+    :param Extractor: Base class for a Custom Feature class.
+    :type Extractor: _type_
     """
     def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None]):
         super().__init__(params=params, trigger_callback=trigger_callback)

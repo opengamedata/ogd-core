@@ -6,7 +6,7 @@ from unittest import TestCase
 from ogd.common.configs.TestConfig import TestConfig
 from ogd.common.utils.Logger import Logger
 # import locals
-from src.ogd.common.configs.generators.SubfeatureConfig import SubfeatureConfig
+from src.ogd.core.configs.generators.SubfeatureConfig import SubfeatureConfig
 from tests.config.t_config import settings
 
 class test_SubfeatureConfig(TestCase):

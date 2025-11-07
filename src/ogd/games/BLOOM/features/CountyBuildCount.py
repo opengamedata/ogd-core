@@ -1,12 +1,12 @@
 """# import libraries
 from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
-class CountyBuildCount(Feature):
+class CountyBuildCount(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.build_counts: Dict[str, int] = {}
@@ -28,7 +28,7 @@ class CountyBuildCount(Feature):
             else:
                 self.build_counts[county_name] += 1
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:
@@ -43,7 +43,7 @@ from typing import Any, Dict, List
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 # import PerCountyFeature
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
@@ -80,7 +80,7 @@ class CountyBuildCount(PerCountyFeature):
         if county_name and county_name in self.build_counts:
             self.build_counts[county_name] += 1
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:
@@ -97,10 +97,10 @@ from typing import Any, Dict, List
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 # import PerCountyFeature
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.games.BLOOM.features.PerCountyFeature import PerCountyFeature
 
 class CountyBuildCount(PerCountyFeature):
@@ -121,7 +121,7 @@ class CountyBuildCount(PerCountyFeature):
     def _updateFromEvent(self, event: Event) -> None:
         self.count += 1
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         pass
 
     def _getFeatureValues(self) -> List[Any]:

@@ -2,15 +2,15 @@
 from typing import List, Optional, Type
 # import locals
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.common.configs.DataTableConfig import DataTableConfig
 
 class LegacyLoader(GeneratorLoader):
-    def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
-        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
+    def __init__(self, player_id:str, session_id:str, game_schema:DataTableConfig, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
+        super().__init__(player_id=player_id, session_id=session_id, generator_config=game_schema, mode=mode, feature_overrides=feature_overrides)
 
-    def GetFeatureClass(self, feature_type:str) -> Optional[Type[Feature]]:
+    def GetExtractorClass(self, feature_type:str) -> Optional[Type[Extractor]]:
         return None
 
     def _validateMode(self, feature_type) -> bool:

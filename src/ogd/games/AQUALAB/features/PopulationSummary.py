@@ -6,7 +6,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class PopulationSummary(SessionFeature):
 
@@ -28,13 +28,13 @@ class PopulationSummary(SessionFeature):
     def _updateFromEvent(self, event: Event) -> None:
         return
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         if feature.FeatureType == "JobsCompleted":
-            self._user_completions[feature.PlayerID].append(feature.FeatureValues[0])
+            self._user_completions[feature.PlayerID].append(feature.Values[0])
         elif feature.FeatureType == "SessionID" and feature.SessionID not in self._user_sessions[feature.PlayerID]:
             self._user_sessions[feature.PlayerID].append(feature.SessionID)
         elif feature.FeatureType == "SessionDuration":
-            self._user_session_times[feature.PlayerID].append(feature.FeatureValues[0])
+            self._user_session_times[feature.PlayerID].append(feature.Values[0])
 
     def _getFeatureValues(self) -> List[Any]:
         num_sessions = [len(self._user_sessions[user]) for user in self._user_sessions]

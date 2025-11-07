@@ -10,7 +10,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.legacy.LegacyFeature import LegacyFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.schemas.games.GameSchema import GameSchema
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 
 # temp comment
 
@@ -27,10 +27,10 @@ class CrystalExtractor(LegacyFeature):
     #                    by this extractor instance.
     #  @param game_table A data structure containing information on how the db
     #                    table assiciated with this game is structured. 
-    #  @param game_schema A dictionary that defines how the game data itself is
+    #  @param generator_config A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, params:GeneratorParameters, game_schema:GameSchema, session_id:str):
-        super().__init__(params=params, game_schema=game_schema, session_id=session_id)
+    def __init__(self, params:GeneratorParameters, generator_config:GeneratorCollectionConfig, session_id:str):
+        super().__init__(params=params, generator_config=generator_config, session_id=session_id)
         # Define custom private data.
         self._start_times: typing.Dict       = {}
         self._end_times:   typing.Dict       = {}
@@ -54,7 +54,7 @@ class CrystalExtractor(LegacyFeature):
         level = event.GameState['level']
         event_client_time = event.Timestamp
         # Check for invalid row.
-        if self.ExtractionMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
+        if self.ExtractMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
             Logger.Log(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.SessionID}!", logging.ERROR)
         # If row is valid, process it.
         else:

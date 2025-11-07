@@ -41,8 +41,8 @@ class SubfeatureConfig(Schema):
         """
         unparsed_elements : Map = other_elements or {}
         
-        self._return_type : str = return_type or self._parseReturnType(unparsed_elements=unparsed_elements)
-        self._description : str = description or self._parseDescription(unparsed_elements=unparsed_elements)
+        self._return_type : str = return_type if return_type is not None else self._parseReturnType(unparsed_elements=unparsed_elements, schema_name=name)
+        self._description : str = description if description is not None else self._parseDescription(unparsed_elements=unparsed_elements, schema_name=name)
 
         super().__init__(name=name, other_elements=other_elements)
 
@@ -101,23 +101,25 @@ class SubfeatureConfig(Schema):
     # *** PRIVATE STATICS ***
 
     @staticmethod
-    def _parseReturnType(unparsed_elements:Map) -> str:
+    def _parseReturnType(unparsed_elements:Map, schema_name:Optional[str]=None) -> str:
         return SubfeatureConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=["return_type"],
             to_type=str,
             default_value=SubfeatureConfig._DEFAULT_RETURN_TYPE,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
 
     @staticmethod
-    def _parseDescription(unparsed_elements:Map):
+    def _parseDescription(unparsed_elements:Map, schema_name:Optional[str]=None):
         return SubfeatureConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=["description"],
             to_type=str,
             default_value=SubfeatureConfig._DEFAULT_DESCRIPTION,
-            remove_target=True
+            remove_target=True,
+            schema_name=schema_name
         )
 
     # *** PRIVATE METHODS ***

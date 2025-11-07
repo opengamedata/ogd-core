@@ -10,7 +10,7 @@
 
 # from typing import List
 # from ogd.common.models.enums.ExtractionMode import ExtractionMode
-# from ogd.common.models.FeatureData import FeatureData
+# from ogd.common.models.Feature import Feature
 # from ogd.core.generators.Generator import GeneratorParameters
 # from ogd.core.generators.models.PopulationModel import PopulationModel
 # from ogd.common.utils.Logger import Logger
@@ -35,21 +35,21 @@
 #             'TotalBuildCount'
 #         ]
     
-#     def _updateFromFeatureData(self, feature:FeatureData):
-#         print("\n\n\nInside _updateFromFeatureData of KMeansModel")
+#     def _updateFromFeature(self, feature:Feature):
+#         print("\n\n\nInside _updateFromFeature of KMeansModel")
 #         if hasattr(feature, 'ExtractionMode') and feature.ExtractionMode == ExtractionMode.SESSION:
 #             if feature.Name == "CropBuildCount":
-#                 self._crop_build_count.append(feature.FeatureValues[0])
+#                 self._crop_build_count.append(feature.Values[0])
 #             elif feature.Name == "DairyBuildCount":
-#                 self._dairy_build_count.append(feature.FeatureValues[0])
+#                 self._dairy_build_count.append(feature.Values[0])
 #             elif feature.Name == "HouseBuildCount":
-#                 self._house_build_count.append(feature.FeatureValues[0])
+#                 self._house_build_count.append(feature.Values[0])
 #             elif feature.Name == "HoversBeforeCropPlacement":
-#                 self._hovers_before_crop_placement.append(feature.FeatureValues[0])
+#                 self._hovers_before_crop_placement.append(feature.Values[0])
 #             elif feature.Name == "TotalBuildCount":
-#                 self._total_build_count.append(feature.FeatureValues[0])
+#                 self._total_build_count.append(feature.Values[0])
 
-#             Logger.Log(f"[KMeansModel] Received feature: {feature.Name} = {feature.FeatureValues[0]}", logging.DEBUG)
+#             Logger.Log(f"[KMeansModel] Received feature: {feature.Name} = {feature.Values[0]}", logging.DEBUG)
 
 
 #     def _updateFromEvent(self, event):
@@ -57,7 +57,7 @@
     
 #     def _train(self):
 #         print("\n\n\nInside _train of KMeansModel")
-#         # self._updateFromFeatureData(feature)
+#         # self._updateFromFeature(feature)
 #         min_length = min(
 #             len(self._crop_build_count),
 #             len(self._dairy_build_count), 
@@ -112,14 +112,14 @@
 #         print(f"Training completed. Silhouette Score: {self._silhouette_score}")
 
 
-#     def _apply(self, apply_to:List[FeatureData]) -> FeatureData:
+#     def _apply(self, apply_to:List[Feature]) -> Feature:
 #         if self._kmeans is None:
 #             raise ValueError("Model must be trained before applying")
         
 #         input_features = {}
         
 #         for feature_data in apply_to:
-#             if feature_data.ExportMode == self.ExtractionMode:
+#             if feature_data.ExportMode == self.ExtractMode:
 #                 if feature_data.Name == "CropBuildCount":
 #                     input_features["CropBuildCount"] = feature_data.FeatureValues[0]
 #                 elif feature_data.Name == "DairyBuildCount":
@@ -131,7 +131,7 @@
 #                 elif feature_data.Name == "TotalBuildCount":
 #                     input_features["TotalBuildCount"] = feature_data.FeatureValues[0]
     
-#         required_features = self._featureFilter(self.ExtractionMode)
+#         required_features = self._featureFilter(self.ExtractMode)
 #         if len(input_features) != len(required_features):
 #             raise ValueError(f"Missing required features. Got {list(input_features.keys())}, need {required_features}")
         
@@ -153,7 +153,7 @@
         
 #         result_feature = apply_to[0] if apply_to else None
 #         if result_feature:
-#             result_feature.FeatureValues = [cluster_assignment]
+#             result_feature.Values = [cluster_assignment]
 #             result_feature.Name = "PredictedCluster"
         
 #         return result_feature
@@ -218,7 +218,7 @@ from sklearn.metrics import silhouette_score
 import logging
 
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.models.PopulationModel import PopulationModel
 from ogd.common.utils.Logger import Logger
@@ -253,12 +253,12 @@ class KMeansModel(PopulationModel):
             'TotalBuildCount'
         ]
     
-# In KMeansModel.py, replace your _updateFromFeatureData with this detailed version:
+# In KMeansModel.py, replace your _updateFromFeature with this detailed version:
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         # --- ADD THIS DETAILED DEBUGGING BLOCK ---
         print(" DEBUGGING: CHECKPOINT 2 (KMeansModel) ")
-        print(f"Received feature: {feature.Name} with value {feature.FeatureValues[0]}")
+        print(f"Received feature: {feature.Name} with value {feature.Values[0]}")
         mode_check_passed = False
         if hasattr(feature, 'ExtractionMode') and feature.ExtractionMode == ExtractionMode.SESSION:
             mode_check_passed = True
@@ -270,7 +270,7 @@ class KMeansModel(PopulationModel):
         # 2. If the mode was correct, check the Name condition
         if mode_check_passed:
             try:
-                value_as_string = str(feature.FeatureValues[0])
+                value_as_string = str(feature.Values[0])
                 numeric_value = int(value_as_string.split()[-1])
             except (ValueError, IndexError):
                 numeric_value = 0
@@ -354,14 +354,14 @@ class KMeansModel(PopulationModel):
 
 
 
-    def _apply(self, apply_to:List[FeatureData]) -> FeatureData:
+    def _apply(self, apply_to:List[Feature]) -> Feature:
         if self._kmeans is None:
             raise ValueError("Model must be trained before applying")
         
         input_features = {}
         
         for feature_data in apply_to:
-            if feature_data.ExportMode == self.ExtractionMode:
+            if feature_data.ExportMode == self.ExtractMode:
                 if feature_data.Name == "CropBuildCount":
                     input_features["CropBuildCount"] = feature_data.FeatureValues[0]
                 elif feature_data.Name == "DairyBuildCount":
@@ -373,7 +373,7 @@ class KMeansModel(PopulationModel):
                 elif feature_data.Name == "TotalBuildCount":
                     input_features["TotalBuildCount"] = feature_data.FeatureValues[0]
     
-        required_features = self._featureFilter(self.ExtractionMode)
+        required_features = self._featureFilter(self.ExtractMode)
         if len(input_features) != len(required_features):
             raise ValueError(f"Missing required features. Got {list(input_features.keys())}, need {required_features}")
         
@@ -395,7 +395,7 @@ class KMeansModel(PopulationModel):
         
         result_feature = apply_to[0] if apply_to else None
         if result_feature:
-            result_feature.FeatureValues = [cluster_assignment]
+            result_feature.Values = [cluster_assignment]
             result_feature.Name = "PredictedCluster"
         
         return result_feature

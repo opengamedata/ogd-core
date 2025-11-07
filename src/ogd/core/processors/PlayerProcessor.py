@@ -1,17 +1,14 @@
 # import standard libraries
 import logging
-import traceback
-from typing import List, Dict, Type, Optional, Set
+from typing import List, Type, Optional, Set
 # import local files
+from ogd.core.configs.generators.GeneratorCollectionConfig import GeneratorCollectionConfig
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
-from ogd.core.processors.SessionProcessor import SessionProcessor
 from ogd.common.models.Event import Event
-from ogd.common.models.enums.ExportMode import ExportMode
+from ogd.common.models.FeatureSet import FeatureSet
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
-from ogd.common.schemas.games.GameSchema import GameSchema
 from ogd.common.utils.Logger import Logger
 from ogd.common.utils.typing import ExportRow
 
@@ -22,7 +19,7 @@ class PlayerProcessor(ExtractorProcessor):
     # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the PlayerProcessor class.
-    def __init__(self, LoaderClass: Type[GeneratorLoader], game_schema: GameSchema, player_id:str,
+    def __init__(self, LoaderClass: Type[GeneratorLoader], generator_cfg:GeneratorCollectionConfig, player_id:str,
                  feature_overrides:Optional[List[str]]=None):
         """Constructor for the PlayerProcessor class.
            Simply stores some data for use later, including the type of extractor to use.
@@ -31,7 +28,7 @@ class PlayerProcessor(ExtractorProcessor):
                             This should correspond to whatever game_id is in the TableSchema.
         :type LoaderClass: Type[GeneratorLoader]
         :param game_schema: A dictionary that defines how the game data itself is structured.
-        :type game_schema: GameSchema
+        :type game_schema: DataTableConfig
         :param player_id: _description_
         :type player_id: str
         :param feature_overrides: _description_, defaults to None
@@ -42,9 +39,9 @@ class PlayerProcessor(ExtractorProcessor):
         Logger.Log(f"Setting up PlayerProcessor for {player_id}...", logging.DEBUG, depth=2)
         self._player_id : str      = player_id
         self._sessions  : Set[str] = set()
-        super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
+        super().__init__(LoaderClass=LoaderClass, generator_cfg=generator_cfg, feature_overrides=feature_overrides)
         ## Define instance vars
-        Logger.Log(f"Done", logging.DEBUG, depth=2)
+        Logger.Log("Done", logging.DEBUG, depth=2)
 
     def __str__(self):
         return f"PlayerProcessor({self._player_id})"
@@ -88,8 +85,8 @@ class PlayerProcessor(ExtractorProcessor):
         ret_val = [self._player_id, len(self._sessions)] + self._registry.GetFeatureValues()
         return [ret_val]
 
-    def _getFeatureData(self, order:int) -> List[FeatureData]:
-        return self._registry.GetFeatureData(order=order, player_id=self._player_id)
+    def _getFeatures(self, order:int, app_id:Optional[str]=None) -> FeatureSet:
+        return self._registry.GetFeatures(order=order, app_id=app_id, sess_id="*", player_id=self._player_id)
 
     ##  Function to empty the list of lines stored by the PlayerProcessor.
     def _clearLines(self) -> None:

@@ -2,14 +2,14 @@ from collections import Counter
 from typing import Any, List, Optional
 
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 from collections import defaultdict
 
 
-class ActiveJobs(Feature):
+class ActiveCounties(Extractor):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         self.last_unlocked_county = dict()  
@@ -28,7 +28,7 @@ class ActiveJobs(Feature):
         county_name = event.EventData.get("county_name")
         self.last_unlocked_county[player_id] = county_name
 
-    def _updateFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeature(self, feature: Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:

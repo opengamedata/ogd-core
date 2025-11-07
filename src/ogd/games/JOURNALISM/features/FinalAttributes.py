@@ -7,7 +7,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
 class FinalAttributes(PerLevelFeature):
     def __init__(self, params:GeneratorParameters):
@@ -32,7 +32,7 @@ class FinalAttributes(PerLevelFeature):
         _stats = json.loads(event.GameState.get("current_stats", _default))
         self._last_attribs = dict(zip(self._ATTRIBUTE_ENUM, _stats))
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         #add logic to make sure that MODE is session, not player so we don't get duplicates
         return
 

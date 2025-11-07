@@ -7,12 +7,12 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 # import locals
 from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
-from ogd.common.models.FeatureData import FeatureData
+from ogd.common.models.Feature import Feature
 
-class JobsAttempted(Feature):
+class JobsAttempted(Extractor):
 
     def __init__(self, params:GeneratorParameters, job_map:dict, diff_map: dict):
         self._player_id = None
@@ -86,28 +86,28 @@ class JobsAttempted(Feature):
 
         # self._prev_timestamp = event.Timestamp
 
-    def _updateFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeature(self, feature:Feature):
         if feature.FeatureType == "JobActiveTime":
             if feature.CountIndex == self.CountIndex:
-                _active_time = feature.FeatureValues[0]
-                if self.ExtractionMode == ExtractionMode.SESSION \
+                _active_time = feature.Values[0]
+                if self.ExtractMode == ExtractionMode.SESSION \
                 and feature.ExportMode == ExtractionMode.SESSION:
                     # session should only have one time, namely the time for the session.
                     self._times = [_active_time]
                     # print(f"JobsAttempted got session-session for player {self._player_id}")
-                elif self.ExtractionMode == ExtractionMode.PLAYER \
+                elif self.ExtractMode == ExtractionMode.PLAYER \
                 and feature.ExportMode   == ExtractionMode.PLAYER:
                     # player should only have one time, namely the time for the player.
                     self._times = [_active_time]
                     # print(f"JobsAttempted got player-player for player {self._player_id}")
-                elif self.ExtractionMode == ExtractionMode.POPULATION \
+                elif self.ExtractMode == ExtractionMode.POPULATION \
                 and feature.ExportMode   == ExtractionMode.PLAYER:
                     # population could have many times. Only add to list if they actually spent time there, though.
                     if _active_time > 0:
                         self._times.append(_active_time)
                     # print(f"JobsAttempted got population-player for player {self._player_id}")
                 # else:
-                    # print(f"JobsAttempted got a {self.ExtractionMode.name}-{feature.ExportMode.name} matching, not helpful.")
+                    # print(f"JobsAttempted got a {self.ExtractMode.name}-{feature.ExportMode.name} matching, not helpful.")
         else:
             print(f"JobsAttempted got a feature of wrong type: {feature.FeatureType}")
 
