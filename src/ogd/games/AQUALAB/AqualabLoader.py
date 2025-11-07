@@ -21,6 +21,7 @@ from . import features
 
 EXPORT_PATH : Final[str] = "games/AQUALAB/DBExport.json"
 
+
 class AqualabLoader(GeneratorLoader):
     """Loader subclass for Aqualab generators"""
 
@@ -45,18 +46,19 @@ class AqualabLoader(GeneratorLoader):
         self._task_map = {}
 
         # Load Aqualab jobs export and map job names to integer values
+        METADATA = {}
         _dbexport_path = Path(AQUALAB.__file__) if Path(AQUALAB.__file__).is_dir() else Path(AQUALAB.__file__).parent
         with open(_dbexport_path / "DBExport.json", "r") as file:
-            export = json.load(file)
+            METADATA = json.load(file)
 
-            task_num = 1
-            for i, job in enumerate(export["jobs"], start=1):
-                self._job_map[job["id"]] = i
-                self._diff_map[i] = job["difficulties"]
-                for task in job["tasks"]:
-                    task_by_job = job["id"] + "_" + task["id"]
-                    self._task_map[task_by_job] = task_num
-                    task_num += 1
+        task_num = 1
+        for i, job in enumerate(METADATA.get("jobs", {}), start=1):
+            self._job_map[job["id"]] = i
+            self._diff_map[i] = job["difficulties"]
+            for task in job["tasks"]:
+                task_by_job = job["id"] + "_" + task["id"]
+                self._task_map[task_by_job] = task_num
+                task_num += 1
 
         # Update level count
         self._game_schema._max_level = len(self._job_map) - 1
@@ -93,10 +95,14 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = EchoSessionID.EchoSessionID(params=extractor_params)
                 case "EventList":
                     ret_val = EventList.EventList(params=extractor_params)
+                case "ExperimentalCondition":
+                    ret_val = ExperimentalCondition.ExperimentalCondition(params=extractor_params, job_map=self._job_map)
+                case "PlayedNonexperimentalVersion":
+                    ret_val = PlayedNonexperimentalVersion.PlayedNonexperimentalVersion(params=extractor_params)
                 case "JobsCompleted":
-                    ret_val = JobsCompleted.JobsCompleted(params=extractor_params, player_id=self._player_id)
-                case "JobTriesInArgument":
-                    ret_val = JobTriesInArgument.JobTriesInArgument(params=extractor_params, job_map=self._job_map)
+                    ret_val = JobsCompleted.JobsCompleted(params=extractor_params)
+                case "JobQuitsPerComplete":
+                    ret_val = JobQuitsPerComplete.JobQuitsPerComplete(params=extractor_params)
                 case "JobPlayTime":
                     ret_val = JobPlayTime.JobPlayTime(params=extractor_params, job_map=self._job_map)
                 case "ModelExportCount":
@@ -105,8 +111,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = ModelInterveneCount.ModelInterveneCount(params=extractor_params, job_map=self._job_map)
                 case "ModelPredictCount":
                     ret_val = ModelPredictCount.ModelPredictCount(params=extractor_params, job_map=self._job_map)
-                # case "PlayLocations":
-                #     ret_val = PlayLocations.PlayLocations(params=extractor_params)
+                case "PlayLocations":
+                     ret_val = PlayLocations.PlayLocations(params=extractor_params)
                 case "PlayerSummary":
                     ret_val = PlayerSummary.PlayerSummary(params=extractor_params)
                 case "PopulationSummary":
@@ -131,6 +137,10 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = TankRulesCount.TankRulesCount(params=extractor_params)
                 case "TopJobCompletionDestinations":
                     ret_val = TopJobCompletionDestinations.TopJobCompletionDestinations(params=extractor_params, job_map=self._job_map)
+                case "TotalJobQuits":
+                    ret_val = TotalJobQuits.TotalJobQuits(params=extractor_params)
+                case "TotalJobRecommendationReceived":
+                    ret_val = TotalJobRecommendationReceived.TotalJobRecommendationReceived(params=extractor_params)
                 case "TopJobSwitchDestinations":
                     ret_val = TopJobSwitchDestinations.TopJobSwitchDestinations(params=extractor_params, job_map=self._job_map)
                 case "TotalArcticTime":
@@ -157,6 +167,12 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = TotalModelingTime.TotalModelingTime(params=extractor_params)
                 case "TotalPlayTime":
                     ret_val = TotalPlayTime.TotalPlayTime(params=extractor_params)
+                case "TotalSessionTime":
+                    ret_val = TotalSessionTime.TotalSessionTime(params=extractor_params, threshold=int(schema_args.get("threshold", 30)))
+                case "TotalPopulationTime":
+                    ret_val = TotalPopulationTime.TotalPopulationTime(params=extractor_params, threshold=int(schema_args.get("threshold", 30)))
+                case "TotalPlayerTime":
+                    ret_val = TotalPlayerTime.TotalPlayerTime(params=extractor_params, threshold=int(schema_args.get("threshold", 30)))
                 case "UserAvgActiveTime":
                     ret_val = UserAvgActiveTime.UserAvgActiveTime(params=extractor_params, player_id=self._player_id)
                 case "UserAvgSessionDuration":
@@ -172,6 +188,26 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = JobActiveTime.JobActiveTime(params=extractor_params, job_map=self._job_map)
                 case "JobArgumentation":
                     ret_val = JobArgumentation.JobArgumentation(params=extractor_params, job_map=self._job_map)
+                case "JobArgumentationFails":
+                    ret_val = JobArgumentationFails.JobArgumentationFails(params=extractor_params, job_map=self._job_map)
+                case "JobArgumentationNoReject":
+                    ret_val = JobArgumentationNoReject.JobArgumentationNoReject(params=extractor_params, job_map=self._job_map)
+                case "JobArgumentationSuccessRatio":
+                    ret_val = JobArgumentationSuccessRatio.JobArgumentationSuccessRatio(params=extractor_params, job_map=self._job_map)
+                case "JobArgumentationSuccessRatioPerDifficulty":
+                    ret_val = JobArgumentationSuccessRatioPerDifficulty.JobArgumentationSuccessRatioPerDifficulty(params=extractor_params, diff_map=self._diff_map, difficulty_type=schema_args.get("difficulty_type"))
+                case "JobArgumentationRejects":
+                    ret_val = JobArgumentationRejects.JobArgumentationRejects(params=extractor_params, job_map=self._job_map)
+                case "JobTriesInArgument":
+                    ret_val = JobTriesInArgument.JobTriesInArgument(params=extractor_params, job_map=self._job_map)
+                case "JobTriesInArgumentPerDifficulty":
+                    ret_val = JobTriesInArgumentPerDifficulty.JobTriesInArgumentPerDifficulty(params=extractor_params, diff_map=self._diff_map, difficulty_type=schema_args.get("difficulty_type"))
+                case "JobTotalAttempts":
+                    ret_val = JobTotalAttempts.JobTotalAttempts(params=extractor_params, job_map=self._job_map)
+                case "JobAttempted":
+                    ret_val = JobAttempted.JobAttempted(params=extractor_params, job_map=self._job_map)
+                case "JobComplete":
+                    ret_val = JobComplete.JobComplete(params=extractor_params, job_map=self._job_map)
                 case "JobCompletionTime":
                     ret_val = JobCompletionTime.JobCompletionTime(params=extractor_params, job_map=self._job_map)
                 case "JobDiveSitesCount":
@@ -190,12 +226,14 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = JobLocationChangesNoKelp.JobLocationChangesNoKelp(params=extractor_params, job_map=self._job_map)
                 case "JobModeling":
                     ret_val = JobModeling.JobModeling(params=extractor_params, job_map=self._job_map)
+                case "JobName":
+                    ret_val = JobName.JobName(params=extractor_params, job_map=self._job_map)
                 case "JobPriorAttempt":
                     ret_val = JobPriorAttempt.JobPriorAttempt(params=extractor_params, job_map=self._job_map)
                 case "JobPriorComplete":
                     ret_val = JobPriorComplete.JobPriorComplete(params=extractor_params, job_map=self._job_map)
-                case "JobStartCount":
-                    ret_val = JobStartCount.JobStartCount(params=extractor_params, job_map=self._job_map)
+                case "JobStarted":
+                    ret_val = JobStarted.JobStarted(params=extractor_params, job_map=self._job_map)
                 case "JobTasksCompleted":
                     ret_val = JobTasksCompleted.JobTasksCompleted(params=extractor_params, job_map=self._job_map)
                 case "JobsAttempted":
@@ -206,6 +244,20 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = RegionJobCount.RegionJobCount(params=extractor_params)
                 case "SyncCompletionTime":
                     ret_val = SyncCompletionTime.SyncCompletionTime(params=extractor_params)
+                case "QuitJob":
+                    ret_val = QuitJob.QuitJob(params=extractor_params, job_map=self._job_map)
+                case "JobRecommendationReceived":
+                    ret_val = JobRecommendationReceived.JobRecommendationReceived(params=extractor_params, job_map=self._job_map)
+                case "FollowedAdvice":
+                    ret_val = FollowedAdvice.FollowedAdvice(params=extractor_params, job_map=self._job_map)
+                case "SuccessfulAdvice":
+                    ret_val = SuccessfulAdvice.SuccessfulAdvice(params=extractor_params, job_map=self._job_map)
+                case "SurveyCompleted":
+                    ret_val = SurveyCompleted.SurveyCompleted(params=extractor_params)
+                case "SurveyItemResponse":
+                    _target = schema_args.get("target", "NO TARGET CONFIGURED")
+                    _retest = schema_args.get("retest", False)
+                    ret_val = SurveyItemResponse.SurveyItemResponse(params=extractor_params, target_survey=_target, retest=_retest)
                 case _:
                     Logger.Log(f"'{feature_type}' is not a valid per-count feature type for Aqualab.")
         return ret_val

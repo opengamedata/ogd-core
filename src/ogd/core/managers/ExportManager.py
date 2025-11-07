@@ -230,6 +230,9 @@ class ExportManager:
             case "WAVES":
                 from ogd.games.WAVES.WaveLoader import WaveLoader
                 _loader_class = WaveLoader
+            case "WEATHER_STATION":
+                from ogd.games.WEATHER_STATION.WeatherStationLoader import WeatherStationLoader
+                _loader_class = WeatherStationLoader
             case "PENGUINS":
                 from ogd.games.PENGUINS.PenguinsLoader import PenguinsLoader
                 _loader_class = PenguinsLoader
@@ -265,13 +268,17 @@ class ExportManager:
 
         Logger.Log(f"Retrieving slice [{slice_num}/{slice_count}]...", logging.INFO, depth=2)
         start : datetime = datetime.now()
+        # HACK : setting to skip algae and nudge hint events here directly
         # TODO : Add a way to configure what to exclude at higher level, here. So we can easily choose to leave out certain events.
-        _exclude_rows = None
-        # HACK : setting to skip algae events here directly
-        if request.GameID == 'BLOOM':
-            _exclude_rows = ['algae_growth_end', 'algae_growth_begin']
-        if request.GameID == 'LAKELAND':
-            _exclude_rows = ['CUSTOM.24']
+        match request.GameID:
+            case 'BLOOM':
+                _exclude_rows = ['algae_growth_end', 'algae_growth_begin']
+            case 'THERMOLAB' | 'THERMOVR':
+                _exclude_rows = ['nudge_hint_displayed', 'nudge_hint_hidden', 'simulation_data']
+            case 'LAKELAND':
+                _exclude_rows = ['CUSTOM.24']
+            case _:
+                _exclude_rows = None
         ret_val = request.Interface.EventsFromIDs(id_list=next_slice_ids, id_mode=request.Range.IDMode, exclude_rows=_exclude_rows)
         time_delta = datetime.now() - start
         if ret_val is not None:

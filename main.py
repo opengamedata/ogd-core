@@ -69,7 +69,7 @@ if __name__ == '__main__':
     if config.WithProfiling:
         profiler.disable()
         profile = pstats.Stats(profiler)
-        profile.sort_stats(pstats.SortKey.CUMULATIVE).print_stats('ogd', .1)
+        profile.sort_stats(pstats.SortKey.CUMULATIVE).print_stats('ogd\\\\core|ogd\\\\games', .1)
 
     if not success:
         sys.exit(1)

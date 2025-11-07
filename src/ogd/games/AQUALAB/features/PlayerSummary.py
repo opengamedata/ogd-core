@@ -10,6 +10,7 @@ from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.utils.Logger import Logger
+from time import sleep
 
 class PlayerSummary(SessionFeature):
 
@@ -31,16 +32,15 @@ class PlayerSummary(SessionFeature):
 
     def _updateFromFeatureData(self, feature:FeatureData):
         user_id = feature.PlayerID
-
-        if user_id not in self._summary:
-            self._summary[user_id] = {
-                "active_time": 0,
-                "jobs_completed": [],
-                "sessions": [],
-                "num_sessions": 0
-            }
-
+        
         if feature.ExportMode == ExtractionMode.PLAYER:
+            if user_id not in self._summary:
+                self._summary[user_id] = {
+                    "active_time": 0,
+                    "jobs_completed": [],
+                    "sessions": [],
+                    "num_sessions": 0
+                }
             if feature.FeatureType == "JobsCompleted":
                 self._summary[user_id]["jobs_completed"] = feature.FeatureValues[0]
             elif feature.FeatureType == "SessionDuration":
@@ -53,6 +53,7 @@ class PlayerSummary(SessionFeature):
         elif feature.ExportMode == ExtractionMode.SESSION:
             if feature.FeatureType == "SessionID":
                 self._summary[user_id]["sessions"].append(feature.FeatureValues[0])
+
 
     def _getFeatureValues(self) -> List[Any]:
         for summary in self._summary.values():

@@ -1587,6 +1587,11 @@
         "enabled": true,
         "description": "Number of hovers before crop placement",
         "return_type": "int"
+      },
+      "TotalSessionTime":{ 
+        "enabled": true,
+        "description": "Total session time",
+        "return_type": "list"
       }
     },
     "aggregate_legacy": {

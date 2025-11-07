@@ -9,150 +9,60 @@
     },
 
     "game_state" : {
-        "seconds_from_launch" : {
-            "type" : "float",
-            "description" : "The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*."
+        "current_lab" : {
+            "type": "Dict[str, int] | null",
+            "details": {
+                "Index":"int",
+                "IsActive":"bool",
+                "LabName":"str",
+                "LabAuthor":"str",
+                "PercentComplete":"float",
+                "Sections":"EmptyList"
+            },
+            "description": "A description of the currently-active lab, or null if not in lab mode."
+        },
+        "current_section" : {
+            "type": "Dict[str, int] | null",
+            "details": {
+                "Description":"str",
+                "Index":"int",
+                "IsActive":"bool",
+                "IsComplete":"bool",
+                "LabName":"str",
+                "Tasks":"EmptyList"
+            },
+            "description": "A description of the currently-active lab section, or null if not in lab mode."
+        },
+        "current_task" : {
+            "type": "Dict[str, int] | null",
+            "details": {
+                "AvailableTools":"List[enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)]",
+                "Category":"enum(TARGET_STATE, CONSTANT_VARIABLE, MULTIPLE_CHOICE, MULTIPLE_SELECT, WORD_BANK)",
+                "Index":"int",
+                "IsActive":"bool",
+                "IsComplete":"bool",
+                "LabName":"str",
+                "Prompts":"List[str]"
+            },
+            "description": "A description of the currently-active lab task, or null if not in lab mode."
+        },
+        "headset" : {
+            "type": "Dict[str, List[int] | None",
+            "details": {
+                "post":"List[float]",
+                "rot":"List[float]"
+            },
+            "description": "The headset position and rotation at the time the event occurred."
         },
         "platform": {
             "type": "Platform",
             "description": "The mode of the game being started, either on a VR headset or the web-based version."
         },
-        "tablet_mode" : {
-            "type" : "TabletModes"
-        },
         "play_score" : {
             "type" : "int",
             "description" : "The current score the player has in play/game mode."
         },
-        "region" : {
-            "type" : "enum(WATER, VAPOR, TWO_PHASE)",
-            "description" : "The current graph region of the water in the piston"
-        },
-        "pressure" : {
-            "type" : "float",
-            "description" : "The current pressure (P) in the piston in kPa"
-        },
-        "temperature" : {
-            "type" : "float",
-            "description" : "The current temperature (T) of the water in the piston in K"
-        },
-        "volume" : {
-            "type" : "float",
-            "description" : "The current volume (V) of the water in the piston m^3"
-        },
-        "internal_energy" : {
-            "type" : "float",
-            "description" : "The current internal energy (u) in the piston"
-        },
-        "entropy" : {
-            "type" : "float",
-            "description" : "The current entropy (s) in the piston in kJ/(kgK)"
-        },
-        "enthalpy" : {
-            "type" : "float",
-            "description" : "The current enthalpy (h) in the piston in kJ/kg"
-        },
-        "vapor" : {
-            "type" : "float",
-            "description" : "The current percentage (by mass) of water in the vapor phase in the piston"
-        },
-        "heat_delta" : {
-            "type" : "float",
-            "description" : "Current readout of net heat change due to inputs from the workstation terminal"
-        },
-        "pos_x" : {
-            "type" : "float",
-            "description" : "The current x-position of the headset at the moment the event occurred."
-        },
-        "pos_y" : {
-            "type" : "float",
-            "description" : "The current y-position of the headset at the moment the event occurred."
-        },
-        "pos_z" : {
-            "type" : "float",
-            "description" : "The current z-position of the headset at the moment the event occurred."
-        },
-        "rot_x" : {
-            "type" : "float",
-            "description" : "The x-component of the orientation of the headset at the moment the event occurred."
-        },
-        "rot_y" : {
-            "type" : "float",
-            "description" : "The y-component of the orientation of the headset at the moment the event occurred."
-        },
-        "rot_z" : {
-            "type" : "float",
-            "description" : "The z-component of the orientation of the headset at the moment the event occurred."
-        },
-        "rot_w" : {
-            "type" : "float",
-            "description" : "The w-component of the orientation of the headset at the moment the event occurred."
-        },
-        "insulation_tool" : {
-            "type": "Dict[str, int]",
-            "details": {
-                "enabled":"bool",
-                "slider_val":"float"
-            },
-            "description": "The state of the insulation tool: whether it is enabled, and the percent effectiveness of the insulation."
-        },
-        "lower_stop_tool" : {
-            "type": "Dict[str, int]",
-            "details": {
-                "enabled":"bool",
-                "slider_val":"float"
-            },
-            "description": "The state of the lower stop tool: whether it is enabled, and the minimum piston volume in m^3/kg."
-        },
-        "upper_stop_tool" : {
-            "type": "Dict[str, int]",
-            "details": {
-                "enabled":"bool",
-                "slider_val":"float"
-            },
-            "description": "The state of the upper stop tool: whether it is enabled, and the maximum piston volume in m^3/kg."
-        },
-        "increase_weight_tool" : {
-            "type": "Dict[str, int]",
-            "details": {
-                "enabled":"bool",
-                "slider_val":"float"
-            },
-            "description": "The state of the weight (pressure increase) tool: whether it is enabled, and the pressure increase in kPa."
-        },
-        "decrease_weight_tool" : {
-            "type": "Dict[str, int]",
-            "details": {
-                "enabled":"bool",
-                "slider_val":"float"
-            },
-            "description": "The state of the balloon (pressure reduction) tool: whether it is enabled, and the pressure reduction in kPa."
-        },
-        "heat_tool" : {
-            "type": "Dict[str, int]",
-            "details": {
-                "enabled":"bool",
-                "slider_val":"float"
-            },
-            "description": "The state of the bunsen burner tool: whether it is enabled, and the heat per second it generates in kJ/s."
-        },
-        "cooling_tool" : {
-            "type": "Dict[str, int]",
-            "details": {
-                "enabled":"bool",
-                "slider_val":"float"
-            },
-            "description": "The state of the cooling coil tool: whether it is enabled, and the heat per second it removes in kJ/s."
-        },
-        "chamber_temperature_tool" : {
-            "type": "Dict[str, int]",
-            "details": {
-                "enabled":"bool",
-                "slider_val":"float"
-            },
-            "description": "The state of the chamber/ambient temperature tool: whether ambient heat exchange is enabled, and the ambient temperature in K."
-        },
-        "chamber_pressure_tool" : {
+        "slider_chamber_pressure" : {
             "type": "Dict[str, int]",
             "details": {
                 "enabled":"bool",
@@ -160,34 +70,94 @@
             },
             "description": "The state of the chamber/ambient pressure tool: the ambient pressure in kPa (the ambient pressure is always enabled)."
         },
-        "current_lab" : {
-            "type": "Dict[str, int] | null",
+        "slider_chamber_temperature" : {
+            "type": "Dict[str, int]",
             "details": {
-                "lab_name":"str",
-                "author":"str",
-                "percent_complete":"float"
+                "enabled":"bool",
+                "slider_val":"float"
             },
-            "description": "A description of the currently-active lab, or null if not in lab mode."
+            "description": "The state of the chamber/ambient temperature tool: whether ambient heat exchange is enabled, and the ambient temperature in K."
         },
-        "current_section" : {
-            "type": "Dict[str, int] | null",
+        "slider_cooling" : {
+            "type": "Dict[str, int]",
             "details": {
-                "section_number":"int",
-                "description":"str",
-                "is_complete":"bool"
+                "enabled":"bool",
+                "slider_val":"float"
             },
-            "description": "A description of the currently-active lab section, or null if not in lab mode."
+            "description": "The state of the cooling coil tool: whether it is enabled, and the heat per second it removes in kJ/s."
         },
-        "current_task" : {
-            "type": "Dict[str, int] | null",
+        "slider_heat" : {
+            "type": "Dict[str, int]",
             "details": {
-                "category":"enum(TARGET_STATE, CONSTANT_VARIABLE, MULTIPLE_CHOICE, MULTIPLE_SELECT, WORD_BANK)",
-                "task_number":"int",
-                "is_complete":"bool",
-                "available_tools":"List[enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)]",
-                "prompts":"List[str]"
+                "enabled":"bool",
+                "slider_val":"float"
             },
-            "description": "A description of the currently-active lab task, or null if not in lab mode."
+            "description": "The state of the bunsen burner tool: whether it is enabled, and the heat per second it generates in kJ/s."
+        },
+        "slider_insulation" : {
+            "type": "Dict[str, int]",
+            "details": {
+                "enabled":"bool",
+                "slider_val":"float"
+            },
+            "description": "The state of the insulation tool: whether it is enabled, and the percent effectiveness of the insulation."
+        },
+        "slider_lower_stop" : {
+            "type": "Dict[str, int]",
+            "details": {
+                "enabled":"bool",
+                "slider_val":"float"
+            },
+            "description": "The state of the lower stop tool: whether it is enabled, and the minimum piston volume in m^3/kg."
+        },
+        "slider_upper_stop" : {
+            "type": "Dict[str, int]",
+            "details": {
+                "enabled":"bool",
+                "slider_val":"float"
+            },
+            "description": "The state of the upper stop tool: whether it is enabled, and the maximum piston volume in m^3/kg."
+        },
+        "slider_weight" : {
+            "type": "Dict[str, int]",
+            "details": {
+                "enabled":"bool",
+                "slider_val":"float"
+            },
+            "description": "The state of the weight (pressure increase) tool: whether it is enabled, and the pressure increase in kPa."
+        },
+        "slider_negative_weight" : {
+            "type": "Dict[str, int]",
+            "details": {
+                "enabled":"bool",
+                "slider_val":"float"
+            },
+            "description": "The state of the balloon (pressure reduction) tool: whether it is enabled, and the pressure reduction in kPa."
+        },
+        "tablet_mode" : {
+            "type" : "TabletModes"
+        },
+        "thermo_attributes" : {
+            "type": "Dict[str, str | float]",
+            "details": {
+                "P":"float",
+                "Region":"str",
+                "T":"float",
+                "V":"float",
+                "h":"float",
+                "s":"float",
+                "u":"float",
+                "x":"float"
+            },
+            "description": "The state of the cooling coil tool: whether it is enabled, and the heat per second it removes in kJ/s."
+        },
+        "seconds_from_launch" : {
+            "type" : "float",
+            "description" : "The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*. WARNING : Not implemented as of log version 5"
+        },
+        "heat_delta" : {
+            "type" : "float",
+            "description" : "Current readout of net heat change due to inputs from the workstation terminal. WARNING : Not implemented as of log version 5"
         }
     },
 
@@ -1245,12 +1215,12 @@
                 "section" : {
                     "type": "Dict[str, Any]",
                     "details": {
-                        "lab_name" : "str",
-                        "section_number" : "int",
-                        "description" : "str",
-                        "is_complete" : "bool",
-                        "is_active" : "bool",
-                        "tasks" : "List[Dict]"
+                        "Description": "str",
+                        "Index" : "int",
+                        "LabName" : "str",
+                        "IsActive" : "bool",
+                        "IsComplete" : "bool",
+                        "Tasks" : "List[Dict]"
                     },
                     "description" : "Details of the section the player selected, including task sub-objects."
                 }
@@ -1277,32 +1247,40 @@
         }
     },
 
-   "features": {
+    "features": {
         "per_count": {
-        },
-        "aggregate":{
-            "LabCompleteCount": {
+            "CorrectAnswerOnFirstGuess": {
                 "enabled": false,
+                "type": "CorrectAnswerOnFirstGuess",
+                "description": "Counts the number of correct answers given on the first attempt",
+                "return_type": "int",
+                "prefix":"quiz_",
+                "count": []
+            }
+        },
+        "aggregate": {
+            "LabCompleteCount": {
+                "enabled": true,
                 "type": "LabCompleteCount",
                 "description": "Count of number of labs completed",
                 "return_type": "int"
             },
             "LeftHandMoves": {
                 "enabled": false,
-                "type": "LabCompleteCount",
-                "description": "Count of number of Left hand moves",
+                "type": "LeftHandMoves",
+                "description": "Count of number of left hand moves",
                 "return_type": "int"
             },
-            "RighHandMoves": {
+            "RightHandMoves": {
                 "enabled": false,
-                "type": "RighHandMoves",
+                "type": "RightHandMoves",
                 "description": "Count of number of right hand moves",
                 "return_type": "int"
             },
             "PhasesReached": {
                 "enabled": false,
                 "type": "PhasesReached",
-                "description": "Phases Reached during a certain task",
+                "description": "Phases reached during a certain task",
                 "return_type": "dict"
             },
             "PlayMode": {
@@ -1317,9 +1295,9 @@
                 "description": "Count of number of tasks completed",
                 "return_type": "int"
             },
-            "ToolNudegCount": {
+            "ToolNudgeCount": {
                 "enabled": false,
-                "type": "ToolNudegCount",
+                "type": "ToolNudgeCount",
                 "description": "Count of number of times a tool has been nudged",
                 "return_type": "dict"
             },
@@ -1328,6 +1306,24 @@
                 "type": "ToolSliderTime",
                 "description": "Counts the total time the slider has been moved",
                 "return_type": "timedelta"
+            },
+            "SectionCompleteCount": {
+                "enabled": true,
+                "type": "SectionCompleteCount",
+                "description": "Count of sections completed within a lab or task",
+                "return_type": "int"
+            },
+            "TotalPlayTime": {
+                "enabled": true,
+                "type": "TotalPlayTime",
+                "description": "Total time spent playing the current session",
+                "return_type": "timedelta"
+            },
+            "AnswerAttemptsCount": {
+                "enabled": true,
+                "type": "AnswerAttemptsCount",
+                "description": "Counts the total number of answer attempts",
+                "return_type": "int"
             }
         }
     },

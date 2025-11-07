@@ -37,6 +37,11 @@ class LakelandLoader(GeneratorLoader):
                 ret_val = TotalBuildCount.TotalBuildCount(params=extractor_params)
             case "HoversBeforeCropPlacement":
                 ret_val = HoversBeforeCropPlacement.HoversBeforeCropPlacement(params=extractor_params)
+            case "TotalEventsPerSession":
+                ret_val = TotalEventsPerSession.TotalEventsPerSession(params=extractor_params)
+            case "TotalSessionTime":
+                threshold = schema_args.get("threshold", 50)
+                ret_val = TotalSessionTime.TotalSessionTime(params=extractor_params, threshold=threshold)
             case _:
                 ret_val = None
 

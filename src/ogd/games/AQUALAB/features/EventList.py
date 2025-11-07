@@ -70,13 +70,17 @@ class EventList(Feature):
         return []
 
     def _updateFromEvent(self, event:Event) -> None:
+        _job_name = event.GameState.get('job_name', event.EventData.get('job_name', "UNDEFINED"))
+        if isinstance(_job_name, dict):
+            _job_name = _job_name['string_value']
+
         if event.UserID:
             next_event = {
                 "name": event.EventName,
                 "user_id": event.UserID,
                 "session_id": event.SessionID,
                 "timestamp": event.Timestamp.isoformat(),
-                "job_name": event.GameState.get('job_name', event.EventData.get('job_name', "UNDEFINED")),
+                "job_name": _job_name,
                 "index": event.EventSequenceIndex,
                 "event_primary_detail": None
             }
@@ -86,11 +90,7 @@ class EventList(Feature):
 
             if event.EventName in self._details_map:
                 param_name = self._details_map[event.EventName][0]
-
-                try:
-                    next_event["event_primary_detail"] = event.EventData[param_name]
-                except KeyError as err:
-                    raise KeyError(f"Event of type {event.EventName} did not have parameter {param_name}, valid parameters are {event.EventData.keys()}")
+                next_event["event_primary_detail"] = event.EventData.get(param_name, event.GameState.get(param_name, "NOT FOUND"))
 
             self._event_list.append(next_event)
 
@@ -103,4 +103,4 @@ class EventList(Feature):
     # *** Optionally override public functions. ***
     @staticmethod
     def MinVersion() -> Optional[str]:
-        return "1"
+        return "3"

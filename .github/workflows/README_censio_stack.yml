@@ -4,7 +4,7 @@ run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' &
 on:
   push:
     branches:
-    - master
+    - main
     paths:
     - 'src/ogd/games/CENSIO_STACK/schemas/CENSIO_STACK.json.template'
     - '.github/workflows/README_censio_stack.yml'

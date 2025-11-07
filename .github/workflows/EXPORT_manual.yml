@@ -26,15 +26,15 @@ on:
       month_year:
         description: "Month/Year: the month(s) and year(s) to export (comma-separated). Only used if 'monthly' is true."
         required: false
-        default: "['01/2021']"
+        default: "['01/2025']"
       start_date:
         description: "Start Date: the start date for the export"
         required: false
-        default: "01/01/2021"
+        default: "01/01/2025"
       end_date:
         description: "End Date: the end date for the export"
         required: false
-        default: "01/01/2021"
+        default: "01/01/2025"
       upload_to_ogd:
         type: boolean
         description: "Upload to OGD: if true, the exported files will be uploaded to the Open Game Data website, else they will be uploaded to GitHub as an artifact of the GH Action."
@@ -129,12 +129,6 @@ jobs:
         shadowspect_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
         shipwrecks_id:  ${{ secrets.BQ_SHIPWRECKS_PROJECT_ID }}
         shipwrecks_key: ${{ secrets.BQ_SHIPWRECKS_JSON }}
-    - name: Connect to VPN
-      uses: opengamedata/actions-openconnect-vpn@v1.1
-      with:
-        username: ${{ secrets.VPN_USER }}
-        password: ${{ secrets.VPN_PASS }}
-        endpoint: "soe.vpn.wisc.edu"
     - name: Set up Config File
       uses: ./.github/actions/OGD_config
       with:
@@ -145,15 +139,15 @@ jobs:
         ssh_pass: ${{secrets.VPN_PASS}}
         slice_size: ${{ github.event.inputs.slice_size }}
         log_level: ${{ github.event.inputs.log_level }}
-    - name: Set up Alternate Data Source
-      if: github.event.inputs.use_alternate_data_source == 'true'
-      uses: ./.github/actions/set_custom_db
-      with:
-        game_id:       ${{ matrix.game }}
-        source_id:     ${{ github.event.inputs.source_id }}
-        database_name: ${{ github.event.inputs.database_name }}
-        table_name:    ${{ github.event.inputs.table_name }}
-        schema_id:     ${{ github.event.inputs.schema_id }}
+    # - name: Set up Alternate Data Source
+    #   if: github.event.inputs.use_alternate_data_source == 'true'
+    #   uses: ./.github/actions/set_custom_db
+    #   with:
+    #     game_id:       ${{ matrix.game }}
+    #     source_id:     ${{ github.event.inputs.source_id }}
+    #     database_name: ${{ github.event.inputs.database_name }}
+    #     table_name:    ${{ github.event.inputs.table_name }}
+    #     schema_id:     ${{ github.event.inputs.schema_id }}
 
     # 3. Execute process
     - name: Do Export of Month
@@ -184,12 +178,22 @@ jobs:
 
 
     # 4. Cleanup & complete
+    # If uploading file to server, need to get VPN connection in this case.
+    - name: Connect to VPN
+      if: github.event.inputs.upload_to_ogd == 'true'
+      uses: opengamedata/actions-openconnect-vpn@v1.1
+      with:
+        username: ${{ secrets.VPN_USER }}
+        password: ${{ secrets.VPN_PASS }}
+        endpoint: "soe.vpn.wisc.edu"
     - name: Upload files to OpenGameData Website
       if: github.event.inputs.upload_to_ogd == 'true'
       uses: ./.github/actions/upload_export
       with:
         game: ${{ matrix.game }}
         host: ${{ vars.FD_WEB_HOST }}
+        remote_user: ${{ secrets.VPN_USER }}
+        remote_key: ${{ secrets.VPN_KEY }}
         source_path: ./data/${{ matrix.game }}
         remote_data_path: "/var/www/opengamedata/data"
     - name: Upload data as artifact
@@ -209,6 +213,7 @@ jobs:
     if: github.event.inputs.upload_to_ogd == 'true'
     needs: export_data
     uses: ./.github/workflows/REINDEX_fileserver.yml
+    secrets: inherit
     with:
       FILE_SERVER: ${{ vars.FD_WEB_HOST }}
       data_path: "/var/www/opengamedata/data"
