@@ -2,6 +2,7 @@
 from datetime import datetime, timedelta
 import logging, warnings
 from typing import Any, List, Optional
+from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 # import locals
 from ogd.common.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
@@ -41,4 +42,4 @@ class ModelPredictCount(Extractor):
     # *** Optionally override public functions. ***
     @staticmethod
     def MinVersion() -> Optional[str]:
-        return "1"
+        return "3"

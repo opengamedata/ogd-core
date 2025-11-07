@@ -65,8 +65,8 @@ class BloomLoader(GeneratorLoader):
                     ret_val = ActiveTime.ActiveTime(params=extractor_params, idle_threshold=schema_args.get("threshold", 30))
                 case "AlertCount":
                     ret_val = AlertCount.AlertCount(params=extractor_params)
-                case "ActiveCounties":
-                    ret_val = ActiveCounties.ActiveCounties(params=extractor_params)
+                case "ActiveJobs":
+                    ret_val = ActiveJobs.ActiveJobs(params=extractor_params)
                 case "AlertResponseCount":
                     ret_val = AlertResponseCount.AlertResponseCount(params=extractor_params)
                 case "AlertReviewCount":
@@ -114,10 +114,10 @@ class BloomLoader(GeneratorLoader):
                     ret_val = QuitOnCityFail.QuitOnCityFail(params=extractor_params)
                 case "QuitOnBankruptcy":
                     ret_val = QuitOnBankruptcy.QuitOnBankruptcy(params=extractor_params)
-                case "TopCountySwitchDestinations":
-                    ret_val = TopCountySwitchDestinations.TopCountySwitchDestinations(params=extractor_params)
-                case "TopCountyCompletionDestinations":
-                    ret_val = TopCountyCompletionDestinations.TopCountyCompletionDestinations(params=extractor_params)
+                case "TopJobSwitchDestinations":
+                    ret_val = TopJobSwitchDestinations.TopJobSwitchDestinations(params=extractor_params)
+                case "TopJobCompletionDestinations":
+                    ret_val = TopJobCompletionDestinations.TopJobCompletionDestinations(params=extractor_params)
                 case "BuildingInspectorTabCount": 
                     ret_val = BuildingInspectorTabCount.BuildingInspectorTabCount(params=extractor_params)
                 case "GoodPolicyCount":

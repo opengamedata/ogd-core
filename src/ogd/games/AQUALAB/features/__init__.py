@@ -12,6 +12,10 @@ __all__ = [
     "FollowedAdvice",
     "JobActiveTime",
     "JobArgumentation",
+    "JobArgumentationFails",
+    "JobArgumentationNoReject",
+    "JobArgumentationSuccessRatio",
+    "JobArgumentationSuccessRatioPerDifficulty",
     "JobArgumentationRejects",
     "JobAttempted",
     "JobTotalAttempts",
@@ -36,6 +40,7 @@ __all__ = [
     "JobStarted",
     "JobTasksCompleted",
     "JobTriesInArgument",
+    "JobTriesInArgumentPerDifficulty",
     "QuitJob",
     "ModelExportCount",
     "ModelInterveneCount",
@@ -47,12 +52,12 @@ __all__ = [
     "RegionJobCount",
     "RegionName",
     "SessionDiveSitesCount",
+    "SessionJobsCompleted",
     "SessionDuration",
     "SessionDurationPerJob",
     "SessionGuideCount",
     "SessionHelpCount",
     "SessionID",
-    "SessionJobsCompleted",
     "SuccessfulAdvice",
     "SurveyCompleted",
     "SurveyItemResponse",
@@ -70,7 +75,6 @@ __all__ = [
     "TotalExperimentationTime",
     "TotalGuideCount",
     "TotalHelpCount",
-    "TimeInJournal",
     "TotalJobRecommendationReceived",
     "TotalKelpTime",
     "TotalModelingTime",
@@ -95,6 +99,10 @@ from . import PlayedNonexperimentalVersion
 from . import FollowedAdvice
 from . import JobActiveTime
 from . import JobArgumentation
+from . import JobArgumentationFails
+from . import JobArgumentationNoReject
+from . import JobArgumentationSuccessRatio
+from . import JobArgumentationSuccessRatioPerDifficulty
 from . import JobArgumentationRejects
 from . import JobAttempted
 from . import JobTotalAttempts
@@ -108,7 +116,6 @@ from . import JobHelpCount
 from . import JobLocationChanges
 from . import JobLocationChangesNoKelp
 from . import JobQuitsPerComplete
-from . import TimeInJournal
 from . import JobModeling
 from . import JobName
 from . import JobPlayTime
@@ -120,6 +127,7 @@ from . import JobRecommendationReceived
 from . import JobStarted
 from . import JobTasksCompleted
 from . import JobTriesInArgument
+from . import JobTriesInArgumentPerDifficulty
 from . import QuitJob
 from . import ModelExportCount
 from . import ModelInterveneCount
@@ -131,12 +139,12 @@ from . import PopulationSummary
 from . import RegionJobCount
 from . import RegionName
 from . import SessionDiveSitesCount
+from . import SessionJobsCompleted
 from . import SessionDuration
 from . import SessionDurationPerJob
 from . import SessionGuideCount
 from . import SessionHelpCount
 from . import SessionID
-from . import SessionJobsCompleted
 from . import SuccessfulAdvice
 from . import SurveyCompleted
 from . import SurveyItemResponse

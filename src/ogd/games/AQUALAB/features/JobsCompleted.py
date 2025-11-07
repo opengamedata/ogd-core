@@ -8,8 +8,7 @@ from ogd.common.models.Feature import Feature
 
 class JobsCompleted(SessionFeature):
 
-    def __init__(self, params:GeneratorParameters, player_id:str):
-        self._player_id = player_id
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._jobs_completed = []
 
@@ -23,20 +22,19 @@ class JobsCompleted(SessionFeature):
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        if event.UserID == self._player_id:
-            _job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
-            if event.app_version == 'Aqualab' or event.app_version == 'None':
-                self._jobs_completed.append(_job_name.get('string_value'))
-            else:
-                self._jobs_completed.append(_job_name)
+        _job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
+        if event.app_version == 'Aqualab' or event.app_version == 'None':
+            self._jobs_completed.append(_job_name.get('string_value'))
+        else:
+            self._jobs_completed.append(_job_name)
 
     def _updateFromFeature(self, feature:Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [len(self._jobs_completed), self._jobs_completed]
+        return [len(self._jobs_completed), len(set(self._jobs_completed)), self._jobs_completed]
 
     # *** Optionally override public functions. ***
 
     def Subfeatures(self) -> List[str]:
-        return ["Names"]
+        return ["UniqueCount", "Names"]

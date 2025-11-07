@@ -92,6 +92,7 @@ settings = {
         "MAGNET":               { "source":"OPENGAMEDATA_BQ",    "schema":"OPENGAMEDATA_BIGQUERY",  "database":"magnet",               "table":"magnet_daily" },
         "MASHOPOLIS":           { "source":"OPENGAMEDATA_BQ",    "schema":"OPENGAMEDATA_BIGQUERY",  "database":"mashopolis",           "table":"mashopolis_daily" },
         "PENGUINS":             { "source":"OPENGAMEDATA_BQ",    "schema":"OPENGAMEDATA_BIGQUERY",  "database":"penguins",             "table":"penguins_daily" },
+        "PENNYCOOK":            { "source":"OPENGAMEDATA_BQ",    "database":"pennycook",            "table":"pennycook_daily",            "schema":"OPENGAMEDATA_BIGQUERY" },
         "SHADOWSPECT":          { "source":"OPENGAMEDATA_BQ",    "schema":"OPENGAMEDATA_BIGQUERY",  "database":"shadowspect",          "table":"shadowspect_daily" },
         "SHIPWRECKS":           { "source":"SHIPWRECKS_BQ",      "schema":"FIREBASE",               "database":"analytics_269167605",  "table":"events" },
         "THERMOVR":             { "source":"OPENGAMEDATA_BQ",    "schema":"OPENGAMEDATA_BIGQUERY",  "database":"thermovr",             "table":"thermovr_daily" },

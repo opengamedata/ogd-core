@@ -15,6 +15,7 @@ from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.games import THERMOLAB
+from ogd.games.THERMOLAB import features
 from ogd.games.THERMOLAB.detectors import *
 from ogd.games.THERMOLAB.features import *
 from . import features
@@ -108,7 +109,7 @@ class ThermoLabLoader(GeneratorLoader):
         ret_val: Optional[Detector] = None
         match detector_type:
             case "player_move":
-                ret_val = player_move.player_move(params=extractor_params, trigger_callback=trigger_callback)
+                ret_val = SliderMove.SliderMove(params=extractor_params, trigger_callback=trigger_callback)
             case _:
                 Logger.Log(f"'{detector_type}' is not a valid detector for ThermoLab.")
         return ret_val

@@ -1,8 +1,12 @@
 # Specific things in this project that shouldn't go to git:
+*-data/
 data/
 config/*.json
+config/*.json.bak
 config/config.py
+config/config.py.new
 src/ogd/games/*/schemas/*.json
+src/ogd/games/*/schemas/*.json.bak
 tests/config/t_config.py
 /*.png
 /*.jpg
@@ -137,3 +141,4 @@ venv.bak/
 OGD_venv/
 john_temp/
 games/JOWILDER/convert.py
+src/ogd/games/THERMOLAB/names_output.txt
