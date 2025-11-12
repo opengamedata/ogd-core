@@ -1,5 +1,5 @@
 import logging
-from typing import Any, List, Optional
+from typing import Any, Dict, List, Optional
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.common.models.Event import Event
@@ -27,8 +27,8 @@ class SurveyCompleted(PerCountFeature):
 
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        self._completed = False
-        self._responses = {}
+        self._completed : bool       = False
+        self._responses : List[Dict] = []
 
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
@@ -55,16 +55,16 @@ class SurveyCompleted(PerCountFeature):
 
     def _updateFromEvent(self, event: Event) -> None:
         self._completed = True
-        self._responses = event.EventData.get("responses", {})
+        self._responses.append(event.EventData.get("responses", {}))
 
     def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._completed, self.KNOWN_SURVEY_NAMES[self.CountIndex], self._responses]
+        return [self._completed, self.KNOWN_SURVEY_NAMES[self.CountIndex], len(self._responses), self._responses]
 
     def Subfeatures(self) -> List[str]:
-        return ["Name", "Responses"]
+        return ["Name", "ResponseCount", "Responses"]
 
     @staticmethod
     def MinVersion() -> Optional[str]:
