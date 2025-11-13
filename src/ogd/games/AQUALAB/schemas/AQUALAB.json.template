@@ -1290,6 +1290,18 @@
                 "description": "Returns the first event branch",
                 "return_type": "str"
             },
+            "FinalBestiary": {
+                "enabled": true,
+                "type": "FinalBestiary",
+                "description": "Returns the final contents of the bestiary, the last time the player switched jobs.",
+                "return_type": "list",
+                "subfeatures": {
+                    "Size" : {
+                        "description": "The number of items in the bestiary",
+                        "return_type": "int"
+                    }
+                }
+            },
             "PlayedNonexperimentalVersion": {
                 "enabled": true,
                 "type": "PlayedNonexperimentalVersion",

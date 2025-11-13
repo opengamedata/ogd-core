@@ -97,6 +97,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = EventList.EventList(params=extractor_params)
                 case "ExperimentalCondition":
                     ret_val = ExperimentalCondition.ExperimentalCondition(params=extractor_params, job_map=self._job_map)
+                case "FinalBestiary":
+                    ret_val = FinalBestiary.FinalBestiary(params=extractor_params)
                 case "PlayedNonexperimentalVersion":
                     ret_val = PlayedNonexperimentalVersion.PlayedNonexperimentalVersion(params=extractor_params)
                 case "JobsCompleted":
