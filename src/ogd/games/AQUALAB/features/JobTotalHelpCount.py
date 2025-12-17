@@ -10,7 +10,7 @@ from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 
-class JobHelpPopulationCount(PerJobFeature):
+class JobTotalHelpCount(PerJobFeature):
 
     def __init__(self, params:GeneratorParameters, job_map:dict):
         self._job_map = job_map
