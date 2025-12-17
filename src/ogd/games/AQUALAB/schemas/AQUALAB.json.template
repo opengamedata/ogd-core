@@ -674,6 +674,24 @@
                 "description": "The total number of players who attempted the job.",
                 "return_type": "int"
             },
+            "JobTotalHelpCount": {
+                "enabled": true,
+                "type": "JobTotalHelpCount",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "The total number of times players asked for help in the job.",
+                "return_type": "int",
+                "subfeatures": {
+                    "ByTask": {
+                        "description": "Mapping of task names to number of times they asked for help.",
+                        "return_type": "dict"
+                    },
+                    "Players": {
+                        "description": "Number of individual players who asked for help",
+                        "return_type": "int"
+                    }
+                }
+            },
             "JobArgumentationRejects": {
                 "enabled": true,
                 "type": "JobArgumentationRejects",
