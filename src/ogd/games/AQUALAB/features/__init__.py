@@ -20,6 +20,7 @@ __all__ = [
     "JobArgumentationRejects",
     "JobAttempted",
     "JobTotalAttempts",
+    "JobTotalHelpCount",
     "JobComplete",
     "JobCompletionTime",
     "JobDiveSitesCount",
@@ -108,6 +109,7 @@ from . import JobArgumentationSuccessRatioPerDifficulty
 from . import JobArgumentationRejects
 from . import JobAttempted
 from . import JobTotalAttempts
+from . import JobTotalHelpCount
 from . import JobComplete
 from . import JobCompletionTime
 from . import JobDiveSitesCount

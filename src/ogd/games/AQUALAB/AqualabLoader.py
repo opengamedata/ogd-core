@@ -206,6 +206,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = JobTriesInArgumentPerDifficulty.JobTriesInArgumentPerDifficulty(params=extractor_params, diff_map=self._diff_map, difficulty_type=schema_args.get("difficulty_type"))
                 case "JobTotalAttempts":
                     ret_val = JobTotalAttempts.JobTotalAttempts(params=extractor_params, job_map=self._job_map)
+                case "JobTotalHelpCount":
+                    ret_val = JobTotalHelpCount.JobTotalHelpCount(params=extractor_params, job_map=self._job_map)
                 case "JobAttempted":
                     ret_val = JobAttempted.JobAttempted(params=extractor_params, job_map=self._job_map)
                 case "JobComplete":
