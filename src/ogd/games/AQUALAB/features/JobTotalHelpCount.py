@@ -37,7 +37,7 @@ class JobTotalHelpCount(PerJobFeature):
             player_ct    = feature.FeatureValues[0]
             player_tasks = feature.FeatureValues[1]
 
-            self._player_count += 1
+            self._player_count += 1 if player_ct > 0 else 0
             self._total_count += player_ct
             for key in player_tasks.keys():
                 if key in self._by_task:
