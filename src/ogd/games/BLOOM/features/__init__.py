@@ -41,6 +41,8 @@ __all__ = [
     "TopJobCompletionDestinations",
     "BuildingInspectorTabCount",
     "GoodPolicyCount",
+    "PlayerProgression",
+    "PopulationProgression",
     # "PhosphorusViewTime",
     # "InspectorResponseCount"
 ]
@@ -85,5 +87,7 @@ from . import TopJobSwitchDestinations
 from . import TopJobCompletionDestinations
 from . import BuildingInspectorTabCount
 from . import GoodPolicyCount
+from . import PlayerProgression
+from . import PopulationProgression
 # from . import PhosphorusViewTime
 # from . import InspectorResponseCount

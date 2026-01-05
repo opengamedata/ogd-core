@@ -120,6 +120,10 @@ class BloomLoader(GeneratorLoader):
                     ret_val = BuildingInspectorTabCount.BuildingInspectorTabCount(params=extractor_params)
                 case "GoodPolicyCount":
                     ret_val = GoodPolicyCount.GoodPolicyCount(params=extractor_params)
+                case "PlayerProgression":
+                    ret_val = PlayerProgression.PlayerProgression(params=extractor_params)
+                case "PopulationProgression":
+                    ret_val = PopulationProgression.PopulationProgression(params=extractor_params)
                 # case "PhosphorusViewTime":
                 #     ret_val = PhosphorusViewTime.PhosphorusViewTime(params=extractor_params)
                 # case "InspectorResponseCount":
