@@ -16,9 +16,10 @@ class PlayerProgression(Feature):
         self.links = {} # nested dict (src_hub_id -> dest_hub_id -> count & type) of links
         self.prev_node = {}
         self.current_session_id = None
-        self.prev_event_timestamp = timedelta(0)
+        self.prev_event_timestamp = None
         self.hybernation_time = timedelta(0)
-        self.game_start_timestamp = timedelta(0)
+        self.hybernation_time_since_prev_node = timedelta(0)  # Track hibernation since prev_node was set
+        self.game_start_timestamp = None
 
         
     
@@ -43,7 +44,12 @@ class PlayerProgression(Feature):
             self.current_session_id = session_id
         
         if session_id != self.current_session_id:
-            self.hybernation_time += event.Timestamp - self.prev_event_timestamp
+            if self.prev_event_timestamp is not None:
+                gap = event.Timestamp - self.prev_event_timestamp
+                self.hybernation_time += gap
+                # Only accumulate hibernation time since prev_node if prev_node exists
+                if self.prev_node and "timestamp" in self.prev_node:
+                    self.hybernation_time_since_prev_node += gap
             self.prev_event_timestamp = event.Timestamp
             self.current_session_id = session_id
 
@@ -58,13 +64,21 @@ class PlayerProgression(Feature):
 
 
         # update ending node (Urban) based on win_game event
-        if event.EventName == "win_game":     
+        if event.EventName == "win_game":
+            if self.prev_node and "timestamp" in self.prev_node:
+                time_spent = event.Timestamp - self.prev_node["timestamp"] - self.hybernation_time_since_prev_node
+                # Ensure time_spent is not negative (can happen if events are out of order)
+                if time_spent < timedelta(0):
+                    time_spent = timedelta(0)
+            else:
+                time_spent = timedelta(0)
             self.nodes["Urban"] = {     
                 "node_count": 1,
                 "percentage_completed": 1,
-                "time_spent": event.Timestamp - self.prev_node["timestamp"] - self.hybernation_time,
+                "time_spent": time_spent,
             }
             self.hybernation_time = timedelta(0)
+            self.hybernation_time_since_prev_node = timedelta(0)
             
         # update intermediate nodes and links for county_unlocked event
         if event.EventName == "county_unlocked":
@@ -78,10 +92,14 @@ class PlayerProgression(Feature):
                     "time_spent": timedelta(0),
                 }
             
-            if self.prev_node and event.EventName == "county_unlocked":
+            if self.prev_node and "timestamp" in self.prev_node and event.EventName == "county_unlocked":
                 self.nodes[self.prev_node["id"]]["percentage_completed"] = 1
-                self.nodes[self.prev_node["id"]]["time_spent"] = event.Timestamp - self.prev_node["timestamp"] - self.hybernation_time
-                self.hybernation_time = timedelta(0)
+                time_spent = event.Timestamp - self.prev_node["timestamp"] - self.hybernation_time_since_prev_node
+                # Ensure time_spent is not negative (can happen if events are out of order)
+                if time_spent < timedelta(0):
+                    time_spent = timedelta(0)
+                self.nodes[self.prev_node["id"]]["time_spent"] = time_spent
+                self.hybernation_time_since_prev_node = timedelta(0)  # Reset for next node
                 
             # update links
             if self.prev_node and cur_node["id"] != self.prev_node["id"]:
@@ -93,6 +111,8 @@ class PlayerProgression(Feature):
                     }
 
             self.prev_node = cur_node
+            # Reset hibernation time tracking when prev_node is updated
+            self.hybernation_time_since_prev_node = timedelta(0)
         self.prev_event_timestamp = event.Timestamp
  
     def _updateFromFeatureData(self, feature: FeatureData):
