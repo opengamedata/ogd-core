@@ -88,10 +88,13 @@ class FeatureManager:
             for session_list in self._sessions.values():
                 for session in session_list.values():
                     session.ProcessFeatureData(feature_list=pop_data)
-            # 3. For each player, get 1st-order data
+            # 3. For each player, get 1st-order and 2nd-order data
             for player_name,player in self._players.items():
-                play_data = player.GetFeatureData(order=1)
-                # 4. Distribute player 1st-order data
+                # Get both first-order and second-order features from players
+                # (some player features like PlayerProgressionJobNodes are second-order)
+                play_data = player.GetFeatureData(order=1)  # First-order features
+                play_data += player.GetFeatureData(order=2)  # Second-order features (may be empty)
+                # 4. Distribute player data (both 1st and 2nd order)
                 self._population.ProcessFeatureData(feature_list=play_data)
                 player.ProcessFeatureData(feature_list=play_data)
                 for session in self._sessions.get(player_name, {}).values():

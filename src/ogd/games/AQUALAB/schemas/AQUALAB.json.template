@@ -1469,6 +1469,30 @@
                 "description": "Top five most accepted jobs after switching away from a given job",
                 "return_type": "str"
             },
+            "PlayerProgressionLinks": {
+                "enabled": true,
+                "type": "PlayerProgressionLinks",
+                "description": "Links between jobs completed and switched",
+                "return_type": "dict"
+            },
+            "PlayerProgressionJobNodes": {
+                "enabled": true,
+                "type": "PlayerProgressionJobNodes",
+                "description": "Nodes in the player's progression graph",
+                "return_type": "dict"
+            },
+            "PopulationJobCompletionProgression": {
+                "enabled": true,
+                "type": "PopulationJobCompletionProgression",
+                "description": "Progression of job completions and switches in the population",
+                "return_type": "dict"
+            },
+            "PopulationJobSwitchProgression": {
+                "enabled": true,
+                "type": "PopulationJobSwitchProgression",
+                "description": "Progression of job switches in the population",
+                "return_type": "dict"
+            },
             "TotalArgumentationTime": {
                 "enabled": true,
                 "type": "TotalArgumentationTime",
