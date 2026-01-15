@@ -27,7 +27,6 @@ class PlayerProgressionLinks(Feature):
 
     def _updateFromEvent(self, event: Event) -> None:
         job_name = event.GameState["job_name"]
-        Logger.Log(f"Job name: {job_name}", logging.INFO)
         if job_name == "no-active-job":
             return
 

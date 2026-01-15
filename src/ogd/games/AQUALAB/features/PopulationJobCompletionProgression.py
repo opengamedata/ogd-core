@@ -41,14 +41,14 @@ class PopulationJobCompletionProgression(Feature):
                         self.nodes[key] = {
                             "node_count": 0,
                             "percentage_completed": 0,
-                            "time_spent": timedelta(0),
+                            "time_spent": 0,
                         }
                     self.nodes[key]["node_count"] += node["node_count"]
                     self.nodes[key]["percentage_completed"] += node["percentage_completed"]
                     # Normalize time_spent to timedelta if it's an int
                     time_spent = node["time_spent"]
-                    if isinstance(time_spent, int):
-                        time_spent = timedelta(seconds=time_spent)
+                    # Debug log removed - was causing interleaved logs during ProcessFeatureData
+                    # Final values are logged in _getFeatureValues() instead
                     self.nodes[key]["time_spent"] += time_spent
         elif feature.FeatureType == "PlayerProgressionLinks":
             # Handle links data from PlayerProgressionLinks
@@ -75,13 +75,15 @@ class PopulationJobCompletionProgression(Feature):
             node["percentage_completed"] = node["percentage_completed"] / node["node_count"] *100
             node["time_spent"] = node["time_spent"] / node["node_count"]
 
+        Logger.Log(f"Nodes: {self.nodes}", logging.INFO)
+
         nodes = [{
             "id": node_id,
             "node_name": node_id,
             "node_count": node["node_count"],
             "percentage_completed": node["percentage_completed"],
-            "time_spent": node["time_spent"].total_seconds(),
-            "node_tooltip": f"{node['node_count']} players visited {node_id}, {node['percentage_completed']:.2f}% completed, {node['time_spent'].total_seconds():.2f} seconds spent on average"
+            "time_spent": node["time_spent"],
+            "node_tooltip": f"{node['node_count']} players visited {node_id}, {node['percentage_completed']:.2f}% completed, {node['time_spent']:.2f} seconds spent on average"
             } for node_id, node in self.nodes.items()]
         links = [{
             "source": src_node_id, 
