@@ -68,6 +68,8 @@ class WeatherStationLoader(GeneratorLoader):
                     ret_val = PuzzleCompletionTime.PuzzleCompletionTime(params=extractor_params)
                 case "QuitCount":
                     ret_val = QuitCount.QuitCount(params=extractor_params)
+                case "PlayerProgression":
+                    ret_val = PlayerProgression.PlayerProgression(params=extractor_params)
                 case _:
                     Logger.Log(f"'{feature_type}' is not a valid aggregate feature for Weather Station.")
         # Per-count features
