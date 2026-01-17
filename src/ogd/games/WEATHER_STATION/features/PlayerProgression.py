@@ -14,10 +14,9 @@ class PlayerProgression(Feature):
         super().__init__(params=params)
         self.nodes = {} # dict of nodes (puzzle_id -> node info)
         self.links = {} # nested dict (src_puzzle_id -> dest_puzzle_id -> count & type) of links
-        self.prev_puzzle_started = None
-        self.prev_puzzle_started = None
-        self.prev_puzzle_started_time = None
+        self.in_progress_puzzles = {}
         self.session_id = None
+        self.prev_puzzle = None
 
     @classmethod
     def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
@@ -31,9 +30,8 @@ class PlayerProgression(Feature):
         session_id = event.SessionID
         if session_id != self.session_id:
             self.session_id = session_id
-            # self.prev_puzzle_started = None
-            self.prev_puzzle_started = None
-            self.prev_puzzle_started_time = None
+            self.prev_puzzle = None
+            self.in_progress_puzzles = {}
 
         puzzle_id = _getIndexNameFromEvent(event)
         if puzzle_id is None:
@@ -44,18 +42,7 @@ class PlayerProgression(Feature):
                 self.nodes[puzzle_id] = {"node_count": 0, "time_spent": 0, "completed_count": 0}
             self.nodes[puzzle_id]["node_count"] += 1
 
-            # create a link showing progression
-            if self.prev_puzzle_started and puzzle_id != self.prev_puzzle_started:
-                if self.prev_puzzle_started not in self.links:
-                    self.links[self.prev_puzzle_started] = {}
-                if puzzle_id not in self.links[self.prev_puzzle_started]:
-                    self.links[self.prev_puzzle_started][puzzle_id] = {
-                        "link_count": 0,
-                    }
-                self.links[self.prev_puzzle_started][puzzle_id]["link_count"] += 1
-
-            self.prev_puzzle_started = puzzle_id
-            self.prev_puzzle_started_time = event.Timestamp
+            self.in_progress_puzzles[puzzle_id] = event.Timestamp
 
         # Track transitions between puzzles - only on complete_puzzle events
         if event.EventName == "complete_puzzle":
@@ -68,24 +55,21 @@ class PlayerProgression(Feature):
                 }
             self.nodes[puzzle_id]["completed_count"] += 1
 
-            if self.prev_puzzle_started_time is not None and self.prev_puzzle_started == puzzle_id:
-                self.nodes[puzzle_id]["time_spent"] += (event.Timestamp - self.prev_puzzle_started_time).total_seconds()
-                self.prev_puzzle_started = None
-                self.prev_puzzle_started_time = None
+            if puzzle_id in self.in_progress_puzzles:
+                self.nodes[puzzle_id]["time_spent"] += (event.Timestamp - self.in_progress_puzzles[puzzle_id]).total_seconds()
+                del self.in_progress_puzzles[puzzle_id]
 
-            # # When a puzzle is completed, if there was a previous completed puzzle,
-            # # create a link showing progression
-            # if self.prev_puzzle_started and puzzle_id != self.prev_puzzle_started:
-            #     if self.prev_puzzle_started not in self.links:
-            #         self.links[self.prev_puzzle_started] = {}
-            #     if puzzle_id not in self.links[self.prev_puzzle_started]:
-            #         self.links[self.prev_puzzle_started][puzzle_id] = {
-            #             "link_count": 0,
-            #         }
-            #     self.links[self.prev_puzzle_started][puzzle_id]["link_count"] += 1
+            # create a link showing progression
+            if self.prev_puzzle and puzzle_id != self.prev_puzzle:
+                if self.prev_puzzle not in self.links:
+                    self.links[self.prev_puzzle] = {}
+                if puzzle_id not in self.links[self.prev_puzzle]:
+                    self.links[self.prev_puzzle][puzzle_id] = {
+                        "link_count": 0,
+                    }
+                self.links[self.prev_puzzle][puzzle_id]["link_count"] += 1
 
-            # Update previous puzzle to the completed one
-            self.prev_puzzle_started = puzzle_id
+            self.prev_puzzle = puzzle_id
 
     def _updateFromFeatureData(self, feature: FeatureData):
         return 
