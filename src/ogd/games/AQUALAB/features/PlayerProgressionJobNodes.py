@@ -64,8 +64,8 @@ class PlayerProgressionJobNodes(Feature):
             if len(feature.FeatureValues) > 0:
                 active_time = feature.FeatureValues[0]
                 # Log to debug why all active_time values are 0
-                if active_time > 0:
-                    Logger.Log(f"JobActiveTime_{feature.CountIndex}: {active_time} seconds", logging.INFO)
+                # if active_time > 0:
+                #     Logger.Log(f"JobActiveTime_{feature.CountIndex}: {active_time} seconds", logging.INFO)
                 if feature.CountIndex not in self._job_active_times:
                     # Initialize with both keys (active_time may arrive before job_name)
                     self._job_active_times[feature.CountIndex] = {

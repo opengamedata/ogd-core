@@ -75,7 +75,7 @@ class PopulationJobCompletionProgression(Feature):
             node["percentage_completed"] = node["percentage_completed"] / node["node_count"] *100
             node["time_spent"] = node["time_spent"] / node["node_count"]
 
-        Logger.Log(f"Nodes: {self.nodes}", logging.INFO)
+        # Logger.Log(f"Nodes: {self.nodes}", logging.INFO)
 
         nodes = [{
             "id": node_id,
