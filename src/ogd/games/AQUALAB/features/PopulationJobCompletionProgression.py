@@ -83,7 +83,7 @@ class PopulationJobCompletionProgression(Feature):
             "node_count": node["node_count"],
             "percentage_completed": node["percentage_completed"],
             "time_spent": node["time_spent"],
-            "node_tooltip": f"{node['node_count']} players visited {node_id}, {node['percentage_completed']:.2f}% completed, {node['time_spent']:.2f} seconds spent on average"
+            "node_tooltip": f"{node['node_count']} players visited {node_id}, {node['percentage_completed']:.2f}% completed the job"
             } for node_id, node in self.nodes.items()]
         links = [{
             "source": src_node_id, 
@@ -96,7 +96,7 @@ class PopulationJobCompletionProgression(Feature):
             "links": links,
             "encodings": {
                 "nodeColor": "percentage_completed",
-                "nodeSize": "time_spent",
+                "nodeSize": "node_count",
                 "nodeLabel": "node_name",
 		        "nodeTooltip": "node_tooltip",
 		        "linkWidth": "link_count",
