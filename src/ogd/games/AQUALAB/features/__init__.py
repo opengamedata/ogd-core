@@ -88,6 +88,10 @@ __all__ = [
     "UserAvgActiveTime",
     "UserAvgSessionDuration",
     "UserTotalSessionDuration",
+    "PlayerProgressionJobNodes",
+    "PlayerProgressionLinks",
+    "PopulationJobCompletionProgression",
+    "PopulationJobSwitchProgression",
 ]
 
 from . import ActiveJobs
@@ -177,3 +181,7 @@ from . import TimeInJournal
 from . import UserAvgActiveTime
 from . import UserAvgSessionDuration
 from . import UserTotalSessionDuration
+from . import PlayerProgressionJobNodes
+from . import PlayerProgressionLinks
+from . import PopulationJobCompletionProgression
+from . import PopulationJobSwitchProgression

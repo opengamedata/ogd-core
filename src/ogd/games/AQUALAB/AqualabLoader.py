@@ -181,6 +181,14 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = UserAvgSessionDuration.UserAvgSessionDuration(params=extractor_params, player_id=self._player_id)
                 case "UserTotalSessionDuration":
                     ret_val = UserTotalSessionDuration.UserTotalSessionDuration(params=extractor_params, player_id=self._player_id)
+                case "PlayerProgressionJobNodes":
+                    ret_val = PlayerProgressionJobNodes.PlayerProgressionJobNodes(params=extractor_params)
+                case "PlayerProgressionLinks":
+                    ret_val = PlayerProgressionLinks.PlayerProgressionLinks(params=extractor_params)
+                case "PopulationJobCompletionProgression":
+                    ret_val = PopulationJobCompletionProgression.PopulationJobCompletionProgression(params=extractor_params)
+                case "PopulationJobSwitchProgression":
+                    ret_val = PopulationJobSwitchProgression.PopulationJobSwitchProgression(params=extractor_params)
                 case _:
                     Logger.Log(f"'{feature_type}' is not a valid aggregate feature type for Aqualab.")
         # then run through per-count features.
