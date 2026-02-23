@@ -9,6 +9,7 @@ __all__ = [
     "EventList",
     "ExperimentalCondition",
     "PlayedNonexperimentalVersion",
+    "FinalBestiary",
     "FollowedAdvice",
     "JobActiveTime",
     "JobArgumentation",
@@ -19,6 +20,7 @@ __all__ = [
     "JobArgumentationRejects",
     "JobAttempted",
     "JobTotalAttempts",
+    "JobTotalHelpCount",
     "JobComplete",
     "JobCompletionTime",
     "JobDiveSitesCount",
@@ -86,6 +88,10 @@ __all__ = [
     "UserAvgActiveTime",
     "UserAvgSessionDuration",
     "UserTotalSessionDuration",
+    "PlayerProgressionJobNodes",
+    "PlayerProgressionLinks",
+    "PopulationJobCompletionProgression",
+    "PopulationJobSwitchProgression",
 ]
 
 from . import ActiveJobs
@@ -96,6 +102,7 @@ from . import EchoSessionID
 from . import EventList
 from . import ExperimentalCondition
 from . import PlayedNonexperimentalVersion
+from . import FinalBestiary
 from . import FollowedAdvice
 from . import JobActiveTime
 from . import JobArgumentation
@@ -106,6 +113,7 @@ from . import JobArgumentationSuccessRatioPerDifficulty
 from . import JobArgumentationRejects
 from . import JobAttempted
 from . import JobTotalAttempts
+from . import JobTotalHelpCount
 from . import JobComplete
 from . import JobCompletionTime
 from . import JobDiveSitesCount
@@ -173,3 +181,7 @@ from . import TimeInJournal
 from . import UserAvgActiveTime
 from . import UserAvgSessionDuration
 from . import UserTotalSessionDuration
+from . import PlayerProgressionJobNodes
+from . import PlayerProgressionLinks
+from . import PopulationJobCompletionProgression
+from . import PopulationJobSwitchProgression

@@ -3,13 +3,14 @@ import logging
 from typing import Any, Dict, List, Optional
 # import locals
 from ogd.common.utils.Logger import Logger
+from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 from ogd.common.models.Event import Event
 from ogd.common.models.enums.ExtractionMode import ExtractionMode
 from ogd.common.models.FeatureData import FeatureData
 
-class JobHelpCount(PerJobFeature):
+class JobTotalHelpCount(PerJobFeature):
 
     def __init__(self, params:GeneratorParameters, job_map:dict):
         self._job_map = job_map
@@ -17,30 +18,35 @@ class JobHelpCount(PerJobFeature):
         self._by_task       : Dict[str, int] = {}
         self._current_count : int = 0
         self._total_count   : int = 0
+        self._player_count  : int = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
-        return ["ask_for_help", "complete_task"]
+        return []
 
     @classmethod
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
-        return []
+        return ["JobHelpCount"]
 
     def _updateFromEvent(self, event:Event) -> None:
-        if event.EventName == "ask_for_help":
-            self._current_count += 1
-            self._total_count += 1
-        elif event.EventName == "complete_task":
-            task_id = event.EventData.get("task_id", "UNKNOWN_TASK")
-            self._by_task[task_id] = self._current_count
-            self._current_count = 0
-
-    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
+    def _updateFromFeatureData(self, feature:FeatureData):
+        if feature.ExportMode == ExtractionMode.PLAYER and feature.CountIndex == self.CountIndex:
+            player_ct    = feature.FeatureValues[0]
+            player_tasks = feature.FeatureValues[1]
+
+            self._player_count += 1 if player_ct > 0 else 0
+            self._total_count += player_ct
+            for key in player_tasks.keys():
+                if key in self._by_task:
+                    self._by_task[key] += player_tasks[key]
+                else:
+                    self._by_task[key] = player_tasks[key]
+
     def _getFeatureValues(self) -> List[Any]:
-        return [self._total_count, self._by_task]
+        return [self._total_count, self._by_task, self._player_count]
 
     # *** Optionally override public functions. ***
 
@@ -52,10 +58,10 @@ class JobHelpCount(PerJobFeature):
         :return: _description_
         :rtype: List[ExtractionMode]
         """
-        return [ExtractionMode.PLAYER, ExtractionMode.SESSION]
+        return [ExtractionMode.POPULATION]
 
     def Subfeatures(self) -> List[str]:
-        return ["ByTask"]
+        return ["ByTask", "Players"]
 
     @staticmethod
     def MinVersion() -> Optional[str]:

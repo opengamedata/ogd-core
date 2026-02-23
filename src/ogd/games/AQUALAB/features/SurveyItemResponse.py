@@ -10,11 +10,10 @@ from ogd.common.utils.Logger import Logger
 class SurveyItemResponse(PerCountFeature):
     def __init__(self, params: GeneratorParameters, target_survey:str, retest:bool=False):
         self._target_survey = target_survey
-        self._response = None
-        self._prompt = None
-        self._response_count = 0
         self._retest = retest
-        self._retest_response = None
+
+        self._prompt = None
+        self._response_list = []
         super().__init__(params=params)
 
     @classmethod
@@ -49,20 +48,15 @@ class SurveyItemResponse(PerCountFeature):
         return survey_name == self._target_survey
 
     def _updateFromEvent(self, event: Event) -> None:
-        self._response_count += 1
-
         _responses = event.EventData.get("responses", {})
         if len(_responses) > self.CountIndex:
             self._prompt = _responses[self.CountIndex].get("prompt", None)
             # If it was the first time they got the survey, 
-            if self._response_count == 1:
-                self._response = _responses[self.CountIndex].get("response", None)
-            elif self._retest:
-                self._retest_response = _responses[self.CountIndex].get("response", None)
-            else:
+            self._response_list.append(_responses[self.CountIndex].get("response", None))
+            _ct = len(self._response_list)
+            if (self._retest and _ct > 2) or ((not self._retest) and _ct > 1):
                 if self.ExtractionMode != ExtractionMode.POPULATION:
                     Logger.Log(f"SurveyItemResponse feature for {self._target_survey} had an unexpected retest, for player {event.UserID}, session {event.SessionID}!", logging.WARN)
-                    self._response = _responses[self.CountIndex].get("response", None)
         else:
             Logger.Log(f"SurveyItemResponse feature for {self._target_survey} got a survey_submitted event with fewer than {self.CountIndex} items, for player {event.UserID}, session {event.SessionID}!", logging.WARN)
 
@@ -70,10 +64,17 @@ class SurveyItemResponse(PerCountFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._response, self._retest_response, self._prompt, self._response_count]
+        _ct = len(self._response_list)
+        return [
+            self._response_list[0] if _ct > 0 else None,
+            self._response_list[1] if _ct > 1 else None,
+            self._prompt,
+            _ct,
+            self._response_list
+        ]
 
     def Subfeatures(self) -> List[str]:
-        return ["Retest", "Prompt", "Count"]
+        return ["Retest", "Prompt", "Count", "AllResponses"]
 
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
