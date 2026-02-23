@@ -1,0 +1,41 @@
+{
+    "level_range": { "min":0, "max":2 },
+
+    "game_state": {
+        "level": {
+            "type": "int",
+            "description": "The current level when the event happens"
+        }
+    },
+
+    "events":{
+        "display_text_dialog": {
+            "description": "a new dialog text bubble is displayed on the screen",
+            "event_data" : {
+                "node_id": {
+                    "type": "str",
+                    "description": "the node id containing the text"
+                },
+                "text_content": {
+                    "type": "str",
+                    "description": "the actual text content of the bubble"
+                },
+                "speaker": {
+                    "type": "str",
+                    "description": "the speaker_id of the character/entity who 'spoke' the text"
+                }
+            }
+        }
+    },
+
+    "features": {
+        "per_count": {
+        },
+        "aggregate":{
+        }
+    },
+
+    "config": {
+    	"SUPPORTED_VERS": [1]
+	}
+}

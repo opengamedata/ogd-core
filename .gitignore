@@ -5,6 +5,7 @@ config/*.json
 config/*.json.bak
 config/config.py
 config/config.py.new
+config/config.py.old
 src/ogd/games/*/schemas/*.json
 src/ogd/games/*/schemas/*.json.bak
 tests/config/t_config.py

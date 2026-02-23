@@ -674,6 +674,24 @@
                 "description": "The total number of players who attempted the job.",
                 "return_type": "int"
             },
+            "JobTotalHelpCount": {
+                "enabled": true,
+                "type": "JobTotalHelpCount",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "The total number of times players asked for help in the job.",
+                "return_type": "int",
+                "subfeatures": {
+                    "ByTask": {
+                        "description": "Mapping of task names to number of times they asked for help.",
+                        "return_type": "dict"
+                    },
+                    "Players": {
+                        "description": "Number of individual players who asked for help",
+                        "return_type": "int"
+                    }
+                }
+            },
             "JobArgumentationRejects": {
                 "enabled": true,
                 "type": "JobArgumentationRejects",
@@ -1290,6 +1308,18 @@
                 "description": "Returns the first event branch",
                 "return_type": "str"
             },
+            "FinalBestiary": {
+                "enabled": true,
+                "type": "FinalBestiary",
+                "description": "Returns the final contents of the bestiary, the last time the player switched jobs.",
+                "return_type": "list",
+                "subfeatures": {
+                    "Size" : {
+                        "description": "The number of items in the bestiary",
+                        "return_type": "int"
+                    }
+                }
+            },
             "PlayedNonexperimentalVersion": {
                 "enabled": true,
                 "type": "PlayedNonexperimentalVersion",
@@ -1438,6 +1468,30 @@
                 "type": "TopJobSwitchDestinations",
                 "description": "Top five most accepted jobs after switching away from a given job",
                 "return_type": "str"
+            },
+            "PlayerProgressionLinks": {
+                "enabled": true,
+                "type": "PlayerProgressionLinks",
+                "description": "Links between jobs completed and switched",
+                "return_type": "dict"
+            },
+            "PlayerProgressionJobNodes": {
+                "enabled": true,
+                "type": "PlayerProgressionJobNodes",
+                "description": "Nodes in the player's progression graph",
+                "return_type": "dict"
+            },
+            "PopulationJobCompletionProgression": {
+                "enabled": true,
+                "type": "PopulationJobCompletionProgression",
+                "description": "Progression of job completions and switches in the population",
+                "return_type": "dict"
+            },
+            "PopulationJobSwitchProgression": {
+                "enabled": true,
+                "type": "PopulationJobSwitchProgression",
+                "description": "Progression of job switches in the population",
+                "return_type": "dict"
             },
             "TotalArgumentationTime": {
                 "enabled": true,
