@@ -97,6 +97,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = EventList.EventList(params=extractor_params)
                 case "ExperimentalCondition":
                     ret_val = ExperimentalCondition.ExperimentalCondition(params=extractor_params, job_map=self._job_map)
+                case "FinalBestiary":
+                    ret_val = FinalBestiary.FinalBestiary(params=extractor_params)
                 case "PlayedNonexperimentalVersion":
                     ret_val = PlayedNonexperimentalVersion.PlayedNonexperimentalVersion(params=extractor_params)
                 case "JobsCompleted":
@@ -179,6 +181,14 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = UserAvgSessionDuration.UserAvgSessionDuration(params=extractor_params, player_id=self._player_id)
                 case "UserTotalSessionDuration":
                     ret_val = UserTotalSessionDuration.UserTotalSessionDuration(params=extractor_params, player_id=self._player_id)
+                case "PlayerProgressionJobNodes":
+                    ret_val = PlayerProgressionJobNodes.PlayerProgressionJobNodes(params=extractor_params)
+                case "PlayerProgressionLinks":
+                    ret_val = PlayerProgressionLinks.PlayerProgressionLinks(params=extractor_params)
+                case "PopulationJobCompletionProgression":
+                    ret_val = PopulationJobCompletionProgression.PopulationJobCompletionProgression(params=extractor_params)
+                case "PopulationJobSwitchProgression":
+                    ret_val = PopulationJobSwitchProgression.PopulationJobSwitchProgression(params=extractor_params)
                 case _:
                     Logger.Log(f"'{feature_type}' is not a valid aggregate feature type for Aqualab.")
         # then run through per-count features.
@@ -204,6 +214,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = JobTriesInArgumentPerDifficulty.JobTriesInArgumentPerDifficulty(params=extractor_params, diff_map=self._diff_map, difficulty_type=schema_args.get("difficulty_type"))
                 case "JobTotalAttempts":
                     ret_val = JobTotalAttempts.JobTotalAttempts(params=extractor_params, job_map=self._job_map)
+                case "JobTotalHelpCount":
+                    ret_val = JobTotalHelpCount.JobTotalHelpCount(params=extractor_params, job_map=self._job_map)
                 case "JobAttempted":
                     ret_val = JobAttempted.JobAttempted(params=extractor_params, job_map=self._job_map)
                 case "JobComplete":

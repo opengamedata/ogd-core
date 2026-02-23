@@ -87,6 +87,7 @@ settings = {
         "PENNYCOOK":            { "source":"OPENGAMEDATA_BQ",    "database":"pennycook",            "table":"pennycook_daily",            "schema":"OPENGAMEDATA_BIGQUERY" },
         "SHADOWSPECT":          { "source":"OPENGAMEDATA_BQ",    "database":"shadowspect",          "table":"shadowspect_daily",          "schema":"OPENGAMEDATA_BIGQUERY" },
         "SHIPWRECKS":           { "source":"SHIPWRECKS_BQ",      "database":"analytics_269167605",  "table":"events",                     "schema":"FIREBASE"              },
+        "TE_BACTERIA":          { "source":"OPENGAMEDATA_BQ",    "database":"te_bacteria",          "table":"te_bacteria_daily",          "schema":"OPENGAMEDATA_BIGQUERY" },
         "THERMOVR":             { "source":"OPENGAMEDATA_BQ",    "database":"thermovr",             "table":"thermovr_daily",             "schema":"OPENGAMEDATA_BIGQUERY" },
         "THERMOLAB":            { "source":"OPENGAMEDATA_BQ",    "database":"thermolab",            "table":"thermolab_daily",            "schema":"OPENGAMEDATA_BIGQUERY" },
         "TRANSFORMATION_QUEST": { "source":"OPENGAMEDATA_BQ",    "database":"transformation_quest", "table":"transformation_quest_daily", "schema":"OPENGAMEDATA_BIGQUERY" },
