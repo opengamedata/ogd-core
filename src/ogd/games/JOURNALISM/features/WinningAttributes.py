@@ -12,7 +12,7 @@ import json
 
 
 
-class PlayerAttributes(SessionFeature):
+class WinningAttributes(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
     :param Feature: Base class for a Custom Feature class.
@@ -20,7 +20,7 @@ class PlayerAttributes(SessionFeature):
     """
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
-        self._current_stats =[0, 0, 0, 0, 0, 0]
+        self._current_stats =[None, None, None, None, None, None]
         
         
 
@@ -32,7 +32,7 @@ class PlayerAttributes(SessionFeature):
         :return: _description_
         :rtype: List[str]
         """
-        return ["stat_update"]
+        return ["start_endgame"]
         #return ["snippet_received"] # >>> fill in names of events this Feature should use for extraction. <<<
 
     @classmethod
