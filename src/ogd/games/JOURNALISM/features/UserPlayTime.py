@@ -93,12 +93,12 @@ class UserPlayTime(SessionFeature):
         :rtype: List[Any]
         """
 
-        return [self._cumulative_play_time, self._cumulative_active_time]
+        return [self._cumulative_play_time, self._cumulative_active_time, self._cumulative_active_time.total_seconds()]
 
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return ["Active"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
+        return ["Active", "Active-Seconds"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
     
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
