@@ -10,6 +10,7 @@ __all__ = [
     "SkillSequenceCount",
     "TotalLevelTime",
     "PlayerAttributes",
+    "WinningAttributes",
     "FinalAttributes",
     "StoryAlignment",
     "QuitLevel",
@@ -39,9 +40,9 @@ __all__ = [
     "StoryScoreSequence",
     "LevelTime",
     "SnippetsCollected", 
-    "SnippetsSubmitted"
-
-
+    "SnippetsSubmitted",
+    "CompletedSurvey",
+    "PlayerProgression"
 ]
 
 from . import TextClickCount
@@ -55,6 +56,7 @@ from . import SkillSequenceCount
 from . import TotalLevelTime
 from . import FinalAttributes
 from . import PlayerAttributes
+from . import WinningAttributes
 from . import StoryAlignment
 from . import QuitLevel
 from . import QuitType
@@ -83,3 +85,5 @@ from . import StoryScoreSequence
 from . import LevelTime
 from . import SnippetsCollected
 from . import SnippetsSubmitted
+from . import CompletedSurvey
+from . import PlayerProgression
