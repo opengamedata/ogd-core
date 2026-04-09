@@ -24,6 +24,7 @@ jobs:
           BALLOON,
           BLOOM,
           # CRUSHSTATIONS,
+          CONECTADO,
           CRYSTAL,
           CYCLE_CARBON,
           CYCLE_NITROGEN,
