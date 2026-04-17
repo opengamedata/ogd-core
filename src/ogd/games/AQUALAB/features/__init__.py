@@ -92,6 +92,8 @@ __all__ = [
     "PlayerProgressionLinks",
     "PopulationJobCompletionProgression",
     "PopulationJobSwitchProgression",
+    "LanguageSelected",
+    "PlayerLanguageSelected",
 ]
 
 from . import ActiveJobs
@@ -185,3 +187,5 @@ from . import PlayerProgressionJobNodes
 from . import PlayerProgressionLinks
 from . import PopulationJobCompletionProgression
 from . import PopulationJobSwitchProgression
+from . import LanguageSelected
+from . import PlayerLanguageSelected
