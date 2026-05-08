@@ -4,7 +4,7 @@
         "app_id"               : null,
         "timestamp"            : ["server_time"],
         "event_name"           : ["event_name"],
-        "event_data"           : {"event_data":"event_data", "http_user_agent":"http_user_agent"},
+        "event_data"           : {"event_data":"event_data"},
         "event_source"         : null,
         "app_version"          : "app_version",
         "app_branch"           : "app_branch",
