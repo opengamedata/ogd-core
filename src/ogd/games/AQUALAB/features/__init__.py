@@ -28,6 +28,7 @@ __all__ = [
     "JobExperimentation",
     "JobGuideCount",
     "JobHelpCount",
+    "JobInterventionFails",
     "JobLocationChanges",
     "JobLocationChangesNoKelp",
     "JobQuitsPerComplete",
@@ -121,6 +122,7 @@ from . import JobDiveTime
 from . import JobExperimentation
 from . import JobGuideCount
 from . import JobHelpCount
+from . import JobInterventionFails
 from . import JobLocationChanges
 from . import JobLocationChangesNoKelp
 from . import JobQuitsPerComplete
