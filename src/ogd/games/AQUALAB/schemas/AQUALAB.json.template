@@ -620,22 +620,6 @@
                 "description": "",
                 "return_type": "int"
             },
-            "JobPriorComplete": {
-                "enabled": false,
-                "type": "JobPriorComplete",
-                "count": "level_range",
-                "prefix": "job",
-                "description": "",
-                "return_type": "list"
-            },
-            "JobPriorAttempt": {
-                "enabled": false,
-                "type": "JobPriorAttempt",
-                "count": "level_range",
-                "prefix": "job",
-                "description": "",
-                "return_type": "list"
-            },
             "JobActiveTime": {
                 "enabled": false,
                 "type": "JobActiveTime",
