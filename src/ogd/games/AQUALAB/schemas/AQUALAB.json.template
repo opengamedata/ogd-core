@@ -666,9 +666,9 @@
                 "description": "Indicator for whether the player ever entered into the given job",
                 "return_type": "bool"
             },
-            "JobComplete": {
+            "JobCompleted": {
                 "enabled": true,
-                "type": "Complete",
+                "type": "JobCompleted",
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Indicator for whether the player ever completed the given job",
