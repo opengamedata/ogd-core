@@ -44,11 +44,11 @@ class JobArgumentationFails(PerJobFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        if(self._success_count > self._leave_count):
-            return [0]
-        else:
-            # TODO : this logic is suspect, need to look into it
-            return [(self._leave_count + 1) - self._success_count]
+        # if(self._success_count > self._leave_count):
+        #     return [0]
+        # else:
+        # NOTE : after complete, player always has a 'leave' after they get dumped into no-active-job. So no-active-job will have many argumentation 'fails'
+        return [self._leave_count]
         
 
 
