@@ -714,7 +714,15 @@
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Number of times argumentation left per job",
-                "return_type": "float"
+                "return_type": "int"
+            },
+            "JobInterventionFails": {
+                "enabled": true,
+                "type": "JobInterventionFails",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Number of times intervention modeling left per job",
+                "return_type": "int"
             },
             "JobCompletionTime": {
                 "enabled": false,
