@@ -1,0 +1,329 @@
+{
+   "enums": {
+      "ToolID": [ "PTYPE", "NTYPE", "METAL", "CONTACT", "GATE" ],
+      "Minigame": [ "RESEARCH", "DESIGN", "SUPPLY_CHAIN", "FABRICATION" ],
+      "Layer": ["METAL", "TRANSISTOR"]
+   },
+   "structures" : {
+      "DesignGrid" : {
+         "type" : "List[List[Set[ToolID]]]",
+         "description" : "A 2D array indicating which elements of the chip design grid has been filled with one or more tools"
+      }
+   },
+   "game_state": {
+      "seconds_from_launch": {
+         "type": "float",
+         "description": "The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*."
+      },
+      "current_contract": {
+         "type": "str",
+         "description": "The name of the contract the player is currently working on"
+      },
+      "current_minigame" : {
+         "type" : "Optional[Minigame]",
+         "description" : "An enum (string) with the name of the minigame the player is currently playing. Null if the player is not currently in a minigame."
+      },
+      "contract_levels": {
+         "type" : "Dict",
+         "description" : "JSON structure indicating the number of levels of each minigame, specified by the contract."
+      },
+      "design_grid": {
+         "type": "Optional[DesignGrid]",
+         "description": "A representation of the current state of the design grid. Null if the player is not in the design minigame."
+      }
+   },
+   "events": {
+      "session_start": {
+         "description": "When the app is started and the gameplay session is assigned a session ID",
+         "event_data": {}
+      },
+      "game_start": {
+         "description": "When a game is actually loaded/started, showing the player the main interface and tools.",
+         "event_data": {
+            "from_resume" : {
+               "type" : "bool",
+               "description" : "Indicator for whether the game was a brand new start, or resumed from the menu."
+            }
+         }
+      },
+      "click_new_game": {
+         "description": "When the player clicks the button for a new game.",
+         "event_data": {}
+      },
+      "click_resume_game": {
+         "description": "When the player clicks the button for a new game.",
+         "event_data": {}
+      },
+      "accept_contract": {
+         "description": "When the player accepts a new contract.",
+         "event_data": {
+            "contract_id" : {
+               "type" : "str",
+               "description" : "The ID for the specific contract."
+            },
+            "contract_levels" : {
+               "type" : "Dict",
+               "description" : "JSON structure indicating the number of levels of each minigame, specified by the contract."
+            }
+         }
+      },
+      "open_contract_view": {
+         "description": "When the player opens the view of contract details.",
+         "event_data": {}
+      },
+      "start_change_contract": {
+         "description": "When the player selects a new contract, but has not yet confirmed the change of contract.",
+         "event_data": {
+            "contract_id" : {
+               "type" : "str",
+               "description" : "The ID for the prior contract; the contract the player is changing into should be in game state."
+            }
+         }
+      },
+      "confirm_change_contract": {
+         "description": "When the player confirms the change of contract.",
+         "event_data": {
+            "contract_id" : {
+               "type" : "str",
+               "description" : "The ID for the prior contract; the contract the player is changing into should be in game state."
+            }
+         }
+      },
+      "cancel_change_contract": {
+         "description": "When the player had selected a new contract, but chooses to cancel the switch.",
+         "event_data": {
+            "contract_id" : {
+               "type" : "str",
+               "description" : "The ID for the prior contract, which the player will return to by cancelling the change; the contract the player was changing into should be in game state."
+            }
+         }
+      },
+      "ship_menu_displayed": {
+         "description": "When the ship menu is displayed to the player.",
+         "event_data": {}
+      },
+      "select_research": {
+         "description": "When the player selects the research minigame, but has not yet clicked to 'start' the minigame.",
+         "event_data": {}
+      },
+      "select_design": {
+         "description": "When the player selects the design minigame, but has not yet clicked to 'start' the minigame.",
+         "event_data": {}
+      },
+      "select_supply_chain": {
+         "description": "When the player selects the supply chain minigame, but has not yet clicked to 'start' the minigame.",
+         "event_data": {}
+      },
+      "select_fabrication": {
+         "description": "When the player selects the fabrication minigame, but has not yet clicked to 'start' the minigame.",
+         "event_data": {}
+      },
+      "start_research": {
+         "description": "When the player starts the research minigame.",
+         "event_data": {}
+      },
+      "start_design": {
+         "description": "When the player starts the design minigame.",
+         "event_data": {}
+      },
+      "start_supply_chain": {
+         "description": "When the player starts the supply chain minigame.",
+         "event_data": {}
+      },
+      "start_fabrication": {
+         "description": "When the player starts the fabrication minigame.",
+         "event_data": {}
+      },
+      "level_menu_displayed": {
+         "description": "When the menu of levels is displayed to the player.",
+         "event_data": {}
+      },
+      "select_level": {
+         "description": "When the player selects a specific level within a minigame.",
+         "event_data": {
+            "level_id" : {
+               "type" : "int",
+               "description" : "The level number the player selected."
+            }
+         }
+      },
+      "design_level_begin": {
+         "description": "When the player begins a new level in teh design minigame.",
+         "event_data": {
+            "initial_board_state" : {
+               "type" : "DesignGrid",
+               "description" : "The initial state of the design grid, when the player began the level."
+            },
+            "inputs" : {
+               "type" : "TBD",
+               "description" : "The inputs. Not 100% sure what this was. Possibly the coordinates of the input points?"
+            },
+            "outputs" : {
+               "type" : "TBD",
+               "description" : "The outputs. Not 100% sure what this was. Possibly the coordinates of the output point?"
+            }
+         }
+      },
+      "select_tool": {
+         "description": "When the player selects a new tool in the design minigame.",
+         "event_data": {
+            "tool_id" : {
+               "type" : "ToolID",
+               "description" : "The enum (string) indicating the name of the selected tool."
+            }
+         }
+      },
+      "fill_grid": {
+         "description": "When the player clicks to fill a grid space with the current tool.",
+         "event_data": {
+            "tool_id" : {
+               "type" : "ToolID",
+               "description" : "The enum (string) indicating the name of the selected tool."
+            },
+            "coordinates" : {
+               "type" : "Tuple[int, int, Layer]",
+               "description" : "A tuple (list) indicating the x-y coordinates and layer of the grid that the player chose to fill."
+            }
+         }
+      },
+      "submit_design": {
+         "description": "When the player clicks to submit their design for evaluation.",
+         "event_data": {
+            "outputs" : {
+               "type" : "TBD",
+               "description" : "The outputs. Not 100% sure what this was. Possibly the coordinates of the output point in the submitted design?"
+            },
+            "target_inputs" : {
+               "type" : "TBD",
+               "description" : "The target inputs. Not 100% sure what this was. Possibly the coordinates of the input points?"
+            }
+         }
+      },
+      "submission_succeeded": {
+         "description": "When the design the player submitted was successful.",
+         "event_data": {
+            "message" : {
+               "type" : "str",
+               "description" : "The success message displayed to the player."
+            }
+         }
+      },
+      "submission_failed": {
+         "description": "When the design the player submitted failed.",
+         "event_data": {
+            "message" : {
+               "type" : "str",
+               "description" : "The failure message displayed to the player."
+            },
+            "tests_failed" : {
+               "type" : "List[int | str]",
+               "description" : "The list of tests that failed (not sure if these are ints or strings)."
+            }
+         }
+      },
+      "exit_design": {
+         "description": "When the player exits the design minigame.",
+         "event_data": {}
+      },
+      "generate_wafer": {
+         "description": "When the player clicks to get a new wafer for fabrication.",
+         "event_data": {}
+      },
+      "timer_start": {
+         "description": "When the minigame timer starts counting.",
+         "event_data": {}
+      },
+      "instruction_updated": {
+         "description": "When the instruction shown to the player is updated.",
+         "event_data": {
+            "next_station" : {
+               "type" : "str",
+               "description" : "The next station the player needs to complete, as indicated by the instruction."
+            },
+            "is_hidden" : {
+               "type" : "bool",
+               "description" : "Whether the instruction is currently hidden from the player or not."
+            }
+         }
+      },
+      "activate_station": {
+         "description": "When the player activates a station.",
+         "event_data": {
+            "station_id" : {
+               "type" : "str",
+               "description" : "The ID of the station the player activated."
+            }
+         }
+      },
+      "invalid_activation": {
+         "description": "When the player attempted to activate the wrong station.",
+         "event_data": {
+            "station_id" : {
+               "type" : "str",
+               "description" : "The ID of the station the player activated."
+            },
+            "next_station" : {
+               "type" : "str",
+               "description" : "The actual next station the player was supposed to activate."
+            }
+         }
+      },
+      "station_complete": {
+         "description": "When the player completes the activated station.",
+         "event_data": {
+            "station_id" : {
+               "type" : "str",
+               "description" : "The ID of the station the player activated."
+            },
+            "accuracy" : {
+               "type" : "float",
+               "description" : "The accuracy the player achieved on the station activation."
+            },
+            "is_automated" : {
+               "type" : "bool",
+               "description" : "Whether the station run was automated, or manually run by the player."
+            }
+         }
+      },
+      "fabrication_complete": {
+         "description": "When the fabrication challenge is completed.",
+         "event_data": {
+         }
+      },
+      "use_automation": {
+         "description": "When the player sets a station to be automated.",
+         "event_data": {
+            "station_id" : {
+               "type" : "str",
+               "description" : "The ID of the automated station."
+            }
+         }
+      },
+      "fabrication_success": {
+         "description": "When the fabrication has been completed successfully, i.e. passes the requirements.",
+         "event_data": {
+            "accuracy" : {
+               "type" : "float",
+               "description" : "The accuracy the player achieved in the fabrication."
+            },
+            "time" : {
+               "type" : "float",
+               "description" : "The total time of the fabrication, across stations."
+            },
+            "production_cycles" : {
+               "type" : "int",
+               "description" : "The number of production cycles in the fabrication."
+            }
+         }
+      }
+   },
+   "features": {
+      "per_count": {},
+      "aggregate": {}
+   },
+   "config": {
+      "SUPPORTED_VERS": [
+         1
+      ]
+   }
+}
