@@ -4,8 +4,8 @@
         "max": 56
     },
     "diff_range":{
-      "min": 0,
-      "max": 5
+        "min": 0,
+        "max": 5
     },
     "task_range": {
         "min": 0,
