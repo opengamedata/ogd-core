@@ -70,6 +70,7 @@ settings = {
         "CENSIO_MATCH":         { "source":"OPENGAMEDATA_BQ",    "database":"censio_match",         "table":"censio_match_daily",         "schema":"OPENGAMEDATA_BIGQUERY" },
         "CENSIO_SLIDE":         { "source":"OPENGAMEDATA_BQ",    "database":"censio_slide",         "table":"censio_slide_daily",         "schema":"OPENGAMEDATA_BIGQUERY" },
         "CENSIO_STACK":         { "source":"OPENGAMEDATA_BQ",    "database":"censio_stack",         "table":"censio_stack_daily",         "schema":"OPENGAMEDATA_BIGQUERY" },
+        "CONECTADO":            { "source":"OPENGAMEDATA_BQ",    "database":"conectado",            "table":"conectado_daily",            "schema":"OPENGAMEDATA_BIGQUERY" },
         "CRUSH_STATION":        { "source":"OPENGAMEDATA_BQ",    "database":"crush_station",        "table":"crush_station_daily",        "schema":"OPENGAMEDATA_BIGQUERY" },
         "CRYSTAL":              { "source":"OPENGAMEDATA_BQ",    "database":"crystal",              "table":"crystal_daily",              "schema":"OPENGAMEDATA_BIGQUERY" },
         "CYCLE_CARBON":         { "source":"OPENGAMEDATA_BQ",    "database":"cycle_carbon",         "table":"cycle_carbon_daily",         "schema":"OPENGAMEDATA_BIGQUERY" },
