@@ -29,14 +29,16 @@ class JobArgumentationFails(PerJobFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
-        return ["leave_argument", "complete_argument"]
+        return ["leave_argument", "complete_argument", "script_line_displayed"]
 
     @classmethod
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _updateFromEvent(self, event:Event) -> None:
-        if(event.EventName == "leave_argument"):
+        if(event.EventName == "leave_argument" and event.GameState.get("job_name") != "arctic-salmon-monitoring"):
+            self._leave_count += 1
+        if (event.EventName == "script_line_displayed" and event.EventData.get("node_id") == "job.arctic-salmon-monitoring.argue.giveUp"):
             self._leave_count += 1
         if(event.EventName == "complete_argument"):
             self._success_count += 1
