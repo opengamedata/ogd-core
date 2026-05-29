@@ -37,15 +37,15 @@ class JobArgumentationFails(PerJobFeature):
 
     def _updateFromEvent(self, event:Event) -> None:
         match event.EventName:
-            case "fact_submitted":
-                self._started = True
+            # case "fact_submitted":
+            #     self._started = True
             case "complete_argument":
                 self._completed = True
             case "leave_argument":
-                if self._started and event.GameState.get("job_name") != "arctic-salmon-monitoring":
+                if event.GameState.get("job_name") != "arctic-salmon-monitoring":
                     self._leave_count += 1
             case "script_line_displayed":
-                if self._started and event.EventData.get("node_id") == "job.arctic-salmon-monitoring.argue.giveUp":
+                if event.EventData.get("node_id") == "job.arctic-salmon-monitoring.argue.giveUp":
                     self._leave_count += 1
     def _updateFromFeatureData(self, feature:FeatureData):
         return
