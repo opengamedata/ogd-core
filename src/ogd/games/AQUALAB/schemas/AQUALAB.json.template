@@ -4,8 +4,8 @@
         "max": 56
     },
     "diff_range":{
-      "min": 0,
-      "max": 5
+        "min": 0,
+        "max": 5
     },
     "task_range": {
         "min": 0,
@@ -812,9 +812,9 @@
                 "description": "Number of times player received a job recommendation",
                 "return_type": "int"
             },
-            "LeftJob": {
+            "QuitJob": {
                 "enabled": true,
-                "type": "LeftJob",
+                "type": "QuitJob",
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Job left off on by player",
