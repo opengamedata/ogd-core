@@ -32,7 +32,7 @@ class JobPriorComplete(PerCountFeature):
             job_data = event.GameState.get("job_name", event.EventData.get("job_name", {})).get('string_value')
         else:
             job_data = event.GameState.get("job_name", event.EventData.get("job_name", {}))
-        if self._job_map[job_data] == self.CountIndex:
+        if not isinstance(job_data, dict) and self._job_map[job_data] == self.CountIndex:
             self._completed = True
             return
         self._prior_list.add(self._job_map[job_data])
