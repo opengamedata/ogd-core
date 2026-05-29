@@ -24,7 +24,7 @@ class JobArgumentationFails(PerJobFeature):
         super().__init__(params=params, job_map=job_map)
         self._started = False
         self._completed = False
-        self._fail_count = 0
+        self._leave_count = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
