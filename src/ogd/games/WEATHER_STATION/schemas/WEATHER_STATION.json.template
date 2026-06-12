@@ -837,6 +837,12 @@
         "type": "QuitCount",
         "description": "Number of times the player quits each puzzle",
         "return_type": "dict"
+      },
+      "PlayerProgression": {
+        "enabled": true,
+        "type": "PlayerProgression",
+        "description": "Player progression through the puzzles",
+        "return_type": "dict"
       }
     }
   },
