@@ -96,7 +96,7 @@ class PopulationJobCompletionProgression(Feature):
             "links": links,
             "encodings": {
                 "nodeColor": "percentage_completed",
-                "nodeSize": "node_count",
+                "nodeSize": "time_spent",
                 "nodeLabel": "node_name",
 		        "nodeTooltip": "node_tooltip",
 		        "linkWidth": "link_count",
@@ -110,7 +110,3 @@ class PopulationJobCompletionProgression(Feature):
     @staticmethod
     def MinVersion() -> Optional[str]:
         return "1"
-    
-    @classmethod
-    def AvailableModes(cls) -> List[ExtractionMode]:
-        return [ExtractionMode.POPULATION]
