@@ -95,7 +95,7 @@ class PopulationJobSwitchProgression(Feature):
             "encodings": {
                 "nodeColor": "percentage_completed",
                 "nodeSize": "time_spent",
-                "nodeLabel": "node_count",
+                "nodeLabel": "node_name",
 		        "nodeTooltip": "node_tooltip",
 		        "linkWidth": "link_count",
             }
@@ -108,7 +108,3 @@ class PopulationJobSwitchProgression(Feature):
     @staticmethod
     def MinVersion() -> Optional[str]:
         return "1"
-    
-    @classmethod
-    def AvailableModes(cls) -> List[ExtractionMode]:
-        return [ExtractionMode.POPULATION]

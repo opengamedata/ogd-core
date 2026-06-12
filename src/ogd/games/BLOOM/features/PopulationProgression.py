@@ -99,7 +99,3 @@ class PopulationProgression(Feature):
     @staticmethod
     def MinVersion() -> Optional[str]:
         return "1"
-    
-    @classmethod
-    def AvailableModes(cls) -> List[ExtractionMode]:
-        return [ExtractionMode.POPULATION]
