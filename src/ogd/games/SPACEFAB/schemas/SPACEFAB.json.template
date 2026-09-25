@@ -1,8 +1,13 @@
 {
    "enums": {
+      "VolumeType": [ "MASTER", "MUSIC", "SFX" ],
       "ToolID": [ "PTYPE", "NTYPE", "METAL", "CONTACT", "GATE" ],
       "Minigame": [ "RESEARCH", "DESIGN", "SUPPLY_CHAIN", "FABRICATION" ],
-      "Layer": ["METAL", "TRANSISTOR"]
+      "Layer": ["METAL", "SILICON"],
+      "ElementState": ["HI", "LO"],
+      "Station": ["TODO : fill in all station names"],
+      "FabricationAction": ["TODO : fill in all action names"],
+      "FabricationLayer": ["TODO : fill in all layer names"]
    },
    "structures" : {
       "DesignGrid" : {
@@ -30,6 +35,10 @@
       "design_grid": {
          "type": "Optional[DesignGrid]",
          "description": "A representation of the current state of the design grid. Null if the player is not in the design minigame."
+      },
+      "research_materials": {
+         "type": "Optional[Dict[str, bool]]",
+         "description": "A representation of which materials have been fully identified in the research minigame. Null if the player is not in the research minigame. In the future, we may shift to indicating which properties are identified."
       }
    },
    "events": {
@@ -53,6 +62,122 @@
       "click_resume_game": {
          "description": "When the player clicks the button for a new game.",
          "event_data": {}
+      },
+      "start_credits": {
+         "description": "When the player clicks to start the credits from the main menu.",
+         "event_data": {}
+      },
+      "quit_credits": {
+         "description": "When the player clicks to leave from the credits to the main menu.",
+         "event_data": {}
+      },
+      "open_settings": {
+         "description": "When the player opens the settings screen from the main menu.",
+         "event_data": {}
+      },
+      "close_settings": {
+         "description": "When the player closes the settings screen.",
+         "event_data": {}
+      },
+      "toggle_fullscreen": {
+         "description": "When the player clicks to toggle to/from fullscreen mode in the settings.",
+         "event_data": {
+            "is_fullscreen" : {
+               "type" : "bool",
+               "description" : "True if the player is toggling the fullscreen mode on, or false if they're turning it off."
+            }
+         }
+      },
+      "set_volume": {
+         "description": "When the player sets a new volume in the settings.",
+         "event_data": {
+            "volume_type" : {
+               "type" : "VolumeType",
+               "description" : "Whether the volume type being adjusted was the master volume, music, or sound effects (SFX)."
+            },
+            "new_value" : {
+               "type" : "int",
+               "description" : "The new volume level that was set."
+            }
+         }
+      },
+      "cutscene_started": {
+         "description": "When a new cutscene is triggered by the system and begins to play.",
+         "event_data": {
+            "scene_id" : {
+               "type" : "int",
+               "description" : "The scene number of the cutscene."
+            }
+         }
+      },
+      "cutscene_completed": {
+         "description": "When a cutscene finishes playing.",
+         "event_data": {
+            "scene_id" : {
+               "type" : "int",
+               "description" : "The scene number of the cutscene."
+            }
+         }
+      },
+      "click_cutscene_next": {
+         "description": "When the player clicks to advance the cutscene to the next panel/display.",
+         "event_data": {
+            "scene_id" : {
+               "type" : "int",
+               "description" : "The scene number of the cutscene."
+            },
+            "panel_id" : {
+               "type" : "int",
+               "description" : "The panel number of the currently-displayed panel, which the player is 'dismissing' or moving past."
+            }
+         }
+      },
+      "cutscene_advanced": {
+         "description": "When the next panel in a cutscene is displayed.",
+         "event_data": {
+            "scene_id" : {
+               "type" : "int",
+               "description" : "The scene number of the cutscene."
+            },
+            "panel_id" : {
+               "type" : "int",
+               "description" : "The panel number of the newly-displayed panel."
+            }
+         }
+      },
+      "dialog_started": {
+         "description": "When a new dialog sequence begins.",
+         "event_data": {}
+      },
+      "dialog_completed": {
+         "description": "When a dialog sequence finishes.",
+         "event_data": {}
+      },
+      "dialog_line_displayed": {
+         "description": "When a new line in a dialog sequence is displayed to the player.",
+         "event_data": {
+            "character_name" : {
+               "type" : "str",
+               "description" : "The name of the character who 'speaks' the line of dialog."
+            },
+            "text_content" : {
+               "type" : "str",
+               "description" : "The text content of the dialog line, in the language that was shown to the player."
+            },
+            "tutorial_highlight" : {
+               "type" : "Optional[str]",
+               "description" : "If the dialog line triggered a highlight to be displayed around an on-screen object or UI element as part of a tutorial, this is the ID of the highlighted object. Otherwise null."
+            }
+         }
+      },
+      "click_advance_dialog": {
+         "description": "When the player clicks to advance past the currently-displayed dialog item.",
+         "event_data": {
+            "character_name" : {
+               "type" : "str",
+               "description" : "The name of the character who 'spoke' the line of dialog that is being dismissed."
+            }
+         }
       },
       "accept_contract": {
          "description": "When the player accepts a new contract.",
@@ -134,6 +259,84 @@
          "description": "When the player starts the fabrication minigame.",
          "event_data": {}
       },
+      "exit_minigame": {
+         "description": "When the player clicks to exit the current minigame. Note that the player will then be asked to confirm before they actually exit.",
+         "event_data": {
+            "minigame" : {
+               "type" : "Minigame",
+               "description" : "The specific minigame the player is attempting to exit."
+            }
+         }
+      },
+      "confirm_exit_minigame": {
+         "description": "When the player clicks to confirm that they do, in fact, want to exit the current minigame.",
+         "event_data": {
+            "minigame" : {
+               "type" : "Minigame",
+               "description" : "The specific minigame the player is exiting."
+            }
+         }
+      },
+      "cancel_exit_minigame": {
+         "description": "When the player chooses to cancel the exit action and resume the minigame.",
+         "event_data": {
+            "minigame" : {
+               "type" : "Minigame",
+               "description" : "The specific minigame the player is choosing to resume."
+            }
+         }
+      },
+      "helper_shown": {
+         "description": "When the P.A.L. helper character is displayed to the player.",
+         "event_data": {}
+      },
+      "hide_helper": {
+         "description": "When the player clicks to dismiss the P.A.L. helper character.",
+         "event_data": {}
+      },
+      "show_wiki": {
+         "description": "When the player opens up the wiki tool from the sidebar.",
+         "event_data": {
+            "initial_tab" : {
+               "type" : "str",
+               "description" : "The initial tab that is selected when the player opens the wiki."
+            },
+            "initial_page" : {
+               "type" : "str",
+               "description" : "The initial page that is shown when the player opens the wiki."
+            }
+         }
+      },
+      "hide_wiki": {
+         "description": "When the player closes the wiki tool.",
+         "event_data": {}
+      },
+      "select_tab": {
+         "description": "When the player selects a new tab within the wiki.",
+         "event_data": {
+            "tab_name" : {
+               "type" : "str",
+               "description" : "The tab selected by the player."
+            },
+            "initial_page" : {
+               "type" : "str",
+               "description" : "The initial page that is shown when the player opens the new tab."
+            }
+         }
+      },
+      "select_page": {
+         "description": "When the player selects a new page within a wiki tab.",
+         "event_data": {
+            "tab_name" : {
+               "type" : "str",
+               "description" : "The current wiki tab."
+            },
+            "page_name" : {
+               "type" : "str",
+               "description" : "The page the player selected."
+            }
+         }
+      },
       "level_menu_displayed": {
          "description": "When the menu of levels is displayed to the player.",
          "event_data": {}
@@ -155,14 +358,40 @@
                "description" : "The initial state of the design grid, when the player began the level."
             },
             "inputs" : {
-               "type" : "TBD",
-               "description" : "The inputs. Not 100% sure what this was. Possibly the coordinates of the input points?"
+               "type" : "Dict[str, ElementState]",
+               "description" : "A map of the input names to their state in the initial configuration"
             },
             "outputs" : {
-               "type" : "TBD",
-               "description" : "The outputs. Not 100% sure what this was. Possibly the coordinates of the output point?"
+               "type" : "Dict[str, ElementState]",
+               "description" : "A map of the output names to their state in the initial configuration"
             }
          }
+      },
+      "toggle_input": {
+         "description": "When the player toggles the state of an input in the design minigame.",
+         "event_data": {
+            "input" : {
+               "type" : "str",
+               "description" : "Whether the toggled input was input A or B."
+            },
+            "new_state" : {
+               "type" : "ElementState",
+               "description" : "Whether the input was toggled to hi or low."
+            }
+         }
+      },
+      "switch_layer": {
+         "description": "When the player switches to a different layer in the design minigame.",
+         "event_data": {
+            "new_layer" : {
+               "type" : "Layer",
+               "description" : "The layer the player selected."
+            }
+         }
+      },
+      "clear_grid": {
+         "description": "When the player clicks the 'trash' button to clear the design grid.",
+         "event_data": {}
       },
       "select_tool": {
          "description": "When the player selects a new tool in the design minigame.",
@@ -186,21 +415,21 @@
             }
          }
       },
-      "submit_design": {
-         "description": "When the player clicks to submit their design for evaluation.",
+      "run_test": {
+         "description": "When the player starts a test of the current input configuration of their chip.",
          "event_data": {
             "outputs" : {
-               "type" : "TBD",
-               "description" : "The outputs. Not 100% sure what this was. Possibly the coordinates of the output point in the submitted design?"
+               "type" : "Dict[str, ElementState]",
+               "description" : "A map of the output names to their state in the current configuration"
             },
             "target_inputs" : {
-               "type" : "TBD",
-               "description" : "The target inputs. Not 100% sure what this was. Possibly the coordinates of the input points?"
+               "type" : "Dict[str, ElementState]",
+               "description" : "A map of the input names to their state in the current configuration"
             }
          }
       },
-      "submission_succeeded": {
-         "description": "When the design the player submitted was successful.",
+      "test_succeeded": {
+         "description": "When the configuration the player tested matched the goal state.",
          "event_data": {
             "message" : {
                "type" : "str",
@@ -208,30 +437,87 @@
             }
          }
       },
-      "submission_failed": {
-         "description": "When the design the player submitted failed.",
+      "test_failed": {
+         "description": "When the configuration the player tested did not match the goal state.",
          "event_data": {
             "message" : {
                "type" : "str",
                "description" : "The failure message displayed to the player."
             },
             "tests_failed" : {
-               "type" : "List[int | str]",
-               "description" : "The list of tests that failed (not sure if these are ints or strings)."
+               "type" : "List[str]",
+               "description" : "The list of outputs that had an incorrect state."
             }
          }
+      },
+      "design_complete": {
+         "description": "When the current design has passed all tests, resulting in completion of the puzzle.",
+         "event_data": {}
       },
       "exit_design": {
          "description": "When the player exits the design minigame.",
          "event_data": {}
       },
+      "fabrication_begin": {
+         "description": "When the player begins playing a fabrication level.",
+         "event_data": {
+            "station_order" : {
+               "type" : "List[Station]",
+               "description" : "The order of the stations displayed to the user. This is randomized at the beginning of the fabrication level, and remains the same across layers. The order in which stations must be completed differs between layers."
+            },
+            "layers" : {
+               "type" : "List[FabricationLayer]",
+               "description" : "The layers that must be fabricated to successfully complete the current level."
+            }
+         }
+      },
       "generate_wafer": {
-         "description": "When the player clicks to get a new wafer for fabrication.",
+         "description": "When the player clicks to generate the initial wafer and start the timer.",
          "event_data": {}
       },
       "timer_start": {
          "description": "When the minigame timer starts counting.",
-         "event_data": {}
+         "event_data": {
+            "current_time" : {
+               "type" : "float",
+               "description" : "The current time on the timer when the timer starts counting. 0 at the start of the level."
+            }
+         }
+      },
+      "timer_stop": {
+         "description": "When the minigame timer starts counting.",
+         "event_data": {
+            "current_time" : {
+               "type" : "float",
+               "description" : "The current time on the timer when the timer stopped counting."
+            }
+         }
+      },
+      "layer_started": {
+         "description": "When the player is set to start working on the series of fabrication steps for a new layer of the chip.",
+         "event_data": {
+            "layer_id" : {
+               "type" : "FabricationLayer",
+               "description" : "The specific layer the player is beginning work on."
+            },
+            "action_order" : {
+               "type" : "List[FabricationAction]",
+               "description" : "The order of the actions that must be completed to successfully complete the new layer."
+            },
+            "action_stations_visible" : {
+               "type" : "List[bool]",
+               "description" : "A parallel array to the action_order, indicating whether the corresponding station name is shown in the instruction text or not."
+            }
+         }
+      },
+      "layer_completed": {
+         "description": "When the player has completed all stations necessary to fabricate a given layer.",
+         "event_data": {
+            "layer_id" : {
+               "type" : "FabricationLayer",
+               "description" : "The specific layer the player has completed work on."
+            }
+         }
       },
       "instruction_updated": {
          "description": "When the instruction shown to the player is updated.",
@@ -278,10 +564,15 @@
             "accuracy" : {
                "type" : "float",
                "description" : "The accuracy the player achieved on the station activation."
-            },
-            "is_automated" : {
-               "type" : "bool",
-               "description" : "Whether the station run was automated, or manually run by the player."
+            }
+         }
+      },
+      "station_failed": {
+         "description": "When the player fails the activity in the activated station.",
+         "event_data": {
+            "station_id" : {
+               "type" : "str",
+               "description" : "The ID of the station the player failed."
             }
          }
       },
