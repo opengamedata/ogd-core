@@ -5,6 +5,13 @@
       "Minigame": [ "RESEARCH", "DESIGN", "SUPPLY_CHAIN", "FABRICATION" ],
       "Layer": ["METAL", "SILICON"],
       "ElementState": ["HI", "LO"],
+      "Material": ["TODO : fill in materials that exist in the research minigame"],
+      "Chamber": ["TODO : fill in list of research chambers"],
+      "ChamberSlot": ["TODO : fill in list, most will be identical to the chamber, but for the two-part chamber we have two slots with different suffixes"],
+      "DopantRejection": [
+         "INVALID_SUBSTRATE", "UNIDENTIFIED_SUBSTRATE",      "DOPANT_TOO_BIG",
+         "POLYATOMIC_DOPANT", "SUBSTRATE_DOPANT_DUPLICATED", "UNSTABLE_ELECTRON_COUNT"
+      ],
       "Station": ["TODO : fill in all station names"],
       "FabricationAction": ["TODO : fill in all action names"],
       "FabricationLayer": ["TODO : fill in all layer names"]
@@ -337,6 +344,84 @@
             }
          }
       },
+      "select_observations_tab": {
+         "description": "When the player specifically selects the observations tab in the research minigame's modified version of the wiki.",
+         "event_data": {
+            "initial_page" : {
+               "type" : "str",
+               "description" : "The initial page that is shown when the player opens the observation tab."
+            },
+            "available_observations" : {
+               "type" : "List[str]",
+               "description" : "The observations that can be made in the research minigame."
+            },
+            "selected_observations" : {
+               "type" : "List[str]",
+               "description" : "The observations that are initially selected."
+            }
+         }
+      },
+      "select_observations_page": {
+         "description": "When the player selects a new page within a observations tab.",
+         "event_data": {
+            "page_name" : {
+               "type" : "str",
+               "description" : "The page the player selected."
+            },
+            "available_observations" : {
+               "type" : "List[str]",
+               "description" : "The observations that can be made in the research minigame."
+            },
+            "selected_observations" : {
+               "type" : "List[str]",
+               "description" : "The observations that are initially selected."
+            }
+         }
+      },
+      "click_select_observation": {
+         "description": "When the player attempts to select an observation for the current material; if the observation was correct for the material, an observation_selected event should follow.",
+         "event_data": {
+            "valid_selection" : {
+               "type" : "bool",
+               "description" : "Whether or not the observation the player clicked was actually a correct observation for the current material."
+            },
+            "observation_id" : {
+               "type" : "Observation",
+               "description" : "The specific observation the player tried to select."
+            },
+            "material_id" : {
+               "type" : "Material",
+               "description" : "The material for which the player is selecting an observation."
+            },
+            "substrate_id" : {
+               "type" : "Optional[Material]",
+               "description" : "If the current observation is related to the doping chamber, this is the type of material set as the substrate. Otherwise null."
+            }
+         }
+      },
+      "click_deselect_observation": {
+         "description": "When the player attempts to deselect an observation for the current material.",
+         "event_data": {
+            "observation_id" : {
+               "type" : "Observation",
+               "description" : "The specific observation the player tried to deselect."
+            },
+            "material_id" : {
+               "type" : "Material",
+               "description" : "The material for which the player is deselecting an observation."
+            },
+            "substrate_id" : {
+               "type" : "Optional[Material]",
+               "description" : "If the current observation is related to the doping chamber, this is the type of material set as the substrate. Otherwise null."
+            }
+         }
+      },
+
+
+
+
+
+
       "level_menu_displayed": {
          "description": "When the menu of levels is displayed to the player.",
          "event_data": {}
@@ -458,6 +543,142 @@
          "description": "When the player exits the design minigame.",
          "event_data": {}
       },
+
+      "research_begin": {
+         "description": "When the player begins playing a research level.",
+         "event_data": {
+            "requirements" : {
+               "type" : "List[str]",
+               "description" : "A list of required findings to pass the level."
+            },
+            "initial_samples" : {
+               "type" : "List[Material]",
+               "description" : "The materials available as samples for study within the level."
+            },
+            "available_chambers" : {
+               "type" : "List[Chamber]",
+               "description" : "The chambers available for testing the material samples."
+            }
+         }
+      },
+      "select_chamber": {
+         "description": "When the player selects one of the testing chambers.",
+         "event_data": {
+            "chamber_id" : {
+               "type" : "Chamber",
+               "description" : "The specific chamber the player selected."
+            }
+         }
+      },
+      "grab_sample": {
+         "description": "When the player picks up one of the materials, which they may drop onto a chamber on the research bench.",
+         "event_data": {
+            "material_id" : {
+               "type" : "Material",
+               "description" : "The specific type of material whose sample the player grabbed."
+            }
+         }
+      },
+      "drop_sample": {
+         "description": "When the player releases a material sample they previously grabbed, whether or not the material is released into a valid chamber.",
+         "event_data": {
+            "material_id" : {
+               "type" : "Material",
+               "description" : "The specific type of material whose sample the player dropped."
+            }
+         }
+      },
+      "place_sample": {
+         "description": "When the player releases a material sample into a slot in one of the research chambers.",
+         "event_data": {
+            "slot" : {
+               "type" : "ChamberSlot",
+               "description" : "The specific chamber slot the player put the sample into."
+            },
+            "material_id" : {
+               "type" : "Material",
+               "description" : "The specific type of material whose sample the player grabbed."
+            }
+         }
+      },
+      "increase_voltage": {
+         "description": "When the player increments the voltage to be applied in the voltage chamber",
+         "event_data": {
+            "new_voltage" : {
+               "type" : "int",
+               "description" : "The updated voltage level."
+            }
+         }
+      },
+      "decrease_voltage": {
+         "description": "When the player decrements the voltage to be applied in the voltage chamber",
+         "event_data": {
+            "new_voltage" : {
+               "type" : "int",
+               "description" : "The updated voltage level."
+            }
+         }
+      },
+      "increase_heat": {
+         "description": "When the player increments the heat to be applied in the heat chamber",
+         "event_data": {
+            "new_heat" : {
+               "type" : "int",
+               "description" : "The updated heat level."
+            }
+         }
+      },
+      "decrease_heat": {
+         "description": "When the player decrements the heat to be applied in the heat chamber",
+         "event_data": {
+            "new_heat" : {
+               "type" : "int",
+               "description" : "The updated heat level."
+            }
+         }
+      },
+      "sample_destroyed": {
+         "description": "When a too-high setting in one of the chambers results in the destruction of the material sample",
+         "event_data": {
+            "material_id" : {
+               "type" : "Material",
+               "description" : "The material type of the destroyed sample."
+            },
+            "breakdown_type" : {
+               "type" : "str",
+               "description" : "The type of breakdown."
+            },
+            "breakdown_value" : {
+               "type" : "int",
+               "description" : "The level of heat/voltage applied that lead to the sample destruction."
+            }
+         }
+      },
+      "sample_rejected": {
+         "description": "When a sample is rejected from being placed in the dopant chamber",
+         "event_data": {
+            "material_id" : {
+               "type" : "Material",
+               "description" : "The material type of the rejected sample."
+            },
+            "slot" : {
+               "type" : "ChamberSlot",
+               "description" : "The specific dopant chamber slot the player had put the sample into."
+            },
+            "rejection_reason" : {
+               "type" : "DopantRejection",
+               "description" : "The specific reason why the sample was rejected from the dopant chamber."
+            }
+         }
+      },
+
+
+
+
+
+
+
+
       "fabrication_begin": {
          "description": "When the player begins playing a fabrication level.",
          "event_data": {
@@ -577,20 +798,6 @@
          }
       },
       "fabrication_complete": {
-         "description": "When the fabrication challenge is completed.",
-         "event_data": {
-         }
-      },
-      "use_automation": {
-         "description": "When the player sets a station to be automated.",
-         "event_data": {
-            "station_id" : {
-               "type" : "str",
-               "description" : "The ID of the automated station."
-            }
-         }
-      },
-      "fabrication_success": {
          "description": "When the fabrication has been completed successfully, i.e. passes the requirements.",
          "event_data": {
             "accuracy" : {
