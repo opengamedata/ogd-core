@@ -24,6 +24,14 @@ inputs:
    description: "The remote path of the data folder."
    required: false
    default: "/var/www/opengamedata/data"
+  connect_timeout:
+   description: "Seconds to wait for the SSH TCP connection before giving up on one attempt."
+   required: false
+   default: "30"
+  max_attempts:
+   description: "How many times to try the upload before failing the job."
+   required: false
+   default: "5"
 runs:
   using: "composite"
   steps:
@@ -33,8 +41,44 @@ runs:
       echo '${{ inputs.remote_key }}' >> ./key.txt
       chmod 600 ./key.txt
     shell: bash
-  - name: "Do upload"
+  - name: "Wait for host to be reachable over the VPN"
+    # The VPN tunnel reports "connected" before the pushed DNS/routes are
+    # necessarily usable, so resolve-and-probe the host first instead of
+    # letting ssh fail immediately with "Could not resolve hostname".
     run: |
-      ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ inputs.remote_user }}@${{ inputs.host }} "cd ${{ inputs.remote_data_path }}; mkdir -p ${{ inputs.game }}"
-      scp -o StrictHostKeyChecking=no -i ./key.txt ${{ inputs.source_path }}/* ${{ inputs.remote_user }}@${{ inputs.host }}:${{ inputs.remote_data_path }}/${{ inputs.game }}/
+      HOST='${{ inputs.host }}'
+      for i in $(seq 1 30); do
+        if getent hosts "$HOST" >/dev/null 2>&1; then
+          echo "Resolved $HOST after ${i} attempt(s)."
+          break
+        fi
+        if [ "$i" -eq 30 ]; then
+          echo "::error::Could not resolve $HOST after 30 attempts (~60s) - VPN DNS never came up."
+          exit 1
+        fi
+        sleep 2
+      done
+    shell: bash
+  - name: "Do upload"
+    # Retries with backoff, and a bounded ConnectTimeout so a dead tunnel
+    # fails in seconds rather than hanging until the 6h job limit.
+    run: |
+      set -o pipefail
+      SSH_OPTS="-o StrictHostKeyChecking=no -o ConnectTimeout=${{ inputs.connect_timeout }} -o ServerAliveInterval=15 -o ServerAliveCountMax=4 -i ./key.txt"
+      ATTEMPTS='${{ inputs.max_attempts }}'
+      for i in $(seq 1 "$ATTEMPTS"); do
+        echo "Upload attempt ${i}/${ATTEMPTS}..."
+        if ssh $SSH_OPTS '${{ inputs.remote_user }}@${{ inputs.host }}' "cd ${{ inputs.remote_data_path }}; mkdir -p ${{ inputs.game }}" \
+           && scp $SSH_OPTS -r ${{ inputs.source_path }}/* '${{ inputs.remote_user }}@${{ inputs.host }}:${{ inputs.remote_data_path }}/${{ inputs.game }}/'; then
+          echo "Upload succeeded on attempt ${i}."
+          exit 0
+        fi
+        if [ "$i" -lt "$ATTEMPTS" ]; then
+          BACKOFF=$((i * 15))
+          echo "Attempt ${i} failed; retrying in ${BACKOFF}s."
+          sleep "$BACKOFF"
+        fi
+      done
+      echo "::error::Upload to ${{ inputs.host }} failed after ${ATTEMPTS} attempts."
+      exit 1
     shell: bash
