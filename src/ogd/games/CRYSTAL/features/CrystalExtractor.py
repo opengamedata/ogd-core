@@ -150,7 +150,12 @@ class CrystalExtractor(LegacyFeature):
             self._features.incAggregateVal(feature_name="sessionDurationInSecs", increment=time_taken)
             self._active_begin = None
             score = event_data["stability"]["pack"] + event_data["stability"]["charge"]
-            max_score = max(score, self._features.getValByIndex(feature_name="finalScore", index=level))
+            # getValByIndex returns None (and logs an error) when `level` is outside the
+            # schema's configured level range, so max() must not be handed the raw result.
+            # Treat an out-of-range/unset level as having no prior score rather than
+            # crashing the whole game's export on a single bad event.
+            prior_score = self._features.getValByIndex(feature_name="finalScore", index=level)
+            max_score = score if prior_score is None else max(score, prior_score)
             self._features.setValByIndex(feature_name="finalScore", index=level, new_value=max_score)
 
     ## Private function to extract features from a "BACK_TO_MENU" event.
