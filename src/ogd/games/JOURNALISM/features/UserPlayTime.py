@@ -69,18 +69,23 @@ class UserPlayTime(SessionFeature):
         # Note: This function runs on data from each Feature whose name matches one of the strings returned by _featureFilter().
         #       The number of instances of each Feature may vary, depending on the configuration and the unit of analysis at which this CustomFeature is run.
     
-        # Exception handling for empty sessions
-        if(not self._cumulative_play_time):
-            self._cumulative_play_time = feature._vals[0]
-        if(not self._cumulative_active_time):
-            self._cumulative_active_time = feature._vals[1]
+        # Exception handling for empty sessions: a PlayTime instance that saw no
+        # events can report None, so neither the seed nor the accumulation may
+        # assume a timedelta is present.
+        if self._cumulative_play_time is None:
+            self._cumulative_play_time = timedelta(0)
+        if self._cumulative_active_time is None:
+            self._cumulative_active_time = timedelta(0)
 
-        try:
-            self._cumulative_play_time  += feature.FeatureValues[0]
-            self._cumulative_active_time += feature.FeatureValues[1]
-        except:
-            self._cumulative_play_time += timedelta(0)
-            self._cumulative_active_time += timedelta(0)
+        _vals = feature.FeatureValues
+
+        _play_time = _vals[0] if len(_vals) > 0 else None
+        if isinstance(_play_time, timedelta):
+            self._cumulative_play_time += _play_time
+
+        _active_time = _vals[1] if len(_vals) > 1 else None
+        if isinstance(_active_time, timedelta):
+            self._cumulative_active_time += _active_time
 
         
         
@@ -93,7 +98,13 @@ class UserPlayTime(SessionFeature):
         :rtype: List[Any]
         """
 
-        return [self._cumulative_play_time, self._cumulative_active_time, self._cumulative_active_time.total_seconds()]
+        # A player whose sessions all produced no PlayTime data never reaches
+        # _updateFromFeatureData, leaving these as None; report zeroes rather
+        # than crashing the whole export (see AttributeError on .total_seconds).
+        _play_time   = self._cumulative_play_time   if self._cumulative_play_time   is not None else timedelta(0)
+        _active_time = self._cumulative_active_time if self._cumulative_active_time is not None else timedelta(0)
+
+        return [_play_time, _active_time, _active_time.total_seconds()]
 
 
     # *** Optionally override public functions. ***
